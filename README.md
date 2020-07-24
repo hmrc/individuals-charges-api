@@ -1,9 +1,9 @@
 
-# self-assessment-biss-api
+# individuals-charges-api
 
 # To run locally
 
-`sbt "run 9785"`
+`sbt "run 9765"`
 or
 `sbt run`
 
