@@ -1,0 +1,38 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatBusinessID
+  - errors.formatTypeOfBusiness
+  - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.ruleBusinessId
+  - errors.ruleTypeOfBusiness
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFoundIncomeSource
+  - queryParameters.businessId
+  - queryParameters.foreignTypeOfBusiness
+  - queryParameters.taxYear
+displayName: Retrieve a Foreign Property Business Income Source Summary (BISS)
+description: This endpoint allows a developer to retrieve a running (year-to-date) summary of the income and expenditure for a specified foreign property business during a tax year.
+(annotations.sandboxData): !include scenarios/retrieveForeignProperty.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+responses:
+  200:
+      body:
+          application/json:
+              type: !include schemas/retrieveBiss/retrieve_foreign_property_business_income_response.json
+              examples:
+                  example-1:
+                     description: Foreign Property profit summary
+                     value: !include examples/retrieveForeignPropertyBiss/retrieve_foreign_property.json
+                  example-2:
+                     description: Foreign Property FHL EEA loss summary
+                     value: !include examples/retrieveForeignPropertyBiss/retrieve_foreign_property_fhl_eea.json
+      headers:
+        X-CorrelationId:
+          example: c75f40a6-a3df-4429-a697-471eeec46435
+          description: Unique ID for operation tracking <br> String, 36 characters.
