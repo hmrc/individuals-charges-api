@@ -62,16 +62,16 @@ class CreateBFLossControllerISpec extends IntegrationBaseSpec {
         |{
         |    "id": "AAZZ1234567890a",
         |    "links": [{
-        |      "href": "/individuals/losses/$nino/brought-forward-losses/$lossId",
+        |      "href": "/individuals/charges/$nino/brought-forward-losses/$lossId",
         |      "method": "GET",
         |      "rel": "self"
         |    },
         |    {
-        |      "href": "/individuals/losses/$nino/brought-forward-losses/$lossId",
+        |      "href": "/individuals/charges/$nino/brought-forward-losses/$lossId",
         |      "method": "DELETE",
         |      "rel": "delete-brought-forward-loss"
         |    },{
-        |      "href": "/individuals/losses/$nino/brought-forward-losses/$lossId/change-loss-amount",
+        |      "href": "/individuals/charges/$nino/brought-forward-losses/$lossId/change-loss-amount",
         |      "method": "POST",
         |      "rel": "amend-brought-forward-loss"
         |    }

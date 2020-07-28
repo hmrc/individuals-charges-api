@@ -71,7 +71,7 @@ class ListBFLossesControllerISpec extends IntegrationBaseSpec {
          |            "id": "000000000000001",
          |            "links" : [
          |             {
-         |               "href" : "/individuals/losses$uri/000000000000001",
+         |               "href" : "/individuals/charges$uri/000000000000001",
          |               "rel": "self",
          |               "method": "GET"
          |             }
@@ -81,7 +81,7 @@ class ListBFLossesControllerISpec extends IntegrationBaseSpec {
          |            "id": "000000000000002",
          |             "links" : [
          |             {
-         |               "href" : "/individuals/losses$uri/000000000000002",
+         |               "href" : "/individuals/charges$uri/000000000000002",
          |               "rel": "self",
          |               "method": "GET"
          |             }
@@ -90,12 +90,12 @@ class ListBFLossesControllerISpec extends IntegrationBaseSpec {
          |    ],
          |    "links": [
          |      {
-         |        "href": "/individuals/losses$uri",
+         |        "href": "/individuals/charges$uri",
          |        "rel": "self",
          |        "method": "GET"
          |      },
          |      {
-         |        "href": "/individuals/losses$uri",
+         |        "href": "/individuals/charges$uri",
          |        "rel": "create-brought-forward-loss",
          |        "method": "POST"
          |      }
