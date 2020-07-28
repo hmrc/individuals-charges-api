@@ -42,8 +42,8 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         )
       ),
       api = APIDefinition(
-        name = "Business Income Source Summary (MTD)",
-        description = "An API for providing Business Income Source Summary data",
+        name = "Individuals Charges (MTD)",
+        description = "This is a draft spec for the Individuals Charges API",
         context = appConfig.apiGatewayContext,
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(

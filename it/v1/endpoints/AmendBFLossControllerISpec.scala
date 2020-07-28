@@ -77,7 +77,7 @@ class AmendBFLossControllerISpec extends IntegrationBaseSpec {
          |    "lossAmount": $lossAmount,
          |    "lastModified": "2018-07-13T12:13:48.763Z",
          |    "links": [{
-         |      "href": "/individuals/losses/$nino/brought-forward-losses/$lossId",
+         |      "href": "/individuals/charges/$nino/brought-forward-losses/$lossId",
          |      "method": "GET",
          |      "rel": "self"
          |    }
