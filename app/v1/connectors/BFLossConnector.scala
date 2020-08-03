@@ -27,6 +27,7 @@ import v1.models.requestData._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+//TODO REMOVE FILE
 @Singleton
 class BFLossConnector @Inject()(http: HttpClient, appConfig: AppConfig) extends DesConnector {
 

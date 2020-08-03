@@ -27,6 +27,7 @@ import v1.models.requestData._
 
 import scala.concurrent.Future
 
+//TODO REMOVE FILE
 class BFLossConnectorSpec extends ConnectorSpec {
 
   lazy val baseUrl = "test-BaseUrl"
