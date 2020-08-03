@@ -32,15 +32,15 @@ uses:
   headers: headers.raml
   queryParameters: queryParameters.raml
 
-'/individuals/self-assessment/income-summary':
+'/individuals/pension/charges':
   /{nino}:
     uriParameters:
       nino:
         description: National Insurance number, in the format AA999999A.
         type: string
         example: TC663795B
-    /self-employment:
-      get: !include retrieveSelfEmploymentBiss.raml
+    /{taxYear}:
+      get: !include retrievePensionCharges.raml
     /uk-property:
       get: !include retrieveUkPropBiss.raml
     /foreign-property:
