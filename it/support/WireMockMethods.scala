@@ -24,8 +24,9 @@ import play.api.libs.json.Writes
 
 trait WireMockMethods {
 
-  def when(method: HTTPMethod, uri: String, queryParams: Map[String, String] = Map.empty, headers: Map[String, String] = Map.empty): Mapping = {
-    new Mapping(method, uri, queryParams, headers, None)
+  def when(method: HTTPMethod, uri: String, queryParams: Map[String, String] = Map.empty, headers: Map[String, String] = Map.empty,
+           body: Option[String] = None): Mapping = {
+    new Mapping(method, uri, queryParams, headers, body)
   }
 
   class Mapping(method: HTTPMethod, uri: String, queryParams: Map[String, String], headers: Map[String, String], body: Option[String]) {
