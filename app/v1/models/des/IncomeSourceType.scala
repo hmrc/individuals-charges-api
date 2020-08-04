@@ -25,7 +25,8 @@ sealed trait IncomeSourceType {
 }
 
 object IncomeSourceType {
-
+  //TODO REMOVE FILE
+  //scalastyle:off
   case object `01` extends IncomeSourceType {
     override def toTypeOfLoss: TypeOfLoss = TypeOfLoss.`self-employment`
   }

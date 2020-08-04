@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package utils
+package v1.models.requestData
 
-import java.time.LocalDate
+import uk.gov.hmrc.domain.Nino
 
-import v1.models.requestData.DesTaxYear
-
-object DateUtils {
-
-  def getDesTaxYear(dateProvided: Any): DesTaxYear = dateProvided match {
-    case taxYear: String => DesTaxYear.fromMtd(taxYear)
-    case current: LocalDate =>
-      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
-
-      if(current.isAfter(fiscalYearStartDate)){
-        DesTaxYear((current.getYear + 1).toString)
-      } else {
-        DesTaxYear(current.getYear.toString)
-      }
-  }
-}
+case class DeletePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)

@@ -16,21 +16,18 @@
 
 package utils
 
-import java.time.LocalDate
+import play.api.Logger
 
-import v1.models.requestData.DesTaxYear
+object PagerDutyHelper {
+  val logger: Logger = Logger("PagerDutyLogger")
 
-object DateUtils {
+  object PagerDutyKeys extends Enumeration {
+    val DES_INTERNAL_SERVER_ERROR: PagerDutyKeys.Value = Value
+    val DES_SERVICE_UNAVAILABLE: PagerDutyKeys.Value = Value
+    val DES_UNEXPECTED_RESPONSE: PagerDutyKeys.Value = Value
+  }
 
-  def getDesTaxYear(dateProvided: Any): DesTaxYear = dateProvided match {
-    case taxYear: String => DesTaxYear.fromMtd(taxYear)
-    case current: LocalDate =>
-      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
-
-      if(current.isAfter(fiscalYearStartDate)){
-        DesTaxYear((current.getYear + 1).toString)
-      } else {
-        DesTaxYear(current.getYear.toString)
-      }
+  def pagerDutyLog(pagerDutyKey: PagerDutyKeys.Value, otherDetail: Option[String] = None): Unit = {
+    logger.error(s"$pagerDutyKey ${otherDetail.getOrElse("")}")
   }
 }

@@ -30,14 +30,18 @@ case class DesTaxYear(value: String) extends AnyVal {
 
 object DesTaxYear {
 
+  val startOfYear = 2
+  val startYearAndDash = 5
+
   /**
     * @param taxYear tax year in MTD format (e.g. 2017-18)
     */
+
   def fromMtd(taxYear: String): DesTaxYear =
-    DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+    DesTaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
 
   def fromDes(taxYear: String): DesTaxYear =
-    DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(2))
+    DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(startOfYear))
 
   def mostRecentTaxYear(date: LocalDate = LocalDate.now()): DesTaxYear = {
     val limit = LocalDate.parse(s"${date.getYear}-04-05", DateTimeFormatter.ISO_DATE)
