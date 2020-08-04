@@ -26,7 +26,7 @@ import v1.models.requestData._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesConnector @Inject()(http: HttpClient, appConfig: AppConfig) extends DesConnector {
+class PensionChargesConnector @Inject()(http: HttpClient, appConfig: AppConfig) extends DesConnector {
 
   def deletePensionCharges(request: DeletePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[Unit]] = {
     val nino = request.nino.nino

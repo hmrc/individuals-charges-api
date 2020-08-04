@@ -25,7 +25,7 @@ import v1.models.requestData._
 
 import scala.concurrent.Future
 
-class DeletePensionChargesConnectorSpec extends ConnectorSpec {
+class PensionChargesConnectorSpec extends ConnectorSpec {
 
   lazy val baseUrl = "test-BaseUrl"
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
@@ -34,7 +34,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
   val taxYear = "2019-20"
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: DeletePensionChargesConnector = new DeletePensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: PensionChargesConnector = new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
     MockedAppConfig.desBaseUrl returns baseUrl
