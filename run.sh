@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-sbt "run 7785"
+sbt "run 9765"
