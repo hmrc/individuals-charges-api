@@ -122,12 +122,12 @@
             "amount":{
               "description":"The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type":"number",
-              "example":1999.99
+              "example":"1999.99"
             },
             "foreignTaxPaid":{
               "description":"The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type":"number",
-              "example":1999.99
+              "example":"1999.99"
             }
           }
         },
@@ -138,12 +138,12 @@
             "amount":{
               "description":"The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type":"number",
-              "example":1999.99
+              "example":"1999.99"
             },
             "foreignTaxPaid":{
               "description":"The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type":"number",
-              "example":1999.99
+              "example":"1999.99"
             }
           }
         }
