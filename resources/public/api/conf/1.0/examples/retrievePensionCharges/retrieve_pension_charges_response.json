@@ -4,18 +4,17 @@
     "taperedAnnualAllowance": true,
     "moneyPurchasedAllowance": true,
     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-    "lumpSumBenefitTakenInExcessOfLifetimeAllowance":[
+    "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
       {
         "amount":100,
         "taxPaid":100
       }
-    ],
-    "benefitInExcessOfLifetimeAllowance":[
+    ,
+    "benefitInExcessOfLifetimeAllowance":
       {
         "amount":100,
         "taxPaid":100
       }
-    ]
   },
   "pensionSchemeOverseasTransfers": {
     "overseasSchemeProvider": [
@@ -34,12 +33,12 @@
   "pensionSchemeUnauthorisedPayments": {
     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
     "surcharge": {
-      "amount": 100,
-      "foreignTaxPaid": 100
+      "amount": 100.99,
+      "foreignTaxPaid": 100.99
     },
     "noSurcharge": {
-      "amount": 100,
-      "foreignTaxPaid": 100
+      "amount": 100.99,
+      "foreignTaxPaid": 100.99
     }
   },
   "pensionContributions": {
