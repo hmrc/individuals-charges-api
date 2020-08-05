@@ -2,6 +2,7 @@
   "$schema":"http://json-schema.org/draft-04/schema#",
   "title":"Retrieve Pension Charges",
   "description":"Retrieve Pension Charges",
+  "type":"object",
   "properties":{
     "pensionSavingsTaxCharges":{
       "type":"object",
@@ -23,9 +24,12 @@
           "example":"false"
         },
         "pensionSchemeTaxReference":{
-          "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
           "type":"array",
-          "example":"00123456RA"
+          "items": {
+            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "type": "string",
+            "example": "00123456RA"
+          }
         },
         "lumpSumBenefitTakenInExcessOfLifetimeAllowance":{
           "type":"object",
@@ -111,9 +115,12 @@
       "description":"Tax on unauthorised payment.",
       "properties":{
         "pensionSchemeTaxReference":{
-          "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
           "type":"array",
-          "example":"00123456RA"
+          "items": {
+            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "type": "string",
+            "example": "00123456RA"
+          }
         },
         "surcharge":{
           "type":"object",
@@ -154,9 +161,12 @@
       "description":"Payments paid into a pension",
       "properties":{
         "pensionSchemeTaxReference":{
-          "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
           "type":"array",
-          "example":"00123456RA"
+          "items": {
+            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "type": "string",
+            "example": "00123456RA"
+          }
         },
         "inExcessOfTheAnnualAllowance":{
           "description":"The amount of the in excess of the annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
