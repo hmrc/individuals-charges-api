@@ -1,6 +1,7 @@
 is:
   - headers.acceptJson
   - headers.testScenarioHeader
+  - headers.contentTypeJson
   - errors.formatNino
   - errors.formatTaxYear
   - errors.ruleTaxYearRangeInvalid
@@ -9,17 +10,14 @@ is:
 displayName: Retrieve pension charges
 description: This endpoint allows a developer to retrieve previously populated charges for pensions. A National Insurance number and Tax year must be provided.
 (annotations.sandboxData): !include scenarios/retrievePensionCharges.md
-(annotations.scope): "read:self-assessment"
-securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
   200:
     body:
       application/json:
         type: !include schemas/retrievePensionCharges/retrieve_pension_charges_response.json
-        examples:
-          example-1:
-            description: Retrieve Pension Charge Response
-            value: !include examples/retrievePensionCharges/retrieve_pension_charges_response.json
+        example: !include examples/retrievePensionCharges/retrieve_pension_charges_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
