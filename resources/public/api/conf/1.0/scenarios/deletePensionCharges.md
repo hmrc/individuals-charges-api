@@ -20,14 +20,6 @@
             <td><p>Simulates a scenario where the format of the supplied tax year field is not valid.</p></td>
         </tr> 
         <tr>
-             <td><p>RULE_TAX_YEAR_RANGE_INVALID</p></td>
-             <td><p>Simulates a scenario where the Tax year range is invalid.</p></td>
-        </tr>
-        <tr>
-              <td><p>RULE_TAX_YEAR_NOT_SUPPORTED</p></td>
-              <td><p>Simulates a scenario where the Tax year is not supported.</p></td>
-        </tr>
-        <tr>
              <td><p>MATCHING_RESOURCE_NOT_FOUND</p></td>
              <td><p>Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period.</p></td>
         </tr>                     
