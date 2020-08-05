@@ -1,0 +1,26 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.ruleIncorrectOrEmptyBodySubmitted
+  - errors.ruleTaxYearNotSupported
+displayName: Amend charges relating to Pensions
+description: This endpoint allows a developer to amend charges relating to pensions. A National Insurance number and Tax year must be provided.
+(annotations.sandboxData): !include scenarios/amendPensionCharges.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+body:
+  application/json:
+    type: !include schemas/amend_request_schema.json
+    examples:
+     example-1:
+      description: Amend Request from Vendors
+      value: !include examples/amend_request.json
+responses:
+  204:
+      headers:
+        X-CorrelationId:
+          example: c75f40a6-a3df-4429-a697-471eeec46435
+          description: Unique ID for operation tracking <br> String, 36 characters.

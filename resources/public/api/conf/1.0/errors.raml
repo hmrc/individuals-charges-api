@@ -158,5 +158,92 @@ traits:
                             description: The supplied income source could not be found
                             value:
                               code: MATCHING_RESOURCE_NOT_FOUND
-
+  formatValue:
+                responses:
+                  400:
+                    body:
+                      application/json:
+                        type: types.errorResponse
+                        examples:
+                          formatValue:
+                            description: One or more values have been added with the incorrect format.
+                            value:
+                              code: FORMAT_VALUE
+  formatCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            formatCountryCode:
+                              description: The format of the supplied country code is not valid.
+                              value:
+                                code: FORMAT_COUNTRY_CODE
+  ruleCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            ruleCountryCode:
+                              description: The format of the supplied country code is not valid.
+                              value:
+                                code: RULE_COUNTRY_CODE
+  formatProviderName:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderName:
+                               description: The format of providers name is invalid.
+                               value:
+                                 code: FORMAT_PROVIDER_NAME
+  formatProvidersAddress:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderAddress:
+                               description: The format of providers address is invalid.
+                               value:
+                                 code: FORMAT_PROVIDERS_ADDRESS
+  ruleLumpSumBenefitTakenInExcess:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleLumpSumBenefitTakenInExcess:
+                               description: You can only provide either Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance.
+                               value:
+                                 code: RULE_LUMP_SUM_BENEFIT_TAKEN_IN_EXCESS
+  ruleBenefitInExcess:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleBenefitInExcess:
+                               description: You can only provide either Benefit in excess of lifetime allowance or Lump sum benefit taken in excess of lifetime allowance.
+                               value:
+                                 code: RULE_BENEFIT_IN_EXCESS
+  ruleIncorrectOrEmptyBodySubmitted:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleIncorrectOrEmptyBodySubmitted:
+                               description: An empty or non-matching body was submitted.
+                               value:
+                                 code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
 
