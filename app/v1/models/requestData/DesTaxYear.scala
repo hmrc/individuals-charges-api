@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 /**
   * Represents a tax year for DES
   *
-  * @param value the tax year string (where 2018 represents 2017-18)
+  * @param value the tax year string (2017-18)
   */
 case class DesTaxYear(value: String) extends AnyVal {
   override def toString: String = value
@@ -33,16 +33,14 @@ object DesTaxYear {
   val startOfYear = 2
   val startYearAndDash = 5
 
-  /**
-    * @param taxYear tax year in MTD format (e.g. 2017-18)
-    */
-
+  //TODO REMOVE METHODS AS MTD & DES WILL USE THE SAME FORMAT
   def fromMtd(taxYear: String): DesTaxYear =
     DesTaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
 
   def fromDes(taxYear: String): DesTaxYear =
     DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(startOfYear))
 
+  //TODO UPDATE IF NEEDED TO USE 2017-18 FORMAT
   def mostRecentTaxYear(date: LocalDate = LocalDate.now()): DesTaxYear = {
     val limit = LocalDate.parse(s"${date.getYear}-04-05", DateTimeFormatter.ISO_DATE)
     if(date.isBefore(limit)) {
