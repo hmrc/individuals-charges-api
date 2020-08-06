@@ -29,7 +29,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val nino = Nino("AA123456A")
-  val taxYear = DesTaxYear("2019-20")
+  val taxYear = DesTaxYear("2020-21")
 
   trait Test extends MockPensionChargesConnector {
     lazy val service = new DeletePensionChargesService(connector)
