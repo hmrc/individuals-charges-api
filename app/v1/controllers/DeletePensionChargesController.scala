@@ -22,7 +22,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
 import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.auth.UserDetails
@@ -37,16 +36,14 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
                                                requestParser: DeletePensionChargesParser,
                                                service: DeletePensionChargesService,
                                                auditService: AuditService,
-                                               cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc)
-  with BaseController
-  with Logging {
+                                               cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
     controllerName = "DeletePensionChargesController",
     endpointName = "Delete Pension Charges"
   )
 
-  def deleteRequest(nino: String, taxYear: String): Action[AnyContent] = {
+  def delete(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
 
       val rawData = DeletePensionChargesRawData(nino, taxYear)
@@ -56,6 +53,7 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
         case Right(data) => service.deletePensionCharges(data)
         case Left(errorWrapper) => Future.successful(Left(errorWrapper))
       }
+
       serviceResponse.map {
         case Right(responseWrapper) =>
 

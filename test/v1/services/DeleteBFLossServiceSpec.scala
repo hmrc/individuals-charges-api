@@ -54,21 +54,21 @@ class DeleteBFLossServiceSpec extends ServiceSpec {
         val desResponse = DesResponse(correlationId, OutboundError(someError))
         MockedBFLossConnector.deleteBFLoss(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.deleteBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), someError, None))
+        await(service.deleteBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
       }
     }
 
     "return a downstream error" when {
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected = ErrorWrapper(Some(correlationId), DownstreamError, None)
+        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
         MockedBFLossConnector.deleteBFLoss(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deleteBFLoss(request)) shouldBe Left(expected)
       }
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected = ErrorWrapper(Some(correlationId), DownstreamError, None)
+        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
         MockedBFLossConnector.deleteBFLoss(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deleteBFLoss(request)) shouldBe Left(expected)
@@ -89,7 +89,7 @@ class DeleteBFLossServiceSpec extends ServiceSpec {
           s"the connector call returns $k" in new Test {
             MockedBFLossConnector.deleteBFLoss(request).returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
-            await(service.deleteBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), v, None))
+            await(service.deleteBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
           }
         }
     }
