@@ -92,7 +92,7 @@
                 "type": "string",
                 "example": "Overseas Pensions Plc"
               },
-              "providerAddress ": {
+              "providerAddress": {
                 "description": "The address of the pension provider.",
                 "type": "string",
                 "example": "111 Main Street, Any Town, Any City"
@@ -101,11 +101,40 @@
                 "description": "A three-letter code that represents a country name. The value must be a ISO 3166-1 alpha-3 code.",
                 "type": "string",
                 "example": "CYM"
+              },
+              "qualifyingRecognisedOverseasPensionScheme":{
+                "type":"array",
+                "items": {
+                  "description":"The qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "type": "string",
+                  "example": "Q123456"
+                }
               }
-            }
+            },
+            "required": [
+              "providerName",
+              "providerAddress",
+              "providerCountryCode",
+              "qualifyingRecognisedOverseasPensionScheme"
+            ]
           }
+        },
+        "transferCharge":{
+          "description":"The amount the pension provider charges to transfer the pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type":"number",
+          "example":"1999.99"
+        },
+        "transferChargeTaxPaid": {
+          "description":"The amount of tax paid on the transfer charge. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type":"number",
+          "example":"1999.99"
         }
-      }
+      },
+      "required": [
+        "overseasSchemeProvider",
+        "transferCharge",
+        "transferChargeTaxPaid"
+      ]
     },
     "pensionSchemeUnauthorisedPayments":{
       "type":"object",
@@ -133,7 +162,11 @@
               "type":"number",
               "example":"1999.99"
             }
-          }
+          },
+          "required": [
+            "amount",
+            "foreignTaxPaid"
+          ]
         },
         "noSurcharge":{
           "type":"object",
@@ -149,9 +182,16 @@
               "type":"number",
               "example":"1999.99"
             }
-          }
+          },
+          "required": [
+            "amount",
+            "foreignTaxPaid"
+          ]
         }
-      }
+      },
+      "required": [
+        "pensionSchemeTaxReference"
+      ]
     },
     "pensionContributions":{
       "type":"object",
@@ -175,7 +215,12 @@
           "type":"number",
           "example":"1999.99"
         }
-      }
+      },
+      "required": [
+        "pensionSchemeTaxReference",
+        "inExcessOfTheAnnualAllowance",
+        "annualAllowanceTaxPaid"
+      ]
     },
     "overseasPensionContributions":{
       "type":"object",
@@ -199,11 +244,6 @@
               "description":"A three-letter code that represents a country name. The value must be a ISO 3166-1 alpha-3 code.",
               "type":"string",
               "example":"CYM"
-            },
-            "qualifyingRecognisedOverseasPensionScheme":{
-              "description":"Array of qualifying recognised Overseas Pension Scheme reference number.",
-              "type":"array",
-              "example":"Q123456"
             }
           }
         },
@@ -217,7 +257,12 @@
           "type":"number",
           "example":"1999.99"
         }
-      }
+      },
+      "required": [
+        "overseasSchemeProvider",
+        "shortServiceRefund",
+        "shortServiceRefundTaxPaid"
+      ]
     }
   }
 }
