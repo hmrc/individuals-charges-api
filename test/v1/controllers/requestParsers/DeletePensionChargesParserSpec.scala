@@ -33,7 +33,7 @@ class DeletePensionChargesParserSpec extends UnitSpec{
   //TODO REPLACE WITH ACTUAL MOCK VALIDATOR
   class MockDeletePensionChargesValidator extends MockFactory {
 
-    val mockValidator: Validator[DeletePensionChargesRawData] = mock[Validator[DeletePensionChargesRawData]]
+    val mockValidator: TempValidator = mock[TempValidator]
 
     object MockValidator {
       def validate(data: DeletePensionChargesRawData): CallHandler1[DeletePensionChargesRawData, List[MtdError]] = {

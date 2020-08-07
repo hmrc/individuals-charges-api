@@ -82,37 +82,6 @@ class DeletePensionChargesControllerSpec
       }
     }
 
-    "handle auth failure" in {
-
-      val mtdId = "X123567890"
-
-      val predicate: Predicate = Enrolment("HMRC-MTD-IT")
-        .withIdentifier("MTDITID", mtdId)
-        .withDelegatedAuthRule("mtd-it-auth")
-
-      MockedEnrolmentsAuthService.authorised(predicate).returns(Future.successful(Left(UnauthorisedError)))
-
-      val hc = HeaderCarrier()
-
-      val controller = new DeletePensionChargesController(
-        authService = mockEnrolmentsAuthService,
-        lookupService = mockMtdIdLookupService,
-        service = mockDeleteBFLossService,
-        requestParser = mockDeletePensionChargesParser,
-        auditService = mockAuditService,
-        cc = cc
-      )
-
-      MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-
-      MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
-
-      MockDeletePensionChargesService.delete(request).returns(Future.successful(Right(DesResponse(correlationId, ()))))
-
-      val result: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
-      status(result) shouldBe NO_CONTENT
-    }
-
     "handle mdtp validation errors as per spec" when {
       def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
         s"a ${error.code} error is returned from the parser" in new Test {
