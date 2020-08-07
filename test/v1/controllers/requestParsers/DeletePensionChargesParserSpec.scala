@@ -16,11 +16,9 @@
 
 package v1.controllers.requestParsers
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.Validator
+import v1.mocks.validators.MockDeletePensionChargesValidator
 import v1.models.errors._
 import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesRequest, DesTaxYear}
 
@@ -29,18 +27,6 @@ class DeletePensionChargesParserSpec extends UnitSpec{
   val taxYear = "2019-20"
 
   val inputData = DeletePensionChargesRawData(nino, taxYear)
-
-  //TODO REPLACE WITH ACTUAL MOCK VALIDATOR
-  class MockDeletePensionChargesValidator extends MockFactory {
-
-    val mockValidator: TempValidator = mock[TempValidator]
-
-    object MockValidator {
-      def validate(data: DeletePensionChargesRawData): CallHandler1[DeletePensionChargesRawData, List[MtdError]] = {
-        (mockValidator.validate(_: DeletePensionChargesRawData)).expects(data)
-      }
-    }
-  }
 
   trait Test extends MockDeletePensionChargesValidator {
     lazy val parser = new DeletePensionChargesParser(mockValidator)

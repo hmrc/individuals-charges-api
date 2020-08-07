@@ -78,9 +78,8 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
 
     (errorWrapper.errors.head: @unchecked) match {
-      //TODO ADD IN FURTHER ERRORS FROM VALIDATION
-    //case BadRequestError | NinoFormatError | TaxYearFormatError | RULE_TAX_YEAR_RANGE_INVALID | RULE_TAX_YEAR_NOT_SUPPORTED => BadRequest
-      case BadRequestError | NinoFormatError | TaxYearFormatError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
+           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
