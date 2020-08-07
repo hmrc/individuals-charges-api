@@ -104,9 +104,8 @@ class DeletePensionChargesControllerSpec
       errorsFromParserTester(NinoFormatError, BAD_REQUEST)
       errorsFromParserTester(TaxYearFormatError, BAD_REQUEST)
       errorsFromParserTester(BadRequestError, BAD_REQUEST)
-      //TODO ADD IN ERRORS WHEN VALIDATION IS IN
-//      errorsFromParserTester(RULE_TAX_YEAR_RANGE_INVALID, BAD_REQUEST)
-//      errorsFromParserTester(RULE_TAX_YEAR_NOT_SUPPORTED, BAD_REQUEST)
+      errorsFromParserTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
+      errorsFromParserTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromParserTester(NotFoundError, NOT_FOUND)
       errorsFromParserTester(DownstreamError, INTERNAL_SERVER_ERROR)
     }
@@ -134,9 +133,8 @@ class DeletePensionChargesControllerSpec
       errorsFromServiceTester(NinoFormatError, BAD_REQUEST)
       errorsFromServiceTester(TaxYearFormatError, BAD_REQUEST)
       errorsFromServiceTester(BadRequestError, BAD_REQUEST)
-      //TODO ADD IN ERRORS WHEN VALIDATION IS IN
-      //      errorsFromServiceTester(RULE_TAX_YEAR_RANGE_INVALID, BAD_REQUEST)
-      //      errorsFromServiceTester(RULE_TAX_YEAR_NOT_SUPPORTED, BAD_REQUEST)
+      errorsFromServiceTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
+      errorsFromServiceTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromServiceTester(NotFoundError, NOT_FOUND)
       errorsFromServiceTester(DownstreamError, INTERNAL_SERVER_ERROR)
     }
