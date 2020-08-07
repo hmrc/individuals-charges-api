@@ -82,7 +82,7 @@ class ListBFLossesController @Inject()(val authService: EnrolmentsAuthService,
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+    (errorWrapper.errors.head: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | TypeOfLossFormatError | SelfEmploymentIdFormatError | RuleSelfEmploymentId |
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalid =>
         BadRequest(Json.toJson(errorWrapper))

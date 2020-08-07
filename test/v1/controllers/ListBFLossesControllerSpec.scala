@@ -162,7 +162,7 @@ class ListBFLossesControllerSpec
 
           MockListBFLossesRequestDataParser
             .parseRequest(rawData)
-            .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+            .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
           val response: Future[Result] = controller.list(nino, Some(taxYear), Some(selfEmployment), Some(selfEmploymentId))(fakeRequest)
 
@@ -192,7 +192,7 @@ class ListBFLossesControllerSpec
 
           MockListBFLossesService
             .list(request)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), error, None))))
+            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
 
           val response: Future[Result] = controller.list(nino, Some(taxYear), Some(selfEmployment), Some(selfEmploymentId))(fakeRequest)
           status(response) shouldBe expectedStatus

@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.audit
 
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError, TaxYearFormatError}
-import v1.models.requestData.DesTaxYear
+import play.api.libs.json.{Json, OWrites}
 
-object MinTaxYearValidation {
+case class GenericAuditDetail(
+                             userType: String,
+                             agentReferenceNumber: Option[String],
+                             nino: String,
+                             `X-CorrelationId`: String,
+                             response: AuditResponse
+                           )
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, minTaxYear: Int): List[MtdError] = {
-    try {
-      val desTaxYear = Integer.parseInt(DesTaxYear.toYearYYYY(taxYear).value)
-
-      if (desTaxYear >= minTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
-    } catch {
-      case e: NumberFormatException => List(TaxYearFormatError)
-    }
-  }
+object GenericAuditDetail {
+  implicit val writes: OWrites[GenericAuditDetail] = Json.writes[GenericAuditDetail]
 }
+
