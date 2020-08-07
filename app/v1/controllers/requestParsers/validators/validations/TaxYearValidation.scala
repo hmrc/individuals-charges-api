@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import java.io.FileNotFoundException
-
 import v1.models.errors.{MtdError, RuleTaxYearRangeInvalid, TaxYearFormatError}
 
 object TaxYearValidation {
