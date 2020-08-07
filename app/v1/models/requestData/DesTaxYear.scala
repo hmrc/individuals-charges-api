@@ -33,11 +33,15 @@ object DesTaxYear {
   val startOfYear = 2
   val startYearAndDash = 5
 
-  //TODO REMOVE METHODS AS MTD & DES WILL USE THE SAME FORMAT
-  def fromMtd(taxYear: String): DesTaxYear =
-    DesTaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
+  //TODO MOVE TO VALIDATION ONLY
+  def toYearYYYY(taxYear: String): DesTaxYear = DesTaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
 
-  def fromDes(taxYear: String): DesTaxYear =
+  /**
+    * Converts YYYY year to MTD year YYYY-YY. E.g. 2018 -> 2017-18
+    *
+    * @param taxYear the tax year string (2018)
+    */
+  def toMTDYear(taxYear: String): DesTaxYear =
     DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(startOfYear))
 
   //TODO UPDATE IF NEEDED TO USE 2017-18 FORMAT

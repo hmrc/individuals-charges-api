@@ -28,13 +28,13 @@ class DesTaxYearSpec extends UnitSpec {
   "DesTaxYear" should {
     "generate a des tax year" when {
       "given a year" in {
-        val year = DesTaxYear.fromMtd(taxYear)
+        val year = DesTaxYear.toYearYYYY(taxYear)
         year.value shouldBe desTaxYear
       }
     }
     "generate an mtd tax year" when {
       "given a year" in {
-        val year = DesTaxYear.fromDes(desTaxYear)
+        val year = DesTaxYear.toMTDYear(desTaxYear)
         year.value shouldBe taxYear
       }
     }
