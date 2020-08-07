@@ -19,10 +19,18 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.Validator
+import v1.models.errors.MtdError
 import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesRequest, DesTaxYear}
 
+class TempValidator extends Validator[DeletePensionChargesRawData] {
+
+  private val validationSet = List()
+
+  override def validate(data: DeletePensionChargesRawData): List[MtdError] = run(validationSet, data)
+}
+
 //TODO REPLACE WITH ACTUAL VALIDATOR
-class DeletePensionChargesParser @Inject()(val validator: Validator[DeletePensionChargesRawData]) extends RequestParser[DeletePensionChargesRawData,
+class DeletePensionChargesParser @Inject()(val validator: TempValidator) extends RequestParser[DeletePensionChargesRawData,
   DeletePensionChargesRequest] {
 
   override protected def requestFor(data: DeletePensionChargesRawData): DeletePensionChargesRequest =

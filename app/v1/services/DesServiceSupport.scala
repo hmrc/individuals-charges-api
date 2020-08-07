@@ -67,16 +67,16 @@ trait DesServiceSupport {
           logger.info(
             s"[$serviceName] [$endpointName] [CorrelationId - $correlationId]" +
               s" - downstream returned ${errors.map(_.code).mkString(",")}. Revert to ISE")
-          Left(ErrorWrapper(Some(correlationId), DownstreamError, None))
+          Left(ErrorWrapper(Some(correlationId), Seq(DownstreamError)))
         } else {
-          Left(ErrorWrapper(Some(correlationId), BadRequestError, Some(mtdErrors)))
+          Left(ErrorWrapper(Some(correlationId), Seq(BadRequestError) ++ mtdErrors))
         }
 
       case Left(DesResponse(correlationId, SingleError(error))) =>
-        Left(ErrorWrapper(Some(correlationId), errorMap.applyOrElse(error.code, defaultErrorMapping), None))
+        Left(ErrorWrapper(Some(correlationId), Seq(errorMap.applyOrElse(error.code, defaultErrorMapping))))
 
       case Left(DesResponse(correlationId, OutboundError(error))) =>
-        Left(ErrorWrapper(Some(correlationId), error, None))
+        Left(ErrorWrapper(Some(correlationId), Seq(error)))
     }
   }
 

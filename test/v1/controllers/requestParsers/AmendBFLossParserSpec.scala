@@ -46,13 +46,13 @@ class AmendBFLossParserSpec extends UnitSpec {
     "return a single error" when {
       "the validator returns a single error" in new Test {
         MockValidator.validate(data).returns(List(NinoFormatError))
-        parser.parseRequest(data) shouldBe Left(ErrorWrapper(None, NinoFormatError, None))
+        parser.parseRequest(data) shouldBe Left(ErrorWrapper(None, Seq(NinoFormatError)))
       }
     }
     "return multiple errors" when {
       "the validator returns multiple errors" in new Test {
         MockValidator.validate(data).returns(List(NinoFormatError, RuleIncorrectOrEmptyBodyError))
-        parser.parseRequest(data) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, RuleIncorrectOrEmptyBodyError))))
+        parser.parseRequest(data) shouldBe Left(ErrorWrapper(None, Seq(BadRequestError, NinoFormatError, RuleIncorrectOrEmptyBodyError)))
       }
     }
   }
