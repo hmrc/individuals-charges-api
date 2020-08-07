@@ -61,13 +61,13 @@ class DeletePensionChargesParserSpec extends UnitSpec{
       "a single validation error occurs" in new Test {
         MockValidator.validate(inputData).returns(List(NinoFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError, None))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, Seq(NinoFormatError)))
       }
 
       "multiple validation errors occur" in new Test {
         MockValidator.validate(inputData).returns(List(NinoFormatError, LossIdFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, LossIdFormatError))))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, Seq(BadRequestError, NinoFormatError, LossIdFormatError)))
       }
     }
   }

@@ -66,13 +66,9 @@ class DeleteBFLossControllerSpec
     "return a successful response with header X-CorrelationId and body" when {
       "the request received is valid" in new Test {
 
-        MockDeleteBFLossRequestDataParser
-          .parseRequest(rawData)
-          .returns(Right(request))
+        MockDeleteBFLossRequestDataParser.parseRequest(rawData).returns(Right(request))
 
-        MockDeleteBFLossService
-          .delete(request)
-          .returns(Future.successful(Right(DesResponse(correlationId, ()))))
+        MockDeleteBFLossService.delete(request).returns(Future.successful(Right(DesResponse(correlationId, ()))))
 
         val result: Future[Result] = controller.delete(nino, lossId)(fakeRequest)
         status(result) shouldBe NO_CONTENT
@@ -89,9 +85,7 @@ class DeleteBFLossControllerSpec
       def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
         s"a ${error.code} error is returned from the parser" in new Test {
 
-          MockDeleteBFLossRequestDataParser
-            .parseRequest(rawData)
-            .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+          MockDeleteBFLossRequestDataParser.parseRequest(rawData).returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
           val response: Future[Result] = controller.delete(nino, lossId)(fakeRequest)
 
@@ -118,13 +112,9 @@ class DeleteBFLossControllerSpec
       def errorsFromServiceTester(error: MtdError, expectedStatus: Int): Unit = {
         s"a ${error.code} error is returned from the service" in new Test {
 
-          MockDeleteBFLossRequestDataParser
-            .parseRequest(rawData)
-            .returns(Right(request))
+          MockDeleteBFLossRequestDataParser.parseRequest(rawData).returns(Right(request))
 
-          MockDeleteBFLossService
-            .delete(request)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), error, None))))
+          MockDeleteBFLossService.delete(request).returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
 
           val response: Future[Result] = controller.delete(nino, lossId)(fakeRequest)
           status(response) shouldBe expectedStatus

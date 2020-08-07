@@ -50,8 +50,9 @@ class CreateBFLossParserSpec extends UnitSpec {
       "valid request data is supplied" in new Test {
         MockValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe
-          Right(CreateBFLossRequest(Nino(nino), BFLoss(TypeOfLoss.`self-employment`, Some("XAIS01234567890"), taxYear, 1000)))
+        parser.parseRequest(inputData) shouldBe Right(
+          CreateBFLossRequest(Nino(nino), BFLoss(TypeOfLoss.`self-employment`, Some("XAIS01234567890"), taxYear, 1000))
+        )
       }
     }
 
@@ -62,7 +63,7 @@ class CreateBFLossParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(None, Seq(NinoFormatError)))
       }
 
       "multiple validation errors occur" in new Test {
@@ -70,7 +71,7 @@ class CreateBFLossParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
+          Left(ErrorWrapper(None, Seq(BadRequestError, NinoFormatError, TaxYearFormatError)))
       }
     }
   }
