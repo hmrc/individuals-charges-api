@@ -27,35 +27,28 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino          = "AA123456A"
-    val taxYear       = "2017-18"
-    val data        = "someData"
-    val correlationId = "X-123"
 
-    val requestJson: String =
-      """
-        |{
-        |    "selfEmploymentId": "XKIS00000000988",
-        |    "typeOfLoss": "self-employment",
-        |    "taxYear": "2019-20",
-        |    "lossAmount": 256.78
-        |}
-      """.stripMargin
+    val nino = "AA123456A"
+    val taxYear = "2021-22"
 
-    val desResponseJson: JsValue = Json.parse(
-      """
-        |{
-        |    "lossId": "AAZZ1234567890a"
-        |}
-      """.stripMargin)
+    def uri: String = s"/pensions/$nino/$taxYear"
+
+    def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/$nino/brought-forward-losses")
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+      buildRequest(uri).withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
+    def errorBody(code: String): String =
+      s"""
+         |      {
+         |        "code": "$code",
+         |        "reason": "des message"
+         |      }
+    """.stripMargin
   }
 
   "Calling the sample endpoint" when {
@@ -70,7 +63,7 @@ class AuthISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.internalServerError(nino)
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
@@ -78,16 +71,15 @@ class AuthISpec extends IntegrationBaseSpec {
     "an MTD ID is successfully retrieve from the NINO and the user is authorised" should {
 
       "return 201" in new Test {
-        val desUrl: String = s"/income-tax/brought-forward-losses/$nino"
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUrl, Status.OK, desResponseJson)
+          DesStub.onSuccess(DesStub.DELETE, desUri, Status.NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
-        response.status shouldBe Status.CREATED
+        val response: WSResponse = await(request().delete())
+        response.status shouldBe Status.NO_CONTENT
       }
     }
 
@@ -102,7 +94,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedNotLoggedIn()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.FORBIDDEN
       }
     }
@@ -118,11 +110,9 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedOther()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.FORBIDDEN
       }
     }
-
   }
-
 }
