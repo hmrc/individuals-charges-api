@@ -6,3 +6,4 @@ POST       /:nino/brought-forward-losses/:lossId/change-loss-amount     v1.contr
 GET        /:nino/brought-forward-losses/:lossId                        v1.controllers.RetrieveBFLossController.retrieve(nino: String, lossId: String)
 GET        /:nino/brought-forward-losses                                v1.controllers.ListBFLossesController.list(nino: String, taxYear: Option[String], typeOfLoss: Option[String], selfEmploymentId: Option[String])
 
+DELETE     /pensions/:nino/:taxYear                                     v1.controllers.DeletePensionChargesController.delete(nino: String, taxYear: String)

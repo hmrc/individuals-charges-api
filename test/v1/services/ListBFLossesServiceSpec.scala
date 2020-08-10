@@ -54,14 +54,14 @@ class ListBFLossesServiceSpec extends ServiceSpec {
         val desResponse = DesResponse(correlationId, OutboundError(someError))
         MockedBFLossConnector.listBFLosses(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.listBFLosses(request)) shouldBe Left(ErrorWrapper(Some(correlationId), someError, None))
+        await(service.listBFLosses(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
       }
     }
 
     "return a downstream error" when {
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected    = ErrorWrapper(Some(correlationId), DownstreamError, None)
+        val expected    = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
         MockedBFLossConnector.listBFLosses(request).returns(Future.successful(Left(desResponse)))
 
         await(service.listBFLosses(request)) shouldBe Left(expected)
@@ -69,7 +69,7 @@ class ListBFLossesServiceSpec extends ServiceSpec {
 
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected    = ErrorWrapper(Some(correlationId), DownstreamError, None)
+        val expected    = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
         MockedBFLossConnector.listBFLosses(request).returns(Future.successful(Left(desResponse)))
 
         await(service.listBFLosses(request)) shouldBe Left(expected)
@@ -92,7 +92,7 @@ class ListBFLossesServiceSpec extends ServiceSpec {
               .listBFLosses(request)
               .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
-            await(service.listBFLosses(request)) shouldBe Left(ErrorWrapper(Some(correlationId), v, None))
+            await(service.listBFLosses(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
           }
         }
     }

@@ -133,7 +133,7 @@ class CreateBFLossControllerSpec
 
         MockCreateBFLossRequestDataParser.
           parseRequest(CreateBFLossRawData(nino, AnyContentAsJson(requestBody)))
-          .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+          .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
         val response: Future[Result] = controller.create(nino)(fakePostRequest(requestBody))
 
@@ -176,7 +176,7 @@ class CreateBFLossControllerSpec
 
         MockCreateBFLossService
           .create(CreateBFLossRequest(Nino(nino), bfLoss))
-          .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), error, None))))
+          .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
 
         val response: Future[Result] = controller.create(nino)(fakePostRequest(requestBody))
         status(response) shouldBe expectedStatus

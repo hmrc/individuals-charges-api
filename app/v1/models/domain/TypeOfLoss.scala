@@ -27,7 +27,8 @@ sealed trait TypeOfLoss {
 }
 
 object TypeOfLoss {
-
+  //TODO REMOVE FILE
+  //scalastyle:off
   case object `uk-property-fhl` extends TypeOfLoss {
     override def toIncomeSourceType: Option[IncomeSourceType] = Some(IncomeSourceType.`04`)
     override def isProperty: Boolean                          = true

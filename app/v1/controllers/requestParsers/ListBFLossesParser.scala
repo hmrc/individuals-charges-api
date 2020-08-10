@@ -34,7 +34,7 @@ class ListBFLossesParser @Inject()(val validator: ListBFLossesValidator) extends
     } yield incomeSourceType
 
     ListBFLossesRequest(Nino(data.nino),
-        taxYear = taxYear.map(DesTaxYear.fromMtd),
+        taxYear = taxYear.map(DesTaxYear.toYearYYYY),
         incomeSourceType = incomeSourceType,
         selfEmploymentId = data.selfEmploymentId)
   }

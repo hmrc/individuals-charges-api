@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 /**
   * Represents a tax year for DES
   *
-  * @param value the tax year string (where 2018 represents 2017-18)
+  * @param value the tax year string (2017-18)
   */
 case class DesTaxYear(value: String) extends AnyVal {
   override def toString: String = value
@@ -30,15 +30,21 @@ case class DesTaxYear(value: String) extends AnyVal {
 
 object DesTaxYear {
 
+  val startOfYear = 2
+  val startYearAndDash = 5
+
+  //TODO MOVE TO VALIDATION ONLY
+  def toYearYYYY(taxYear: String): DesTaxYear = DesTaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
+
   /**
-    * @param taxYear tax year in MTD format (e.g. 2017-18)
+    * Converts YYYY year to MTD year YYYY-YY. E.g. 2018 -> 2017-18
+    *
+    * @param taxYear the tax year string (2018)
     */
-  def fromMtd(taxYear: String): DesTaxYear =
-    DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+  def toMTDYear(taxYear: String): DesTaxYear =
+    DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(startOfYear))
 
-  def fromDes(taxYear: String): DesTaxYear =
-    DesTaxYear((taxYear.toInt -1) + "-" + taxYear.drop(2))
-
+  //TODO UPDATE IF NEEDED TO USE 2017-18 FORMAT
   def mostRecentTaxYear(date: LocalDate = LocalDate.now()): DesTaxYear = {
     val limit = LocalDate.parse(s"${date.getYear}-04-05", DateTimeFormatter.ISO_DATE)
     if(date.isBefore(limit)) {
