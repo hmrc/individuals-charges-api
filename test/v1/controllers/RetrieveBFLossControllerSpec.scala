@@ -120,7 +120,7 @@ class RetrieveBFLossControllerSpec
 
           MockRetrieveBFLossRequestDataParser
             .parseRequest(rawData)
-            .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+            .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
           val response: Future[Result] = controller.retrieve(nino, lossId)(fakeRequest)
 
@@ -146,7 +146,7 @@ class RetrieveBFLossControllerSpec
 
           MockRetrieveBFLossService
             .retrieve(request)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), error, None))))
+            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
 
           val response: Future[Result] = controller.retrieve(nino, lossId)(fakeRequest)
           status(response) shouldBe expectedStatus

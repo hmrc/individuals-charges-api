@@ -30,14 +30,14 @@ object BFLoss {
   implicit val writes: Writes[BFLoss] = (loss: BFLoss) => if (loss.typeOfLoss.isProperty) {
     Json.obj(
       "incomeSourceType" -> loss.typeOfLoss.toIncomeSourceType,
-      "taxYear" -> DesTaxYear.fromMtd(loss.taxYear).toString,
+      "taxYear" -> DesTaxYear.toYearYYYY(loss.taxYear).toString,
       "broughtForwardLossAmount" -> loss.lossAmount
     )
   } else {
     Json.obj(
       "incomeSourceId" -> loss.selfEmploymentId,
       "lossType" -> loss.typeOfLoss.toLossType,
-      "taxYear" -> DesTaxYear.fromMtd(loss.taxYear).toString,
+      "taxYear" -> DesTaxYear.toYearYYYY(loss.taxYear).toString,
       "broughtForwardLossAmount" -> loss.lossAmount
     )
   }

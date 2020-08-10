@@ -68,7 +68,7 @@ class AmendBFLossServiceSpec extends ServiceSpec {
         val desResponse = DesResponse(correlationId, OutboundError(someError))
         MockedBFLossConnector.amendBFLoss(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.amendBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), someError, None))
+        await(service.amendBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
       }
     }
 
@@ -77,7 +77,7 @@ class AmendBFLossServiceSpec extends ServiceSpec {
         val expected = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, serviceUnavailableError)))
         MockedBFLossConnector.amendBFLoss(request).returns(Future.successful(Left(expected)))
         val result: AmendBFLossOutcome = await(service.amendBFLoss(request))
-        result shouldBe Left(ErrorWrapper(Some(correlationId), DownstreamError, None))
+        result shouldBe Left(ErrorWrapper(Some(correlationId), Seq(DownstreamError)))
       }
     }
 
@@ -98,7 +98,7 @@ class AmendBFLossServiceSpec extends ServiceSpec {
               .amendBFLoss(request)
               .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "MESSAGE"))))))
 
-            await(service.amendBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), v, None))
+            await(service.amendBFLoss(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
           }
         }
     }

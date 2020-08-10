@@ -137,7 +137,7 @@ class AmendBFLossControllerSpec
 
         MockAmendBFLossRequestDataParser
           .parseRequest(AmendBFLossRawData(nino, lossId, AnyContentAsJson(requestBody)))
-          .returns(Left(ErrorWrapper(None, NinoFormatError, None)))
+          .returns(Left(ErrorWrapper(None, Seq(NinoFormatError))))
 
         val result: Future[Result] = controller.amend(nino, lossId)(fakePostRequest(requestBody))
         status(result) shouldBe BAD_REQUEST
@@ -176,7 +176,7 @@ class AmendBFLossControllerSpec
 
       MockAmendBFLossRequestDataParser
         .parseRequest(AmendBFLossRawData(nino, lossId, AnyContentAsJson(requestBody)))
-        .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+        .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
       val response: Future[Result] = controller.amend(nino, lossId)(fakePostRequest(requestBody))
 
@@ -202,7 +202,7 @@ class AmendBFLossControllerSpec
 
       MockAmendBFLossService
         .amend(AmendBFLossRequest(Nino(nino), lossId, amendBFLoss))
-        .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), error, None))))
+        .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
 
       val response: Future[Result] = controller.amend(nino, lossId)(fakePostRequest(requestBody))
       status(response) shouldBe expectedStatus

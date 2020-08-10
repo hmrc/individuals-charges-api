@@ -95,7 +95,7 @@ class ListBFLossesParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(None, Seq(NinoFormatError)))
       }
 
       "handle multiple errors" in new Test {
@@ -104,7 +104,7 @@ class ListBFLossesParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, LossIdFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, LossIdFormatError))))
+          Left(ErrorWrapper(None, Seq(BadRequestError, NinoFormatError, LossIdFormatError)))
       }
     }
   }
