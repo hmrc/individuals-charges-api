@@ -4,8 +4,19 @@ is:
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
+  - errors.ruleTaxYearRangeInvalid
+  - errors.formatValue
+  - errors.formatCountryCode
+  - errors.ruleCountryCode
+  - errors.formatProviderName
+  - errors.formatProvidersAddress
+  - errors.matchingResourceNotFound
+  - errors.ruleBenefit
+  - errors.clientOrAgentNotAuthorised
   - errors.ruleIncorrectOrEmptyBodySubmitted
   - errors.ruleTaxYearNotSupported
+  - errors.formatQopsRef
+  - errors.formatPensionSchemeTaxReference
 displayName: Amend charges relating to Pensions
 description: This endpoint allows a developer to amend charges relating to pensions. A National Insurance number and Tax year must be provided.
 (annotations.sandboxData): !include scenarios/amendPensionCharges.md

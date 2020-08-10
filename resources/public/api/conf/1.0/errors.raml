@@ -213,18 +213,7 @@ traits:
                                description: The format of providers address is invalid.
                                value:
                                  code: FORMAT_PROVIDERS_ADDRESS
-  ruleLumpSumBenefitTakenInExcess:
-                   responses:
-                     400:
-                       body:
-                         application/json:
-                           type: types.errorResponse
-                           examples:
-                             ruleLumpSumBenefitTakenInExcess:
-                               description: You can only provide either Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance.
-                               value:
-                                 code: RULE_LUMP_SUM_BENEFIT_TAKEN_IN_EXCESS
-  ruleBenefitInExcess:
+  ruleBenefit:
                    responses:
                      400:
                        body:
@@ -246,4 +235,38 @@ traits:
                                description: An empty or non-matching body was submitted.
                                value:
                                  code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+  matchingResourceNotFound:
+                   responses:
+                     404:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             matchingResourceNotFound:
+                               description: The supplied income source could not be found.
+                               value:
+                                 code: MATCHING_RESOURCE_NOT_FOUND
+
+  formatQopsRef:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatQopsRef:
+                               description: The format of QOPS reference number is not valid.
+                               value:
+                                 code: FORMAT_QOPS_REF
+  formatPensionSchemeTaxReference:
+                     responses:
+                       400:
+                         body:
+                           application/json:
+                             type: types.errorResponse
+                             examples:
+                               formatPensionSchemeTaxReference:
+                                 description: The format of pension scheme tax referencer is not valid.
+                                 value:
+                                   code: FORMAT_PENSION_SCHEME_TAX_REFERENCE
 

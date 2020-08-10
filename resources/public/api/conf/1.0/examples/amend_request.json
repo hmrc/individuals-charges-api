@@ -19,9 +19,9 @@
   "pensionSchemeOverseasTransfers": {
     "overseasSchemeProvider": [
       {
-        "providerName": "name",
-        "providerAddress": "address",
-        "providerCountryCode": "postcode",
+        "providerName": "Overseas Pensions Plc",
+        "providerAddress": "111 Main Street, Any Town, Any City",
+        "providerCountryCode": "CYM",
         "qualifyingRecognisedOverseasPensionScheme": [
           "Q123456"
         ]
