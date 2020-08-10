@@ -9,7 +9,7 @@
       "description":"Object holding the booleans for annual allowance.",
       "properties":{
         "isAnnualAllowanceReduced":{
-          "description":"A boolean indicating whether annual allowance has been reduced. The value must be true or false.",
+          "description":"A boolean indicating whether annual allowance has been reduced.if isAnnualAllowanceReduced is true then one of tapered Annual Allowance or money Purchased Allowance must also be true.",
           "type":"boolean",
           "example":"false"
         },
@@ -26,7 +26,7 @@
         "pensionSchemeTaxReference":{
           "type":"array",
           "items": {
-            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
@@ -104,7 +104,7 @@
               },
               "qualifyingRecognisedOverseasPensionScheme":{
                 "type":"array",
-                "Description": "Array of qualifying recognised Overseas Pension Scheme reference number",
+                "Description": "A list of one or more qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
                   "description":"The qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
@@ -144,7 +144,7 @@
         "pensionSchemeTaxReference":{
           "type":"array",
           "items": {
-            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
@@ -201,7 +201,7 @@
         "pensionSchemeTaxReference":{
           "type":"array",
           "items": {
-            "description":"The unique reference provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
@@ -251,9 +251,9 @@
               },
               "qualifyingRecognisedOverseasPensionScheme":{
                 "type":"array",
-                "Description": "Array of qualifying recognised Overseas Pension Scheme reference number",
+                "Description": "A list of one or more qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
-                  "description":"The qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "description":"A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
                 }

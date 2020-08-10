@@ -221,9 +221,9 @@ traits:
                            type: types.errorResponse
                            examples:
                              ruleBenefitInExcess:
-                               description: You can only provide either Benefit in excess of lifetime allowance or Lump sum benefit taken in excess of lifetime allowance.
+                               description: Provision of either Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance.
                                value:
-                                 code: RULE_BENEFIT_IN_EXCESS
+                                 code: RULE_BENEFIT
   ruleIncorrectOrEmptyBodySubmitted:
                    responses:
                      400:
@@ -269,3 +269,4 @@ traits:
                                  description: The format of pension scheme tax referencer is not valid.
                                  value:
                                    code: FORMAT_PENSION_SCHEME_TAX_REFERENCE
+
