@@ -18,23 +18,29 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.Inject
-import v1.controllers.requestParsers.validators.validations.{LossIdValidation, MinTaxYearValidation, NinoValidation, TaxYearValidation}
-import v1.models.errors.MtdError
-import v1.models.requestData.{DeleteBFLossRawData, DeletePensionChargesRawData}
+import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
+import v1.models.errors.{MtdError, TaxYearFormatError}
+import v1.models.requestData.DeletePensionChargesRawData
 
 class DeletePensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[DeletePensionChargesRawData]{
 
   private val validationSet = List(parameterFormatValidation)
 
   private def parameterFormatValidation: DeletePensionChargesRawData => List[List[MtdError]] = { data =>
-    List(
+
+    val taxYearValidation = TaxYearValidation.validate(data.taxYear)
+
+    val minTaxYearValidation = if(taxYearValidation.contains(TaxYearFormatError)){
+      Seq()
+    } else {
+      Seq(MinTaxYearValidation.validate(data.taxYear, appConfig.minTaxYearPensionCharge.toInt))
+    }
+
+    (List(
       NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
-      MinTaxYearValidation.validate(data.taxYear, appConfig.minTaxYearPensionCharge.toInt)
-    ).distinct
+      taxYearValidation
+    ) ++ minTaxYearValidation).distinct
   }
-
-
 
   override def validate(data: DeletePensionChargesRawData): List[MtdError] = run(validationSet, data)
 }
