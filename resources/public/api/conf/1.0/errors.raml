@@ -158,4 +158,126 @@ traits:
                             description: The supplied income source could not be found.
                             value:
                               code: MATCHING_RESOURCE_NOT_FOUND
+  formatValue:
+                responses:
+                  400:
+                    body:
+                      application/json:
+                        type: types.errorResponse
+                        examples:
+                          formatValue:
+                            description: One or more values have been added with the incorrect format.
+                            value:
+                              code: FORMAT_VALUE
+  formatCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            formatCountryCode:
+                              description: The format of the supplied country code is not valid.
+                              value:
+                                code: FORMAT_COUNTRY_CODE
+  ruleCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            ruleCountryCode:
+                              description: Not a valid ISO 3166-1 alpha-3 country code.
+                              value:
+                                code: RULE_COUNTRY_CODE
+  formatProviderName:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderName:
+                               description: The format of providers name is invalid.
+                               value:
+                                 code: FORMAT_PROVIDER_NAME
+  formatProvidersAddress:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderAddress:
+                               description: The format of providers address is invalid.
+                               value:
+                                 code: FORMAT_PROVIDERS_ADDRESS
+  ruleBenefit:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleBenefitInExcess:
+                               description: Provision of either Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance.
+                               value:
+                                 code: RULE_BENEFIT
+  ruleIncorrectOrEmptyBodySubmitted:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleIncorrectOrEmptyBodySubmitted:
+                               description: An empty or non-matching body was submitted.
+                               value:
+                                 code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+  matchingResourceNotFound:
+                   responses:
+                     404:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             matchingResourceNotFound:
+                               description: The supplied income source could not be found.
+                               value:
+                                 code: MATCHING_RESOURCE_NOT_FOUND
+
+  formatQopsRef:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatQopsRef:
+                               description: The format of QOPS reference number is not valid.
+                               value:
+                                 code: FORMAT_QOPS_REF
+  formatPensionSchemeTaxReference:
+                     responses:
+                       400:
+                         body:
+                           application/json:
+                             type: types.errorResponse
+                             examples:
+                               formatPensionSchemeTaxReference:
+                                 description: The format of pension scheme tax reference is not valid.
+                                 value:
+                                   code: FORMAT_PENSION_SCHEME_TAX_REFERENCE
+  ruleIsAnnualAllowanceReduced:
+                       responses:
+                         400:
+                           body:
+                             application/json:
+                               type: types.errorResponse
+                               examples:
+                                 ruleIsAnnualAllowanceReduced:
+                                   description: If annual allowance reduced is provided then tapered annual allowance or money purchased allowance must also be provided.
+                                   value:
+                                     code: RULE_IS_ANNUAL_ALLOWANCE_REDUCED
 
