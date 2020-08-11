@@ -269,4 +269,15 @@ traits:
                                  description: The format of pension scheme tax reference is not valid.
                                  value:
                                    code: FORMAT_PENSION_SCHEME_TAX_REFERENCE
+  ruleIsAnnualAllowanceReduced:
+                       responses:
+                         400:
+                           body:
+                             application/json:
+                               type: types.errorResponse
+                               examples:
+                                 ruleIsAnnualAllowanceReduced:
+                                   description: If annual allowance reduced is provided then tapered annual allowance or money purchased allowance must also be provided.
+                                   value:
+                                     code: RULE_IS_ANNUAL_ALLOWANCE_REDUCED
 

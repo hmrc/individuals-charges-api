@@ -9,7 +9,7 @@
       "description":"Object holding the booleans for annual allowance.",
       "properties":{
         "isAnnualAllowanceReduced":{
-          "description":"A boolean indicating whether annual allowance has been reduced.if isAnnualAllowanceReduced is true then one of tapered Annual Allowance or money Purchased Allowance must also be true.",
+          "description":"A boolean indicating whether annual allowance has been reduced.If this field is set to true then taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
           "type":"boolean",
           "example":"false"
         },
@@ -53,7 +53,7 @@
         },
         "benefitInExcessOfLifetimeAllowance":{
           "type":"object",
-          "description":"Object holding the amount and tax paid on benefit in excess of the lifetime allowance.",
+          "description":"The amount and tax paid on benefit in excess of the lifetime allowance.",
           "properties":{
             "amount":{
               "description":"The amount of the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -78,7 +78,7 @@
     },
     "pensionSchemeOverseasTransfers":{
       "type":"object",
-      "description":"Object holding transfer of overseas pension to another pension scheme.",
+      "description":"Transfer of overseas pension to another pension scheme.",
       "properties": {
         "overseasSchemeProvider": {
           "description": "Details of overseas pension provider.",
@@ -104,9 +104,9 @@
               },
               "qualifyingRecognisedOverseasPensionScheme":{
                 "type":"array",
-                "Description": "A list of one or more qualifying recognised Overseas Pension Scheme reference number",
+                "Description": "Array of qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
-                  "description":"The qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "description":"\n\t\n\nA list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
                 }
@@ -139,7 +139,7 @@
     },
     "pensionSchemeUnauthorisedPayments":{
       "type":"object",
-      "description":"Object holding tax on unauthorised payment.",
+      "description":"Tax on unauthorised payment.",
       "properties":{
         "pensionSchemeTaxReference":{
           "type":"array",
@@ -196,7 +196,7 @@
     },
     "pensionContributions":{
       "type":"object",
-      "description":"Object holding payments paid into a pension.",
+      "description":" Payments paid into a pension.",
       "properties":{
         "pensionSchemeTaxReference":{
           "type":"array",
