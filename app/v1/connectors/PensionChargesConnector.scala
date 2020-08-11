@@ -21,6 +21,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.connectors.httpparsers.StandardDesHttpParser._
+import v1.models.des.RetrievePensionChargesResponse
 import v1.models.requestData._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,5 +34,17 @@ class PensionChargesConnector @Inject()(http: HttpClient, appConfig: AppConfig) 
     val taxYear = request.taxYear.value
 
     http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,desHeaderCarrier(appConfig),ec)
+  }
+
+  def retrievePensionCharges(request: RetrievePensionChargesRequest)
+                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[RetrievePensionChargesResponse]] = {
+    val nino = request.nino.nino
+    val taxYear = request.taxYear.value
+
+    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[RetrievePensionChargesResponse]] = {
+      http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/pension-charges/$nino/$taxYear")
+    }
+
+    doIt(desHeaderCarrier(appConfig))
   }
 }
