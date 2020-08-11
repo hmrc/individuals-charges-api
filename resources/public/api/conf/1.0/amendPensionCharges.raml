@@ -20,8 +20,8 @@ is:
 displayName: Amend Pension Charges
 description: This endpoint allows a developer to amend charges relating to pensions. A National Insurance number and Tax year must be provided.
 (annotations.sandboxData): !include scenarios/amendPensionCharges.md
-(annotations.scope): "read:self-assessment"
-securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
   application/json:
     type: !include schemas/amend_request_schema.json
