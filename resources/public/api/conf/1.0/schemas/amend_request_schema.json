@@ -106,7 +106,7 @@
                 "type":"array",
                 "Description": "Array of qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
-                  "description":"\n\t\n\nA list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "description":"A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
                 }
