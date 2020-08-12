@@ -1,4 +1,4 @@
-This API allows software packages to show and provide a taxpayers’ financial data for their Charges.
+This API allows software packages to show and provide a taxpayers’ financial data for their charges.
 
 For Pension charges a developer can:
 
