@@ -1,1 +1,7 @@
-The Self Assessment BISS (Business Income Source Summary) API allows a developer to retrieve a summary of income and expenditure for a specified self-employment, or UK property business for a given tax year.
+This API allows software packages to show and provide a taxpayers’ financial data for their Charges.
+
+For Pension charges a developer can:
+
+* retrieve pension charges
+* amend pension charges
+* delete pension charges
