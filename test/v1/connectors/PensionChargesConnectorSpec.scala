@@ -35,7 +35,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   val taxYear = "2019-20"
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA","00123456RA"),
+    Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(100.00, 100.00)),
     Some(LifetimeAllowance(100.00, 100.00)),
     Some(true),
@@ -43,20 +43,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     Some(true),
   )
 
-  val overseasSchemeProvider: OverseasSchemeProvider =  OverseasSchemeProvider(
+  val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
     "name",
     "address",
     "postcode",
     Seq("Q123456")
   )
 
-  val pensionOverseasTransfer : PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
+  val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
     100.00,
     100.00
   )
 
-  val pensionUnauthorisedPayments : PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
+  val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
     Seq("00123456RA", "00123456RA"),
     Some(Charge(100.00, 100.00)),
     Some(Charge(100.00, 100.00))
@@ -68,7 +68,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     100.00
   )
 
-  val overseasPensionContributions : OverseasPensionContributions = OverseasPensionContributions (
+  val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
     overseasSchemeProvider,
     100.00,
     100.00
@@ -151,7 +151,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(DesResponse(correlationId, retrieveResponse))
 
         MockedHttpClient
-          .get(s"$baseUrl/income-tax/pension-charges/$nino/$taxYear", desRequestHeaders: _*)
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
@@ -163,38 +163,38 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       }
     }
 
-        "a request returning a single error" should {
-          "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-            val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+    "a request returning a single error" should {
+      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
+        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
 
-            MockedHttpClient
-              .get(s"$baseUrl/income-tax/pension-charges/$nino/$taxYear", desRequestHeaders: _*)
-              .returns(Future.successful(expected))
+        MockedHttpClient
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .returns(Future.successful(expected))
 
-            await(connector.retrievePensionCharges(
-              RetrievePensionChargesRequest(
-                nino = Nino(nino),
-                taxYear = DesTaxYear(taxYear)
-              )
-            )) shouldBe expected
-          }
-        }
+        await(connector.retrievePensionCharges(
+          RetrievePensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear)
+          )
+        )) shouldBe expected
+      }
+    }
 
-        "a request returning multiple errors" should {
-          "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-            val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
+    "a request returning multiple errors" should {
+      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
+        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
 
-            MockedHttpClient
-              .get(s"$baseUrl/income-tax/pension-charges/$nino/$taxYear", desRequestHeaders: _*)
-              .returns(Future.successful(expected))
+        MockedHttpClient
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .returns(Future.successful(expected))
 
-            await(connector.retrievePensionCharges(
-              RetrievePensionChargesRequest(
-                nino = Nino(nino),
-                taxYear = DesTaxYear(taxYear)
-              )
-            )) shouldBe expected
-          }
-        }
+        await(connector.retrievePensionCharges(
+          RetrievePensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear)
+          )
+        )) shouldBe expected
+      }
+    }
   }
 }
