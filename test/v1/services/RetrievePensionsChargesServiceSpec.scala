@@ -18,7 +18,7 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRequest}
-import fixtures.RetrievePensionChargesFixtures._
+import data.RetrievePensionChargesFixtures._
 import v1.models.outcomes.DesResponse
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
 import v1.models.errors._
@@ -79,6 +79,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "INVAILD_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "NO_DATA_FOUND"             -> NotFoundError,
+      "INVALID_CORRELATIONID"     -> DownstreamError,
       "SERVER_ERROR"              -> DownstreamError,
       "SERVICE_UNAVAILABLE"       -> DownstreamError
     ).foreach {

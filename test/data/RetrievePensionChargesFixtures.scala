@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fixtures
+package data
 
 import v1.models.des._
 
