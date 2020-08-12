@@ -34,4 +34,6 @@ package object services {
 
   type DeletePensionChargesOutcome = Either[ErrorWrapper, DesResponse[Unit]]
 
+  type RetrievePensionChargesOutcome = Either[ErrorWrapper, DesResponse[RetrievePensionChargesResponse]]
+
 }
