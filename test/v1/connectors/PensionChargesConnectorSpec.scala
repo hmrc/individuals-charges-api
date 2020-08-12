@@ -19,6 +19,7 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
+import v1.models.des._
 import v1.models.errors._
 import v1.models.outcomes.DesResponse
 import v1.models.requestData._
@@ -32,6 +33,54 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
   val nino = "AA123456A"
   val taxYear = "2019-20"
+
+  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    Seq("00123456RA", "00123456RA"),
+    Some(LifetimeAllowance(100.00, 100.00)),
+    Some(LifetimeAllowance(100.00, 100.00)),
+    Some(true),
+    Some(true),
+    Some(true),
+  )
+
+  val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
+    "name",
+    "address",
+    "postcode",
+    Seq("Q123456")
+  )
+
+  val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
+    Seq(overseasSchemeProvider),
+    100.00,
+    100.00
+  )
+
+  val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
+    Seq("00123456RA", "00123456RA"),
+    Some(Charge(100.00, 100.00)),
+    Some(Charge(100.00, 100.00))
+  )
+
+  val pensionContributions: PensionContributions = PensionContributions(
+    Seq("00123456RA", "00123456RA"),
+    100.00,
+    100.00
+  )
+
+  val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
+    overseasSchemeProvider,
+    100.00,
+    100.00
+  )
+
+  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    Some(pensionSavingsCharge),
+    Some(pensionOverseasTransfer),
+    Some(pensionUnauthorisedPayments),
+    Some(pensionContributions),
+    Some(overseasPensionContributions)
+  )
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: PensionChargesConnector = new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
@@ -88,6 +137,59 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         await(connector.deletePensionCharges(
           DeletePensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear)
+          )
+        )) shouldBe expected
+      }
+    }
+  }
+
+  "Retrieve pension charges" when {
+    "a valid request is supplied" should {
+      "return a successful response with the correct correlationId" in new Test {
+        val expected = Right(DesResponse(correlationId, retrieveResponse))
+
+        MockedHttpClient
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(
+          RetrievePensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear)
+          )
+        )) shouldBe expected
+      }
+    }
+
+    "a request returning a single error" should {
+      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
+        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+
+        MockedHttpClient
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(
+          RetrievePensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear)
+          )
+        )) shouldBe expected
+      }
+    }
+
+    "a request returning multiple errors" should {
+      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
+        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
+
+        MockedHttpClient
+          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(
+          RetrievePensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear)
           )
