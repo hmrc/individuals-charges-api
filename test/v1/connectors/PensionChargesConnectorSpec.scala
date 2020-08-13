@@ -38,16 +38,17 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(100.00, 100.00)),
     Some(LifetimeAllowance(100.00, 100.00)),
-    Some(true),
-    Some(true),
-    Some(true),
+    true,
+    true,
+    true,
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
     "name",
     "address",
     "postcode",
-    Seq("Q123456")
+    Some(Seq("Q123456")),
+    None
   )
 
   val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
@@ -69,7 +70,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
-    overseasSchemeProvider,
+    Seq(overseasSchemeProvider),
     100.00,
     100.00
   )
