@@ -29,8 +29,8 @@ case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     isAnnualAllowanceReduced: Boolean,
-                                    taperedAnnualAllowance: Boolean,
-                                    moneyPurchasedAllowance: Boolean)
+                                    taperedAnnualAllowance: Option[Boolean],
+                                    moneyPurchasedAllowance: Option[Boolean])
 
 object PensionSavingsTaxCharges {
 
@@ -39,9 +39,9 @@ object PensionSavingsTaxCharges {
     (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
-      (__ \ "isAnnualAllowanceReduced").readNullable[Boolean].map(a => a.getOrElse(false)) and
-      (__ \ "taperedAnnualAllowance").readNullable[Boolean].map(a => a.getOrElse(false)) and
-      (__ \ "moneyPurchasedAllowance").readNullable[Boolean].map(a => a.getOrElse(false))
+      (__ \ "isAnnualAllowanceReduced").read[Boolean] and
+      (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
+      (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
     ) (PensionSavingsTaxCharges.apply _)
 
   implicit val format: Format[PensionSavingsTaxCharges] = Format(reads, writes)

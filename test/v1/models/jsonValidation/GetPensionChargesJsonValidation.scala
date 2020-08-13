@@ -255,7 +255,7 @@ class GetPensionChargesJsonValidation extends UnitSpec {
       |""".stripMargin
   )
 
-  val barebonesPensionSavingsTaxChargesJson: JsValue = Json.parse(
+  val validMinimumBooleansSupplied1: JsValue = Json.parse(
     """
       |{
       |	"submittedOn": "2020-07-27T17:00:19Z",
@@ -541,6 +541,36 @@ class GetPensionChargesJsonValidation extends UnitSpec {
       |""".stripMargin
   )
 
+  val validMinimumBooleansSupplied2: JsValue = Json.parse(
+    """
+      |{
+      |	"submittedOn": "2020-07-27T17:00:19Z",
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |  "isAnnualAllowanceReduced": true,
+      |  "taperedAnnualAllowance": true
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  val validMinimumBooleansSupplied3: JsValue = Json.parse(
+    """
+      |{
+      |	"submittedOn": "2020-07-27T17:00:19Z",
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |  "isAnnualAllowanceReduced": true,
+      |   "moneyPurchasedAllowance": true
+      |	}
+      |}
+      |""".stripMargin
+  )
+
   private case class JsonTest(name: String, json: JsValue, outcome: Boolean)
 
   "The json Schema file for Get Pension Charges Response" should {
@@ -551,7 +581,6 @@ class GetPensionChargesJsonValidation extends UnitSpec {
       JsonTest("full json example", fullJson, true),
       JsonTest("full json with differing arrays used example", fullJsonWithArraysSwapped, true),
       JsonTest("only pensionSavingsTaxCharges example", pensionSavingsTaxChargesJson, true),
-      JsonTest("only barebones pensionSavingsTaxCharges example", barebonesPensionSavingsTaxChargesJson, true),
       JsonTest("pensionSavingsTaxCharges first booleans example", booleans1PensionSavingsTaxChargesJson, true),
       JsonTest("pensionSavingsTaxCharges second booleans example", booleans2PensionSavingsTaxChargesJson, true),
       JsonTest("pensionSavingsTaxCharges lump sum example", lumpSumPensionSavingsTaxChargesJson, true),
@@ -561,7 +590,9 @@ class GetPensionChargesJsonValidation extends UnitSpec {
       JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments pensionContributions example", partialJson2, true),
       JsonTest("invalid json", invalidJson, false),
       JsonTest("invalid json no boolean fields supplied", invalidJsonNoBooleans, false),
-      JsonTest("invalid boolean fields supplied", invalidBooleansSupplied1, false)
+      JsonTest("valid minimum boolean fields supplied", validMinimumBooleansSupplied1, true),
+      JsonTest("valid minimum boolean fields supplied example 2", validMinimumBooleansSupplied2, true),
+      JsonTest("valid minimum boolean fields supplied example 3", validMinimumBooleansSupplied3, true)
     )
 
     jsonSchemaTests.foreach {
@@ -578,52 +609,10 @@ class GetPensionChargesJsonValidation extends UnitSpec {
 
   "A json with no booleans" should {
 
-    "read the json and default them to false" in {
+    "not read to the model" in {
       val result = invalidJsonNoBooleans.asOpt[RetrievePensionChargesResponse]
 
-      result.isDefined shouldBe true
-      result.get shouldBe RetrievePensionChargesResponse(
-        Some(PensionSavingsTaxCharges(
-          Seq("00123456RA"),
-          Some(LifetimeAllowance(123.45,12.45)),
-          Some(LifetimeAllowance(123.45,12.34)),
-          false,
-          false,
-          false
-        )),
-        Some(PensionSchemeOverseasTransfers(
-          Seq(OverseasSchemeProvider(
-            "Overseas Pensions Plc",
-            "111 Main Street, George Town, Grand Cayman",
-            "ESP",
-            Some(Seq("Q123456")),
-            None
-          )),
-          123.45,
-          0
-        )),
-        Some(PensionSchemeUnauthorisedPayments(
-          Seq("00123456RA"),
-          Some(Charge(123.45,123.45)),
-          Some(Charge(123.45,123.45))
-        )),
-        Some(PensionContributions(
-          Seq("00123456RA"),
-          123.45,
-          123.45
-        )),
-        Some(OverseasPensionContributions(
-          Seq(OverseasSchemeProvider(
-            "Overseas Pensions Plc",
-            "111 Main Street, George Town, Grand Cayman",
-            "ESP",
-            None,
-            Some(Seq("00123456RA")),
-          )),
-          123.45,
-          0
-        ))
-      )
+      result.isDefined shouldBe false
     }
   }
 }
