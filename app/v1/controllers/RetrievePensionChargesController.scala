@@ -16,7 +16,12 @@
 
 package v1.controllers
 
-class RetrievePensionChargesController {
+import javax.inject.{Inject, Singleton}
+import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
+
+class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                retrievePensionChargesService)  {
 
 
 
