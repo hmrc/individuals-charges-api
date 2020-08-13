@@ -1,0 +1,616 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "API# 1674 Get Pension Charges response schema",
+  "description": "Data retreived for Pension Charges",
+  "type": "object",
+  "minProperties": 1,
+  "properties": {
+    "submittedOn": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "pensionSavingsTaxCharges": {
+      "oneOf": [
+        {
+          "description": "Minimum one field is required.",
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "pensionSchemeTaxReference": {
+              "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+            },
+            "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "benefitInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "isAnnualAllowanceReduced": {
+              "description": "if isAnnualAllowanceReduced is true then one of tapered Annual Allowance or money Purchased Allowance must also be true",
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "taperedAnnualAllowance": {
+              "description": "Example - true",
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "moneyPurchasedAllowance": {
+              "description": "Example - false",
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Minimum one field is required.",
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "pensionSchemeTaxReference": {
+              "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+            },
+            "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "benefitInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "isAnnualAllowanceReduced": {
+              "description": "Example - true",
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            },
+            "taperedAnnualAllowance": {
+              "description": "Example - false",
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            },
+            "moneyPurchasedAllowance": {
+              "description": "Example - true",
+              "type": "boolean",
+              "enum": [
+                true
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Minimum one field is required.",
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "pensionSchemeTaxReference": {
+              "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+            },
+            "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "benefitInExcessOfLifetimeAllowance": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "amount": {
+                  "$ref": "#/definitions/monetaryPos"
+                },
+                "taxPaid": {
+                  "$ref": "#/definitions/monetaryPos"
+                }
+              },
+              "required": [
+                "amount",
+                "taxPaid"
+              ],
+              "additionalProperties": false
+            },
+            "isAnnualAllowanceReduced": {
+              "description": "Example -false",
+              "type": "boolean",
+              "enum": [
+                false
+              ]
+            },
+            "taperedAnnualAllowance": {
+              "type": "boolean"
+            },
+            "moneyPurchasedAllowance": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "pensionSchemeOverseasTransfers": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "overseasSchemeProvider": {
+          "oneOf": [
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "minProperties": 1,
+                "properties": {
+                  "providerName": {
+                    "$ref": "#/definitions/providerNameType"
+                  },
+                  "providerAddress": {
+                    "$ref": "#/definitions/providerAddressType"
+                  },
+                  "providerCountryCode": {
+                    "$ref": "#/definitions/providerCountryCodeType"
+                  },
+                  "pensionSchemeTaxReference": {
+                    "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+                  }
+                },
+                "required": [
+                  "providerName",
+                  "providerAddress",
+                  "providerCountryCode"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "minProperties": 1,
+                "properties": {
+                  "providerName": {
+                    "$ref": "#/definitions/providerNameType"
+                  },
+                  "providerAddress": {
+                    "$ref": "#/definitions/providerAddressType"
+                  },
+                  "providerCountryCode": {
+                    "$ref": "#/definitions/providerCountryCodeType"
+                  },
+                  "qualifyingRecognisedOverseasPensionScheme": {
+                    "$ref": "#/definitions/qualifyingRecognisedOverseasPensionSchemeType"
+                  }
+                },
+                "required": [
+                  "providerName",
+                  "providerAddress",
+                  "providerCountryCode"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        "transferCharge": {
+          "$ref": "#/definitions/monetaryPos"
+        },
+        "transferChargeTaxPaid": {
+          "$ref": "#/definitions/monetaryPos"
+        }
+      },
+      "required": [
+        "overseasSchemeProvider",
+        "transferCharge",
+        "transferChargeTaxPaid"
+      ],
+      "additionalProperties": false
+    },
+    "pensionSchemeUnauthorisedPayments": {
+      "description": "Minimum one field is required.",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "pensionSchemeTaxReference": {
+          "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+        },
+        "surcharge": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "amount": {
+              "$ref": "#/definitions/monetaryPos"
+            },
+            "foreignTaxPaid": {
+              "$ref": "#/definitions/monetaryPos"
+            }
+          },
+          "required": [
+            "amount",
+            "foreignTaxPaid"
+          ],
+          "additionalProperties": false
+        },
+        "noSurcharge": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "amount": {
+              "$ref": "#/definitions/monetaryPos"
+            },
+            "foreignTaxPaid": {
+              "$ref": "#/definitions/monetaryPos"
+            }
+          },
+          "required": [
+            "amount",
+            "foreignTaxPaid"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "pensionContributions": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "pensionSchemeTaxReference": {
+          "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+        },
+        "inExcessOfTheAnnualAllowance": {
+          "$ref": "#/definitions/monetaryPos"
+        },
+        "annualAllowanceTaxPaid": {
+          "$ref": "#/definitions/monetaryPos"
+        }
+      },
+      "required": [
+        "pensionSchemeTaxReference",
+        "inExcessOfTheAnnualAllowance",
+        "annualAllowanceTaxPaid"
+      ],
+      "additionalProperties": false
+    },
+    "overseasPensionContributions": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "overseasSchemeProvider": {
+          "oneOf": [
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "minProperties": 1,
+                "properties": {
+                  "providerName": {
+                    "$ref": "#/definitions/providerNameType"
+                  },
+                  "providerAddress": {
+                    "$ref": "#/definitions/providerAddressType"
+                  },
+                  "providerCountryCode": {
+                    "$ref": "#/definitions/providerCountryCodeType"
+                  },
+                  "pensionSchemeTaxReference": {
+                    "$ref": "#/definitions/pensionSchemeTaxReferenceType"
+                  }
+                },
+                "required": [
+                  "providerName",
+                  "providerAddress",
+                  "providerCountryCode"
+                ],
+                "additionalProperties": false
+              }
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "minProperties": 1,
+                "properties": {
+                  "providerName": {
+                    "$ref": "#/definitions/providerNameType"
+                  },
+                  "providerAddress": {
+                    "$ref": "#/definitions/providerAddressType"
+                  },
+                  "providerCountryCode": {
+                    "$ref": "#/definitions/providerCountryCodeType"
+                  },
+                  "qualifyingRecognisedOverseasPensionScheme": {
+                    "$ref": "#/definitions/qualifyingRecognisedOverseasPensionSchemeType"
+                  }
+                },
+                "required": [
+                  "providerName",
+                  "providerAddress",
+                  "providerCountryCode"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        "shortServiceRefund": {
+          "$ref": "#/definitions/monetaryPos"
+        },
+        "shortServiceRefundTaxPaid": {
+          "$ref": "#/definitions/monetaryPos"
+        }
+      },
+      "required": [
+        "overseasSchemeProvider",
+        "shortServiceRefund",
+        "shortServiceRefundTaxPaid"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "submittedOn"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "monetaryPos": {
+      "description": "Defines a monetary value (to 2 decimal places) between 0 and 99999999999.99",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 99999999999.99,
+      "multipleOf": 0.01
+    },
+    "pensionSchemeTaxReferenceType": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "description": "00123456RA",
+        "type": "string",
+        "pattern": "^\\d{8}[R]{1}[a-zA-Z]{1}$"
+      }
+    },
+    "providerNameType": {
+      "description": "Example - Overseas Pensions Plc",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 105
+    },
+    "providerAddressType": {
+      "description": "Example - 111 Main Street, George Town, Grand Cayman",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "providerCountryCodeType": {
+      "description": "Example - ESP",
+      "type": "string",
+      "enum": [
+        "CYM",
+        "DZA",
+        "ATG",
+        "ARG",
+        "ARM",
+        "AUS",
+        "AUT",
+        "AZE",
+        "BHR",
+        "BGD",
+        "BRB",
+        "BLR",
+        "BEL",
+        "BLZ",
+        "BOL",
+        "BIH",
+        "BWA",
+        "VGB",
+        "BRN",
+        "BGR",
+        "MMR",
+        "CAN",
+        "ALB",
+        "CHL",
+        "CHN",
+        "CXR",
+        "CCK",
+        "CIV",
+        "HRV",
+        "CYP",
+        "CZE",
+        "DNK",
+        "EGY",
+        "EST",
+        "ETH",
+        "FLK",
+        "FRO",
+        "FJI",
+        "FIN",
+        "FRA",
+        "GUF",
+        "GMB",
+        "GEO",
+        "DEU",
+        "GHA",
+        "GRC",
+        "GRD",
+        "GLP",
+        "GGY",
+        "GUY",
+        "HKG",
+        "HUN",
+        "ISL",
+        "IND",
+        "IDN",
+        "IRL",
+        "IMN",
+        "ISR",
+        "ITA",
+        "JAM",
+        "JPN",
+        "JEY",
+        "JOR",
+        "KAZ",
+        "KEN",
+        "KIR",
+        "XKX",
+        "KWT",
+        "LVA",
+        "LSO",
+        "LBY",
+        "LIE",
+        "LTU",
+        "LUX",
+        "MKD",
+        "MWI",
+        "MYS",
+        "MLT",
+        "MTQ",
+        "MUS",
+        "MEX",
+        "MDA",
+        "MNG",
+        "MNE",
+        "MSR",
+        "MAR",
+        "NAM",
+        "NLD",
+        "NZL",
+        "NGA",
+        "NFK",
+        "NOR",
+        "OMN",
+        "PAK",
+        "PAN",
+        "PNG",
+        "PHL",
+        "POL",
+        "PRT",
+        "QAT",
+        "REU",
+        "ROU",
+        "RUS",
+        "KNA",
+        "SAU",
+        "SEN",
+        "SRB",
+        "SLE",
+        "SGP",
+        "SVK",
+        "SVN",
+        "SLB",
+        "ZAF",
+        "KOR",
+        "ESP",
+        "LKA",
+        "SDN",
+        "SWZ",
+        "SWE",
+        "CHE",
+        "TWN",
+        "TJK",
+        "THA",
+        "TTO",
+        "TUN",
+        "TUR",
+        "TKM",
+        "TUV",
+        "UGA",
+        "UKR",
+        "ARE",
+        "USA",
+        "URY",
+        "UZB",
+        "VEN",
+        "VNM",
+        "ZMB",
+        "ZWE"
+      ]
+    },
+    "qualifyingRecognisedOverseasPensionSchemeType": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "description": "Q123456",
+        "type": "string",
+        "pattern": "^[Q]{1}[0-9]{6}$"
+      }
+    }
+  }
+}
