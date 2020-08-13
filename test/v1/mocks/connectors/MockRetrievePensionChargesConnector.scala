@@ -20,23 +20,22 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, PensionChargesConnector}
-import v1.models.requestData._
 import v1.models.des.RetrievePensionChargesResponse
+import v1.models.requestData.RetrievePensionChargesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockPensionChargesConnector extends MockFactory {
+trait MockRetrievePensionChargesConnector  extends MockFactory{
 
-  val connector: PensionChargesConnector = mock[PensionChargesConnector]
+  val mockRetrievePensionChargesConnector: PensionChargesConnector = mock[PensionChargesConnector]
 
-  object MockPensionChargesConnector {
+  object MockRetrievePensionChargesConnector {
 
-    def deletePensionCharges(deletePensionChargesRequest: DeletePensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (connector.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(deletePensionChargesRequest, *, *)
+    def retrievePensions(request: RetrievePensionChargesRequest): CallHandler[Future[DesOutcome[RetrievePensionChargesResponse]]]= {
+      (mockRetrievePensionChargesConnector
+        .retrievePensionCharges(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(request, *, *)
     }
-
-
-
   }
+
 }
