@@ -18,7 +18,7 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRequest}
-import data.RetrievePensionChargesFixtures._
+import data.RetrievePensionChargesData._
 import v1.models.outcomes.DesResponse
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
 import v1.models.errors._
