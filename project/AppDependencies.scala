@@ -41,7 +41,8 @@ object AppDependencies {
     "org.pegdown"            % "pegdown"             % "1.6.0"             % scope,
     "com.typesafe.play"      %% "play-test"          % PlayVersion.current % scope,
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.3"             % scope,
-    "com.github.tomakehurst" % "wiremock"            % "2.26.3"            % scope
+    "com.github.tomakehurst" % "wiremock"            % "2.26.3"            % scope,
+    "com.github.fge"         % "json-schema-validator" % "2.2.6"           % scope
   )
 
   // Fixes a transitive dependency clash between wiremock and scalatestplus-play
