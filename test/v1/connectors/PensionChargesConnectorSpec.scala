@@ -39,8 +39,8 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     Some(LifetimeAllowance(100.00, 100.00)),
     Some(LifetimeAllowance(100.00, 100.00)),
     true,
-    true,
-    true,
+    Some(true),
+    Some(true),
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
