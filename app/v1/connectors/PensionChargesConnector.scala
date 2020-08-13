@@ -42,7 +42,7 @@ class PensionChargesConnector @Inject()(http: HttpClient, appConfig: AppConfig) 
     val taxYear = request.taxYear.value
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[RetrievePensionChargesResponse]] = {
-      http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/pension-charges/$nino/$taxYear")
+      http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
     }
 
     doIt(desHeaderCarrier(appConfig))
