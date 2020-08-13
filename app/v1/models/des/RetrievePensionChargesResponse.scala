@@ -51,7 +51,7 @@ case class OverseasSchemeProvider(providerName: String,
                                   providerAddress: String,
                                   providerCountryCode: String,
                                   qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
-                                  pensionSchemeTaxReference: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
                                  )
 
 object OverseasSchemeProvider {

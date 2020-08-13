@@ -19,11 +19,11 @@ package v1.models.jsonValidation
 import com.fasterxml.jackson.databind.{JsonNode, ObjectMapper}
 import com.github.fge.jsonschema.core.report.ProcessingReport
 import com.github.fge.jsonschema.main.{JsonSchemaFactory, JsonValidator}
-import play.api.libs.json.{JsValue, Json, Reads}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import play.api.test.FakeRequest
 import support.UnitSpec
-import v1.models.des.{Charge, LifetimeAllowance, OverseasPensionContributions, OverseasSchemeProvider, PensionContributions, PensionSavingsTaxCharges, PensionSchemeOverseasTransfers, PensionSchemeUnauthorisedPayments, RetrievePensionChargesResponse}
+import v1.models.des._
 
 class GetPensionChargesJsonValidation extends UnitSpec {
 
@@ -544,7 +544,7 @@ class GetPensionChargesJsonValidation extends UnitSpec {
   private case class JsonTest(name: String, json: JsValue, outcome: Boolean)
 
   "The json Schema file for Get Pension Charges Response" should {
-    val schemaJsonDoc = "getPensionChargesResponseSchema.json"
+    val schemaJsonDoc = "/desJsonSchemas/retrieve_pension_charges_response.json"
 
     val jsonSchemaTests: List[JsonTest] = List(
       JsonTest("only submitted date json", onlySubmittedDateJson, true),
