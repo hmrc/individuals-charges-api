@@ -51,12 +51,29 @@
         "providerName": "Overseas Pensions Plc",
         "providerAddress": "111 Main Street, George Town, Grand Cayman",
         "providerCountryCode": "CYM",
-        "pensionSchemeTaxReference": [
-          "00123456RA"
+        "qualifyingRecognisedOverseasPensionScheme": [
+          "Q123456"
         ]
       }
     ],
     "shortServiceRefund": 123.0,
     "shortServiceRefundTaxPaid": 123.0
-  }
+  },
+  "links":[
+    {
+      "href":"/individuals/charges/pensions/TC663795B/2021-22",
+      "method":"GET",
+      "rel":"self"
+    },
+    {
+      "href":"/individuals/charges/pensions/TC663795B/2021-22",
+      "method":"PUT",
+      "rel":"amend-charges-pensions"
+    },
+    {
+      "href":"/individuals/charges/pensions/TC663795B/2021-22",
+      "method":"DELETE",
+      "rel":"delete-charges-pensions"
+    }
+  ]
 }
