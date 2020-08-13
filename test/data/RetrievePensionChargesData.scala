@@ -18,21 +18,23 @@ package data
 
 import v1.models.des._
 
-object RetrievePensionChargesFixtures {
+object RetrievePensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA","00123456RA"),
     Some(LifetimeAllowance(100.00, 100.00)),
     Some(LifetimeAllowance(100.00, 100.00)),
-    Some(true),
-    Some(true),
-    Some(true),
+    true,
+    true,
+    true
   )
+
   val overseasSchemeProvider: OverseasSchemeProvider =  OverseasSchemeProvider(
     "name",
     "address",
     "postcode",
-    Seq("Q123456")
+    Some(Seq("Q123456")),
+    None
   )
   val pensionOverseasTransfer : PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
@@ -50,7 +52,7 @@ object RetrievePensionChargesFixtures {
     100.00
   )
   val overseasPensionContributions : OverseasPensionContributions = OverseasPensionContributions (
-    overseasSchemeProvider,
+    Seq(overseasSchemeProvider),
     100.00,
     100.00
   )
