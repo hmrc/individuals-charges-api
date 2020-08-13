@@ -34,7 +34,7 @@ class RetrievePensionChargesService @Inject()(connector: PensionChargesConnector
   def retrievePensions(request: RetrievePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
 
     connector.retrievePensionCharges(request).map {
-      mapToVendorDirect("retrieveBFLoss", mappingDesToMtdError)
+      mapToVendorDirect("retrievePensionCharges", mappingDesToMtdError)
     }
   }
 
