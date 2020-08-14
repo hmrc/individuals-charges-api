@@ -20,6 +20,7 @@ import cats.data.EitherT
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditResponse, GenericAuditDetail}
 import v1.models.errors.ErrorWrapper
 import v1.models.requestData.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrievePensionChargesService}
@@ -36,27 +37,55 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrievePensionChargesController", endpointName = "Retrieve a Pensions Charge")
 
-  def retrieve(nino: String, taxYear: String): Action[AnyContent] =
+  def retrieve(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
       val rawData = RetrievePensionChargesRawData(nino, taxYear)
       val parsedRequest = EitherT.fromEither[Future](retrievePensionsChargesParser.parseRequest(rawData))
+
       val serviceResponse : Future[RetrievePensionsOutcome] = parsedRequest match {
         case Right(data) => service.deletePensionCharges(data)
         case Left(errorWrapper) => Future.successful(Left(errorWrapper))
       }
-    }
 
+      serviceResponse.map {
+        case Right(responseWrapper)=>
 
+          logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
+          auditSubmission(
+            createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
+          )
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.errors.head: @unchecked) match {
-      case BadRequestError | NinoFormatError | LossIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                         => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                       => InternalServerError(Json.toJson(errorWrapper))
+          Ok.withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+
+        case Left(errorWrapper) =>
+          val correlationId = getCorrelationId(errorWrapper)
+          val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper)))
+          result
+
+      }
     }
   }
 
+  private def createAuditDetails(rawData: CreateRawData,
+                                 statusCode: Int,
+                                 correlationId: String,
+                                 userDetails: UserDetails,
+                                 errorWrapper: Option[ErrorWrapper] = None,
+                                 responseBody: Option[JsValue] = None): GenericAuditDetail = {
+    val response = errorWrapper
+      .map { wrapper =>
+        AuditResponse(statusCode, Some(wrapper.auditErrors), None)
+      }
+      .getOrElse(AuditResponse(statusCode, None, responseBody ))
 
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId, response)
+  }
 
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("createCisDeductionsAuditType", "create-cis-deductions-transaction-type", details)
+    auditService.auditEvent(event)
+  }
 }
