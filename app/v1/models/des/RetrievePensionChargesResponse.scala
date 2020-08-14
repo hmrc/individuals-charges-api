@@ -16,7 +16,8 @@
 
 package v1.models.des
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, OFormat, Reads, Writes, __, _}
 
 case class LifetimeAllowance(amount: BigDecimal, taxPaid: BigDecimal)
 
@@ -27,18 +28,31 @@ object LifetimeAllowance {
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    isAnnualAllowanceReduced: Option[Boolean],
+                                    isAnnualAllowanceReduced: Boolean,
                                     taperedAnnualAllowance: Option[Boolean],
                                     moneyPurchasedAllowance: Option[Boolean])
 
 object PensionSavingsTaxCharges {
-  implicit val format: OFormat[PensionSavingsTaxCharges] = Json.format[PensionSavingsTaxCharges]
+
+  implicit val writes: Writes[PensionSavingsTaxCharges] = Json.writes[PensionSavingsTaxCharges]
+  implicit val reads: Reads[PensionSavingsTaxCharges] = (
+    (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
+      (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
+      (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
+      (__ \ "isAnnualAllowanceReduced").read[Boolean] and
+      (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
+      (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
+    ) (PensionSavingsTaxCharges.apply _)
+
+  implicit val format: Format[PensionSavingsTaxCharges] = Format(reads, writes)
 }
 
 case class OverseasSchemeProvider(providerName: String,
                                   providerAddress: String,
                                   providerCountryCode: String,
-                                  qualifyingRecognisedOverseasPensionScheme: Seq[String])
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
+                                 )
 
 object OverseasSchemeProvider {
   implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
@@ -74,7 +88,7 @@ object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]
 }
 
-case class OverseasPensionContributions(overseasSchemeProvider: OverseasSchemeProvider,
+case class OverseasPensionContributions(overseasSchemeProvider: Seq[OverseasSchemeProvider],
                                         shortServiceRefund: BigDecimal,
                                         shortServiceRefundTaxPaid: BigDecimal)
 
