@@ -1,1 +1,3 @@
 DELETE     /pensions/:nino/:taxYear       v1.controllers.DeletePensionChargesController.delete(nino: String, taxYear: String)
+
+GET       /pensions/:nino/:taxYear        v1.controllers.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
