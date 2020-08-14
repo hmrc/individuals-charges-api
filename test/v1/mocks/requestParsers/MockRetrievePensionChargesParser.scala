@@ -31,7 +31,4 @@ trait MockRetrievePensionChargesParser extends MockFactory {
       (mockRetrievePensionChargesParser.parseRequest(_: RetrievePensionChargesRawData)).expects(data)
     }
   }
-
-
-
 }
