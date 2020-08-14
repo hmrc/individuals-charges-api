@@ -76,7 +76,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
     }
 
     Map(
-      "INVAILD_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "NO_DATA_FOUND"             -> NotFoundError,
       "INVALID_CORRELATIONID"     -> DownstreamError,
