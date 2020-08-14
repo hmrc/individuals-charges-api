@@ -83,8 +83,4 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
         }
       }
     }
-
-
-
-
 }

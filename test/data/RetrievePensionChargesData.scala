@@ -135,5 +135,4 @@ object RetrievePensionChargesData {
       |}
       |""".stripMargin
   )
-
 }
