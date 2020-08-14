@@ -16,39 +16,46 @@
 
 package v1.controllers
 
-import cats.data.EitherT
-import javax.inject.{Inject, Singleton}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import javax.inject._
+import play.api.http.MimeTypes
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditResponse, GenericAuditDetail}
-import v1.models.errors.ErrorWrapper
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.auth.UserDetails
+import v1.models.errors._
 import v1.models.requestData.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrievePensionChargesService}
+import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
-                                                retrievePensionChargesService: RetrievePensionChargesService,
-                                                retrievePensionsParser: ???,
+                                                service: RetrievePensionChargesService,
+                                                requestParser: RetrievePensionChargesParser,
                                                 hateoasFactory: HateoasFactory,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController {
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "RetrievePensionChargesController", endpointName = "Retrieve a Pensions Charge")
+    EndpointLogContext(controllerName = "RetrievePensionChargesController",
+      endpointName = "Retrieve a Pensions Charge")
 
   def retrieve(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-      val rawData = RetrievePensionChargesRawData(nino, taxYear)
-      val parsedRequest = EitherT.fromEither[Future](retrievePensionsChargesParser.parseRequest(rawData))
 
-      val serviceResponse : Future[RetrievePensionsOutcome] = parsedRequest match {
-        case Right(data) => service.deletePensionCharges(data)
+      val rawData = RetrievePensionChargesRawData(nino, taxYear)
+      val parseRequest: Either[ErrorWrapper, RetrievePensionChargesRequest] = requestParser.parseRequest(rawData)
+
+      val serviceResponse: Future[RetrievePensionChargesOutcome] = parseRequest match {
+        case Right(data) => service.retrievePensions(data)
         case Left(errorWrapper) => Future.successful(Left(errorWrapper))
       }
 
       serviceResponse.map {
-        case Right(responseWrapper)=>
+        case Right(responseWrapper) =>
 
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
@@ -57,35 +64,47 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
             createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
           )
 
-          Ok.withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+          Ok(Json.toJson(responseWrapper.responseData)).withApiHeaders(responseWrapper.correlationId)
+            .as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
           auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper)))
           result
-
       }
     }
   }
 
-  private def createAuditDetails(rawData: CreateRawData,
+  private def errorResult(errorWrapper: ErrorWrapper): Result = {
+
+    (errorWrapper.errors.head: @unchecked) match {
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
+           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+    }
+  }
+
+  private def createAuditDetails(rawData: RetrievePensionChargesRawData,
                                  statusCode: Int,
                                  correlationId: String,
                                  userDetails: UserDetails,
                                  errorWrapper: Option[ErrorWrapper] = None,
                                  responseBody: Option[JsValue] = None): GenericAuditDetail = {
-    val response = errorWrapper
-      .map { wrapper =>
-        AuditResponse(statusCode, Some(wrapper.auditErrors), None)
-      }
-      .getOrElse(AuditResponse(statusCode, None, responseBody ))
 
+    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
     GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId, response)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("createCisDeductionsAuditType", "create-cis-deductions-transaction-type", details)
+    val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", details)
     auditService.auditEvent(event)
   }
+
+
+
+
+
+
 }

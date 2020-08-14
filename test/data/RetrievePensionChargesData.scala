@@ -16,45 +16,46 @@
 
 package data
 
+import play.api.libs.json.{JsValue, Json}
 import v1.models.des._
 
 object RetrievePensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA","00123456RA"),
-    Some(LifetimeAllowance(100.00, 100.00)),
-    Some(LifetimeAllowance(100.00, 100.00)),
+    Some(LifetimeAllowance(123.45, 12.45)),
+    Some(LifetimeAllowance(123.45, 12.34)),
     true,
     Some(true),
-    Some(true)
+    Some(false)
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider =  OverseasSchemeProvider(
-    "name",
-    "address",
-    "postcode",
+    "Overseas Pensions Plc",
+    "111 Main Street, George Town, Grand Cayman",
+    "ESP",
     Some(Seq("Q123456")),
     None
   )
   val pensionOverseasTransfer : PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
-    100.00,
-    100.00
+    123.45,
+    0
   )
   val pensionUnauthorisedPayments : PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
     Seq("00123456RA", "00123456RA"),
-    Some(Charge(100.00, 100.00)),
-    Some(Charge(100.00, 100.00))
+    Some(Charge(123.45, 123.45)),
+    Some(Charge(123.45, 123.45))
   )
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
-    100.00,
-    100.00
+    123.45,
+    123.45
   )
   val overseasPensionContributions : OverseasPensionContributions = OverseasPensionContributions (
     Seq(overseasSchemeProvider),
-    100.00,
-    100.00
+    123.45,
+    0
   )
   val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
     Some(pensionSavingsCharge),
@@ -62,6 +63,77 @@ object RetrievePensionChargesData {
     Some(pensionUnauthorisedPayments),
     Some(pensionContributions),
     Some(overseasPensionContributions)
+  )
+
+  val fullJson: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		},
+      |		"benefitInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.34
+      |		},
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
   )
 
 }
