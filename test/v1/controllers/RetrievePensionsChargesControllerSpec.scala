@@ -17,13 +17,17 @@
 package v1.controllers
 
 import play.api.mvc.Result
-import data.RetrievePensionChargesData.{fullJson, retrieveResponse}
+import data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrievePensionsChargesService}
+import v1.models.des.RetrievePensionChargesHateoasData
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.RelType.SELF
 import v1.models.outcomes.DesResponse
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
@@ -40,12 +44,15 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
   with MockAuditService
   {
 
-    val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-    val nino   = "AA123456A"
-    val taxYear = "2020-21"
+    private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+    private val nino   = "AA123456A"
+    private val taxYear = "2020-21"
 
-    val rawData = RetrievePensionChargesRawData(nino, taxYear)
-    val requestData = RetrievePensionChargesRequest(Nino(nino),DesTaxYear(taxYear))
+    private val rawData = RetrievePensionChargesRawData(nino, taxYear)
+    private val requestData = RetrievePensionChargesRequest(Nino(nino),DesTaxYear(taxYear))
+
+    private val retrieveHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear",method = GET, rel = "self")
+    private val
 
     trait Test {
       val hc = HeaderCarrier()
@@ -76,9 +83,13 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
             .retrieve(requestData)
             .returns(Future.successful(Right(DesResponse(correlationId, retrieveResponse))))
 
+          MockHateoasFactory
+            .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino,taxYear))
+            .returns(HateoasWrapper(retrieveResponse,links = Seq(retrieveHateoasLink)))
+
           val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
           status(result) shouldBe OK
-          contentAsJson(result) shouldBe fullJson
+          contentAsJson(result) shouldBe fullJsonWithHateoas
           header("X-CorrelationId", result) shouldBe Some(correlationId)
         }
       }

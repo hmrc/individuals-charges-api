@@ -16,8 +16,10 @@
 
 package v1.controllers
 
+import cats.implicits.catsSyntaxEitherId
 import javax.inject._
 import play.api.http.MimeTypes
+import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -26,6 +28,7 @@ import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.auth.UserDetails
+import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
 import v1.models.requestData.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.services._
@@ -60,11 +63,13 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
+          val hateoasResponse = hateoasFactory.wrap(responseWrapper.responseData, RetrievePensionChargesHateoasData(nino,taxYear))
+
           auditSubmission(
             createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
           )
 
-          Ok(Json.toJson(responseWrapper.responseData)).withApiHeaders(responseWrapper.correlationId)
+          Ok(Json.toJson(hateoasResponse)).withApiHeaders(responseWrapper.correlationId)
             .as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
