@@ -19,15 +19,17 @@ package v1.controllers
 import play.api.mvc.Result
 import data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
+import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrievePensionsChargesService}
 import v1.models.des.RetrievePensionChargesHateoasData
+import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.SELF
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.outcomes.DesResponse
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
@@ -51,8 +53,9 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
     private val rawData = RetrievePensionChargesRawData(nino, taxYear)
     private val requestData = RetrievePensionChargesRequest(Nino(nino),DesTaxYear(taxYear))
 
-    private val retrieveHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear",method = GET, rel = "self")
-    private val
+    private val retrieveHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear",method = GET, rel = SELF)
+    private val amendHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = AMEND_PENSION_CHARGES)
+    private val deleteHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear", method = DELETE, rel = DELETE_PENSION_CHARGES)
 
     trait Test {
       val hc = HeaderCarrier()
@@ -85,12 +88,64 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
           MockHateoasFactory
             .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino,taxYear))
-            .returns(HateoasWrapper(retrieveResponse,links = Seq(retrieveHateoasLink)))
+            .returns(HateoasWrapper(retrieveResponse,links = Seq(retrieveHateoasLink, amendHateoasLink,deleteHateoasLink)))
 
           val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
           status(result) shouldBe OK
           contentAsJson(result) shouldBe fullJsonWithHateoas
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+        }
+      }
+      "return the error as per the spec" when {
+        "parser errors occur" should {
+          def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
+          s"a ${error.code} error is returned from the parser" in new Test {
+            MockRetrievePensionChargesParser
+              .parseRequest(rawData)
+              .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
+
+            val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(error)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+          }
+          val input = Seq(
+            (BadRequestError, BAD_REQUEST),
+            (NinoFormatError, BAD_REQUEST),
+            (TaxYearFormatError, BAD_REQUEST)
+          )
+          input.foreach(args => (errorsFromParserTester _).tupled(args))
+        }
+        "service errors occur" should {
+          def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+            s"a $mtdError error is returned from the service" in new Test {
+
+              MockRetrievePensionChargesParser
+                .parseRequest(rawData)
+                .returns(Right(requestData))
+
+              MockRetrievePensionsChargesService
+                .retrieve(requestData)
+                .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(mtdError)))))
+
+              val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
+
+              status(result) shouldBe expectedStatus
+              contentAsJson(result) shouldBe Json.toJson(mtdError)
+              header("X-CorrelationId", result) shouldBe Some(correlationId)
+            }
+          }
+
+          val input = Seq(
+            (NinoFormatError, BAD_REQUEST),
+            (TaxYearFormatError, BAD_REQUEST),
+            (NotFoundError, NOT_FOUND),
+            (DownstreamError, INTERNAL_SERVER_ERROR)
+          )
+
+          input.foreach(args => (serviceErrors _).tupled(args))
         }
       }
     }

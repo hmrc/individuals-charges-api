@@ -208,6 +208,16 @@ object RetrievePensionChargesData {
       |      "href":"individuals/charges/pensions/AA123456A/2020-21",
       |      "method":"GET",
       |      "rel":"self"
+      |    },
+      |     {
+      |      "href":"individuals/charges/pensions/AA123456A/2020-21",
+      |      "method":"PUT",
+      |      "rel":"amend-charges-pensions"
+      |    },
+      |    {
+      |      "href":"individuals/charges/pensions/AA123456A/2020-21",
+      |      "method":"DELETE",
+      |      "rel":"delete-charges-pensions"
       |    }
       |    ]
       |}
