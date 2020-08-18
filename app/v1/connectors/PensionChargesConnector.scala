@@ -47,9 +47,4 @@ class PensionChargesConnector @Inject()(http: HttpClient, appConfig: AppConfig) 
 
     doIt(desHeaderCarrier(appConfig))
   }
-
-
-
-
-
 }
