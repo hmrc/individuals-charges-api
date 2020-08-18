@@ -19,19 +19,97 @@ package v1.models.jsonValidation
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import support.UnitSpec
-import v1.models.des._
+import v1.models.requestData.PensionCharges
 
-class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
+class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
 
-  val onlySubmittedDateJson: JsValue = Json.parse(
+  val minimalPayload: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 0,
+      |		"annualAllowanceTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  val jsonExample: JsValue = Json.parse(
     """{
-      |"submittedOn": "2020-07-27T17:00:19Z"
-      |}""".stripMargin)
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.34
+      |		},
+      |		"benefitInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.34
+      |		},
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 0,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": 12.34,
+      |			"foreignTaxPaid": 12.34
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 12.34,
+      |			"foreignTaxPaid": 0
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 12.34,
+      |		"annualAllowanceTaxPaid": 12.34
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"pensionSchemeTaxReference": [
+      |					"00123456RA"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 12.34,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
 
   val fullJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -102,7 +180,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val fullJsonWithArraysSwapped: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -174,7 +251,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val pensionSavingsTaxChargesJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -198,7 +274,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val lumpSumPensionSavingsTaxChargesJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -218,7 +293,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val benefitInExcessPensionSavingsTaxChargesJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -238,7 +312,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val validMinimumBooleansSupplied1: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -252,7 +325,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val booleans1PensionSavingsTaxChargesJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -268,7 +340,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val booleans2PensionSavingsTaxChargesJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -284,7 +355,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -322,7 +392,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val partialJson1: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -373,7 +442,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val partialJson2: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -431,7 +499,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |	}
       |}
@@ -441,7 +508,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val invalidJsonNoBooleans: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -510,7 +576,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val invalidBooleansSupplied1: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -524,7 +589,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val validMinimumBooleansSupplied2: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -539,7 +603,6 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   val validMinimumBooleansSupplied3: JsValue = Json.parse(
     """
       |{
-      |	"submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA"
@@ -554,10 +617,10 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   private case class JsonTest(name: String, json: JsValue, outcome: Boolean)
 
   "The json Schema file for Get Pension Charges Response" should {
-    val schemaJsonDoc = "/desJsonSchemas/retrieve_pension_charges_response.json"
+    val schemaJsonDoc = "/desJsonSchemas/amend_pension_charges_request.json"
 
     val jsonSchemaTests: List[JsonTest] = List(
-      JsonTest("only submitted date json", onlySubmittedDateJson, true),
+      JsonTest("minimal payload example", minimalPayload, true),
       JsonTest("full json example", fullJson, true),
       JsonTest("full json with differing arrays used example", fullJsonWithArraysSwapped, true),
       JsonTest("only pensionSavingsTaxCharges example", pensionSavingsTaxChargesJson, true),
@@ -581,7 +644,7 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
           isValidateJsonAccordingToJsonSchema(FakeRequest().withJsonBody(jsonTest.json).body, schemaJsonDoc) shouldBe jsonTest.outcome
 
           if(jsonTest.outcome){
-            jsonTest.json.asOpt[RetrievePensionChargesResponse].isDefined shouldBe true
+            jsonTest.json.asOpt[PensionCharges].isDefined shouldBe true
           }
         }
     }
@@ -590,7 +653,7 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
   "A json with no booleans" should {
 
     "not read to the model" in {
-      val result = invalidJsonNoBooleans.asOpt[RetrievePensionChargesResponse]
+      val result = invalidJsonNoBooleans.asOpt[PensionCharges]
 
       result.isDefined shouldBe false
     }
