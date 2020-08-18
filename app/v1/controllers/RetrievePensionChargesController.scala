@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import cats.implicits.catsSyntaxEitherId
 import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.Format.GenericFormat
@@ -26,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
@@ -103,13 +102,7 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", details)
+    val event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", details)
     auditService.auditEvent(event)
   }
-
-
-
-
-
-
 }

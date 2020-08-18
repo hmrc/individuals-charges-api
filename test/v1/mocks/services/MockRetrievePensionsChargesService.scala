@@ -35,7 +35,4 @@ trait MockRetrievePensionsChargesService extends MockFactory {
         .expects(retrievePensionChargesRequest, *, *)
     }
   }
-
-
-
 }

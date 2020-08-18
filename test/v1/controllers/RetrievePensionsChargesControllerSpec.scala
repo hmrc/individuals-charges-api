@@ -17,14 +17,14 @@
 package v1.controllers
 
 import play.api.mvc.Result
-import data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas, retrieveResponse}
+import data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrievePensionsChargesService}
+import v1.mocks.services._
 import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -48,17 +48,17 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
     private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
     private val nino   = "AA123456A"
-    private val taxYear = "2020-21"
+    private val taxYear = "2021-22"
 
     private val rawData = RetrievePensionChargesRawData(nino, taxYear)
     private val requestData = RetrievePensionChargesRequest(Nino(nino),DesTaxYear(taxYear))
 
-    private val retrieveHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear",method = GET, rel = SELF)
-    private val amendHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = AMEND_PENSION_CHARGES)
-    private val deleteHateoasLink = Link(href = s"individuals/charges/pensions/$nino/$taxYear", method = DELETE, rel = DELETE_PENSION_CHARGES)
+    private val retrieveHateoasLink = Link(href = s"/individuals/charges/pensions/$nino/$taxYear",method = GET, rel = SELF)
+    private val amendHateoasLink = Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = AMEND_PENSION_CHARGES)
+    private val deleteHateoasLink = Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = DELETE, rel = DELETE_PENSION_CHARGES)
 
     trait Test {
-      val hc = HeaderCarrier()
+      val hc: HeaderCarrier = HeaderCarrier()
 
       val controller = new RetrievePensionChargesController(
         authService = mockEnrolmentsAuthService,
@@ -114,7 +114,11 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
           val input = Seq(
             (BadRequestError, BAD_REQUEST),
             (NinoFormatError, BAD_REQUEST),
-            (TaxYearFormatError, BAD_REQUEST)
+            (TaxYearFormatError, BAD_REQUEST),
+            (RuleTaxYearRangeInvalid, BAD_REQUEST),
+            (RuleTaxYearNotSupportedError, BAD_REQUEST),
+            (NotFoundError, NOT_FOUND),
+            (DownstreamError, INTERNAL_SERVER_ERROR)
           )
           input.foreach(args => (errorsFromParserTester _).tupled(args))
         }
@@ -144,7 +148,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
             (NotFoundError, NOT_FOUND),
             (DownstreamError, INTERNAL_SERVER_ERROR)
           )
-
           input.foreach(args => (serviceErrors _).tupled(args))
         }
       }
