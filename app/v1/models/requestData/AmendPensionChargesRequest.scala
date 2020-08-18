@@ -17,10 +17,14 @@
 package v1.models.requestData
 
 import play.api.libs.json.{Json, OFormat}
-import v1.models.des.{OverseasPensionContributions, PensionContributions, PensionSavingsTaxCharges,
-  PensionSchemeOverseasTransfers, PensionSchemeUnauthorisedPayments}
+import uk.gov.hmrc.domain.Nino
+import v1.models.des.{OverseasPensionContributions,
+                      PensionContributions,
+                      PensionSavingsTaxCharges,
+                      PensionSchemeOverseasTransfers,
+                      PensionSchemeUnauthorisedPayments}
 
-case class AmendPensionChargesRequest(nino: String, taxYear: String, pensionCharges: PensionCharges) extends RawData
+case class AmendPensionChargesRequest(nino: Nino, taxYear: DesTaxYear, pensionCharges: PensionCharges) extends RawData
 
 case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
