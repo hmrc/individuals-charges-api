@@ -36,6 +36,11 @@ trait MockPensionChargesConnector extends MockFactory {
         .expects(deletePensionChargesRequest, *, *)
     }
 
+    def amendPensionCharges(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (connector.amendPensionCharges(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(amendPensionChargesRequest, *, *)
+    }
+
 
 
   }
