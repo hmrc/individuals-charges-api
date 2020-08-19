@@ -18,11 +18,8 @@ package v1.connectors
 
 import config.AppConfig
 import play.api.Logger
-import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.Authorization
-
-import scala.concurrent.{ExecutionContext, Future}
 
 trait DesConnector {
 
@@ -31,7 +28,5 @@ trait DesConnector {
   def desHeaderCarrier(appConfig: AppConfig)(implicit hc: HeaderCarrier): HeaderCarrier =
     hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
       .withExtraHeaders("Environment" -> appConfig.desEnv)
-
-
 
 }

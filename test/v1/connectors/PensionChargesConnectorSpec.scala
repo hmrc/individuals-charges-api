@@ -17,10 +17,10 @@
 package v1.connectors
 
 import data.AmendPensionChargesData.pensionCharges
+import data.RetrievePensionChargesData.retrieveResponse
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.des._
 import v1.models.errors._
 import v1.models.outcomes.DesResponse
 import v1.models.requestData._
@@ -34,55 +34,6 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
   val nino = "AA123456A"
   val taxYear = "2019-20"
-
-  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA", "00123456RA"),
-    Some(LifetimeAllowance(100.00, 100.00)),
-    Some(LifetimeAllowance(100.00, 100.00)),
-    true,
-    Some(true),
-    Some(true),
-  )
-
-  val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
-    "name",
-    "address",
-    "postcode",
-    Some(Seq("Q123456")),
-    None
-  )
-
-  val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
-    Seq(overseasSchemeProvider),
-    100.00,
-    100.00
-  )
-
-  val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
-    Seq("00123456RA", "00123456RA"),
-    Some(Charge(100.00, 100.00)),
-    Some(Charge(100.00, 100.00))
-  )
-
-  val pensionContributions: PensionContributions = PensionContributions(
-    Seq("00123456RA", "00123456RA"),
-    100.00,
-    100.00
-  )
-
-  val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
-    Seq(overseasSchemeProvider),
-    100.00,
-    100.00
-  )
-
-  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    Some(pensionSavingsCharge),
-    Some(pensionOverseasTransfer),
-    Some(pensionUnauthorisedPayments),
-    Some(pensionContributions),
-    Some(overseasPensionContributions)
-  )
 
   class Test extends MockHttpClient with MockAppConfig {
     val connector: PensionChargesConnector = new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
