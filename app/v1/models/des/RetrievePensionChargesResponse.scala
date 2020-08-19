@@ -123,4 +123,3 @@ object RetrievePensionChargesResponse extends HateoasLinks{
 }
 
 case class RetrievePensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData
-
