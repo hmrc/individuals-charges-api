@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package v1.connectors
+package v1.controllers.requestParsers
 
-import config.AppConfig
-import play.api.Logger
-import play.api.libs.json.Writes
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads}
-import uk.gov.hmrc.http.logging.Authorization
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.AmendPensionChargesValidator
+import v1.models.requestData._
 
-import scala.concurrent.{ExecutionContext, Future}
+class AmendPensionChargesParser @Inject()(val validator: AmendPensionChargesValidator) extends RequestParser[AmendPensionChargesRawData,
+  AmendPensionChargesRequest] {
 
-trait DesConnector {
-
-  val logger = Logger(this.getClass)
-
-  def desHeaderCarrier(appConfig: AppConfig)(implicit hc: HeaderCarrier): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnv)
-
-
-
+  override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest =
+    AmendPensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear), data.body.json.as[PensionCharges])
 }

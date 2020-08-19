@@ -48,5 +48,25 @@ trait HateoasLinks {
 
   def listBfLoss(appConfig: AppConfig, nino: String): Link = Link(href = bfLossBaseUri(appConfig, nino), method = GET, rel = SELF)
 
+  //Individuals Charges API Domain URIs
 
+  private def retrieveBaseUrl(appConfig: AppConfig, nino: String, taxYear: String): String =
+    s"/${appConfig.apiGatewayContext}/pensions/$nino/$taxYear"
+
+  private def deleteBaseUrl(appConfig: AppConfig, nino: String, taxYear: String) : String =
+    s"/${appConfig.apiGatewayContext}/pensions/$nino/$taxYear"
+
+  private def amendBaseUrl(appConfig: AppConfig, nino: String, taxYear: String): String =
+    s"/${appConfig.apiGatewayContext}/pensions/$nino/$taxYear"
+
+  //Individual Charges API resource links
+
+  def getRetrievePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(href = retrieveBaseUrl(appConfig, nino, taxYear), method = GET, rel = SELF)
+
+  def getDeletePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(href = deleteBaseUrl(appConfig,nino, taxYear), method = DELETE, rel = DELETE_PENSION_CHARGES)
+
+  def getAmendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(href = amendBaseUrl(appConfig, nino, taxYear), method = PUT, rel = AMEND_PENSION_CHARGES)
 }

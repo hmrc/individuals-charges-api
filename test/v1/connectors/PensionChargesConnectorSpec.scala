@@ -198,4 +198,23 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       }
     }
   }
+  "Amend pension charges" when {
+    "a valid request is supplied" should {
+      "return a successful response with the correct correlationId" in new Test {
+        val expected = Left(DesResponse(correlationId, ()))
+
+        MockedHttpClient
+          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", PensionCharges, desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.amendPensionCharges(
+          AmendPensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear),
+            amendRequest
+          )
+        ))
+      }
+    }
+  }
 }

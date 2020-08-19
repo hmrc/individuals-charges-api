@@ -16,8 +16,11 @@
 
 package v1.models.des
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, OFormat, Reads, Writes, __, _}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class LifetimeAllowance(amount: BigDecimal, taxPaid: BigDecimal)
 
@@ -104,6 +107,19 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
 
 }
 
-object RetrievePensionChargesResponse {
+object RetrievePensionChargesResponse extends HateoasLinks{
   implicit val format: OFormat[RetrievePensionChargesResponse] = Json.format[RetrievePensionChargesResponse]
+
+  implicit object RetrievePensionChargesLinksFactory extends HateoasLinksFactory[RetrievePensionChargesResponse, RetrievePensionChargesHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrievePensionChargesHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        getRetrievePensions(appConfig, nino, taxYear),
+        getAmendPensions(appConfig, nino, taxYear),
+        getDeletePensions(appConfig, nino, taxYear)
+      )
+    }
+  }
 }
+
+case class RetrievePensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData

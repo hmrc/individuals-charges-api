@@ -18,8 +18,9 @@ package data
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.des._
+import v1.models.requestData.{AmendPensionChargesRequest, PensionCharges}
 
-object RetrievePensionChargesData {
+object AmendPensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA","00123456RA"),
@@ -57,7 +58,7 @@ object RetrievePensionChargesData {
     123.45,
     0
   )
-  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+  val pensionCharges: PensionCharges = PensionCharges(
     Some(pensionSavingsCharge),
     Some(pensionOverseasTransfer),
     Some(pensionUnauthorisedPayments),
@@ -136,91 +137,4 @@ object RetrievePensionChargesData {
       |""".stripMargin
   )
 
-  val fullJsonWithHateoas: JsValue = Json.parse(
-    """
-      |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.34
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
-      |	},
-      |	"pensionSchemeOverseasTransfers": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"transferCharge": 123.45,
-      |		"transferChargeTaxPaid": 0
-      |	},
-      |	"pensionSchemeUnauthorisedPayments": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"surcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		},
-      |		"noSurcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		}
-      |	},
-      |	"pensionContributions": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
-      |	},
-      |	"overseasPensionContributions": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"shortServiceRefund": 123.45,
-      |		"shortServiceRefundTaxPaid": 0
-      |	},
-      | "links":[
-      |    {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
-      |      "method":"GET",
-      |      "rel":"self"
-      |    },
-      |     {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
-      |      "method":"PUT",
-      |      "rel":"amend-charges-pensions"
-      |    },
-      |    {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
-      |      "method":"DELETE",
-      |      "rel":"delete-charges-pensions"
-      |    }
-      |    ]
-      |}
-      |""".stripMargin
-  )
 }
