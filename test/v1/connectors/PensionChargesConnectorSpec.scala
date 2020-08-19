@@ -16,7 +16,10 @@
 
 package v1.connectors
 
+import data.AmendPensionChargesData
+import data.AmendPensionChargesData.{fullJson, pensionCharges}
 import mocks.MockAppConfig
+import play.api.mvc.AnyContentAsJson
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.des._
@@ -201,7 +204,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   "Amend pension charges" when {
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
-        val expected = Left(DesResponse(correlationId, ()))
+        val expected = Left(DesResponse(correlationId, Unit))
 
         MockedHttpClient
           .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", PensionCharges, desRequestHeaders: _*)
@@ -211,7 +214,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           AmendPensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear),
-            amendRequest
+            pensionCharges
           )
         ))
       }
