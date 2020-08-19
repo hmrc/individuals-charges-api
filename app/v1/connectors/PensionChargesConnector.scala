@@ -55,7 +55,7 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val taxYear = request.taxYear.value
 
-    def doIt(implicit hc: HeaderCarrier) =
+    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
       http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)
 
     doIt(desHeaderCarrier(appConfig))

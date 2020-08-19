@@ -16,10 +16,8 @@
 
 package v1.connectors
 
-import data.AmendPensionChargesData
-import data.AmendPensionChargesData.{fullJson, pensionCharges}
+import data.AmendPensionChargesData.pensionCharges
 import mocks.MockAppConfig
-import play.api.mvc.AnyContentAsJson
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.des._
@@ -204,10 +202,10 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   "Amend pension charges" when {
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
-        val expected = Left(DesResponse(correlationId, Unit))
+        val expected = Right(DesResponse(correlationId, Unit))
 
         MockedHttpClient
-          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", PensionCharges, desRequestHeaders: _*)
+          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(
@@ -216,7 +214,41 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
             taxYear = DesTaxYear(taxYear),
             pensionCharges
           )
-        ))
+        )) shouldBe expected
+      }
+    }
+    "A request returning a single error" should {
+      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
+        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+
+        MockedHttpClient
+          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.amendPensionCharges(
+          AmendPensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear),
+            pensionCharges
+          )
+        )) shouldBe expected
+      }
+    }
+    "a request returning multiple errors" should {
+      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
+        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
+
+        MockedHttpClient
+          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
+          .returns(Future.successful(expected))
+
+        await(connector.amendPensionCharges(
+          AmendPensionChargesRequest(
+            nino = Nino(nino),
+            taxYear = DesTaxYear(taxYear),
+            pensionCharges
+          )
+        )) shouldBe expected
       }
     }
   }
