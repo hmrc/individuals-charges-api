@@ -20,7 +20,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRequest}
 import data.RetrievePensionChargesData._
 import v1.models.outcomes.DesResponse
-import v1.mocks.connectors.MockRetrievePensionChargesConnector
+import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
 
 import scala.concurrent.Future
@@ -33,14 +33,14 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
-  trait Test extends MockRetrievePensionChargesConnector {
-    val service = new RetrievePensionChargesService(mockRetrievePensionChargesConnector)
+  trait Test extends MockPensionChargesConnector {
+    val service = new RetrievePensionChargesService(connector)
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockRetrievePensionChargesConnector.retrievePensions(request)
+        MockPensionChargesConnector.retrievePensions(request)
           .returns(Future.successful(Right(DesResponse(correlationId, retrieveResponse))))
 
         await(service.retrievePensions(request)) shouldBe Right(DesResponse(correlationId, retrieveResponse))
@@ -51,7 +51,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connectot returns an outbound error" in new Test {
         val someError = MtdError("SOME_CODE", "some message")
         val desResponse = DesResponse(correlationId, OutboundError(someError))
-        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
         await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
       }
@@ -61,7 +61,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
         val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
-        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
         await(service.retrievePensions(request)) shouldBe Left(expected)
       }
@@ -69,7 +69,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
         val expected    = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
-        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
         await(service.retrievePensions(request)) shouldBe Left(expected)
       }
@@ -86,8 +86,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       case (k, v) =>
         s"return a ${v.code} error" when {
           s"the connector call returns $k" in new Test {
-            MockRetrievePensionChargesConnector
-              .retrievePensions(request)
+            MockPensionChargesConnector.retrievePensions(request)
               .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
