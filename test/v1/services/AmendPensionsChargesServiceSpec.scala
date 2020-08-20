@@ -16,34 +16,35 @@
 
 package v1.services
 
+import data.AmendPensionChargesData._
 import uk.gov.hmrc.domain.Nino
-import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRequest}
-import data.RetrievePensionChargesData._
-import v1.models.outcomes.DesResponse
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
+import v1.models.outcomes.DesResponse
+import v1.models.requestData.{DesTaxYear, AmendPensionChargesRequest}
 
 import scala.concurrent.Future
 
-class RetrievePensionsChargesServiceSpec extends ServiceSpec {
+class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
   val nino: Nino = Nino("AA123456A")
   val taxYear: DesTaxYear = DesTaxYear("2020-21")
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val request = RetrievePensionChargesRequest(nino, taxYear)
+  private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
   trait Test extends MockPensionChargesConnector {
-    val service = new RetrievePensionChargesService(connector)
+    val service = new AmendPensionChargesService(connector)
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockPensionChargesConnector.retrievePensions(request)
-          .returns(Future.successful(Right(DesResponse(correlationId, retrieveResponse))))
+        val desResponse = DesResponse(correlationId, ())
+        MockPensionChargesConnector.amendPensionCharges(request)
+          .returns(Future.successful(Right(desResponse)))
 
-        await(service.retrievePensions(request)) shouldBe Right(DesResponse(correlationId, retrieveResponse))
+        await(service.amendPensions(request)) shouldBe Right(desResponse)
       }
     }
 
@@ -51,9 +52,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connectot returns an outbound error" in new Test {
         val someError = MtdError("SOME_CODE", "some message")
         val desResponse = DesResponse(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
+        await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
       }
     }
 
@@ -61,24 +62,24 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
         val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.retrievePensions(request)) shouldBe Left(expected)
+        await(service.amendPensions(request)) shouldBe Left(expected)
       }
 
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
         val expected    = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.retrievePensions(request)) shouldBe Left(expected)
+        await(service.amendPensions(request)) shouldBe Left(expected)
       }
     }
 
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NotFoundError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "NO_DATA_FOUND"             -> NotFoundError,
+      "INVALID_PAYLOAD"           -> RuleIncorrectOrEmptyBodyError,
       "INVALID_CORRELATIONID"     -> DownstreamError,
       "SERVER_ERROR"              -> DownstreamError,
       "SERVICE_UNAVAILABLE"       -> DownstreamError
@@ -86,10 +87,10 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       case (k, v) =>
         s"return a ${v.code} error" when {
           s"the connector call returns $k" in new Test {
-            MockPensionChargesConnector.retrievePensions(request)
+            MockPensionChargesConnector.amendPensionCharges(request)
               .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
-            await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
+            await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
           }
         }
     }
