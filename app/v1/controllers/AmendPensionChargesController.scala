@@ -25,7 +25,6 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.hateoas.HateoasFactory
 import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.hateoas.AmendHateoasBody
@@ -39,7 +38,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                               val lookupService: MtdIdLookupService,
                                               service: AmendPensionChargesService,
                                               requestParser: AmendPensionChargesParser,
-                                              hateoasFactory: HateoasFactory,
                                               auditService: AuditService,
                                               appConfig: AppConfig,
                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
@@ -86,8 +84,10 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
 
     (errorWrapper.errors.head: @unchecked) match {
+        // TODO: update when validator complete
       case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
+           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError | RuleIncorrectOrEmptyBodyError
+                => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
