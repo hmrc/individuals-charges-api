@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.controllers.requestParsers.validators
 
-import play.api.mvc.AnyContentAsJson
+import mocks.MockAppConfig
+import support.UnitSpec
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+
+
+
+
+
+
+
+
+}

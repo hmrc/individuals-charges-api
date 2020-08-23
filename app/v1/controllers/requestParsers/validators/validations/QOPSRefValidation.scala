@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.mvc.AnyContentAsJson
+import v1.models.errors.{MtdError, QOPSRefFormatError}
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+object QOPSRefValidation {
+
+  def validateOptional(qopsRef: Option[String], path: String): List[MtdError] = qopsRef.fold(NoValidationErrors: List[MtdError]) { ref =>
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
+      QOPSRefFormatError.copy(paths = Some(Seq(path))))
+  }
+
+
+
+}

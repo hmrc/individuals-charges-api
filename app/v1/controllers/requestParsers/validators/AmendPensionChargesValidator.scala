@@ -18,11 +18,13 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.Inject
-import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
-import v1.models.errors.{MtdError, TaxYearFormatError}
-import v1.models.requestData.AmendPensionChargesRawData
+import play.api.libs.json.JsValue
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.des.{OverseasSchemeProvider, PensionSchemeOverseasTransfers}
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
+import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
-class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData]{
+class AmendPensionChargesValidator@Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData]{
 
   private val validationSet = List(parameterFormatValidation)
 
@@ -41,6 +43,12 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
       taxYearValidation
     ) ++ minTaxYearValidation).distinct
   }
+
+//  private def bodyFormatValidator: AmendPensionChargesRawData => List[List[MtdError]] = { data =>
+//    List(
+//      JsonFormatValidation.validate[AmendPensionChargesRequest](data.body, RuleIncorrectOrEmptyBodyError)
+//    )
+//  }
 
   override def validate(data: AmendPensionChargesRawData): List[MtdError] = run(validationSet, data)
 }

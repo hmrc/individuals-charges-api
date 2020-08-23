@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.mvc.AnyContentAsJson
+import v1.models.errors.{MtdError, ProviderNameFormatError}
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+object ProviderNameValidation {
+
+  def validate(providerName: String, maxLength: Int): List[MtdError] = {
+    if(providerName.length() <= maxLength) NoValidationErrors else List(ProviderNameFormatError)
+  }
+
+}

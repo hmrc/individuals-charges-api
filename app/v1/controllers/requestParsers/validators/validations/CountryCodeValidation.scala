@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.mvc.AnyContentAsJson
+import com.neovisionaries.i18n.CountryCode
+import v1.models.errors._
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+
+object CountryCodeValidation {
+
+  def validateOptional(data: Option[String]): List[MtdError] = data match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
+  }
+
+  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data),data) match {
+    case (_: CountryCode,_) => NoValidationErrors
+    case (_, code) if code.length == 3 => List(RuleCountryCodeError)
+    case _ => List(CountryCodeFormatError)
+  }
+
+}
