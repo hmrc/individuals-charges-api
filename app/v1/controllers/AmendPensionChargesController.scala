@@ -64,13 +64,11 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
-
           auditSubmission(
             createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
           )
 
-          Ok(amendPensionsHateoasBody(appConfig, nino, taxYear)).withApiHeaders(responseWrapper.correlationId)
-            .as(MimeTypes.JSON)
+          Ok(amendPensionsHateoasBody(appConfig, nino, taxYear)).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
@@ -105,7 +103,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", details)
+    val event = AuditEvent("amendPensionChargesAuditType", "amend-pension-charges-transaction-type", details)
     auditService.auditEvent(event)
   }
 }
