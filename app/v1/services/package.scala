@@ -22,16 +22,6 @@ import v1.models.outcomes.DesResponse
 
 package object services {
 
-  type CreateBFLossOutcome = Either[ErrorWrapper, DesResponse[CreateBFLossResponse]]
-
-  type RetrieveBFLossOutcome = Either[ErrorWrapper, DesResponse[BFLossResponse]]
-
-  type ListBFLossesOutcome = Either[ErrorWrapper, DesResponse[ListBFLossesResponse[BFLossId]]]
-
-  type AmendBFLossOutcome = Either[ErrorWrapper, DesResponse[BFLossResponse]]
-
-  type DeleteBFLossOutcome = Either[ErrorWrapper, DesResponse[Unit]]
-
   type DeletePensionChargesOutcome = Either[ErrorWrapper, DesResponse[Unit]]
 
   type RetrievePensionChargesOutcome = Either[ErrorWrapper, DesResponse[RetrievePensionChargesResponse]]
