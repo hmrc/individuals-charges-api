@@ -16,12 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
-import data.AmendPensionChargesData.{emptyJson, minimalJson, fullJson}
+import data.AmendPensionChargesData._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.models.errors.{MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearRangeInvalid, TaxYearFormatError}
+import v1.models.errors.{CountryCodeFormatError, MtdError, NinoFormatError, RuleCountryCodeError,
+  RuleIncorrectOrEmptyBodyError, RuleTaxYearRangeInvalid, TaxYearFormatError}
 import v1.models.requestData.AmendPensionChargesRawData
 
 class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
@@ -41,6 +42,45 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
     "return no errors" when {
       "a valid request is supplied" in new Test {
         validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson))) shouldBe Nil
+      }
+    }
+
+    "return country errors" when {
+      "multiple country codes are invalid for multiple reasons" in new Test {
+        validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountries))) shouldBe List(
+          CountryCodeFormatError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
+            )
+          )),
+          RuleCountryCodeError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
+            )
+          ))
+        )
+      }
+      "multiple country codes are invalid format" in new Test {
+        validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("INVALID")))) shouldBe List(
+          CountryCodeFormatError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+            )
+          ))
+        )
+      }
+      "multiple country codes are invalid rule" in new Test {
+        validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("BOB")))) shouldBe List(
+          RuleCountryCodeError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+            )
+          ))
+        )
       }
     }
 

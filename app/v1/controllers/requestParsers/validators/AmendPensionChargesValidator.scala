@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.des.OverseasSchemeProvider
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
+import v1.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import v1.models.requestData.{AmendPensionChargesRawData, PensionCharges}
 
 class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
@@ -59,7 +59,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
       } else if (nonEmptyModel) {
 
         val model = jsonAsModel.get
-        validateCharges(model)
+        validateCharges(model) ++ validateCountryCodes(model)
 
       } else {
         List(RuleIncorrectOrEmptyBodyError)
@@ -119,14 +119,40 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
     }
   }
 
-  private def validateOverseasSchemeProvider(overseasSchemeProvider: OverseasSchemeProvider, arrayIndex: Int): List[MtdError] = {
-    List(
-      CountryCodeValidation.validate(overseasSchemeProvider.providerCountryCode).map(
-        _.copy(paths = Some(Seq(s"/overseasSchemeProvider/$arrayIndex/providerCountryCode")))
-      )
-    ).flatten
-  }
+  private def validateCountryCodes(pensionCharges: PensionCharges): List[MtdError] = {
 
+    def countryCodeErrors(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): List[MtdError] = {
+      overseasSchemeProviders.zipWithIndex.flatMap {
+        case (schemeProviderWithIndex, index) =>
+          CountryCodeValidation.validate(schemeProviderWithIndex.providerCountryCode).map(
+            _.copy(paths = Some(Seq(s"/$startOfPath/overseasSchemeProvider/$index/providerCountryCode"))))
+      }.toList
+    }
+
+    val pensionSchemeOverseasTransfersCountryErrors: List[MtdError] = pensionCharges.pensionSchemeOverseasTransfers.map{
+      pensionSchemeOverseasTransfers =>
+        countryCodeErrors("pensionSchemeOverseasTransfers",pensionSchemeOverseasTransfers.overseasSchemeProvider)
+    }.getOrElse(NoValidationErrors)
+
+    val overseasPensionContributionsCountryErrors: List[MtdError] = pensionCharges.overseasPensionContributions.map{
+      overseasPensionContributions =>
+        countryCodeErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)
+    }.getOrElse(NoValidationErrors)
+
+    val allCountryCodeErrors: List[MtdError] = pensionSchemeOverseasTransfersCountryErrors ++ overseasPensionContributionsCountryErrors
+    val countryCodeFormatPaths: Seq[String] = allCountryCodeErrors.filter(error => error.code.equals(CountryCodeFormatError.code)).flatMap(_.paths).flatten
+    val ruleCountryCodePaths: Seq[String] = allCountryCodeErrors.filter(error => error.code.equals(RuleCountryCodeError.code)).flatMap(_.paths).flatten
+
+    (countryCodeFormatPaths.nonEmpty, ruleCountryCodePaths.nonEmpty) match {
+      case (true, true) => List(
+        CountryCodeFormatError.copy(paths = Some(countryCodeFormatPaths)),
+        RuleCountryCodeError.copy(paths = Some(ruleCountryCodePaths))
+      )
+      case (true, _) => List(CountryCodeFormatError.copy(paths = Some(countryCodeFormatPaths)))
+      case (_, true) => List(RuleCountryCodeError.copy(paths = Some(ruleCountryCodePaths)))
+      case _ => NoValidationErrors
+    }
+  }
 
   override def validate(data: AmendPensionChargesRawData): List[MtdError] = run(validationSet, data)
 }
