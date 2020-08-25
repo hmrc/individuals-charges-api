@@ -137,4 +137,11 @@ object AmendPensionChargesData {
       |""".stripMargin
   )
 
+   val emptyJson: JsValue = Json.parse(
+    """
+      |{}
+      |""".stripMargin
+  )
+
+
 }

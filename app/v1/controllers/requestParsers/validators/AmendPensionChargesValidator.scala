@@ -19,14 +19,15 @@ package v1.controllers.requestParsers.validators
 import config.AppConfig
 import javax.inject.Inject
 import play.api.libs.json.JsValue
+import play.api.mvc.AnyContentAsJson
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.des.{OverseasSchemeProvider, PensionSchemeOverseasTransfers}
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
-import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest, PensionCharges}
 
 class AmendPensionChargesValidator@Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData]{
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, bodyFormatValidator)
 
   private def parameterFormatValidation: AmendPensionChargesRawData => List[List[MtdError]] = { data =>
 
@@ -44,11 +45,30 @@ class AmendPensionChargesValidator@Inject()(appConfig: AppConfig) extends Valida
     ) ++ minTaxYearValidation).distinct
   }
 
-//  private def bodyFormatValidator: AmendPensionChargesRawData => List[List[MtdError]] = { data =>
-//    List(
-//      JsonFormatValidation.validate[AmendPensionChargesRequest](data.body, RuleIncorrectOrEmptyBodyError)
-//    )
-//  }
+  private def bodyFormatValidator: AmendPensionChargesRawData => List[List[MtdError]] = { data =>
+
+    val validationErrors = JsonFormatValidation.validate[PensionCharges](data.body.json, RuleIncorrectOrEmptyBodyError)
+
+    lazy val emptyModel : Boolean = data.body.json.asOpt[PensionCharges].exists(x => x.overseasPensionContributions.isEmpty
+      || x.pensionContributions.isEmpty || x.pensionSavingsTaxCharges.isEmpty || x.pensionSchemeOverseasTransfers.isEmpty
+      || x.pensionSchemeUnauthorisedPayments.isEmpty)
+
+    val errors = if(validationErrors.nonEmpty) validationErrors else if(emptyModel) List(RuleIncorrectOrEmptyBodyError) else List()
+
+    List(
+      errors
+    )
+  }
+
+  private def validateOverseasSchemeProvider(overseasSchemeProvider: OverseasSchemeProvider, arrayIndex: Int): List[MtdError] = {
+      List(
+        CountryCodeValidation.validate(overseasSchemeProvider.providerCountryCode).map(
+          _.copy(paths = Some(Seq(s"/overseasSchemeProvider/$arrayIndex/providerCountryCode")))
+        )
+      ).flatten
+  }
+
+
 
   override def validate(data: AmendPensionChargesRawData): List[MtdError] = run(validationSet, data)
 }
