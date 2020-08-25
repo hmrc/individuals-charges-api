@@ -56,6 +56,7 @@ object RuleLossClaimsMissing extends MtdError("RULE_LOSS_CLAIMS_MISSING",
   "One or more loss claims missing from this request")
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE","The country code is not a valid ISO 3166-1 alpha-3 country code")
 object RuleIsAnnualAllowanceReducedError extends MtdError("RULE_IS_ANNUAL_ALLOWANCE_REDUCED","Tapered annual allowance or money purchased allowance has not been provided")
+object RuleBenefitExcessesError extends MtdError("RULE_BENEFIT","You can only provide Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance not both")
 
 
 

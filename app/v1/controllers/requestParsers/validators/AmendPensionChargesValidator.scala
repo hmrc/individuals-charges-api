@@ -68,7 +68,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
   }
 
   private def validateCharges(pensionCharges: PensionCharges): List[MtdError] = {
-    List(
+    val errors = List(
       NumberValidation.validateOptional(
         field = pensionCharges.pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.amount)),
         path = s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount"),
@@ -112,6 +112,11 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         field = pensionCharges.overseasPensionContributions.map(_.shortServiceRefundTaxPaid),
         path = s"/overseasPensionContributions/shortServiceRefundTaxPaid")
     ).flatten
+    if(errors.nonEmpty){
+      List(errors.head.copy(paths = Some(errors.flatMap(_.paths).flatten)))
+    } else {
+      NoValidationErrors
+    }
   }
 
   private def validateOverseasSchemeProvider(overseasSchemeProvider: OverseasSchemeProvider, arrayIndex: Int): List[MtdError] = {
