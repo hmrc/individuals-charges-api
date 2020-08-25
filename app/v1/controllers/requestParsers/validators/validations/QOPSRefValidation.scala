@@ -20,8 +20,13 @@ import v1.models.errors.{MtdError, QOPSRefFormatError}
 
 object QOPSRefValidation {
 
-  def validateOptional(qopsRef: Option[String], path: String): List[MtdError] = qopsRef.fold(NoValidationErrors: List[MtdError]) { ref =>
-    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
+  def validate(qopsRefs: Seq[String]) : List[MtdError] = {
+    qopsRefs.zipWithIndex.flatMap(x =>
+      validateReference(x._1, path = s"/overseasPensionContributions/${x._2}/qualifyingRecognisedOverseasPensionScheme")).toList
+  }
+
+  private def validateReference(qopsRef: String, path: String): List[MtdError] = {
+    if (qopsRef.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
       QOPSRefFormatError.copy(paths = Some(Seq(path))))
   }
 

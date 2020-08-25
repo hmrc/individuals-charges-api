@@ -22,27 +22,16 @@ import v1.models.errors.QOPSRefFormatError
 class QOPSRefValidationSpec extends UnitSpec {
 
   "QOPSRefValidation" when {
-    "validateOptional" must {
-      "return an empty list for a value of 'None'" in {
-        QOPSRefValidation.validateOptional(
-          qopsRef = None,
-          path = "/path"
-        ) shouldBe NoValidationErrors
-      }
+    "validate correctly for some valid qopsRef" in {
+      QOPSRefValidation.validate(
+        qopsRefs = Seq("QOPS000000")
+      ) shouldBe NoValidationErrors
+    }
 
-      "validate correctly for some valid qopsRef" in {
-        QOPSRefValidation.validateOptional(
-          qopsRef = Some("QOPS000000"),
-          path = "/path"
-        ) shouldBe NoValidationErrors
-      }
-
-      "validate correctly for some invalid qopsRef" in {
-        QOPSRefValidation.validateOptional(
-          qopsRef = Some("This qopsRef string is 91 characters long ---------------------------------------------- 91"),
-          path = "/path"
-        ) shouldBe List(QOPSRefFormatError.copy(paths = Some(Seq("/path"))))
-      }
+    "validate correctly for some invalid qopsRef" in {
+      QOPSRefValidation.validate(
+        qopsRefs = Seq("This qopsRef string is 91 characters long ---------------------------------------------- 91"),
+      ) shouldBe List(QOPSRefFormatError.copy(paths = Some(Seq("/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"))))
     }
   }
 }

@@ -23,18 +23,17 @@ class PensionSchemeTaxReferenceValidationSpec extends UnitSpec {
 
   "SF74RefValidation" when {
     "validateOptional" must {
-      "validate correctly for some valid sf74Ref" in {
+      "validate correctly for some valid Pension Scheme Tax Ref" in {
         PensionSchemeTaxReferenceValidation.validate(
-          pensionSchemeTaxRef = "00123456RA",
-          path = "/path"
+          pensionSchemeTaxRef = Seq("00123456RA")
         ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid sf74Ref" in {
         PensionSchemeTaxReferenceValidation.validate(
-          pensionSchemeTaxRef = "This pensionSchemeTaxRef string is 91 characters long ---------------------------------------------- 91",
-          path = "/path"
-        ) shouldBe List(PensionSchemeTaxRefFormatError.copy(paths = Some(Seq("/path"))))
+          pensionSchemeTaxRef = Seq("This pensionSchemeTaxRef string is 91 characters long ---------------------------------------------- 91"),
+
+        ) shouldBe List(PensionSchemeTaxRefFormatError.copy(paths = Some(Seq("/pensionSchemeOverseasTransfers/0/pensionSchemeTaxReference"))))
       }
     }
   }
