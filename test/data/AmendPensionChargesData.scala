@@ -215,5 +215,18 @@ object AmendPensionChargesData {
       |""".stripMargin
   )
 
+   val minimalJson: JsValue = Json.parse(
+    """{
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 0,
+      |		"annualAllowanceTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
 
 }

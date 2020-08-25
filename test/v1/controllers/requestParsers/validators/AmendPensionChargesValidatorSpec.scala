@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators
 
-import data.AmendPensionChargesData.{emptyJson, fullJson}
+import data.AmendPensionChargesData.{emptyJson, minimalJson, fullJson}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
@@ -104,6 +104,11 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
         "an empty body" in new Test {
           validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(emptyJson))) shouldBe List(
             RuleIncorrectOrEmptyBodyError)
+        }
+      }
+      "not return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
+        "only one field is supplied in body" in new Test {
+          validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(minimalJson))) shouldBe List()
         }
       }
     }
