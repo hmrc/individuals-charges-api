@@ -19,18 +19,19 @@ package v1.controllers.requestParsers.validators.validations
 import support.UnitSpec
 import v1.models.errors.QOPSRefFormatError
 
-class QOPSRefValidationSpec extends UnitSpec {
+class QROPSRefValidationSpec extends UnitSpec {
 
   "QOPSRefValidation" when {
     "validate correctly for some valid qopsRef" in {
-      QOPSRefValidation.validate(
-        qopsRefs = Seq("QOPS000000")
+      QROPSRefValidation.validate(
+        "QOPS000000","path"
       ) shouldBe NoValidationErrors
     }
 
     "validate correctly for some invalid qopsRef" in {
-      QOPSRefValidation.validate(
-        qopsRefs = Seq("This qopsRef string is 91 characters long ---------------------------------------------- 91"),
+      QROPSRefValidation.validate(
+        "This qopsRef string is 91 characters long ---------------------------------------------- 91",
+        "/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"
       ) shouldBe List(QOPSRefFormatError.copy(paths = Some(Seq("/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"))))
     }
   }

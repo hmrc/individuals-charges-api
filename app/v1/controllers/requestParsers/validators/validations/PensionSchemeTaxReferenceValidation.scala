@@ -22,18 +22,9 @@ object PensionSchemeTaxReferenceValidation {
 
   private val regex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
 
-  def validate(pensionSchemeTaxRef: Seq[String]) : List[MtdError] = {
-    pensionSchemeTaxRef.zipWithIndex.flatMap(x =>
-    validateTaxRef(x._1, path = s"/pensionSchemeOverseasTransfers/${x._2}/pensionSchemeTaxReference")).toList
-  }
-
-  def validateTaxRef(pensionSchemeTaxRef: String, path: String) : List[MtdError] = {
+  def validate(pensionSchemeTaxRef: String, path: String) : List[MtdError] = {
     if(pensionSchemeTaxRef.matches(regex)) NoValidationErrors else List(
       PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(path)))
     )
   }
-
-
-
-
 }

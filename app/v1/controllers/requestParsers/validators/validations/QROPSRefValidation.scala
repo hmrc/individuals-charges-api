@@ -18,18 +18,13 @@ package v1.controllers.requestParsers.validators.validations
 
 import v1.models.errors.{MtdError, QOPSRefFormatError}
 
-object QOPSRefValidation {
+object QROPSRefValidation {
 
-  def validate(qopsRefs: Seq[String]) : List[MtdError] = {
-    qopsRefs.zipWithIndex.flatMap(x =>
-      validateReference(x._1, path = s"/overseasPensionContributions/${x._2}/qualifyingRecognisedOverseasPensionScheme")).toList
+  def validate(qropsRef: String, path: String): List[MtdError] = {
+    if (qropsRef.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")){
+      NoValidationErrors
+    } else {
+      List(QOPSRefFormatError.copy(paths = Some(Seq(path))))
+    }
   }
-
-  private def validateReference(qopsRef: String, path: String): List[MtdError] = {
-    if (qopsRef.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
-      QOPSRefFormatError.copy(paths = Some(Seq(path))))
-  }
-
-
-
 }
