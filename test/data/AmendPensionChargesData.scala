@@ -137,9 +137,242 @@ object AmendPensionChargesData {
       |""".stripMargin
   )
 
+  val fullJsonWithInvalidCountries: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		},
+      |		"benefitInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.34
+      |		},
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "BEANS",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "LOL",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "LOL",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "BEANS",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+  //scalastyle:off
+  def fullJsonWithInvalidCountryFormat(cc: String): JsValue = Json.parse(
+    s"""
+      |{
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "$cc",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			},{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "$cc",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  //scalastyle:off
+  def fullJson(bigDecimal: BigDecimal): JsValue = Json.parse(
+    s"""
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": $bigDecimal,
+      |			"taxPaid": $bigDecimal
+      |		},
+      |		"benefitInExcessOfLifetimeAllowance": {
+      |			"amount": $bigDecimal,
+      |			"taxPaid": $bigDecimal
+      |		},
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": $bigDecimal,
+      |		"transferChargeTaxPaid": $bigDecimal
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": $bigDecimal,
+      |			"foreignTaxPaid": $bigDecimal
+      |		},
+      |		"noSurcharge": {
+      |			"amount": $bigDecimal,
+      |			"foreignTaxPaid": $bigDecimal
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": $bigDecimal,
+      |		"annualAllowanceTaxPaid": $bigDecimal
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": $bigDecimal,
+      |		"shortServiceRefundTaxPaid": $bigDecimal
+      |	}
+      |}
+      |""".stripMargin
+  )
+
    val emptyJson: JsValue = Json.parse(
     """
       |{}
+      |""".stripMargin
+  )
+
+   val minimalJson: JsValue = Json.parse(
+    """{
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 0,
+      |		"annualAllowanceTaxPaid": 0
+      |	}
+      |}
       |""".stripMargin
   )
 

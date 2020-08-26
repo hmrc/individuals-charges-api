@@ -23,11 +23,8 @@ object RuleBenefitExcessesValidation {
 
   def validate(lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance]): List[MtdError] =
-      (lumpSumBenefitTakenInExcessOfLifetimeAllowance,benefitInExcessOfLifetimeAllowance) match {
-        case (None,None) => NoValidationErrors
-        case (Some(_),None) => NoValidationErrors
-        case (None, Some(_)) => NoValidationErrors
-        case (Some(_),Some(_)) => List(RuleBenefitExcessesError)
-  }
-
+    (lumpSumBenefitTakenInExcessOfLifetimeAllowance, benefitInExcessOfLifetimeAllowance) match {
+      case (Some(_), Some(_)) => List(RuleBenefitExcessesError)
+      case _ => NoValidationErrors
+    }
 }

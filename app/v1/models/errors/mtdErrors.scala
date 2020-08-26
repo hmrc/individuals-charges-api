@@ -32,6 +32,7 @@ object ProviderNameFormatError extends MtdError("FORMAT_PROVIDER_NAME","The prov
 object ProviderAddressFormatError extends MtdError("FORMAT_PROVIDERS_ADDRESS","The provided address is invalid")
 object QOPSRefFormatError extends MtdError("FORMAT_QOPS_REF", "The provided QOPS reference number is invalid")
 object PensionSchemeTaxRefFormatError extends MtdError("FORMAT_PENSION_SCHEME_TAX_REFERENCE","The provided pension scheme tax reference is invalid")
+object ValueFormatError extends MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED",
