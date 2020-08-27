@@ -22,7 +22,6 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.mvc.AnyContentAsJson
 import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
@@ -125,7 +124,15 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("Badnino", "2019-20", fullValidJson, Status.BAD_REQUEST, NinoFormatError),
           ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", fullValidJson, Status.BAD_REQUEST, RuleTaxYearRangeInvalid),
+          ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("AA123456A", "2021-22", fullReferencesJson("Q123456","453"), Status.BAD_REQUEST, PensionSchemeTaxRefFormatError.copy(
+            "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
+            "/overseasPensionContributions/overseasSchemeProvider/1/pensionSchemeTaxReference/0"
+          )),
+          ("AA123456A", "2021-22", fullReferencesJson("234","00123456RA"), Status.BAD_REQUEST, QOPSRefFormatError.copy(
+            "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
+            "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
+          )),
           ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError.copy(
             paths = Some(Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
