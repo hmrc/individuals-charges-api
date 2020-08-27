@@ -18,4 +18,4 @@ package v1.models.requestData
 
 import play.api.mvc.AnyContentAsJson
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData

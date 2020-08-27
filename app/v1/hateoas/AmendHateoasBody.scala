@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.hateoas
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import config.AppConfig
+import play.api.libs.json.{JsValue, Json}
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
+trait AmendHateoasBody extends HateoasLinks {
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
+  def amendPensionsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
 
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
+    val links = Seq(
+      getRetrievePensions(appConfig, nino, taxYear),
+      getAmendPensions(appConfig, nino, taxYear),
+      getDeletePensions(appConfig, nino, taxYear)
+    )
 
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
-    } else {
-      json
-    }
+    Json.obj("links" -> links)
   }
 }

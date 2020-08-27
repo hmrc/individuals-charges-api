@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import v1.models.errors.{MtdError,RulePensionReferenceError}
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
-
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
-
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
-    } else {
-      json
+object RulePensionReferenceValidation {
+  def validate(qualifyingRecognisedOverseasPensionSchemeReferenceNumber: Option[Seq[String]],
+               pensionSchemeTaxReference: Option[Seq[String]]): List[MtdError] =
+    (qualifyingRecognisedOverseasPensionSchemeReferenceNumber,pensionSchemeTaxReference) match {
+      case (Some(_),Some(_)) => List(RulePensionReferenceError)
+      case _ => NoValidationErrors
     }
-  }
 }

@@ -19,12 +19,13 @@ package v1.models.errors
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class MtdError(code: String, message: String)
+case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
   implicit val reads: Reads[MtdError] = (
     (__ \ "code").read[String] and
-      (__ \ "reason").read[String]
+      (__ \ "reason").read[String] and
+      (__ \ "paths").readNullable[Seq[String]]
     ) (MtdError.apply _)
 }

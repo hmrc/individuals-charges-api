@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import v1.models.errors.{MtdError, QOPSRefFormatError}
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
+object QROPSRefValidation {
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
-
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
+  def validate(qropsRef: String, path: String): List[MtdError] = {
+    if (qropsRef.matches("^[Q]{1}[0-9]{6}$")){
+      NoValidationErrors
     } else {
-      json
+      List(QOPSRefFormatError.copy(paths = Some(Seq(path))))
     }
   }
 }

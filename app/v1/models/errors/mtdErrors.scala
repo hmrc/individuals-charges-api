@@ -15,7 +15,6 @@
  */
 
 package v1.models.errors
-
 //scalastyle:off
 
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
@@ -28,6 +27,12 @@ object TypeOfLossFormatError extends MtdError("FORMAT_TYPE_OF_LOSS", "The suppli
 object TypeOfClaimFormatError extends MtdError("FORMAT_TYPE_OF_CLAIM", "The supplied type of claim format is invalid or the type of claim is not recognised")
 object ClaimTypeFormatError extends MtdError("FORMAT_CLAIM_TYPE", "The provided claim type is invalid")
 object SequenceFormatError extends MtdError("FORMAT_SEQUENCE", "The provided sequence number is invalid")
+object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
+object ProviderNameFormatError extends MtdError("FORMAT_PROVIDER_NAME","The provided name is invalid")
+object ProviderAddressFormatError extends MtdError("FORMAT_PROVIDERS_ADDRESS","The provided address is invalid")
+object QOPSRefFormatError extends MtdError("FORMAT_QOPS_REF", "The provided QOPS reference number is invalid")
+object PensionSchemeTaxRefFormatError extends MtdError("FORMAT_PENSION_SCHEME_TAX_REFERENCE","The provided pension scheme tax reference is invalid")
+object ValueFormatError extends MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED",
@@ -49,6 +54,11 @@ object RuleInvalidSequenceStart extends MtdError( "RULE_INVALID_SEQUENCE_START",
 object RuleSequenceOrderBroken extends MtdError( "RULE_SEQUENCE_ORDER_BROKEN", "The sequence is not continuous")
 object RuleLossClaimsMissing extends MtdError("RULE_LOSS_CLAIMS_MISSING",
   "One or more loss claims missing from this request")
+object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE","The country code is not a valid ISO 3166-1 alpha-3 country code")
+object RuleIsAnnualAllowanceReducedError extends MtdError("RULE_IS_ANNUAL_ALLOWANCE_REDUCED","Tapered annual allowance or money purchased allowance has not been provided")
+object RuleBenefitExcessesError extends MtdError("RULE_BENEFIT","You can only provide Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance not both")
+object RulePensionReferenceError extends MtdError("RULE_PENSION_REFERENCE", "You can only provide qualifying recognised Overseas Pension Scheme reference or pension scheme tax reference not both")
+
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

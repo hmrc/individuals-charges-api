@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import v1.models.errors.{MtdError, ProviderAddressFormatError}
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
+object ProviderAddressValidation {
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
+  private val addressMaxLength = 250
 
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
+  def validate(providerAddress: String, path: String): List[MtdError] = {
+    if(providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty){
+      NoValidationErrors
     } else {
-      json
+      List(ProviderAddressFormatError.copy(paths = Some(Seq(path))))
     }
   }
+
 }

@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import v1.models.errors.{MtdError, PensionSchemeTaxRefFormatError}
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
+object PensionSchemeTaxReferenceValidation {
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
+  private val regex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
 
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
-    } else {
-      json
-    }
+  def validate(pensionSchemeTaxRef: String, path: String) : List[MtdError] = {
+    if(pensionSchemeTaxRef.matches(regex)) NoValidationErrors else List(
+      PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(path)))
+    )
   }
 }
