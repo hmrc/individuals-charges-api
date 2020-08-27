@@ -25,9 +25,6 @@ import v1.models.requestData.{AmendPensionChargesRawData, PensionCharges}
 
 class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
 
-  private val nameMaxLength = 105
-  private val addressMaxLength = 250
-
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator)
 
   private def parameterFormatValidation: AmendPensionChargesRawData => List[List[MtdError]] = { data =>
@@ -102,7 +99,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
     def namesErrors(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): List[MtdError] = {
       overseasSchemeProviders.zipWithIndex.flatMap {
         case (schemeProviderWithIndex, index) =>
-          ProviderNameValidation.validate(schemeProviderWithIndex.providerName, nameMaxLength, s"/$startOfPath/overseasSchemeProvider/$index/providerName")
+          ProviderNameValidation.validate(schemeProviderWithIndex.providerName, s"/$startOfPath/overseasSchemeProvider/$index/providerName")
       }.toList
     }
 
@@ -123,8 +120,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
     def addressesErrors(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): List[MtdError] = {
       overseasSchemeProviders.zipWithIndex.flatMap {
         case (schemeProviderWithIndex, index) =>
-          ProviderAddressValidation.validate(schemeProviderWithIndex.providerAddress,
-            addressMaxLength, s"/$startOfPath/overseasSchemeProvider/$index/providerAddress")
+          ProviderAddressValidation.validate(schemeProviderWithIndex.providerAddress, s"/$startOfPath/overseasSchemeProvider/$index/providerAddress")
       }.toList
     }
 

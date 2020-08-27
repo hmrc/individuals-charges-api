@@ -144,6 +144,74 @@ object AmendPensionChargesData {
       |}
       |""".stripMargin
   )
+  val invalidNameJson: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "r75w46tugyfsbhkfgudifijgklpd;[';g[p56097i-[-trgpfvc;l'd,km.gjn,hrtuieois9pawso0pzcjnx,bhsjfyegui7yo8w4ue9qia;oskjxcs,bhvdyuiertoiwefd",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+  val invalidAddressJson: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Bobby",
+			|     	"providerAddress": "",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Bobby",
+      |				"providerAddress": "4334534545634563456345634563 43345345456345634563456345634334534545634563456345634563 43345345456345634563456345634334534545634563456345634563 43345345456345634563456345634334534545634563456345634563 4334534545634563456345634563 4334534545634563456345634563",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
 
   val fullValidJson: JsValue = Json.parse(
     """
@@ -219,12 +287,12 @@ object AmendPensionChargesData {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
       |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
       |		},
       |		"isAnnualAllowanceReduced": true,
-      |		"moneyPurchasedAllowance": true
+      |		"taperedAnnualAllowance": true
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [

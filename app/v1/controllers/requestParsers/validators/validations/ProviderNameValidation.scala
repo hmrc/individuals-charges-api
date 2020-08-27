@@ -20,8 +20,10 @@ import v1.models.errors.{MtdError, ProviderNameFormatError}
 
 object ProviderNameValidation {
 
-  def validate(providerName: String, maxLength: Int, path: String): List[MtdError] = {
-    if(providerName.length() <= maxLength) NoValidationErrors else List(ProviderNameFormatError.copy(paths = Some(Seq(path))))
+  private val nameMaxLength = 105
+
+  def validate(providerName: String, path: String): List[MtdError] = {
+    if(providerName.length() <= nameMaxLength && providerName.nonEmpty) NoValidationErrors else List(ProviderNameFormatError.copy(paths = Some(Seq(path))))
   }
 
 }

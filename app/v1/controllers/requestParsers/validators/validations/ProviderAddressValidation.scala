@@ -20,8 +20,14 @@ import v1.models.errors.{MtdError, ProviderAddressFormatError}
 
 object ProviderAddressValidation {
 
-  def validate(providerAddress: String, maxLength: Int, path: String): List[MtdError] = {
-    if(providerAddress.length() <= maxLength) NoValidationErrors else List(ProviderAddressFormatError.copy(paths = Some(Seq(path))))
+  private val addressMaxLength = 250
+
+  def validate(providerAddress: String, path: String): List[MtdError] = {
+    if(providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty){
+      NoValidationErrors
+    } else {
+      List(ProviderAddressFormatError.copy(paths = Some(Seq(path))))
+    }
   }
 
 }

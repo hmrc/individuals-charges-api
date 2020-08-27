@@ -152,6 +152,17 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("AA123456A", "2021-22", invalidNameJson, Status.BAD_REQUEST, ProviderNameFormatError.copy(
+            paths = Some(Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
+              "/overseasPensionContributions/overseasSchemeProvider/0/providerName"
+            ))
+          )),("AA123456A", "2021-22", invalidAddressJson, Status.BAD_REQUEST, ProviderAddressFormatError.copy(
+            paths = Some(Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerAddress",
+              "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress"
+            ))
+          )),
           ("AA123456A", "2021-22", fullReferencesJson("Q123456","453"), Status.BAD_REQUEST, PensionSchemeTaxRefFormatError.copy(
             paths = Some(Seq(
             "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
