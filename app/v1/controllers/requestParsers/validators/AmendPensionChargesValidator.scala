@@ -68,13 +68,34 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
           validatePensionSchemeTaxReference(model) ++
           validateNames(model) ++
           validateAddresses(model) ++
-          validateRuleIsAnnualAllowanceReduced(model.pensionSavingsTaxCharges)
+          validateRuleIsAnnualAllowanceReduced(model.pensionSavingsTaxCharges) ++
+          validateRulePensionReference(model)
       } else {
         List(RuleIncorrectOrEmptyBodyError)
       }
     )
 
     List(Validator.flattenErrors(errors))
+  }
+
+  private def validateRulePensionReference(pensionCharges: PensionCharges): List[MtdError] = {
+    def rulePensionReferenceErrors(overseasSchemeProviders: Seq[OverseasSchemeProvider]): List[MtdError] = {
+      overseasSchemeProviders.flatMap { schemeProvider =>
+        RulePensionReferenceValidation.validate(schemeProvider.qualifyingRecognisedOverseasPensionScheme, schemeProvider.pensionSchemeTaxReference)
+      }.toList
+    }
+
+    val pensionSchemeOverseasTransfersRulePensionReferenceErrors: List[MtdError] = pensionCharges.pensionSchemeOverseasTransfers.map {
+      pensionSchemeOverseasTransfers =>
+        rulePensionReferenceErrors(pensionSchemeOverseasTransfers.overseasSchemeProvider)
+    }.getOrElse(NoValidationErrors)
+
+    val overseasPensionContributionsRulePensionReferenceErrors: List[MtdError] = pensionCharges.overseasPensionContributions.map {
+      overseasPensionContributions =>
+        rulePensionReferenceErrors(overseasPensionContributions.overseasSchemeProvider)
+    }.getOrElse(NoValidationErrors)
+
+    pensionSchemeOverseasTransfersRulePensionReferenceErrors ++ overseasPensionContributionsRulePensionReferenceErrors
   }
 
   private def validateNames(pensionCharges: PensionCharges): List[MtdError] = {
