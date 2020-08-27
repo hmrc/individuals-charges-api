@@ -20,13 +20,13 @@ import v1.models.errors.{MtdError, RuleIsAnnualAllowanceReducedError}
 
 object RuleIsAnnualAllowanceReducedValidation {
 
-  def validate(isAnnualAllowanceReduced: Boolean,taperedAnnualAllowance: Option[Boolean], moneyPurchasedAllowance: Option[Boolean]): List[MtdError] =
-      (isAnnualAllowanceReduced,taperedAnnualAllowance,moneyPurchasedAllowance) match {
-        case (true,Some(false),Some(false)) => List(RuleIsAnnualAllowanceReducedError)
-        case (true,Some(false),Some(true)) => NoValidationErrors
-        case (true,Some(true),Some(false)) => NoValidationErrors
-        case (false,Some(false),Some(false)) => NoValidationErrors
-  }
-
-
+  def validate(isAnnualAllowanceReduced: Boolean, taperedAnnualAllowance: Option[Boolean], moneyPurchasedAllowance: Option[Boolean]): List[MtdError] =
+    (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
+      case (true, Some(true), Some(false)) => NoValidationErrors
+      case (true, Some(false), Some(true)) => NoValidationErrors
+      case (true, None, Some(true)) => NoValidationErrors
+      case (true, Some(true), None) => NoValidationErrors
+      case (false, _, _) => NoValidationErrors
+      case _ => List(RuleIsAnnualAllowanceReducedError)
+    }
 }

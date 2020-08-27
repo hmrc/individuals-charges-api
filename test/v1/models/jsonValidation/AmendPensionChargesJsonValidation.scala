@@ -614,6 +614,21 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       |""".stripMargin
   )
 
+  val invalidBooleans: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA"
+      |		],
+      |  "isAnnualAllowanceReduced": true,
+      |  "taperedAnnualAllowance": true,
+      |  "moneyPurchasedAllowance": true
+      |	}
+      |}
+      |""".stripMargin
+  )
+
   private case class JsonTest(name: String, json: JsValue, outcome: Boolean)
 
   "The json Schema file for Get Pension Charges Response" should {
@@ -635,7 +650,9 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       JsonTest("invalid json no boolean fields supplied", invalidJsonNoBooleans, false),
       JsonTest("valid minimum boolean fields supplied", validMinimumBooleansSupplied1, true),
       JsonTest("valid minimum boolean fields supplied example 2", validMinimumBooleansSupplied2, true),
-      JsonTest("valid minimum boolean fields supplied example 3", validMinimumBooleansSupplied3, true)
+      JsonTest("valid minimum boolean fields supplied example 3", validMinimumBooleansSupplied3, true),
+      JsonTest("invalid Booleans", invalidBooleans, false),
+      JsonTest("invalid Booleans only first one", invalidBooleansSupplied1, false)
     )
 
     jsonSchemaTests.foreach {
