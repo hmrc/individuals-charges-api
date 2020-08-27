@@ -16,7 +16,10 @@
 
 package v1.endpoints
 
+import java.time.{LocalDateTime, ZoneOffset}
+
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import com.sun.jna.platform.win32.Guid.GUID
 import data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
@@ -130,7 +133,9 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue,
                                 expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error ${
+            if(expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID else ""
+          }" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
@@ -149,6 +154,8 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("Badnino", "2019-20", fullValidJson, Status.BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "beans", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "20!0-22", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
