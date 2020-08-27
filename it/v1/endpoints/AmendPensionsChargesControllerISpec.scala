@@ -118,8 +118,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().put(requestBody))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
-
-            println(response.json)
           }
         }
 
@@ -128,8 +126,35 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2018-22", fullValidJson, Status.BAD_REQUEST, RuleTaxYearRangeInvalid),
-          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError),
-          ("AA123456A", "2021-22", fullJson(999999999999.99), Status.BAD_REQUEST, ValueFormatError)
+          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError.copy(
+            paths = Some(Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+            ))
+          )),
+          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("INVALID"), Status.BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+            )
+          ))
+          ),
+          ("AA123456A", "2021-22", fullJson(999999999999.99), Status.BAD_REQUEST, ValueFormatError.copy(
+            paths = Some(Seq(
+              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
+              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
+              "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
+              "/pensionSchemeOverseasTransfers/transferCharge",
+              "/pensionSchemeUnauthorisedPayments/surcharge/amount",
+              "/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid",
+              "/pensionSchemeUnauthorisedPayments/noSurcharge/amount",
+              "/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid",
+              "/pensionContributions/annualAllowanceTaxPaid",
+              "/pensionContributions/inExcessOfTheAnnualAllowance",
+              "/overseasPensionContributions/shortServiceRefund",
+              "/overseasPensionContributions/shortServiceRefundTaxPaid"
+            ))
+          ))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
