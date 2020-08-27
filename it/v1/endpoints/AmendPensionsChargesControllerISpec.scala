@@ -96,6 +96,33 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }
+      "any valid request is made with different booleans" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(boolean1Json))
+        response.status shouldBe Status.OK
+        response.json shouldBe hateoasResponse
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe Some("application/json")
+
+        val response2: WSResponse = await(request().put(boolean2Json))
+        response2.status shouldBe Status.OK
+        response2.json shouldBe hateoasResponse
+        response2.header("X-CorrelationId").nonEmpty shouldBe true
+        response2.header("Content-Type") shouldBe Some("application/json")
+
+        val response3: WSResponse = await(request().put(booleans3Json))
+        response3.status shouldBe Status.OK
+        response3.json shouldBe hateoasResponse
+        response3.header("X-CorrelationId").nonEmpty shouldBe true
+        response3.header("Content-Type") shouldBe Some("application/json")
+      }
     }
 
     "return error according to spec" when {
@@ -126,12 +153,16 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "2021-22", fullReferencesJson("Q123456","453"), Status.BAD_REQUEST, PensionSchemeTaxRefFormatError.copy(
+            paths = Some(Seq(
             "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
             "/overseasPensionContributions/overseasSchemeProvider/1/pensionSchemeTaxReference/0"
+            ))
           )),
           ("AA123456A", "2021-22", fullReferencesJson("234","00123456RA"), Status.BAD_REQUEST, QOPSRefFormatError.copy(
+            paths = Some(Seq(
             "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
             "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
+            ))
           )),
           ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError.copy(
             paths = Some(Seq(
