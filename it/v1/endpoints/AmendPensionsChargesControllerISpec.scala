@@ -22,6 +22,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.mvc.AnyContentAsJson
 import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
@@ -90,7 +91,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(fullJson))
+        val response: WSResponse = await(request().put(fullValidJson))
         response.status shouldBe Status.OK
         response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -117,15 +118,18 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().put(requestBody))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
+
+            println(response.json)
           }
         }
 
-        // TODO: update when validator complete
         val input = Seq(
-          ("Badnino", "2019-20", fullJson, Status.BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "203100", fullJson, Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2018-19", fullJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", fullJson, Status.BAD_REQUEST, RuleTaxYearRangeInvalid)
+          ("Badnino", "2019-20", fullValidJson, Status.BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2018-22", fullValidJson, Status.BAD_REQUEST, RuleTaxYearRangeInvalid),
+          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError),
+          ("AA123456A", "2021-22", fullJson(999999999999.99), Status.BAD_REQUEST, ValueFormatError)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -142,7 +146,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
               DesStub.onError(DesStub.PUT, desUri, desStatus, errorBody(desCode))
             }
 
-            val response: WSResponse = await(request().put(fullJson))
+            val response: WSResponse = await(request().put(fullValidJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }

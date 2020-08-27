@@ -81,8 +81,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
 
-    (errorWrapper.errors.head: @unchecked) match {
-        // TODO: update when validator complete
+    (errorWrapper.errors.head.copy(paths = None): @unchecked) match {
       case BadRequestError |
            NinoFormatError |
            TaxYearFormatError |

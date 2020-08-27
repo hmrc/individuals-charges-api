@@ -37,6 +37,7 @@ class CountryCodeValidationSpec extends UnitSpec{
 
       "return a CountryCodeFormatError for an invalid rule country code" in {
         CountryCodeValidation.validate("FRE") shouldBe List(RuleCountryCodeError)
+        CountryCodeValidation.validate("1YM") shouldBe List(RuleCountryCodeError)
       }
     }
 
