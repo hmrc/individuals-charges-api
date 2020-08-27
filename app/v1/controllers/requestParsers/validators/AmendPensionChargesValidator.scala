@@ -18,11 +18,9 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.Inject
-import v1.models.des.PensionSavingsTaxCharges
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.des.OverseasSchemeProvider
-import v1.models.errors.{CountryCodeFormatError, MtdError, PensionSchemeTaxRefFormatError, ProviderNameFormatError,
-  QOPSRefFormatError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
+import v1.models.des.{OverseasSchemeProvider, PensionSavingsTaxCharges}
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import v1.models.requestData.{AmendPensionChargesRawData, PensionCharges}
 
 class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
@@ -58,7 +56,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
       || x.pensionContributions.isDefined || x.pensionSavingsTaxCharges.isDefined || x.pensionSchemeOverseasTransfers.isDefined
       || x.pensionSchemeUnauthorisedPayments.isDefined)
 
-    List(
+    val errors = List(
       if (validationErrors.nonEmpty) {
         validationErrors
       } else if (nonEmptyModel) {
@@ -75,6 +73,8 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         List(RuleIncorrectOrEmptyBodyError)
       }
     )
+
+    List(Validator.flattenErrors(errors))
   }
 
   private def validateNames(pensionCharges: PensionCharges): List[MtdError] = {
@@ -95,10 +95,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         namesErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)
     }.getOrElse(NoValidationErrors)
 
-    val allNameErrors: List[MtdError] = pensionSchemeOverseasTransfersNameErrors ++ overseasPensionContributionsNameErrors
-    lazy val paths = allNameErrors.flatMap(_.paths).flatten
-
-    if(allNameErrors.nonEmpty) List(ProviderNameFormatError.copy(paths = Some(paths))) else NoValidationErrors
+    pensionSchemeOverseasTransfersNameErrors ++ overseasPensionContributionsNameErrors
   }
 
   private def validateAddresses(pensionCharges: PensionCharges): List[MtdError] = {
@@ -120,10 +117,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         addressesErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)
     }.getOrElse(NoValidationErrors)
 
-    val allAddressesErrors: List[MtdError] = pensionSchemeOverseasTransfersAddressesErrors ++ overseasPensionContributionsAddressesErrors
-    lazy val paths = allAddressesErrors.flatMap(_.paths).flatten
-
-    if(allAddressesErrors.nonEmpty) List(ProviderNameFormatError.copy(paths = Some(paths))) else NoValidationErrors
+    pensionSchemeOverseasTransfersAddressesErrors ++ overseasPensionContributionsAddressesErrors
   }
 
   private def validateQROPsReferences(pensionCharges: PensionCharges): List[MtdError] = {
@@ -146,10 +140,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
     val overseasPensionContributionsQROPsErrors: List[MtdError] = pensionCharges.overseasPensionContributions.map(overseasPensionContributions =>
       qropsErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)).getOrElse(NoValidationErrors)
 
-    val allQROPsErrors: List[MtdError] = pensionSchemeOverseasTransfersQROPsErrors ++ overseasPensionContributionsQROPsErrors
-    lazy val paths = allQROPsErrors.flatMap(_.paths).flatten
-
-    if(allQROPsErrors.nonEmpty) List(QOPSRefFormatError.copy(paths = Some(paths))) else NoValidationErrors
+    pensionSchemeOverseasTransfersQROPsErrors ++ overseasPensionContributionsQROPsErrors
   }
 
   private def validatePensionSchemeTaxReference(pensionCharges: PensionCharges): List[MtdError] = {
@@ -190,13 +181,8 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         pensionSchemeTaxReferenceErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)
     }.getOrElse(NoValidationErrors)
 
-    val allReferencesErrors: List[MtdError] = {
-      pensionSchemeOverseasTransfersReferencesErrors ++ overseasPensionContributionsReferencesErrors ++ pensionContributionsReferencesErrors ++
-        pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
-    }
-    lazy val paths = allReferencesErrors.flatMap(_.paths).flatten
-
-    if(allReferencesErrors.nonEmpty) List(PensionSchemeTaxRefFormatError.copy(paths = Some(paths))) else NoValidationErrors
+    pensionSchemeOverseasTransfersReferencesErrors ++ overseasPensionContributionsReferencesErrors ++ pensionContributionsReferencesErrors ++
+      pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
   }
 
   private def validateRuleIsAnnualAllowanceReduced(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): List[MtdError] = {
@@ -213,7 +199,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
   }
 
   private def validateCharges(pensionCharges: PensionCharges): List[MtdError] = {
-    val errors = List(
+    List(
       NumberValidation.validateOptional(
         field = pensionCharges.pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.amount)),
         path = s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount"),
@@ -257,11 +243,6 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
         field = pensionCharges.overseasPensionContributions.map(_.shortServiceRefundTaxPaid),
         path = s"/overseasPensionContributions/shortServiceRefundTaxPaid")
     ).flatten
-    if (errors.nonEmpty) {
-      List(errors.head.copy(paths = Some(errors.flatMap(_.paths).flatten)))
-    } else {
-      NoValidationErrors
-    }
   }
 
   private def validateCountryCodes(pensionCharges: PensionCharges): List[MtdError] = {
@@ -279,19 +260,7 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
     val overseasPensionContributionsCountryErrors: List[MtdError] = pensionCharges.overseasPensionContributions.map(overseasPensionContributions =>
         countryCodeErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider)).getOrElse(NoValidationErrors)
 
-    val allCountryCodeErrors: List[MtdError] = pensionSchemeOverseasTransfersCountryErrors ++ overseasPensionContributionsCountryErrors
-    val countryCodeFormatPaths: Seq[String] = allCountryCodeErrors.filter(error => error.code.equals(CountryCodeFormatError.code)).flatMap(_.paths).flatten
-    val ruleCountryCodePaths: Seq[String] = allCountryCodeErrors.filter(error => error.code.equals(RuleCountryCodeError.code)).flatMap(_.paths).flatten
-
-    (countryCodeFormatPaths.nonEmpty, ruleCountryCodePaths.nonEmpty) match {
-      case (true, true) => List(
-        CountryCodeFormatError.copy(paths = Some(countryCodeFormatPaths)),
-        RuleCountryCodeError.copy(paths = Some(ruleCountryCodePaths))
-      )
-      case (true, _) => List(CountryCodeFormatError.copy(paths = Some(countryCodeFormatPaths)))
-      case (_, true) => List(RuleCountryCodeError.copy(paths = Some(ruleCountryCodePaths)))
-      case _ => NoValidationErrors
-    }
+    pensionSchemeOverseasTransfersCountryErrors ++ overseasPensionContributionsCountryErrors
   }
 
   override def validate(data: AmendPensionChargesRawData): List[MtdError] = run(validationSet, data)

@@ -41,23 +41,23 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   "Running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson))) shouldBe Nil
+        validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJson))) shouldBe Nil
       }
     }
 
     "return country errors" when {
       "multiple country codes are invalid for multiple reasons" in new Test {
         validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountries))) shouldBe List(
-          CountryCodeFormatError.copy(paths = Some(
-            Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
-              "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
-            )
-          )),
           RuleCountryCodeError.copy(paths = Some(
             Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
               "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
+            )
+          )),
+          CountryCodeFormatError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
             )
           ))
         )
@@ -88,8 +88,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       "an too large number is supplied" in new Test {
         validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(999999999999.99)))) shouldBe List(
           MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99",
-            Some(List("/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount",
-              "/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/taxPaid",
+            Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
               "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
@@ -108,8 +107,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       "an too small number is supplied" in new Test {
         validator.validate(AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(-69420.00)))) shouldBe List(
           MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99",
-            Some(List("/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount",
-              "/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/taxPaid",
+            Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
               "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
