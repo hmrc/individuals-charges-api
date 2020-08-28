@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import com.neovisionaries.i18n.CountryCode
+import v1.models.errors._
 
-case class ErrorWrapper(correlationId: Option[String], errors: Seq[MtdError] = Seq()) {
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
+object CountryCodeValidation {
 
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
-    } else {
-      json
-    }
+  def validateOptional(data: Option[String]): List[MtdError] = data match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
   }
+
+  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data),data) match {
+    case (_: CountryCode,_) => NoValidationErrors
+    case (_, code) if code.length == 3 => List(RuleCountryCodeError)
+    case _ => List(CountryCodeFormatError)
+  }
+
 }

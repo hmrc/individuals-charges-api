@@ -30,7 +30,8 @@ object AppDependencies {
     compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
     "com.github.ghik" % "silencer-lib" % "1.7.0" % Provided cross CrossVersion.full,
     "org.json4s" %% "json4s-native" % "3.6.8",
-    "org.json4s" %% "json4s-ext" % "3.6.8"
+    "org.json4s" %% "json4s-ext" % "3.6.8",
+    "com.neovisionaries" % "nv-i18n" % "1.27"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(
