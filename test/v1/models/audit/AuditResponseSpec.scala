@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers
+package v1.models.audit
 
-import javax.inject.Inject
-import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.CreateBFLossValidator
-import v1.models.domain.BFLoss
-import v1.models.requestData._
+import play.api.libs.json.Json
+import support.UnitSpec
+import v1.fixtures.auditFixture._
 
-class CreateBFLossParser @Inject()(val validator: CreateBFLossValidator) extends RequestParser[CreateBFLossRawData, CreateBFLossRequest] {
+class AuditResponseSpec extends UnitSpec {
 
-  override protected def requestFor(data: CreateBFLossRawData): CreateBFLossRequest =
-    CreateBFLossRequest(Nino(data.nino), data.body.json.as[BFLoss])
+  "AuditResponse" when {
+    "written to JSON with a body" should {
+      "produce the expected JsObject" in {
+        Json.toJson(auditResponseModelWithBody) shouldBe auditResponseJsonWithBody
+      }
+    }
+  }
+  "written to JSON with Audit Errors" should {
+    "produce the expected JsObject" in {
+      Json.toJson(auditResponseModelWithErrors) shouldBe auditResponseJsonWithErrors
+    }
+  }
 }
