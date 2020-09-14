@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.RuleTaxYearNotSupportedError
+import v1.models.errors._
 import v1.models.utils.JsonErrorValidators
 
 class MinTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
@@ -43,6 +43,10 @@ class MinTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
         val validationResult = MinTaxYearValidation.validate("2018-19", minTaxYear)
         validationResult shouldBe List(RuleTaxYearNotSupportedError)
       }
+    }
+    "a tax year in the wrong format is supplied" in {
+      val validationResult = MinTaxYearValidation.validate("BEAN-OH", minTaxYear)
+      validationResult shouldBe  List(TaxYearFormatError)
     }
   }
 }
