@@ -18,8 +18,8 @@ is:
   - errors.formatQopsRef
   - errors.formatPensionSchemeTaxReference
   - errors.ruleIsAnnualAllowanceReduced
-displayName: Amend Pension Charges [test only]
-description: This endpoint allows a developer to amend charges relating to pensions. A National Insurance number and Tax year must be provided.
+displayName: Create and Amend Pension Charges [test only]
+description: This endpoint allows a developer to create and amend charges relating to pensions. A National Insurance number and Tax year must be provided.
 (annotations.sandboxData): !include scenarios/amendPensionCharges.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
@@ -28,7 +28,7 @@ body:
     type: !include schemas/amend_request_schema.json
     examples:
      example-1:
-      description: Amend Request from Vendors
+      description: Create and Amend Request from Vendors
       value: !include examples/amend_request.json
 responses:
   204:
