@@ -67,7 +67,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
          |      {
          |         "href":"/individuals/charges/pensions/$nino/$taxYear",
          |         "method":"PUT",
-         |         "rel":"amend-charges-pensions"
+         |         "rel":"create-and-amend-charges-pensions"
          |      },
          |      {
          |         "href":"/individuals/charges/pensions/$nino/$taxYear",

@@ -212,7 +212,7 @@ object RetrievePensionChargesData {
       |     {
       |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
       |      "method":"PUT",
-      |      "rel":"amend-charges-pensions"
+      |      "rel":"create-and-amend-charges-pensions"
       |    },
       |    {
       |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
