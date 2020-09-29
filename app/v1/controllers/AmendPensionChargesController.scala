@@ -69,13 +69,14 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
               Some(Json.toJson(responseWrapper.correlationId)),Some(request.body))
           )
 
-          val hateoasResponse = amendPensionsHateoasBody(appConfig, nino, taxYear)
-            Ok(hateoasResponse).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+
+            Ok( amendPensionsHateoasBody(appConfig, nino, taxYear)).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper),Some(request.body),))
+          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper),Some(request.body),
+            Some(Json.toJson(amendPensionsHateoasBody(appConfig,nino,taxYear)))))
           result
       }
     }
