@@ -65,15 +65,17 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
           auditSubmission(
-            createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
+            createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None,
+              Some(Json.toJson(responseWrapper.correlationId)),Some(request.body))
           )
 
-          Ok(amendPensionsHateoasBody(appConfig, nino, taxYear)).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+          val hateoasResponse = amendPensionsHateoasBody(appConfig, nino, taxYear)
+            Ok(hateoasResponse).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper)))
+          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper),Some(request.body),))
           result
       }
     }
@@ -109,14 +111,15 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                  correlationId: String,
                                  userDetails: UserDetails,
                                  errorWrapper: Option[ErrorWrapper] = None,
+                                 requestBody: Option[JsValue] = None,
                                  responseBody: Option[JsValue] = None): GenericAuditDetail = {
 
     val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId, response)
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId,Some(rawData.body.json), rawData.taxYear, response)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("amendPensionChargesAuditType", "amend-pension-charges-transaction-type", details)
+    val event = AuditEvent("CreateAmendPensionCharges", "create-amend-pension-charges", details)
     auditService.auditEvent(event)
   }
 }
