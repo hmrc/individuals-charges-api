@@ -23,11 +23,11 @@ case class GenericAuditDetail(
                              userType: String,
                              agentReferenceNumber: Option[String],
                              nino: String,
-                             `X-CorrelationId`: String,
                              request: Option[JsValue],
                              taxYear: String,
-                             response: AuditResponse
-                           )
+                             response: AuditResponse,
+                             `X-CorrelationId`: String,
+                             )
 
 object GenericAuditDetail {
   implicit val writes: OWrites[GenericAuditDetail] = Json.writes[GenericAuditDetail]

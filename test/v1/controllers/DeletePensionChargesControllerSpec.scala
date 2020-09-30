@@ -76,7 +76,7 @@ class DeletePensionChargesControllerSpec
         status(result) shouldBe NO_CONTENT
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail = GenericAuditDetail("Individual", None, rawData.nino, correlationId, AuditResponse(NO_CONTENT, None, None))
+        val detail = GenericAuditDetail("Individual", None, rawData.nino, correlationId,, taxYear, AuditResponse(NO_CONTENT, None, None))
         val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", detail)
         MockedAuditService.verifyAuditEvent(event).once
       }

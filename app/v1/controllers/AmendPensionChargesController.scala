@@ -64,13 +64,14 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
+          val amendResponse = amendPensionsHateoasBody(appConfig, nino, taxYear)
           auditSubmission(
             createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None,
-              Some(Json.toJson(responseWrapper.correlationId)),Some(request.body))
+              Some(request.body),responseBody = Some(amendResponse))
           )
 
 
-            Ok( amendPensionsHateoasBody(appConfig, nino, taxYear)).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+            Ok(amendResponse).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
@@ -115,8 +116,9 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                  requestBody: Option[JsValue] = None,
                                  responseBody: Option[JsValue] = None): GenericAuditDetail = {
 
-    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId,Some(rawData.body.json), rawData.taxYear, response)
+    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
+      .getOrElse(AuditResponse(statusCode, None, responseBody))
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,Some(rawData.body.json), rawData.taxYear, response,correlationId)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
