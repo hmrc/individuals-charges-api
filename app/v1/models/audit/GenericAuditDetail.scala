@@ -24,7 +24,7 @@ case class GenericAuditDetail(
                              agentReferenceNumber: Option[String],
                              nino: String,
                              request: Option[JsValue],
-                             taxYear: String,
+                             taxYear: Option[String],
                              response: AuditResponse,
                              `X-CorrelationId`: String,
                              )

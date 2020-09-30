@@ -118,7 +118,8 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
     val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
       .getOrElse(AuditResponse(statusCode, None, responseBody))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,Some(rawData.body.json), rawData.taxYear, response,correlationId)
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,Some(rawData.body.json),
+      Some(rawData.taxYear), response,correlationId)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
