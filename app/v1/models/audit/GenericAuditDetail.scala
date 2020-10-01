@@ -24,7 +24,7 @@ case class GenericAuditDetail(
                                nino: String,
                                request: Option[JsValue],
                                response: AuditResponse,
-                               `X-CorrelationId`: String,
+                               `X-CorrelationId`: String
                              )
 
 object GenericAuditDetail {
