@@ -76,8 +76,8 @@ class DeletePensionChargesControllerSpec
         status(result) shouldBe NO_CONTENT
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail = GenericAuditDetail("Individual", None, rawData.nino, correlationId, AuditResponse(NO_CONTENT, None, None))
-        val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", detail)
+        val detail = GenericAuditDetail("Individual", None, rawData.nino, None, AuditResponse(NO_CONTENT, None, None),correlationId)
+        val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
         MockedAuditService.verifyAuditEvent(event).once
       }
     }
@@ -94,9 +94,9 @@ class DeletePensionChargesControllerSpec
           contentAsJson(response) shouldBe Json.toJson(error)
           header("X-CorrelationId", response) shouldBe Some(correlationId)
 
-          val detail = GenericAuditDetail("Individual", None, rawData.nino, correlationId,
-            AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None))
-          val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", detail)
+          val detail = GenericAuditDetail("Individual", None, rawData.nino,None,
+            AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))),None),correlationId)
+          val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
           MockedAuditService.verifyAuditEvent(event).once
         }
       }
@@ -123,9 +123,9 @@ class DeletePensionChargesControllerSpec
           contentAsJson(response) shouldBe Json.toJson(error)
           header("X-CorrelationId", response) shouldBe Some(correlationId)
 
-          val detail = GenericAuditDetail("Individual", None, rawData.nino, correlationId,
-            AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None))
-          val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", detail)
+          val detail = GenericAuditDetail("Individual", None, rawData.nino,None
+            ,AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))),None),correlationId)
+          val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
           MockedAuditService.verifyAuditEvent(event).once
         }
       }

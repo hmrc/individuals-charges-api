@@ -98,7 +98,7 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
                                  responseBody: Option[JsValue] = None): GenericAuditDetail = {
 
     val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId, response)
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,None, response,correlationId)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

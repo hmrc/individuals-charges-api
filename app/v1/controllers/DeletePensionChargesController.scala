@@ -93,11 +93,11 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
                                  responseBody: Option[JsValue] = None): GenericAuditDetail = {
 
     val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, correlationId, response)
+    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, None, response,correlationId)
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("deletePensionChargesAuditType", "delete-pension-charges-transaction-type", details)
+    val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)
     auditService.auditEvent(event)
   }
 }
