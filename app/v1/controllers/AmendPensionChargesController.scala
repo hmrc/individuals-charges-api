@@ -122,7 +122,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("CreateAmendPensionCharges", "create-amend-pension-charges", details)
+    val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)
     auditService.auditEvent(event)
   }
 }
