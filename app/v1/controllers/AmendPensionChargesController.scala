@@ -19,7 +19,6 @@ package v1.controllers
 import config.AppConfig
 import javax.inject._
 import play.api.http.MimeTypes
-import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -89,7 +88,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
             request.userDetails,
             Some(errorWrapper),
             Some(request.body),
-            Some(Json.toJson(amendPensionsHateoasBody(appConfig, nino, taxYear)))
+            Some(amendPensionsHateoasBody(appConfig, nino, taxYear))
           ))
 
           result
