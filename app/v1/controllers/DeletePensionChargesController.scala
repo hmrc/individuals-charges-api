@@ -60,26 +60,41 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
-          auditSubmission(
-            createAuditDetails(rawData, NO_CONTENT, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
-          )
+          auditSubmission(createAuditDetails(
+            rawData,
+            NO_CONTENT,
+            responseWrapper.correlationId,
+            request.userDetails,
+            None,
+            None
+          ))
 
           NoContent.withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper)))
+
+          auditSubmission(createAuditDetails(
+            rawData,
+            result.header.status,
+            correlationId,
+            request.userDetails,
+            Some(errorWrapper),
+            None
+          ))
+
           result
       }
     }
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-
     (errorWrapper.errors.head: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError |
+           TaxYearFormatError | RuleTaxYearRangeInvalid |
+           RuleTaxYearNotSupportedError
+      => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
@@ -89,11 +104,21 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
                                  statusCode: Int,
                                  correlationId: String,
                                  userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper] = None,
-                                 responseBody: Option[JsValue] = None): GenericAuditDetail = {
+                                 errorWrapper: Option[ErrorWrapper],
+                                 responseBody: Option[JsValue]): GenericAuditDetail = {
 
-    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino, None, response,correlationId)
+    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
+      .getOrElse(AuditResponse(statusCode, None, responseBody))
+
+    GenericAuditDetail(
+      userDetails.userType,
+      userDetails.agentReferenceNumber,
+      rawData.nino,
+      rawData.taxYear,
+      None,
+      response,
+      correlationId
+    )
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

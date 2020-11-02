@@ -16,10 +16,7 @@
 
 package v1.endpoints
 
-import java.time.{LocalDateTime, ZoneOffset}
-
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import com.sun.jna.platform.win32.Guid.GUID
 import data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status

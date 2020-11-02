@@ -18,8 +18,6 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.auth.core.Enrolment
-import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeletePensionChargesParser
@@ -32,13 +30,12 @@ import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesR
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeletePensionChargesControllerSpec
-    extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockDeletePensionChargesService
-    with MockDeletePensionChargesParser
-    with MockAuditService {
+class DeletePensionChargesControllerSpec extends ControllerBaseSpec
+  with MockEnrolmentsAuthService
+  with MockMtdIdLookupService
+  with MockDeletePensionChargesService
+  with MockDeletePensionChargesParser
+  with MockAuditService {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
@@ -62,6 +59,32 @@ class DeletePensionChargesControllerSpec
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+
+    def successAuditDetail(nino: String,
+                           taxYear: String): GenericAuditDetail =
+      GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        taxYear = taxYear,
+        request = None,
+        response = AuditResponse(NO_CONTENT, None, None),
+        `X-CorrelationId` = correlationId
+      )
+
+    def errorAuditDetail(nino: String,
+                         taxYear: String,
+                         errors: Seq[AuditError],
+                         statusCode: Int): GenericAuditDetail =
+      GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        taxYear = taxYear,
+        request = None,
+        response = AuditResponse(statusCode, Some(errors), None),
+        `X-CorrelationId` = correlationId
+      )
   }
 
   "delete" should {
@@ -76,7 +99,7 @@ class DeletePensionChargesControllerSpec
         status(result) shouldBe NO_CONTENT
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail = GenericAuditDetail("Individual", None, rawData.nino, None, AuditResponse(NO_CONTENT, None, None),correlationId)
+        val detail: GenericAuditDetail = successAuditDetail(nino, taxYear)
         val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
         MockedAuditService.verifyAuditEvent(event).once
       }
@@ -94,8 +117,7 @@ class DeletePensionChargesControllerSpec
           contentAsJson(response) shouldBe Json.toJson(error)
           header("X-CorrelationId", response) shouldBe Some(correlationId)
 
-          val detail = GenericAuditDetail("Individual", None, rawData.nino,None,
-            AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))),None),correlationId)
+          val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(error.code)), expectedStatus)
           val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
           MockedAuditService.verifyAuditEvent(event).once
         }
@@ -123,8 +145,7 @@ class DeletePensionChargesControllerSpec
           contentAsJson(response) shouldBe Json.toJson(error)
           header("X-CorrelationId", response) shouldBe Some(correlationId)
 
-          val detail = GenericAuditDetail("Individual", None, rawData.nino,None
-            ,AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))),None),correlationId)
+          val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(error.code)), expectedStatus)
           val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", detail)
           MockedAuditService.verifyAuditEvent(event).once
         }
