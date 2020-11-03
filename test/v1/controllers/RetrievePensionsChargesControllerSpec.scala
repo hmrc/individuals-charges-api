@@ -16,20 +16,21 @@
 
 package v1.controllers
 
-import play.api.mvc.Result
 import data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.DesResponse
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
@@ -43,8 +44,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
   with MockRetrievePensionsChargesService
   with MockHateoasFactory
   with MockAppConfig
-  with MockAuditService
-  {
+  with MockAuditService {
 
     private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
     private val nino   = "AA123456A"
@@ -72,6 +72,33 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
       MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
       MockedEnrolmentsAuthService.authoriseUser()
+
+      def successAuditDetail(nino: String,
+                             taxYear: String,
+                             responseBody: JsValue): GenericAuditDetail =
+        GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino = nino,
+          taxYear = taxYear,
+          request = None,
+          response = AuditResponse(OK, None, Some(responseBody)),
+          `X-CorrelationId` = correlationId
+        )
+
+      def errorAuditDetail(nino: String,
+                           taxYear: String,
+                           errors: Seq[AuditError],
+                           statusCode: Int): GenericAuditDetail =
+        GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino = nino,
+          taxYear = taxYear,
+          request = None,
+          response = AuditResponse(statusCode, Some(errors), None),
+          `X-CorrelationId` = correlationId
+        )
     }
 
     "retrieve" should {
@@ -94,23 +121,33 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
           status(result) shouldBe OK
           contentAsJson(result) shouldBe fullJsonWithHateoas
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val detail: GenericAuditDetail = successAuditDetail(nino, taxYear, fullJsonWithHateoas)
+          def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
+          MockedAuditService.verifyAuditEvent(event).once
         }
       }
+
       "return the error as per the spec" when {
         "parser errors occur" should {
           def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-            MockRetrievePensionChargesParser
-              .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
+            s"a ${error.code} error is returned from the parser" in new Test {
+              MockRetrievePensionChargesParser
+                .parseRequest(rawData)
+                .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
 
-            val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
+              val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
+              status(result) shouldBe expectedStatus
+              contentAsJson(result) shouldBe Json.toJson(error)
+              header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+              val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(error.code)), expectedStatus)
+              def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
+              MockedAuditService.verifyAuditEvent(event).once
+            }
           }
-          }
+
           val input = Seq(
             (BadRequestError, BAD_REQUEST),
             (NinoFormatError, BAD_REQUEST),
@@ -122,6 +159,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
           )
           input.foreach(args => (errorsFromParserTester _).tupled(args))
         }
+
         "service errors occur" should {
           def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
             s"a $mtdError error is returned from the service" in new Test {
@@ -139,6 +177,10 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
               status(result) shouldBe expectedStatus
               contentAsJson(result) shouldBe Json.toJson(mtdError)
               header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+              val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(mtdError.code)), expectedStatus)
+              def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
+              MockedAuditService.verifyAuditEvent(event).once
             }
           }
 

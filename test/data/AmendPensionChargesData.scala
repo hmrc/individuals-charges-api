@@ -18,7 +18,7 @@ package data
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.des._
-import v1.models.requestData.{AmendPensionChargesRequest, PensionCharges}
+import v1.models.requestData.PensionCharges
 
 object AmendPensionChargesData {
 
@@ -26,7 +26,7 @@ object AmendPensionChargesData {
     Seq("00123456RA","00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
-    true,
+    isAnnualAllowanceReduced = true,
     Some(true),
     Some(false)
   )

@@ -18,7 +18,6 @@ package v1.controllers
 
 import javax.inject._
 import play.api.http.MimeTypes
-import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -41,6 +40,7 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
                                                 hateoasFactory: HateoasFactory,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController {
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrievePensionChargesController",
       endpointName = "Retrieve a Pensions Charge")
@@ -64,8 +64,13 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
 
           val hateoasResponse = hateoasFactory.wrap(responseWrapper.responseData, RetrievePensionChargesHateoasData(nino,taxYear))
 
-          auditSubmission(
-            createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None, Some(Json.toJson(responseWrapper.correlationId)))
+          auditSubmission(createAuditDetails(
+            rawData,
+            OK,
+            responseWrapper.correlationId,
+            request.userDetails,
+            None,
+            Some(Json.toJson(hateoasResponse)))
           )
 
           Ok(Json.toJson(hateoasResponse)).withApiHeaders(responseWrapper.correlationId)
@@ -74,17 +79,27 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper)))
+
+          auditSubmission(createAuditDetails(
+            rawData,
+            result.header.status,
+            correlationId,
+            request.userDetails,
+            Some(errorWrapper),
+            None
+          ))
+
           result
       }
     }
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-
     (errorWrapper.errors.head: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError |
+           TaxYearFormatError | RuleTaxYearRangeInvalid |
+           RuleTaxYearNotSupportedError
+      => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
@@ -94,11 +109,21 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
                                  statusCode: Int,
                                  correlationId: String,
                                  userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper] = None,
-                                 responseBody: Option[JsValue] = None): GenericAuditDetail = {
+                                 errorWrapper: Option[ErrorWrapper],
+                                 responseBody: Option[JsValue]): GenericAuditDetail = {
 
-    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None)).getOrElse(AuditResponse(statusCode, None, None))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,None, response,correlationId)
+    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
+      .getOrElse(AuditResponse(statusCode, None, responseBody))
+
+    GenericAuditDetail(
+      userDetails.userType,
+      userDetails.agentReferenceNumber,
+      rawData.nino,
+      rawData.taxYear,
+      None,
+      response,
+      correlationId
+    )
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

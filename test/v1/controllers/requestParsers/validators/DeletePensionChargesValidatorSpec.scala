@@ -16,10 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
-import cats.Inject
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.TaxYearValidation
 import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalid, TaxYearFormatError}
 import v1.models.requestData.DeletePensionChargesRawData
 

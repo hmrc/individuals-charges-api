@@ -19,15 +19,14 @@ package v1.controllers
 import config.AppConfig
 import javax.inject._
 import play.api.http.MimeTypes
-import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import v1.controllers.requestParsers.AmendPensionChargesParser
+import v1.hateoas.AmendHateoasBody
 import v1.models.audit._
 import v1.models.auth.UserDetails
-import v1.hateoas.AmendHateoasBody
 import v1.models.errors._
 import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 import v1.services._
@@ -64,45 +63,50 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
 
-          val responseWrapperWithHateos = amendPensionsHateoasBody(appConfig, nino, taxYear)
-          auditSubmission(
-            createAuditDetails(rawData, OK, responseWrapper.correlationId, request.userDetails, None,
-              Some(request.body),responseBody = Some(responseWrapperWithHateos))
-          )
+          val responseWrapperWithHateoas = amendPensionsHateoasBody(appConfig, nino, taxYear)
 
+          auditSubmission(createAuditDetails(
+            rawData,
+            OK,
+            responseWrapper.correlationId,
+            request.userDetails,
+            None,
+            Some(request.body),
+            Some(responseWrapperWithHateoas)
+          ))
 
-            Ok(responseWrapperWithHateos).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
+          Ok(responseWrapperWithHateoas).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
           val correlationId = getCorrelationId(errorWrapper)
           val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-          auditSubmission(createAuditDetails(rawData, result.header.status, correlationId, request.userDetails, Some(errorWrapper),Some(request.body),
-            Some(Json.toJson(amendPensionsHateoasBody(appConfig,nino,taxYear)))))
+
+          auditSubmission(createAuditDetails(
+            rawData,
+            result.header.status,
+            correlationId,
+            request.userDetails,
+            Some(errorWrapper),
+            Some(request.body),
+            Some(amendPensionsHateoasBody(appConfig, nino, taxYear))
+          ))
+
           result
       }
     }
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-
     (errorWrapper.errors.head.copy(paths = None): @unchecked) match {
-      case BadRequestError |
-           NinoFormatError |
-           TaxYearFormatError |
-           RuleTaxYearRangeInvalid |
-           RuleTaxYearNotSupportedError |
-           RuleIncorrectOrEmptyBodyError |
-           ValueFormatError |
-           RuleCountryCodeError |
-           CountryCodeFormatError |
-           QOPSRefFormatError |
-           PensionSchemeTaxRefFormatError |
-           ProviderNameFormatError |
-           ProviderAddressFormatError |
-           RuleIsAnnualAllowanceReducedError |
-           RuleBenefitExcessesError |
-           RulePensionReferenceError
-                => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError |
+           TaxYearFormatError | RuleTaxYearRangeInvalid |
+           RuleTaxYearNotSupportedError | RuleIncorrectOrEmptyBodyError |
+           ValueFormatError | RuleCountryCodeError |
+           CountryCodeFormatError | QOPSRefFormatError |
+           PensionSchemeTaxRefFormatError | ProviderNameFormatError |
+           ProviderAddressFormatError | RuleIsAnnualAllowanceReducedError |
+           RuleBenefitExcessesError | RulePensionReferenceError
+      => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
@@ -112,13 +116,22 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                  statusCode: Int,
                                  correlationId: String,
                                  userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper] = None,
-                                 requestBody: Option[JsValue] = None,
-                                 responseBody: Option[JsValue] = None): GenericAuditDetail = {
+                                 errorWrapper: Option[ErrorWrapper],
+                                 requestBody: Option[JsValue],
+                                 responseBody: Option[JsValue]): GenericAuditDetail = {
 
-    val response = errorWrapper.map( wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
+    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
       .getOrElse(AuditResponse(statusCode, None, responseBody))
-    GenericAuditDetail(userDetails.userType, userDetails.agentReferenceNumber, rawData.nino,Some(rawData.body.json),response,correlationId)
+
+    GenericAuditDetail(
+      userDetails.userType,
+      userDetails.agentReferenceNumber,
+      rawData.nino,
+      rawData.taxYear,
+      Some(rawData.body.json),
+      response,
+      correlationId
+    )
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
