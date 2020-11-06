@@ -29,9 +29,6 @@ import scala.concurrent.Future
 
 class PensionChargesConnectorSpec extends ConnectorSpec {
 
-  lazy val baseUrl = "test-BaseUrl"
-  val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
   val nino = "AA123456A"
   val taxYear = "2019-20"
 

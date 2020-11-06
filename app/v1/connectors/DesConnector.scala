@@ -25,8 +25,9 @@ trait DesConnector {
 
   val logger = Logger(this.getClass)
 
-  def desHeaderCarrier(appConfig: AppConfig)(implicit hc: HeaderCarrier): HeaderCarrier =
+  def desHeaderCarrier(appConfig: AppConfig)(
+    implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
     hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnv)
+      .withExtraHeaders("Environment" -> appConfig.desEnv, "CorrelationId" -> correlationId)
 
 }

@@ -22,6 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
@@ -44,9 +45,10 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
   with MockRetrievePensionsChargesService
   with MockHateoasFactory
   with MockAppConfig
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
 
-    private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
     private val nino   = "AA123456A"
     private val taxYear = "2021-22"
 
@@ -67,11 +69,13 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
         service = mockRetrievePensionsChargesService,
         hateoasFactory = mockHateoasFactory,
         auditService = mockAuditService,
-        cc = cc
+        cc = cc,
+        idGenerator = mockIdGenerator
       )
 
       MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
       MockedEnrolmentsAuthService.authoriseUser()
+      MockIdGenerator.generateCorrelationId.returns(correlationId)
 
       def successAuditDetail(nino: String,
                              taxYear: String,
@@ -134,7 +138,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
             s"a ${error.code} error is returned from the parser" in new Test {
               MockRetrievePensionChargesParser
                 .parseRequest(rawData)
-                .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
+                .returns(Left(ErrorWrapper(correlationId, Seq(error))))
 
               val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 
@@ -170,7 +174,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
               MockRetrievePensionsChargesService
                 .retrieve(requestData)
-                .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(mtdError)))))
+                .returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(mtdError)))))
 
               val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 

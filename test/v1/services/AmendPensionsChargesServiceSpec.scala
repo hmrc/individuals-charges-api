@@ -29,7 +29,6 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
   val nino: Nino = Nino("AA123456A")
   val taxYear: DesTaxYear = DesTaxYear("2020-21")
-  val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
@@ -54,14 +53,14 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
         val desResponse = DesResponse(correlationId, OutboundError(someError))
         MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
+        await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(someError)))
       }
     }
 
     "return a downstream error" when {
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
+        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
         MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.amendPensions(request)) shouldBe Left(expected)
@@ -69,7 +68,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected    = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
+        val expected    = ErrorWrapper(correlationId, Seq(DownstreamError))
         MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.amendPensions(request)) shouldBe Left(expected)
@@ -90,7 +89,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
             MockPensionChargesConnector.amendPensionCharges(request)
               .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
-            await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
+            await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(v)))
           }
         }
     }

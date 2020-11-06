@@ -32,18 +32,18 @@ trait MockPensionChargesConnector extends MockFactory {
   object MockPensionChargesConnector {
 
     def deletePensionCharges(deletePensionChargesRequest: DeletePensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (connector.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(deletePensionChargesRequest, *, *)
+      (connector.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(deletePensionChargesRequest, *, *, *)
     }
 
     def amendPensionCharges(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (connector.amendPensionCharges(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(amendPensionChargesRequest, *, *)
+      (connector.amendPensionCharges(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(amendPensionChargesRequest, *, *, *)
     }
 
     def retrievePensions(request: RetrievePensionChargesRequest): CallHandler[Future[DesOutcome[RetrievePensionChargesResponse]]]= {
-      (connector.retrievePensionCharges(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+      (connector.retrievePensionCharges(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
 
   }

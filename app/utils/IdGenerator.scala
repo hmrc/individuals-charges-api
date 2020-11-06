@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package utils
 
-import play.api.libs.json.{JsObject, Json, Writes}
-import v1.models.audit.AuditError
+import java.util.UUID
 
-case class ErrorWrapper(correlationId: String, errors: Seq[MtdError] = Seq()) {
+import javax.inject.{Inject, Singleton}
 
-  def auditErrors: Seq[AuditError] =
-    errors.map(error => AuditError(error.code))
-}
+@Singleton
+class IdGenerator @Inject()() {
 
-object ErrorWrapper {
-  implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
-
-    val json = Json.toJson(errorResponse.errors.head).as[JsObject]
-
-    if(errorResponse.errors.length > 1){
-      json + ("errors" -> Json.toJson(errorResponse.errors.tail))
-    } else {
-      json
-    }
-  }
+  def generateCorrelationId: String = UUID.randomUUID().toString
 }

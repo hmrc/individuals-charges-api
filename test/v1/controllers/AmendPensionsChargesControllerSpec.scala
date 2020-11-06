@@ -22,6 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -38,7 +39,8 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
   with MockAmendPensionChargesParser
   with MockAmendPensionsChargesService
   with MockAppConfig
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
 
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
   private val nino = "AA123456A"
@@ -80,12 +82,14 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
       service = mockAmendPensionsChargesService,
       auditService = mockAuditService,
       appConfig = mockAppConfig,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/charges").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     def successAuditDetail(nino: String,
                            taxYear: String,
@@ -146,7 +150,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
           s"a ${error.code} error is returned from the parser" in new Test {
             MockAmendPensionChargesParser
               .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
+              .returns(Left(ErrorWrapper(correlationId, Seq(error))))
 
             val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
 
@@ -183,7 +187,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
 
             MockAmendPensionsChargesService
               .amend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(mtdError)))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(mtdError)))))
 
             val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
 

@@ -31,8 +31,8 @@ trait MockAmendPensionsChargesService extends MockFactory {
 
   object MockAmendPensionsChargesService {
     def amend(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[AmendPensionChargesOutcome]] = {
-      (mockAmendPensionsChargesService.amendPensions(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(amendPensionChargesRequest, *, *)
+      (mockAmendPensionsChargesService.amendPensions(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(amendPensionChargesRequest, *, *, *)
     }
   }
 }

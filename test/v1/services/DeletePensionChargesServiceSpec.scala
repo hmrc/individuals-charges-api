@@ -26,8 +26,6 @@ import scala.concurrent.Future
 
 class DeletePensionChargesServiceSpec extends ServiceSpec {
 
-  val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
   val nino = Nino("AA123456A")
   val taxYear = DesTaxYear("2020-21")
 
@@ -54,28 +52,28 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         val desResponse = DesResponse(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(someError)))
+        await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(someError)))
       }
     }
 
     "return a downstream error" when {
       "the connector call returns a single unknown error default to downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(MtdError("Error","error")))
-        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
+        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(expected)
       }
       "the connector call returns a single downstream error" in new Test {
         val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
+        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(expected)
       }
       "the connector call returns multiple errors including a downstream error" in new Test {
         val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected = ErrorWrapper(Some(correlationId), Seq(DownstreamError))
+        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(expected)
@@ -97,7 +95,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
             MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(
               Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
 
-            await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(Some(correlationId), Seq(v)))
+            await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(v)))
           }
         }
     }

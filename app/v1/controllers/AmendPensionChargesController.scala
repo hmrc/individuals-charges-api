@@ -23,6 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
 import v1.hateoas.AmendHateoasBody
 import v1.models.audit._
@@ -39,7 +40,8 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                               requestParser: AmendPensionChargesParser,
                                               auditService: AuditService,
                                               appConfig: AppConfig,
-                                              cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) with AmendHateoasBody with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -48,6 +50,11 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
   def amend(nino: String, taxYear: String): Action[JsValue] = {
     authorisedAction(nino).async(parse.json) { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
       val parseRequest: Either[ErrorWrapper, AmendPensionChargesRequest] = requestParser.parseRequest(rawData)
@@ -74,12 +81,14 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
             Some(request.body),
             Some(responseWrapperWithHateoas)
           ))
-
           Ok(responseWrapperWithHateoas).withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
-          val correlationId = getCorrelationId(errorWrapper)
-          val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+          val resCorrelationId = errorWrapper.correlationId
+          val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Error response received with CorrelationId: $resCorrelationId")
 
           auditSubmission(createAuditDetails(
             rawData,
