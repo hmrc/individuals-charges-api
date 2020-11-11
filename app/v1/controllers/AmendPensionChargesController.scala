@@ -93,7 +93,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           auditSubmission(createAuditDetails(
             rawData,
             result.header.status,
-            correlationId,
+            resCorrelationId,
             request.userDetails,
             Some(errorWrapper),
             Some(request.body),

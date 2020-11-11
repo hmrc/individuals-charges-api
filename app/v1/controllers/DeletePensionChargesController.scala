@@ -90,7 +90,7 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
           auditSubmission(createAuditDetails(
             rawData,
             result.header.status,
-            correlationId,
+            resCorrelationId,
             request.userDetails,
             Some(errorWrapper),
             None
