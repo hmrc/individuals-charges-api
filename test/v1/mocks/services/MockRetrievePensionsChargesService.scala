@@ -31,8 +31,8 @@ trait MockRetrievePensionsChargesService extends MockFactory {
 
   object MockRetrievePensionsChargesService {
     def retrieve(retrievePensionChargesRequest: RetrievePensionChargesRequest): CallHandler[Future[RetrievePensionChargesOutcome]] = {
-      (mockRetrievePensionsChargesService.retrievePensions(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(retrievePensionChargesRequest, *, *)
+      (mockRetrievePensionsChargesService.retrievePensions(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(retrievePensionChargesRequest, *, *, *)
     }
   }
 }

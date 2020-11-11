@@ -31,7 +31,10 @@ class RetrievePensionChargesService @Inject()(connector: PensionChargesConnector
     */
   override val serviceName: String = this.getClass.getSimpleName
 
-  def retrievePensions(request: RetrievePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
+  def retrievePensions(request: RetrievePensionChargesRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    correlationId: String): Future[RetrievePensionChargesOutcome] = {
 
     connector.retrievePensionCharges(request).map {
       mapToVendorDirect("retrievePensionCharges", mappingDesToMtdError)

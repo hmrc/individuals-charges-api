@@ -20,6 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockDeletePensionChargesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -35,7 +36,8 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockDeletePensionChargesService
   with MockDeletePensionChargesParser
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
@@ -54,11 +56,13 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
       service = mockDeleteBFLossService,
       requestParser = mockDeletePensionChargesParser,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     def successAuditDetail(nino: String,
                            taxYear: String): GenericAuditDetail =
@@ -109,7 +113,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
       def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
         s"a ${error.code} error is returned from the parser" in new Test {
 
-          MockDeletePensionChargesParser.parseRequest(rawData).returns(Left(ErrorWrapper(Some(correlationId), Seq(error))))
+          MockDeletePensionChargesParser.parseRequest(rawData).returns(Left(ErrorWrapper(correlationId, Seq(error))))
 
           val response: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
 
@@ -138,7 +142,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
 
           MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
 
-          MockDeletePensionChargesService.delete(request).returns(Future.successful(Left(ErrorWrapper(Some(correlationId), Seq(error)))))
+          MockDeletePensionChargesService.delete(request).returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(error)))))
 
           val response: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
           status(response) shouldBe expectedStatus

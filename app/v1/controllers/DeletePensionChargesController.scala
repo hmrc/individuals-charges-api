@@ -22,6 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.auth.UserDetails
@@ -36,7 +37,9 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
                                                requestParser: DeletePensionChargesParser,
                                                service: DeletePensionChargesService,
                                                auditService: AuditService,
-                                               cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController {
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
     controllerName = "DeletePensionChargesController",
@@ -45,6 +48,11 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData = DeletePensionChargesRawData(nino, taxYear)
       val parseRequest: Either[ErrorWrapper, DeletePensionChargesRequest] = requestParser.parseRequest(rawData)
@@ -72,13 +80,17 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
           NoContent.withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
 
         case Left(errorWrapper) =>
-          val correlationId = getCorrelationId(errorWrapper)
-          val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+          val resCorrelationId = errorWrapper.correlationId
+          val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Error response received with CorrelationId: $resCorrelationId")
 
           auditSubmission(createAuditDetails(
             rawData,
             result.header.status,
-            correlationId,
+            resCorrelationId,
             request.userDetails,
             Some(errorWrapper),
             None

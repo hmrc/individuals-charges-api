@@ -25,6 +25,7 @@ import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesR
 class DeletePensionChargesParserSpec extends UnitSpec{
   val nino = "AA123456B"
   val taxYear = "2019-20"
+  implicit val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val inputData = DeletePensionChargesRawData(nino, taxYear)
 
@@ -47,13 +48,13 @@ class DeletePensionChargesParserSpec extends UnitSpec{
       "a single validation error occurs" in new Test {
         MockValidator.validate(inputData).returns(List(NinoFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, Seq(NinoFormatError)))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, Seq(NinoFormatError)))
       }
 
       "multiple validation errors occur" in new Test {
         MockValidator.validate(inputData).returns(List(NinoFormatError, LossIdFormatError))
 
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, Seq(BadRequestError, NinoFormatError, LossIdFormatError)))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, Seq(BadRequestError, NinoFormatError, LossIdFormatError)))
       }
     }
   }
