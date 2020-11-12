@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import cats.data.EitherT
 import javax.inject.Inject
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -55,49 +56,44 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
           s"with CorrelationId: $correlationId")
 
       val rawData = DeletePensionChargesRawData(nino, taxYear)
-      val parseRequest: Either[ErrorWrapper, DeletePensionChargesRequest] = requestParser.parseRequest(rawData)
 
-      val serviceResponse: Future[DeletePensionChargesOutcome] = parseRequest match {
-        case Right(data) => service.deletePensionCharges(data)
-        case Left(errorWrapper) => Future.successful(Left(errorWrapper))
+      val result = for {
+        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        serviceResponse <- EitherT(service.deletePensionCharges(parsedRequest))
+      } yield {
+        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+          s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+
+        auditSubmission(createAuditDetails(
+          rawData,
+          NO_CONTENT,
+          serviceResponse.correlationId,
+          request.userDetails,
+          None,
+          None
+        ))
+
+        NoContent.withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
       }
 
-      serviceResponse.map {
-        case Right(responseWrapper) =>
+      result.leftMap { errorWrapper =>
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
-          logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${responseWrapper.correlationId}")
+        auditSubmission(createAuditDetails(
+          rawData,
+          result.header.status,
+          correlationId,
+          request.userDetails,
+          Some(errorWrapper),
+          None
+        ))
 
-          auditSubmission(createAuditDetails(
-            rawData,
-            NO_CONTENT,
-            responseWrapper.correlationId,
-            request.userDetails,
-            None,
-            None
-          ))
-
-          NoContent.withApiHeaders(responseWrapper.correlationId).as(MimeTypes.JSON)
-
-        case Left(errorWrapper) =>
-
-          val resCorrelationId = errorWrapper.correlationId
-          val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Error response received with CorrelationId: $resCorrelationId")
-
-          auditSubmission(createAuditDetails(
-            rawData,
-            result.header.status,
-            resCorrelationId,
-            request.userDetails,
-            Some(errorWrapper),
-            None
-          ))
-
-          result
-      }
+        result
+      }.merge
     }
   }
 
