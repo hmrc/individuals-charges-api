@@ -32,7 +32,7 @@ import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -115,7 +115,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
           MockRetrievePensionsChargesService
             .retrieve(requestData)
-            .returns(Future.successful(Right(DesResponse(correlationId, retrieveResponse))))
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
           MockHateoasFactory
             .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino,taxYear))
@@ -138,7 +138,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
             s"a ${error.code} error is returned from the parser" in new Test {
               MockRetrievePensionChargesParser
                 .parseRequest(rawData)
-                .returns(Left(ErrorWrapper(correlationId, Seq(error))))
+                .returns(Left(ErrorWrapper(correlationId, error)))
 
               val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 
@@ -174,7 +174,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
 
               MockRetrievePensionsChargesService
                 .retrieve(requestData)
-                .returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(mtdError)))))
+                .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
               val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 

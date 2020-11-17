@@ -28,7 +28,7 @@ import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.auth.UserDetails
 import v1.models.errors._
-import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesRequest}
+import v1.models.requestData.DeletePensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -98,7 +98,7 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-    (errorWrapper.errors.head: @unchecked) match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError |
            TaxYearFormatError | RuleTaxYearRangeInvalid |
            RuleTaxYearNotSupportedError

@@ -19,7 +19,9 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRequest}
 import data.RetrievePensionChargesData._
-import v1.models.outcomes.DesResponse
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.controllers.EndpointLogContext
+import v1.models.outcomes.ResponseWrapper
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
 
@@ -33,6 +35,8 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
   trait Test extends MockPensionChargesConnector {
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
     val service = new RetrievePensionChargesService(connector)
   }
 
@@ -40,58 +44,52 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
         MockPensionChargesConnector.retrievePensions(request)
-          .returns(Future.successful(Right(DesResponse(correlationId, retrieveResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
-        await(service.retrievePensions(request)) shouldBe Right(DesResponse(correlationId, retrieveResponse))
+        await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
       }
     }
 
     "return that wrapped error as-is" when {
       "the connectot returns an outbound error" in new Test {
         val someError = MtdError("SOME_CODE", "some message")
-        val desResponse = DesResponse(correlationId, OutboundError(someError))
+        val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(someError)))
+        await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
     }
 
-    "return a downstream error" when {
-      "the connector call returns a single downstream error" in new Test {
-        val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+    "service" should {
+      "return a successful response" when {
+        "a successful response is passed through" in new Test {
+          MockPensionChargesConnector.retrievePensions(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
-        await(service.retrievePensions(request)) shouldBe Left(expected)
-      }
-
-      "the connector call returns multiple errors including a downstream error" in new Test {
-        val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected    = ErrorWrapper(correlationId, Seq(DownstreamError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
-
-        await(service.retrievePensions(request)) shouldBe Left(expected)
-      }
-    }
-
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "INVALID_CORRELATIONID"     -> DownstreamError,
-      "SERVER_ERROR"              -> DownstreamError,
-      "SERVICE_UNAVAILABLE"       -> DownstreamError
-    ).foreach {
-      case (k, v) =>
-        s"return a ${v.code} error" when {
-          s"the connector call returns $k" in new Test {
-            MockPensionChargesConnector.retrievePensions(request)
-              .returns(Future.successful(Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
-
-            await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(v)))
-          }
+          await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
         }
-    }
+      }
+      "map errors according to spec" when {
+        def serviceError(desErrorCode: String, error: MtdError): Unit =
+          s"a $desErrorCode error is returned from the service" in new Test {
 
+            MockPensionChargesConnector.retrievePensions(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+
+            await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+          }
+
+        val input = Seq(
+          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+          "INVALID_TAX_YEAR" -> TaxYearFormatError,
+          "NO_DATA_FOUND" -> NotFoundError,
+          "INVALID_CORRELATIONID" -> DownstreamError,
+          "SERVER_ERROR" -> DownstreamError,
+          "SERVICE_UNAVAILABLE" -> DownstreamError
+        )
+
+        input.foreach(args => (serviceError _).tupled(args))
+      }
+    }
   }
 }

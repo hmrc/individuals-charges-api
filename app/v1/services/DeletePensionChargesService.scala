@@ -16,32 +16,34 @@
 
 package v1.services
 
-import javax.inject.Inject
+import cats.data.EitherT
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.Logging
 import v1.connectors.PensionChargesConnector
+import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.requestData.DeletePensionChargesRequest
+import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeletePensionChargesService @Inject()(connector: PensionChargesConnector) extends DesServiceSupport {
-
-  /**
-    * Service name for logging
-    */
-  override val serviceName: String = this.getClass.getSimpleName
+@Singleton
+class DeletePensionChargesService @Inject()(connector: PensionChargesConnector) extends DesResponseMappingSupport with Logging {
 
   def deletePensionCharges(request: DeletePensionChargesRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
+    logContext: EndpointLogContext,
     correlationId: String): Future[DeletePensionChargesOutcome] = {
 
-    connector.deletePensionCharges(request).map {
-      mapToVendorDirect("deletePensionCharges", mappingDesToMtdError)
-    }
+    val result = for {
+      desResponseWrapper <- EitherT(connector.deletePensionCharges(request)).leftMap(mapDesErrors(desErrorMap))
+    } yield desResponseWrapper
+    result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
+  private def desErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
     "NO_DATA_FOUND"             -> NotFoundError,

@@ -22,7 +22,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.errors._
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 import v1.models.requestData._
 
 import scala.concurrent.Future
@@ -45,7 +45,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(DesResponse(correlationId, ()))
+        val expected = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -62,7 +62,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning a single error" should {
       "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
           .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -79,7 +79,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError))))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError)))
 
         MockedHttpClient
           .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -98,7 +98,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   "Retrieve pension charges" when {
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(DesResponse(correlationId, retrieveResponse))
+        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
         MockedHttpClient
           .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -115,7 +115,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning a single error" should {
       "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
           .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -132,7 +132,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
@@ -150,7 +150,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
   "Amend pension charges" when {
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(DesResponse(correlationId, Unit))
+        val expected = Right(ResponseWrapper(correlationId, Unit))
 
         MockedHttpClient
           .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
@@ -167,7 +167,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     }
     "A request returning a single error" should {
       "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(DesResponse(correlationId, SingleError(NinoFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
           .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
@@ -184,7 +184,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     }
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError, TaxYearFormatError))))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)

@@ -18,14 +18,14 @@ package v1
 
 import v1.models.des._
 import v1.models.errors.ErrorWrapper
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 
 package object services {
 
-  type DeletePensionChargesOutcome = Either[ErrorWrapper, DesResponse[Unit]]
+  type DeletePensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[Unit]]
 
-  type RetrievePensionChargesOutcome = Either[ErrorWrapper, DesResponse[RetrievePensionChargesResponse]]
+  type RetrievePensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[RetrievePensionChargesResponse]]
 
-  type AmendPensionChargesOutcome = Either[ErrorWrapper, DesResponse[Unit]]
+  type AmendPensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[Unit]]
 
 }

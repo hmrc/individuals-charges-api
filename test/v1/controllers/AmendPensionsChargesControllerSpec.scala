@@ -27,7 +27,7 @@ import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest, DesTaxYear}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -131,7 +131,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
 
         MockAmendPensionsChargesService
           .amend(requestData)
-          .returns(Future.successful(Right(DesResponse(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
 
         val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
         status(result) shouldBe OK
@@ -150,7 +150,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
           s"a ${error.code} error is returned from the parser" in new Test {
             MockAmendPensionChargesParser
               .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(correlationId, Seq(error))))
+              .returns(Left(ErrorWrapper(correlationId, error)))
 
             val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
 
@@ -171,6 +171,16 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalid, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (ValueFormatError, BAD_REQUEST),
+          (RuleCountryCodeError, BAD_REQUEST),
+          (CountryCodeFormatError, BAD_REQUEST),
+          (PensionSchemeTaxRefFormatError, BAD_REQUEST),
+          (ProviderAddressFormatError, BAD_REQUEST),
+          (QOPSRefFormatError, BAD_REQUEST),
+          (ProviderNameFormatError, BAD_REQUEST),
+          (RuleIsAnnualAllowanceReducedError, BAD_REQUEST),
+          (RuleBenefitExcessesError, BAD_REQUEST),
+          (RulePensionReferenceError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
@@ -187,7 +197,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
 
             MockAmendPensionsChargesService
               .amend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(mtdError)))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
 
