@@ -25,7 +25,7 @@ import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockDeletePensionChargesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{NotFoundError, _}
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesRequest, DesTaxYear}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -97,7 +97,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
 
         MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
 
-        MockDeletePensionChargesService.delete(request).returns(Future.successful(Right(DesResponse(correlationId, ()))))
+        MockDeletePensionChargesService.delete(request).returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
         status(result) shouldBe NO_CONTENT
@@ -113,7 +113,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
       def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
         s"a ${error.code} error is returned from the parser" in new Test {
 
-          MockDeletePensionChargesParser.parseRequest(rawData).returns(Left(ErrorWrapper(correlationId, Seq(error))))
+          MockDeletePensionChargesParser.parseRequest(rawData).returns(Left(ErrorWrapper(correlationId, error)))
 
           val response: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
 
@@ -142,7 +142,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
 
           MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
 
-          MockDeletePensionChargesService.delete(request).returns(Future.successful(Left(ErrorWrapper(correlationId, Seq(error)))))
+          MockDeletePensionChargesService.delete(request).returns(Future.successful(Left(ErrorWrapper(correlationId, error))))
 
           val response: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
           status(response) shouldBe expectedStatus

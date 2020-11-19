@@ -16,4 +16,6 @@
 
 package v1.models.outcomes
 
-case class DesResponse[+T](correlationId: String, responseData: T)
+case class ResponseWrapper[+A](correlationId: String, responseData: A) {
+  def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))
+}

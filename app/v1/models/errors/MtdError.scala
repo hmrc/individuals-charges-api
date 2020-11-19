@@ -29,3 +29,4 @@ object MtdError {
       (__ \ "paths").readNullable[Seq[String]]
     ) (MtdError.apply _)
 }
+

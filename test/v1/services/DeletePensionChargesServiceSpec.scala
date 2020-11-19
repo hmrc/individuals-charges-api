@@ -17,9 +17,11 @@
 package v1.services
 
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
-import v1.models.outcomes.DesResponse
+import v1.models.outcomes.ResponseWrapper
 import v1.models.requestData.{DeletePensionChargesRequest, DesTaxYear}
 
 import scala.concurrent.Future
@@ -30,6 +32,9 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   val taxYear = DesTaxYear("2020-21")
 
   trait Test extends MockPensionChargesConnector {
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
     lazy val service = new DeletePensionChargesService(connector)
   }
 
@@ -38,67 +43,53 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   "Delete Pension Charges" should {
     "return a Right" when {
       "the connector call is successful" in new Test {
-        val desResponse = DesResponse(correlationId, ())
-        val expected = DesResponse(correlationId, ())
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Right(desResponse)))
+        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
-        await(service.deletePensionCharges(request)) shouldBe Right(expected)
+        await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
       }
     }
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
         val someError:MtdError = DownstreamError
-        val desResponse = DesResponse(correlationId, OutboundError(someError))
+        val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
-        await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(someError)))
+        await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
     }
 
-    "return a downstream error" when {
-      "the connector call returns a single unknown error default to downstream error" in new Test {
-        val desResponse = DesResponse(correlationId, SingleError(MtdError("Error","error")))
-        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
+    "service" when {
+      "a service call is successful" should {
+        "return a mapped result" in new Test {
+          MockPensionChargesConnector.deletePensionCharges(request)
+            .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
-        await(service.deletePensionCharges(request)) shouldBe Left(expected)
-      }
-      "the connector call returns a single downstream error" in new Test {
-        val desResponse = DesResponse(correlationId, SingleError(DownstreamError))
-        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
-
-        await(service.deletePensionCharges(request)) shouldBe Left(expected)
-      }
-      "the connector call returns multiple errors including a downstream error" in new Test {
-        val desResponse = DesResponse(correlationId, MultipleErrors(Seq(NinoFormatError, DownstreamError)))
-        val expected = ErrorWrapper(correlationId, Seq(DownstreamError))
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
-
-        await(service.deletePensionCharges(request)) shouldBe Left(expected)
-      }
-    }
-
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "INVALID_CORRELATIONID"     -> DownstreamError,
-      "SERVER_ERROR"              -> DownstreamError,
-      "SERVICE_UNAVAILABLE"       -> DownstreamError,
-      "UNEXPECTED_ERROR"    -> DownstreamError
-    ).foreach {
-      case(k, v) =>
-        s"return a ${v.code} error" when {
-          s"the connector call returns $k" in new Test {
-            MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(
-              Left(DesResponse(correlationId, SingleError(MtdError(k, "doesn't matter"))))))
-
-            await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, Seq(v)))
-          }
+          await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
         }
+      }
+      "a service call is unsuccessful" should {
+        def serviceError(desErrorCode: String, error: MtdError): Unit =
+          s"return ${error.code} error when $desErrorCode error is returned from the connector" in new Test {
+
+            MockPensionChargesConnector.deletePensionCharges(request)
+              .returns(Future.successful(Left(ResponseWrapper("resultId", DesErrors.single(DesErrorCode(desErrorCode))))))
+
+            await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
+          }
+
+        val input = Seq(
+          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+          "NO_DATA_FOUND"             -> NotFoundError,
+          "INVALID_CORRELATIONID"     -> DownstreamError,
+          "SERVER_ERROR"              -> DownstreamError,
+          "SERVICE_UNAVAILABLE"       -> DownstreamError,
+          "UNEXPECTED_ERROR"    -> DownstreamError
+        )
+
+        input.foreach(args => (serviceError _).tupled(args))
+      }
     }
   }
-
 }

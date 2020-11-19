@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package v1.models.outcomes
 
-import play.api.libs.json.{Json, Reads}
+import support.UnitSpec
 
-case class DesErrorCode(code: String) {
-  def toMtd: MtdError = MtdError(code = code, message = "")
+class ResponseWrapperSpec extends UnitSpec {
+
+  "mapping a ResponseWrapper" should {
+    "return the same response wrapper with correlationId and responseData" in {
+      val response = ResponseWrapper("X-123", "Response")
+
+      response.map(a => a) shouldBe ResponseWrapper("X-123", "Response")
+    }
+  }
 }
-
-object DesErrorCode {
-  implicit val reads: Reads[DesErrorCode] = Json.reads[DesErrorCode]
-}
-
-sealed trait DesError
-
-case class DesErrors(errors: List[DesErrorCode]) extends DesError
-
-object DesErrors {
-  def single(error: DesErrorCode): DesErrors = DesErrors(List(error))
-}
-
-case class OutboundError(error: MtdError, errors: Option[Seq[MtdError]] = None) extends DesError

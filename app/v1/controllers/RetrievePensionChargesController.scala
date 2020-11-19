@@ -30,7 +30,7 @@ import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
-import v1.models.requestData.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v1.models.requestData.RetrievePensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -102,7 +102,7 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-    (errorWrapper.errors.head: @unchecked) match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError |
            TaxYearFormatError | RuleTaxYearRangeInvalid |
            RuleTaxYearNotSupportedError

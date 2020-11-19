@@ -26,6 +26,7 @@ import scala.util.{Success, Try}
 trait HttpParser {
 
   implicit class KnownJsonResponse(response: HttpResponse) {
+
     def validateJson[T](implicit reads: Reads[T]): Option[T] = {
       Try(response.json) match {
         case Success(json: JsValue) => parseResult(json)
@@ -35,8 +36,7 @@ trait HttpParser {
       }
     }
 
-    def parseResult[T](json: JsValue)
-                      (implicit reads: Reads[T]): Option[T] = json.validate[T] match {
+    def parseResult[T](json: JsValue)(implicit reads: Reads[T]): Option[T] = json.validate[T] match {
 
       case JsSuccess(value, _) => Some(value)
       case JsError(error) =>
@@ -47,17 +47,23 @@ trait HttpParser {
 
   def retrieveCorrelationId(response: HttpResponse): String = response.header("CorrelationId").getOrElse("")
 
-  private val multipleErrorReads: Reads[Seq[MtdError]] = (__ \ "failures").read[Seq[MtdError]]
+  private val multipleErrorReads: Reads[List[DesErrorCode]] = (__ \ "failures").read[List[DesErrorCode]]
+
+  private val bvrErrorReads: Reads[Seq[DesErrorCode]] = {
+    implicit val errorIdReads: Reads[DesErrorCode] = (__ \ "id").read[String].map(DesErrorCode(_))
+    (__ \ "bvrfailureResponseElement" \ "validationRuleFailures").read[Seq[DesErrorCode]]
+  }
 
   def parseErrors(response: HttpResponse): DesError = {
-    val singleError = response.validateJson[MtdError].map(SingleError)
-    lazy val multipleErrors = response.validateJson(multipleErrorReads).map(MultipleErrors)
+    val singleError         = response.validateJson[DesErrorCode].map(err => DesErrors(List(err)))
+    lazy val multipleErrors = response.validateJson(multipleErrorReads).map(errs => DesErrors(errs))
+    lazy val bvrErrors      = response.validateJson(bvrErrorReads).map(errs => OutboundError(BVRError, Some(errs.map(_.toMtd))))
     lazy val unableToParseJsonError = {
       Logger.warn(s"unable to parse errors from response: ${response.body}")
       OutboundError(DownstreamError)
     }
 
-    singleError orElse multipleErrors getOrElse unableToParseJsonError
+    singleError orElse multipleErrors orElse bvrErrors getOrElse unableToParseJsonError
   }
 
 }

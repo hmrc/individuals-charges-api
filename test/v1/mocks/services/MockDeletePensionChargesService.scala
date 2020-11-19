@@ -19,6 +19,7 @@ package v1.mocks.services
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.controllers.EndpointLogContext
 import v1.models.requestData.DeletePensionChargesRequest
 import v1.services.{DeletePensionChargesOutcome, DeletePensionChargesService}
 
@@ -31,8 +32,8 @@ trait MockDeletePensionChargesService extends MockFactory {
   object MockDeletePensionChargesService {
 
     def delete(requestData: DeletePensionChargesRequest): CallHandler[Future[DeletePensionChargesOutcome]] = {
-      (mockDeleteBFLossService.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(requestData, *, *, *)
+      (mockDeleteBFLossService.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }

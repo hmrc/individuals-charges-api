@@ -37,12 +37,12 @@ trait RequestParser[Raw <: RawData, Request] extends Logging {
         logger.info(
           "[RequestParser][parseRequest] " +
             s"Validation failed with ${err.code} error for the request with CorrelationId: $correlationId")
-        Left(ErrorWrapper(correlationId, Seq(err)))
+        Left(ErrorWrapper(correlationId, err, None))
       case errs =>
         logger.info(
           "[RequestParser][parseRequest] " +
             s"Validation failed with ${errs.map(_.code).mkString(",")} error for the request with CorrelationId: $correlationId")
-        Left(ErrorWrapper(correlationId, Seq(BadRequestError) ++ errs))
+        Left(ErrorWrapper(correlationId, BadRequestError, Some(errs)))
     }
   }
 }

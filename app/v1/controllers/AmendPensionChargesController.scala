@@ -30,7 +30,7 @@ import v1.hateoas.AmendHateoasBody
 import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.errors._
-import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.requestData.AmendPensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -105,14 +105,14 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
   }
 
   private def errorResult(errorWrapper: ErrorWrapper): Result = {
-    (errorWrapper.errors.head.copy(paths = None): @unchecked) match {
+    (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError |
            TaxYearFormatError | RuleTaxYearRangeInvalid |
            RuleTaxYearNotSupportedError | RuleIncorrectOrEmptyBodyError |
-           ValueFormatError | RuleCountryCodeError |
-           CountryCodeFormatError | QOPSRefFormatError |
-           PensionSchemeTaxRefFormatError | ProviderNameFormatError |
-           ProviderAddressFormatError | RuleIsAnnualAllowanceReducedError |
+           MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(RuleCountryCodeError.code) |
+           MtdErrorWithCustomMessage(CountryCodeFormatError.code) | MtdErrorWithCustomMessage(QOPSRefFormatError.code) |
+           MtdErrorWithCustomMessage(PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) |
+           MtdErrorWithCustomMessage(ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError |
            RuleBenefitExcessesError | RulePensionReferenceError
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
