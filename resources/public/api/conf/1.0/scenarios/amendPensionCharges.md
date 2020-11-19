@@ -12,7 +12,7 @@
             <td><p>Simulates a success response.</p></td>
        </tr> 
         <tr>
-            <td><p>MATCHING_RESOURCE_NOT_FOUND</p></td>
+            <td><p>NOT_FOUND</p></td>
             <td><p>Simulates a scenario where the supplied income source could not be found.</p></td>
         </tr>
         <tr>
