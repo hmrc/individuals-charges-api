@@ -46,7 +46,7 @@ class DeletePensionChargesService @Inject()(connector: PensionChargesConnector) 
   private def desErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "NO_DATA_FOUND"             -> NotFoundError,
+    "NOT_FOUND"                 -> NotFoundError,
     "INVALID_CORRELATIONID"     -> DownstreamError,
     "SERVER_ERROR"              -> DownstreamError,
     "SERVICE_UNAVAILABLE"       -> DownstreamError
