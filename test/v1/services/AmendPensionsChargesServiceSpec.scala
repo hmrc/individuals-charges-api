@@ -23,7 +23,8 @@ import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{AmendPensionChargesRequest, DesTaxYear}
+import v1.models.requestData.AmendPensionCharges.AmendPensionChargesRequest
+import v1.models.requestData.DesTaxYear
 
 import scala.concurrent.Future
 

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.Des
+package v1.models.requestData
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.des._
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method._
+import v1.models.requestData.AmendPensionCharges.PensionCharges
 
-class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
+class PensionChargesSpec extends UnitSpec {
 
-  val responseModel = RetrievePensionChargesResponse(
+  val responseModel = PensionCharges(
     Some(PensionSavingsTaxCharges(
       Seq("00123456RA"),
       Some(LifetimeAllowance(123.12, 123.12)),
@@ -131,11 +129,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       |}
       |""".stripMargin)
 
-
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[RetrievePensionChargesResponse]
+        responseModel shouldBe responseJson.as[PensionCharges]
       }
     }
   }
@@ -144,21 +141,6 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       "return valid JSON" in {
         Json.toJson(responseModel) shouldBe responseJson
       }
-    }
-  }
-
-  "LinksFactory" should {
-    "return the correct links" in {
-      val nino = "mynino"
-      val taxYear = "2017-18"
-
-      MockedAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes
-      RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(mockAppConfig, RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
-        Seq(
-          Link(s"/my/context/pensions/$nino/$taxYear", GET, "self"),
-          Link(s"/my/context/pensions/$nino/$taxYear", PUT, "create-and-amend-charges-pensions"),
-          Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions"),
-        )
     }
   }
 }

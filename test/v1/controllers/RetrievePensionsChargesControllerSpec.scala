@@ -33,7 +33,8 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v1.models.requestData.DesTaxYear
+import v1.models.requestData.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

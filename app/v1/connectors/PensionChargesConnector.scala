@@ -22,7 +22,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.des.RetrievePensionChargesResponse
-import v1.models.requestData._
+import v1.models.requestData.AmendPensionCharges.{AmendPensionChargesRequest, PensionCharges}
+import v1.models.requestData.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 

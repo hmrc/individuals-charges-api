@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.requestData.AmendPensionCharges
 
-case class RetrievePensionChargesRawData(nino: String, taxYear: String) extends RawData
+import uk.gov.hmrc.domain.Nino
+import v1.models.requestData.{DesTaxYear, RawData}
+
+case class AmendPensionChargesRequest(nino: Nino, taxYear: DesTaxYear, pensionCharges: PensionCharges) extends RawData

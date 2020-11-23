@@ -30,7 +30,8 @@ import v1.hateoas.AmendHateoasBody
 import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.errors._
-import v1.models.requestData.AmendPensionChargesRawData
+import v1.models.requestData.AmendPensionCharges
+import v1.models.requestData.AmendPensionCharges.AmendPensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -57,7 +58,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
+      val rawData = AmendPensionCharges.AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
 
       val result = for {
         parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))

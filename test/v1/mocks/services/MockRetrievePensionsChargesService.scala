@@ -21,7 +21,7 @@ import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.models.requestData.RetrievePensionChargesRequest
+import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
 import v1.models.errors.{MtdError, TaxYearFormatError}
-import v1.models.requestData.RetrievePensionChargesRawData
+import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRawData
 
 class RetrievePensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[RetrievePensionChargesRawData]{
 

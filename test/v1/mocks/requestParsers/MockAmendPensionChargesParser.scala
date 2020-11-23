@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.AmendPensionChargesParser
 import v1.models.errors.ErrorWrapper
-import v1.models.requestData.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.requestData.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
 trait MockAmendPensionChargesParser extends MockFactory {
 

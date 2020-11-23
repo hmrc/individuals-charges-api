@@ -28,7 +28,7 @@ import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.auth.UserDetails
 import v1.models.errors._
-import v1.models.requestData.DeletePensionChargesRawData
+import v1.models.requestData.DeletePensionCharges.DeletePensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}

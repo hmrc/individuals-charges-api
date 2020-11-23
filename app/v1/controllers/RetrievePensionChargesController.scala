@@ -30,7 +30,7 @@ import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.des.RetrievePensionChargesHateoasData
 import v1.models.errors._
-import v1.models.requestData.RetrievePensionChargesRawData
+import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}

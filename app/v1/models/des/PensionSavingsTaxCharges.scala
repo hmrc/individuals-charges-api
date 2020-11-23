@@ -38,5 +38,4 @@ object PensionSavingsTaxCharges {
       (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
     ) (PensionSavingsTaxCharges.apply _)
 
-  implicit val format: Format[PensionSavingsTaxCharges] = Format(reads, writes)
 }

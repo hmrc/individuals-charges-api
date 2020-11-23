@@ -26,7 +26,8 @@ import v1.mocks.services.{MockAuditService, MockDeletePensionChargesService, Moc
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors.{NotFoundError, _}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{DeletePensionChargesRawData, DeletePensionChargesRequest, DesTaxYear}
+import v1.models.requestData.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
+import v1.models.requestData.DesTaxYear
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

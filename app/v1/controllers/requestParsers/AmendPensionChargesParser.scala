@@ -19,11 +19,12 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendPensionChargesValidator
-import v1.models.requestData._
+import v1.models.requestData.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest, PensionCharges}
+import v1.models.requestData.{AmendPensionCharges, _}
 
 class AmendPensionChargesParser @Inject()(val validator: AmendPensionChargesValidator) extends RequestParser[AmendPensionChargesRawData,
   AmendPensionChargesRequest] {
 
   override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest =
-    AmendPensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear), data.body.json.as[PensionCharges])
+    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear), data.body.json.as[PensionCharges])
 }

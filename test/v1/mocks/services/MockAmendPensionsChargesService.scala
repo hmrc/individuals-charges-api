@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.models.requestData.AmendPensionChargesRequest
+import v1.models.requestData.AmendPensionCharges.AmendPensionChargesRequest
 import v1.services.{AmendPensionChargesOutcome, AmendPensionChargesService}
 
 import scala.concurrent.{ExecutionContext, Future}

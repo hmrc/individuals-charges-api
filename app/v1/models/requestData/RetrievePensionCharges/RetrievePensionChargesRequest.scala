@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.requestData.RetrievePensionCharges
 
 import uk.gov.hmrc.domain.Nino
+import v1.models.requestData.DesTaxYear
 
-case class DeletePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)
+case class RetrievePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)

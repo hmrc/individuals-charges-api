@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.requestData.RetrievePensionCharges
 
-import play.api.mvc.AnyContentAsJson
+import v1.models.requestData.RawData
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+case class RetrievePensionChargesRawData(nino: String, taxYear: String) extends RawData
