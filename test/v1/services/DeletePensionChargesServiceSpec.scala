@@ -81,7 +81,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         val input = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "NO_DATA_FOUND"             -> NotFoundError,
+          "NOT_FOUND"                 -> NotFoundError,
           "INVALID_CORRELATIONID"     -> DownstreamError,
           "SERVER_ERROR"              -> DownstreamError,
           "SERVICE_UNAVAILABLE"       -> DownstreamError,
