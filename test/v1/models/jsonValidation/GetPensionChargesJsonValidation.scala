@@ -19,7 +19,7 @@ package v1.models.jsonValidation
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import support.UnitSpec
-import v1.models.des._
+import v1.models.response._
 
 class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
 

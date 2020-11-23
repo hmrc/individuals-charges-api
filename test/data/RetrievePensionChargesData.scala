@@ -17,7 +17,7 @@
 package data
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.des._
+import v1.models.response._
 
 object RetrievePensionChargesData {
 

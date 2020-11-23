@@ -19,8 +19,8 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrievePensionChargesValidator
-import v1.models.requestData.{DesTaxYear, RetrievePensionCharges}
-import v1.models.requestData.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v1.models.request.{DesTaxYear, RetrievePensionCharges}
+import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
 class RetrievePensionChargesParser @Inject()(val validator: RetrievePensionChargesValidator) extends RequestParser[RetrievePensionChargesRawData,
   RetrievePensionChargesRequest] {

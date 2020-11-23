@@ -19,9 +19,9 @@ package v1.controllers.requestParsers.validators
 import config.AppConfig
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.des.{OverseasSchemeProvider, PensionSavingsTaxCharges}
+import v1.models.response.{OverseasSchemeProvider, PensionSavingsTaxCharges}
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
-import v1.models.requestData.AmendPensionCharges.{AmendPensionChargesRawData, PensionCharges}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, PensionCharges}
 
 class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
 

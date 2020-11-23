@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
 import v1.models.errors.{MtdError, TaxYearFormatError}
-import v1.models.requestData.DeletePensionCharges.DeletePensionChargesRawData
+import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 
 class DeletePensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[DeletePensionChargesRawData]{
 

@@ -28,8 +28,8 @@ import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
-import v1.models.requestData.DesTaxYear
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.request.DesTaxYear
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

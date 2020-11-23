@@ -22,8 +22,8 @@ import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.DeletePensionCharges.DeletePensionChargesRequest
-import v1.models.requestData.DesTaxYear
+import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.DesTaxYear
 
 import scala.concurrent.Future
 

@@ -23,10 +23,10 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.AmendPensionCharges.AmendPensionChargesRequest
-import v1.models.requestData.DeletePensionCharges.DeletePensionChargesRequest
-import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1.models.requestData.{AmendPensionCharges, DeletePensionCharges, RetrievePensionCharges, _}
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
+import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.request.{AmendPensionCharges, DeletePensionCharges, RetrievePensionCharges, _}
 
 import scala.concurrent.Future
 

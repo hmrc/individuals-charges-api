@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators
 import mocks.MockAppConfig
 import support.UnitSpec
 import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalid, TaxYearFormatError}
-import v1.models.requestData.RetrievePensionCharges.RetrievePensionChargesRawData
+import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 
 class RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private val validNino = "AA123456A"

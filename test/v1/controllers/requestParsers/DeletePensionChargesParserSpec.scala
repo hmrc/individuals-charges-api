@@ -20,8 +20,8 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockDeletePensionChargesValidator
 import v1.models.errors._
-import v1.models.requestData.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
-import v1.models.requestData.DesTaxYear
+import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
+import v1.models.request.DesTaxYear
 
 class DeletePensionChargesParserSpec extends UnitSpec{
   val nino = "AA123456B"
