@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.response.LifetimeAllowance
 import v1.models.errors.{MtdError, RuleBenefitExcessesError}
+import v1.models.request.AmendPensionCharges.LifetimeAllowance
 
 object RuleBenefitExcessesValidation {
 

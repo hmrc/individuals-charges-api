@@ -18,12 +18,13 @@ package v1.models.request.AmendPensionCharges
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
-                          pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
-                          pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
-                          pensionContributions: Option[PensionContributions],
-                          overseasPensionContributions: Option[OverseasPensionContributions])
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
+                                 )
 
-object PensionCharges {
-  implicit val format: OFormat[PensionCharges] = Json.format[PensionCharges]
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
 }

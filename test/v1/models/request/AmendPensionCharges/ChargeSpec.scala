@@ -16,14 +16,33 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Json
+import support.UnitSpec
 
-case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
-                          pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
-                          pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
-                          pensionContributions: Option[PensionContributions],
-                          overseasPensionContributions: Option[OverseasPensionContributions])
+class ChargeSpec extends UnitSpec {
 
-object PensionCharges {
-  implicit val format: OFormat[PensionCharges] = Json.format[PensionCharges]
+  val responseModel = Charge(123.12,123.12)
+
+  val responseJson = Json.parse(
+    """
+      |{
+      | "amount": 123.12,
+      | "foreignTaxPaid": 123.12
+      |}
+      |""".stripMargin)
+
+  "reads" when {
+    "passed valid JSON" should {
+      "return a valid model" in {
+        responseModel shouldBe responseJson.as[Charge]
+      }
+    }
+  }
+  "writes" when {
+    "passed valid model" should {
+      "return valid JSON" in {
+        Json.toJson(responseModel) shouldBe responseJson
+      }
+    }
+  }
 }
