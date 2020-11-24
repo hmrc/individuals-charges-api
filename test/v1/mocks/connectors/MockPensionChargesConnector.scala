@@ -20,10 +20,10 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, PensionChargesConnector}
-import v1.models.response.RetrievePensionChargesResponse
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.response.retrieve.RetrievePensionChargesResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

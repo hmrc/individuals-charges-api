@@ -28,9 +28,9 @@ import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit._
 import v1.models.auth.UserDetails
-import v1.models.response.RetrievePensionChargesHateoasData
 import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
+import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}

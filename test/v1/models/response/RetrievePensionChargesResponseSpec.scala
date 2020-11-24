@@ -21,6 +21,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.hateoas.Link
 import v1.models.hateoas.Method._
+import v1.models.response.retrieve.{Charge, LifetimeAllowance, OverseasPensionContributions, OverseasSchemeProvider, PensionContributions, PensionSavingsTaxCharges, PensionSchemeOverseasTransfers, PensionSchemeUnauthorisedPayments, RetrievePensionChargesHateoasData, RetrievePensionChargesResponse}
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 

@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package v1.hateoas
+package v1.models.response.retrieve
 
-import config.AppConfig
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Json, OFormat}
 
-trait AmendHateoasBody extends HateoasLinks {
+case class LifetimeAllowance(amount: BigDecimal, taxPaid: BigDecimal)
 
-  def amendPensionsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      getRetrievePensions(appConfig, nino, taxYear),
-      getAmendPensions(appConfig, nino, taxYear),
-      getDeletePensions(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
+object LifetimeAllowance {
+  implicit val format: OFormat[LifetimeAllowance] = Json.format[LifetimeAllowance]
 }

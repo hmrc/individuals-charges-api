@@ -18,6 +18,7 @@ package v1.models.response
 
 import play.api.libs.json.Json
 import support.UnitSpec
+import v1.models.response.retrieve.{LifetimeAllowance, PensionSavingsTaxCharges}
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 

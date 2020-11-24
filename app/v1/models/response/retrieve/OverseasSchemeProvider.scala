@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieve
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
+                                 )
 
-object Charge {
-  implicit val format: OFormat[Charge] = Json.format[Charge]
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
 }

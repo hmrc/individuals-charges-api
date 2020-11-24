@@ -26,12 +26,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.hateoas.AmendHateoasBody
 import v1.models.audit._
 import v1.models.auth.UserDetails
 import v1.models.errors._
 import v1.models.request.AmendPensionCharges
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRawData
+import v1.models.response.amend.AmendHateoasBody
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -19,6 +19,7 @@ package v1
 import v1.models.response._
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
+import v1.models.response.retrieve.RetrievePensionChargesResponse
 
 package object services {
 

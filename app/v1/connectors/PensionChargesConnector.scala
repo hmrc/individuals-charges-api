@@ -21,10 +21,10 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.connectors.httpparsers.StandardDesHttpParser._
-import v1.models.response.RetrievePensionChargesResponse
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequest, PensionCharges}
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.response.retrieve.RetrievePensionChargesResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

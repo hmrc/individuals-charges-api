@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.retrieve
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionContributions(pensionSchemeTaxReference: Seq[String],
-                                inExcessOfTheAnnualAllowance: BigDecimal,
-                                annualAllowanceTaxPaid: BigDecimal)
+case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
 
-object PensionContributions {
-  implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]
+object Charge {
+  implicit val format: OFormat[Charge] = Json.format[Charge]
 }

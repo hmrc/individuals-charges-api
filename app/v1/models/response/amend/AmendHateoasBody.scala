@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.amend
 
-import play.api.libs.json.{Json, OFormat}
+import config.AppConfig
+import play.api.libs.json.{JsValue, Json}
+import v1.hateoas.HateoasLinks
 
-case class OverseasSchemeProvider(providerName: String,
-                                  providerAddress: String,
-                                  providerCountryCode: String,
-                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
-                                  pensionSchemeTaxReference: Option[Seq[String]]
-                                 )
+trait AmendHateoasBody extends HateoasLinks {
 
-object OverseasSchemeProvider {
-  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
+  def amendPensionsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      getRetrievePensions(appConfig, nino, taxYear),
+      getAmendPensions(appConfig, nino, taxYear),
+      getDeletePensions(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
 }
