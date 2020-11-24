@@ -127,7 +127,7 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
           header("X-CorrelationId", result) shouldBe Some(correlationId)
 
           val detail: GenericAuditDetail = successAuditDetail(nino, taxYear, fullJsonWithHateoas)
-          def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
+          def event: AuditEvent[GenericAuditDetail] = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
           MockedAuditService.verifyAuditEvent(event).once
         }
       }

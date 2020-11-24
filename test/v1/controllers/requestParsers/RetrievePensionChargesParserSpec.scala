@@ -18,7 +18,7 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.{MockRetrievePensionChargesValidator}
+import v1.mocks.validators.MockRetrievePensionChargesValidator
 import v1.models.errors.{BadRequestError, ErrorWrapper, LossIdFormatError, NinoFormatError}
 import v1.models.requestData.{ DesTaxYear, RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 

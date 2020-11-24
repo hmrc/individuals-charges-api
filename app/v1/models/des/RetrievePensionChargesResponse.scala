@@ -18,7 +18,7 @@ package v1.models.des
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, OFormat, Reads, Writes, __, _}
+import play.api.libs.json._
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 

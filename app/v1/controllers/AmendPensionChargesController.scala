@@ -74,7 +74,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           serviceResponse.correlationId,
           request.userDetails,
           None,
-          Some(request.body),
           Some(responseWrapperWithHateoas)
         ))
 
@@ -95,7 +94,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           correlationId,
           request.userDetails,
           Some(errorWrapper),
-          Some(request.body),
           Some(amendPensionsHateoasBody(appConfig, nino, taxYear))
         ))
 
@@ -125,7 +123,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                  correlationId: String,
                                  userDetails: UserDetails,
                                  errorWrapper: Option[ErrorWrapper],
-                                 requestBody: Option[JsValue],
                                  responseBody: Option[JsValue]): GenericAuditDetail = {
 
     val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))

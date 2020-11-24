@@ -27,9 +27,9 @@ import play.api.mvc.AnyContentAsJson
 class AmendPensionChargesParserSpec extends UnitSpec{
   val nino = "AA123456B"
   val taxYear = "2019-20"
-  implicit val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullJson))
+  val inputData: AmendPensionChargesRawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullJson))
 
   trait Test extends MockAmendPensionChargesValidator {
     lazy val parser = new AmendPensionChargesParser(mockValidator)
