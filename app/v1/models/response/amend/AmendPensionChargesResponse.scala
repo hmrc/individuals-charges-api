@@ -18,11 +18,11 @@ package v1.models.response.amend
 
 import config.AppConfig
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.hateoas.Link
+import v1.models.hateoas.{HateoasData, Link}
 
-object AmendPensionChargesResponse extends HateoasLinks{
+object AmendPensionChargesResponse extends HateoasLinks {
 
-  implicit object LinksFactory extends HateoasLinksFactory[Unit, AmendPensionChargesHateoasData] {
+  implicit object AmendLinksFactory extends HateoasLinksFactory[Unit, AmendPensionChargesHateoasData] {
     override def links(appConfig: AppConfig, data: AmendPensionChargesHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -33,4 +33,4 @@ object AmendPensionChargesResponse extends HateoasLinks{
   }
 }
 
-case class AmendPensionChargesHateoasData(nino: String, taxYear: String)
+case class AmendPensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData

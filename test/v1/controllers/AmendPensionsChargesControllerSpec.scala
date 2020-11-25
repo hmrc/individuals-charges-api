@@ -82,7 +82,6 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
       requestParser = mockAmendPensionChargesParser,
       service = mockAmendPensionsChargesService,
       auditService = mockAuditService,
-      appConfig = mockAppConfig,
       cc = cc,
       idGenerator = mockIdGenerator
     )
