@@ -30,7 +30,8 @@ import v1.hateoas.HateoasFactory
 import v1.models.audit._
 import v1.models.errors._
 import v1.models.request.AmendPensionCharges
-import v1.models.response.amend.{AmendHateoasBody, AmendPensionChargesHateoasData}
+import v1.models.response.amend.AmendPensionChargesHateoasData
+import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +45,7 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
                                               auditService: AuditService,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) with AmendHateoasBody with BaseController {
+    extends AuthorisedController(cc) with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "AmendPensionChargesController",
