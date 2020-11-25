@@ -12,15 +12,7 @@
             <td><p>Simulates a success response.</p></td>
         </tr>
         <tr>
-            <td><p>FORMAT_NINO</p></td>
-            <td><p>Simulates a scenario where the format of the supplied NINO field is not valid.</p></td>
-        </tr>  
-        <tr>
-            <td><p>FORMAT_TAX_YEAR</p></td>
-            <td><p>Simulates a scenario where the format of the supplied tax year field is not valid.</p></td>
-        </tr> 
-        <tr>
-             <td><p>MATCHING_RESOURCE_NOT_FOUND</p></td>
+             <td><p>NOT_FOUND</p></td>
              <td><p>Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period.</p></td>
         </tr>                     
     </tbody>
