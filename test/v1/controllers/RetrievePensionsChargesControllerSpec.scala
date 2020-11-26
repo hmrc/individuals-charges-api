@@ -77,33 +77,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
       MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
       MockedEnrolmentsAuthService.authoriseUser()
       MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-      def successAuditDetail(nino: String,
-                             taxYear: String,
-                             responseBody: JsValue): GenericAuditDetail =
-        GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          nino = nino,
-          taxYear = taxYear,
-          request = None,
-          response = AuditResponse(OK, None, Some(responseBody)),
-          `X-CorrelationId` = correlationId
-        )
-
-      def errorAuditDetail(nino: String,
-                           taxYear: String,
-                           errors: Seq[AuditError],
-                           statusCode: Int): GenericAuditDetail =
-        GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          nino = nino,
-          taxYear = taxYear,
-          request = None,
-          response = AuditResponse(statusCode, Some(errors), None),
-          `X-CorrelationId` = correlationId
-        )
     }
 
     "retrieve" should {
@@ -126,10 +99,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
           status(result) shouldBe OK
           contentAsJson(result) shouldBe fullJsonWithHateoas
           header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-          val detail: GenericAuditDetail = successAuditDetail(nino, taxYear, fullJsonWithHateoas)
-          def event: AuditEvent[GenericAuditDetail] = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
-          MockedAuditService.verifyAuditEvent(event).once
         }
       }
 
@@ -147,9 +116,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
               contentAsJson(result) shouldBe Json.toJson(error)
               header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-              val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(error.code)), expectedStatus)
-              def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
-              MockedAuditService.verifyAuditEvent(event).once
             }
           }
 
@@ -183,9 +149,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
               contentAsJson(result) shouldBe Json.toJson(mtdError)
               header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-              val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, Seq(AuditError(mtdError.code)), expectedStatus)
-              def event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", detail)
-              MockedAuditService.verifyAuditEvent(event).once
             }
           }
 

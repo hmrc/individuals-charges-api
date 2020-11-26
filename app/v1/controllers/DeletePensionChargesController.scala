@@ -64,14 +64,12 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
         logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
           s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        auditSubmission(createAuditDetails(
-          rawData,
-          NO_CONTENT,
-          serviceResponse.correlationId,
-          request.userDetails,
-          None,
-          None
-        ))
+        auditSubmission(GenericAuditDetail(
+          userDetails = request.userDetails,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = None,
+          `X-CorrelationId` = serviceResponse.correlationId,
+          response = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))))
 
         NoContent.withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
       }
@@ -83,13 +81,12 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-        auditSubmission(createAuditDetails(
-          rawData,
-          result.header.status,
-          correlationId,
-          request.userDetails,
-          Some(errorWrapper),
-          None
+        auditSubmission(GenericAuditDetail(
+          userDetails = request.userDetails,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = None,
+          `X-CorrelationId` = correlationId,
+          response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
         ))
 
         result
@@ -108,26 +105,7 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
     }
   }
 
-  private def createAuditDetails(rawData: DeletePensionChargesRawData,
-                                 statusCode: Int,
-                                 correlationId: String,
-                                 userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper],
-                                 responseBody: Option[JsValue]): GenericAuditDetail = {
 
-    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
-      .getOrElse(AuditResponse(statusCode, None, responseBody))
-
-    GenericAuditDetail(
-      userDetails.userType,
-      userDetails.agentReferenceNumber,
-      rawData.nino,
-      rawData.taxYear,
-      None,
-      response,
-      correlationId
-    )
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)

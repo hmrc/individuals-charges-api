@@ -19,7 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import javax.inject._
 import play.api.http.MimeTypes
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -27,7 +27,6 @@ import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit._
-import v1.models.auth.UserDetails
 import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
@@ -67,15 +66,6 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
 
         val hateoasResponse = hateoasFactory.wrap(serviceResponse.responseData, RetrievePensionChargesHateoasData(nino,taxYear))
 
-        auditSubmission(createAuditDetails(
-          rawData,
-          OK,
-          serviceResponse.correlationId,
-          request.userDetails,
-          None,
-          Some(Json.toJson(hateoasResponse)))
-        )
-
         Ok(Json.toJson(hateoasResponse)).withApiHeaders(serviceResponse.correlationId)
           .as(MimeTypes.JSON)
       }
@@ -86,15 +76,6 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(createAuditDetails(
-          rawData,
-          result.header.status,
-          correlationId,
-          request.userDetails,
-          Some(errorWrapper),
-          None
-        ))
 
         result
       }.merge
@@ -110,27 +91,6 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
-  }
-
-  private def createAuditDetails(rawData: RetrievePensionChargesRawData,
-                                 statusCode: Int,
-                                 correlationId: String,
-                                 userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper],
-                                 responseBody: Option[JsValue]): GenericAuditDetail = {
-
-    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
-      .getOrElse(AuditResponse(statusCode, None, responseBody))
-
-    GenericAuditDetail(
-      userDetails.userType,
-      userDetails.agentReferenceNumber,
-      rawData.nino,
-      rawData.taxYear,
-      None,
-      response,
-      correlationId
-    )
   }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

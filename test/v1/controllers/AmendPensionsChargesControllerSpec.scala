@@ -23,13 +23,17 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
+import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 import v1.models.request.DesTaxYear
+import v1.models.response.amend.AmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,6 +45,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
   with MockAmendPensionsChargesService
   with MockAppConfig
   with MockAuditService
+  with MockHateoasFactory
   with MockIdGenerator {
 
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
@@ -48,6 +53,11 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
   private val taxYear = "2021-22"
   private val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
   private val requestData = AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), pensionCharges)
+  private val testHateoasLinks = Seq(
+    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = "self"),
+    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = "create-and-amend-charges-pensions"),
+    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = DELETE, rel = "delete-charges-pensions")
+  )
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
@@ -82,6 +92,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
       requestParser = mockAmendPensionChargesParser,
       service = mockAmendPensionsChargesService,
       auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -91,35 +102,20 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
     MockedAppConfig.apiGatewayContext.returns("individuals/charges").anyNumberOfTimes()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-    def successAuditDetail(nino: String,
-                           taxYear: String,
-                           requestBody: JsValue,
-                           responseBody: JsValue): GenericAuditDetail =
-      GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino = nino,
-        taxYear = taxYear,
-        request = Some(requestBody),
-        response = AuditResponse(OK, None, Some(responseBody)),
-        `X-CorrelationId` = correlationId
-      )
-
-    def errorAuditDetail(nino: String,
-                         taxYear: String,
-                         requestBody: JsValue,
-                         errors: Seq[AuditError],
-                         statusCode: Int): GenericAuditDetail =
-      GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino = nino,
-        taxYear = taxYear,
-        request = Some(requestBody),
-        response = AuditResponse(statusCode, Some(errors), None),
-        `X-CorrelationId` = correlationId
-      )
   }
+
+  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendPensionsCharges",
+      transactionName = "create-amend-pensions-charges",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = requestBody,
+        `X-CorrelationId` = correlationId,
+        response = auditResponse)
+    )
 
   "amend" should {
     "return a successful response with header X-CorrelationId and body" when {
@@ -131,16 +127,19 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
 
         MockAmendPensionsChargesService
           .amend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+        MockHateoasFactory
+          .wrap((), AmendPensionChargesHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
         val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val detail: GenericAuditDetail = successAuditDetail(nino, taxYear, fullJson, hateoasResponse)
-        def event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", detail)
-        MockedAuditService.verifyAuditEvent(event).once
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(fullJson))).once
       }
     }
 
@@ -158,9 +157,8 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, fullJson, Seq(AuditError(error.code)), expectedStatus)
-            def event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", detail)
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(fullJson))).once
           }
         }
 
@@ -205,9 +203,8 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-            val detail: GenericAuditDetail = errorAuditDetail(nino, taxYear, fullJson, Seq(AuditError(mtdError.code)), expectedStatus)
-            def event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", detail)
-            MockedAuditService.verifyAuditEvent(event).once
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(fullJson))).once
           }
         }
 

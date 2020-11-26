@@ -39,17 +39,17 @@ object GenericAuditDetail {
 
   def apply(userDetails: UserDetails,
             params: Map[String, String],
-            requestBody: Option[JsValue],
+            request: Option[JsValue],
             `X-CorrelationId`: String,
-            auditResponse: AuditResponse): GenericAuditDetail = {
+            response: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
       userType = userDetails.userType,
       agentReferenceNumber = userDetails.agentReferenceNumber,
       params = params,
-      requestBody = requestBody,
+      request,
       `X-CorrelationId` = `X-CorrelationId`,
-      auditResponse = auditResponse
+      response
     )
   }
 }
