@@ -206,9 +206,6 @@ class AmendPensionChargesValidator @Inject()(appConfig: AppConfig) extends Valid
       List(
         RuleIsAnnualAllowanceReducedValidation.validate(pensionSavingsTaxCharges.isAnnualAllowanceReduced,
           pensionSavingsTaxCharges.taperedAnnualAllowance, pensionSavingsTaxCharges.moneyPurchasedAllowance
-        ),
-        RuleBenefitExcessesValidation.validate(
-          pensionSavingsTaxCharges.lumpSumBenefitTakenInExcessOfLifetimeAllowance, pensionSavingsTaxCharges.benefitInExcessOfLifetimeAllowance
         )
       ).flatten
     }.getOrElse(NoValidationErrors)
