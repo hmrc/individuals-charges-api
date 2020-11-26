@@ -17,8 +17,7 @@
 package data
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.des._
-import v1.models.requestData.PensionCharges
+import v1.models.request.AmendPensionCharges._
 
 object AmendPensionChargesData {
 

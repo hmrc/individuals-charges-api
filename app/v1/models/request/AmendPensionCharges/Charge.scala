@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request.AmendPensionCharges
 
-import uk.gov.hmrc.domain.Nino
+import play.api.libs.json.{Json, OFormat}
 
-case class RetrievePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)
+case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
+
+object Charge {
+  implicit val format: OFormat[Charge] = Json.format[Charge]
+}

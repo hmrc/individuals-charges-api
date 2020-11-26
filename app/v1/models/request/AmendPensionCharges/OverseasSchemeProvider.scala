@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request.AmendPensionCharges
 
-import uk.gov.hmrc.domain.Nino
+import play.api.libs.json.{Json, OFormat}
 
-case class DeletePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
+                                 )
+
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
+}

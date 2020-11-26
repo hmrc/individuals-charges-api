@@ -19,10 +19,11 @@ package v1.controllers.requestParsers
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendPensionChargesValidator
-import v1.models.errors.{BadRequestError, ErrorWrapper, TaxYearFormatError, NinoFormatError}
-import v1.models.requestData._
+import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import v1.models.request._
 import data.AmendPensionChargesData
 import play.api.mvc.AnyContentAsJson
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
 class AmendPensionChargesParserSpec extends UnitSpec{
   val nino = "AA123456B"

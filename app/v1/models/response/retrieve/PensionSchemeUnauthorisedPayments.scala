@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.response.retrieve
 
-case class DeletePensionChargesRawData(nino: String, taxYear: String) extends RawData
+import play.api.libs.json.{Json, OFormat}
+
+case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String],
+                                             surcharge: Option[Charge],
+                                             noSurcharge: Option[Charge])
+
+object PensionSchemeUnauthorisedPayments {
+  implicit val format: OFormat[PensionSchemeUnauthorisedPayments] = Json.format[PensionSchemeUnauthorisedPayments]
+}

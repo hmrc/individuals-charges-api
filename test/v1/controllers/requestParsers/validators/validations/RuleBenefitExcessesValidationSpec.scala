@@ -17,8 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.des.LifetimeAllowance
 import v1.models.errors.RuleBenefitExcessesError
+import v1.models.request.AmendPensionCharges.LifetimeAllowance
 
 class RuleBenefitExcessesValidationSpec extends UnitSpec {
 

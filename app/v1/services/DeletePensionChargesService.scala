@@ -23,7 +23,7 @@ import utils.Logging
 import v1.connectors.PensionChargesConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
-import v1.models.requestData.DeletePensionChargesRequest
+import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}

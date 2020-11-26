@@ -17,7 +17,7 @@
 package v1.controllers
 
 import cats.data.EitherT
-import config.AppConfig
+import cats.implicits._
 import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -26,24 +26,26 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.hateoas.AmendHateoasBody
+import v1.hateoas.HateoasFactory
 import v1.models.audit._
-import v1.models.auth.UserDetails
 import v1.models.errors._
-import v1.models.requestData.AmendPensionChargesRawData
+import v1.models.request.AmendPensionCharges
+import v1.models.response.amend.AmendPensionChargesHateoasData
+import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
                                               service: AmendPensionChargesService,
                                               requestParser: AmendPensionChargesParser,
+                                              hateoasFactory: HateoasFactory,
                                               auditService: AuditService,
-                                              appConfig: AppConfig,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) with AmendHateoasBody with BaseController {
+    extends AuthorisedController(cc) with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "AmendPensionChargesController",
@@ -51,33 +53,34 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
   def amend(nino: String, taxYear: String): Action[JsValue] = {
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
+      val rawData = AmendPensionCharges.AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
 
-      val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
-
-      val result = for {
+      val result =
+        for {
         parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
         serviceResponse <- EitherT(service.amendPensions(parsedRequest))
+        vendorResponse <- EitherT.fromEither[Future](
+          hateoasFactory.wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear)).asRight[ErrorWrapper])
       } yield {
         logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
           s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        val responseWrapperWithHateoas = amendPensionsHateoasBody(appConfig, nino, taxYear)
 
-        auditSubmission(createAuditDetails(
-          rawData,
-          OK,
-          serviceResponse.correlationId,
-          request.userDetails,
-          None,
-          Some(responseWrapperWithHateoas)
-        ))
-
-        Ok(responseWrapperWithHateoas).withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
+          auditSubmission(
+            GenericAuditDetail(
+              userDetails = request.userDetails,
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              request = Some(request.body),
+              `X-CorrelationId` = serviceResponse.correlationId,
+              response = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
+            )
+          )
+        Ok(Json.toJson(vendorResponse))
+          .withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
       }
 
       result.leftMap { errorWrapper =>
@@ -87,15 +90,13 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-
-        auditSubmission(createAuditDetails(
-          rawData,
-          result.header.status,
-          correlationId,
-          request.userDetails,
-          Some(errorWrapper),
-          Some(amendPensionsHateoasBody(appConfig, nino, taxYear))
-        ))
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            request = Some(request.body),
+            `X-CorrelationId` = correlationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -118,26 +119,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
     }
   }
 
-  private def createAuditDetails(rawData: AmendPensionChargesRawData,
-                                 statusCode: Int,
-                                 correlationId: String,
-                                 userDetails: UserDetails,
-                                 errorWrapper: Option[ErrorWrapper],
-                                 responseBody: Option[JsValue]): GenericAuditDetail = {
-
-    val response = errorWrapper.map(wrapper => AuditResponse(statusCode, Some(wrapper.auditErrors), None))
-      .getOrElse(AuditResponse(statusCode, None, responseBody))
-
-    GenericAuditDetail(
-      userDetails.userType,
-      userDetails.agentReferenceNumber,
-      rawData.nino,
-      rawData.taxYear,
-      Some(rawData.body.json),
-      response,
-      correlationId
-    )
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)

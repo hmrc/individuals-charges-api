@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.response.retrieve
 
-import play.api.mvc.AnyContentAsJson
+import play.api.libs.json.{Json, OFormat}
 
-case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson ) extends RawData
+case class OverseasPensionContributions(overseasSchemeProvider: Seq[OverseasSchemeProvider],
+                                        shortServiceRefund: BigDecimal,
+                                        shortServiceRefundTaxPaid: BigDecimal)
+
+object OverseasPensionContributions {
+  implicit val format: OFormat[OverseasPensionContributions] = Json.format[OverseasPensionContributions]
+}

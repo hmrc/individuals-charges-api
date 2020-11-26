@@ -23,7 +23,10 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData._
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
+import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.request.{AmendPensionCharges, DeletePensionCharges, RetrievePensionCharges, _}
 
 import scala.concurrent.Future
 
@@ -69,7 +72,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(
-          DeletePensionChargesRequest(
+          DeletePensionCharges.DeletePensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear)
           )
@@ -86,7 +89,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(
-          DeletePensionChargesRequest(
+          DeletePensionCharges.DeletePensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear)
           )
@@ -122,7 +125,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
-          RetrievePensionChargesRequest(
+          RetrievePensionCharges.RetrievePensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear)
           )
@@ -139,7 +142,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
-          RetrievePensionChargesRequest(
+          RetrievePensionCharges.RetrievePensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear)
           )
@@ -174,7 +177,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(
-          AmendPensionChargesRequest(
+          AmendPensionCharges.AmendPensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear),
             pensionCharges
@@ -191,7 +194,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(
-          AmendPensionChargesRequest(
+          AmendPensionCharges.AmendPensionChargesRequest(
             nino = Nino(nino),
             taxYear = DesTaxYear(taxYear),
             pensionCharges

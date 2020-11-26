@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.response.retrieve
 
-trait RawData
+import play.api.libs.json.{Json, OFormat}
+
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]]
+                                 )
+
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
+}

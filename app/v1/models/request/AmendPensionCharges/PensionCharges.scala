@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request.AmendPensionCharges
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.domain.Nino
-import v1.models.des.{OverseasPensionContributions,
-                      PensionContributions,
-                      PensionSavingsTaxCharges,
-                      PensionSchemeOverseasTransfers,
-                      PensionSchemeUnauthorisedPayments}
-
-case class AmendPensionChargesRequest(nino: Nino, taxYear: DesTaxYear, pensionCharges: PensionCharges) extends RawData
 
 case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
