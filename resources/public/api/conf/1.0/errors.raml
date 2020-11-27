@@ -213,17 +213,6 @@ traits:
                                description: The format of providers address is invalid.
                                value:
                                  code: FORMAT_PROVIDERS_ADDRESS
-  ruleBenefit:
-                   responses:
-                     400:
-                       body:
-                         application/json:
-                           type: types.errorResponse
-                           examples:
-                             ruleBenefitInExcess:
-                               description: Provision of either Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance.
-                               value:
-                                 code: RULE_BENEFIT
   ruleIncorrectOrEmptyBodySubmitted:
                    responses:
                      400:
