@@ -21,12 +21,9 @@ import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit._
 import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
@@ -39,7 +36,6 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
                                                  service: RetrievePensionChargesService,
                                                  requestParser: RetrievePensionChargesParser,
                                                  hateoasFactory: HateoasFactory,
-                                                 auditService: AuditService,
                                                  cc: ControllerComponents, val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController {
 
@@ -93,8 +89,4 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("retrievePensionChargesAuditType", "retrieve-pension-charges-transaction-type", details)
-    auditService.auditEvent(event)
-  }
 }

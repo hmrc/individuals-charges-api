@@ -69,7 +69,6 @@ class RetrievePensionsChargesControllerSpec extends ControllerBaseSpec
         requestParser = mockRetrievePensionChargesParser,
         service = mockRetrievePensionsChargesService,
         hateoasFactory = mockHateoasFactory,
-        auditService = mockAuditService,
         cc = cc,
         idGenerator = mockIdGenerator
       )
