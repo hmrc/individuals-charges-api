@@ -17,8 +17,7 @@
 package data
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.response._
-import v1.models.response.retrieve.{Charge, LifetimeAllowance, OverseasPensionContributions, OverseasSchemeProvider, PensionContributions, PensionSavingsTaxCharges, PensionSchemeOverseasTransfers, PensionSchemeUnauthorisedPayments, RetrievePensionChargesResponse}
+import v1.models.response.retrieve._
 
 object RetrievePensionChargesData {
 
