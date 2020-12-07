@@ -18,7 +18,7 @@ For pension charges a developer can:
 
 Run from the console using: `sbt run` (starts on port 9765 by default)
 
-Start the service manager profile: `sm --start MTDFB_ALL`
+Start the service manager profile: `sm --start MTDFB_CHARGES`
 
 ## Run tests
 ```
