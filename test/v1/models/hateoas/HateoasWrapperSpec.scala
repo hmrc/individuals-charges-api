@@ -33,15 +33,15 @@ class HateoasWrapperSpec extends UnitSpec {
       Json.toJson(HateoasWrapper(TestMtdResponse("value1", 123), Seq(Link("/some/resource", GET, "thing")))) shouldBe
         Json.parse("""
       |{
-      |"field1": "value1",
-      |"field2": 123,
-      |"links" : [
-      |  {
-      |    "href": "/some/resource",
-      |    "rel": "thing",
-      |    "method": "GET"
-      |  }
-      | ]
+      |  "field1": "value1",
+      |  "field2": 123,
+      |  "links" : [
+      |    {
+      |      "href": "/some/resource",
+      |      "rel": "thing",
+      |      "method": "GET"
+      |    }
+      |  ]
       |}
       """.stripMargin)
     }
@@ -50,10 +50,32 @@ class HateoasWrapperSpec extends UnitSpec {
       Json.toJson(HateoasWrapper(TestMtdResponse("value1", 123), Nil)) shouldBe
         Json.parse("""
                      |{
-                     |"field1": "value1",
-                     |"field2": 123
+                     |  "field1": "value1",
+                     |  "field2": 123
                      |}
     """.stripMargin)
+    }
+  }
+
+  "HateoasWrapper writesEmpty" must {
+    "place links alongside empty object" in {
+      Json.toJson(HateoasWrapper((), Seq(Link("/some/resource", GET, "thing")))) shouldBe
+        Json.parse("""
+      |{
+      |  "links" : [
+      |    {
+      |      "href": "/some/resource",
+      |      "rel": "thing",
+      |      "method": "GET"
+      |    }
+      |  ]
+      |}
+      """.stripMargin)
+    }
+
+    "not write links array if there are no links" in {
+      Json.toJson(HateoasWrapper((), Nil)) shouldBe
+        Json.parse("""{}""".stripMargin)
     }
   }
 }
