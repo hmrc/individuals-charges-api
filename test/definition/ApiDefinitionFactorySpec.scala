@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package definition
 
 import com.typesafe.config.ConfigFactory
+import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import v1.mocks.MockHttpClient
 
 class ApiDefinitionFactorySpec extends UnitSpec {
@@ -29,6 +31,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
     MockedAppConfig.apiGatewayContext returns "api.gateway.context"
   }
+
+  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
@@ -70,6 +74,21 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       "return None" in new Test {
         MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString("""|white-list.enabled = false""".stripMargin))))
         apiDefinitionFactory.buildWhiteListingAccess() shouldBe None
+      }
+    }
+
+    "confidenceLevel" when {
+      Seq(
+        (true, ConfidenceLevel.L200),
+        (false, ConfidenceLevel.L50)
+      ).foreach {
+        case (definitionEnabled, cl) =>
+          s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
+            s"return $cl" in new Test {
+              MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
+              apiDefinitionFactory.confidenceLevel shouldBe cl
+            }
+          }
       }
     }
   }
