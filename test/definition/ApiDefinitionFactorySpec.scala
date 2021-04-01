@@ -32,7 +32,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     MockedAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
