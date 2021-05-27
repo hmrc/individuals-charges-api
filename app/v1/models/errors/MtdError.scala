@@ -28,5 +28,8 @@ object MtdError {
       (__ \ "reason").read[String] and
       (__ \ "paths").readNullable[Seq[String]]
     ) (MtdError.apply _)
+
+  implicit def genericWrites[T <: MtdError]: Writes[T] =
+    writes.contramap[T](c => c: MtdError)
 }
 

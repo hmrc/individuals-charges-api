@@ -16,7 +16,7 @@
 
 package v1.models.request.RetrievePensionCharges
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.models.request.DesTaxYear
 
 case class RetrievePensionChargesRequest(nino: Nino, taxYear: DesTaxYear)

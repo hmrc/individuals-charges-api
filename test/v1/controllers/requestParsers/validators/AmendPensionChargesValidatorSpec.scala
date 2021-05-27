@@ -31,7 +31,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
 
   class Test extends MockAppConfig {
     val validator = new AmendPensionChargesValidator(mockAppConfig)
-    MockedAppConfig.minTaxYearPensionCharge returns "2022"
+    MockAppConfig.minTaxYearPensionCharge returns "2022"
 
     val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 

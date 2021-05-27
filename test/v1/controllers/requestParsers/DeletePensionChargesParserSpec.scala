@@ -17,8 +17,8 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockDeletePensionChargesValidator
+import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.DesTaxYear

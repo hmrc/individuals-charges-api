@@ -29,52 +29,25 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-    MockedAppConfig.apiGatewayContext returns "api.gateway.context"
+    MockAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
 
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus returns "BETA"
+        MockAppConfig.apiStatus returns "BETA"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus returns "ALPHO"
+        MockAppConfig.apiStatus returns "ALPHO"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
       }
     }
   }
-
-  "buildWhiteListingAccess" when {
-    "the 'featureSwitch' parameter is not present" should {
-      "return None" in new Test {
-        MockedAppConfig.featureSwitch returns None
-        apiDefinitionFactory.buildWhiteListingAccess() shouldBe None
-      }
-    }
-
-    "the 'featureSwitch' parameter is present and white listing is enabled" should {
-      "return the correct Access object" in new Test {
-
-        MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-          """|white-list.enabled = true
-             |white-list.applicationIds = ["anId"]
-             |""".stripMargin))))
-
-        apiDefinitionFactory.buildWhiteListingAccess() shouldBe Some(Access("PRIVATE", Seq("anId")))
-      }
-    }
-
-    "the 'featureSwitch' parameter is present and white listing is not enabled" should {
-      "return None" in new Test {
-        MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString("""|white-list.enabled = false""".stripMargin))))
-        apiDefinitionFactory.buildWhiteListingAccess() shouldBe None
-      }
-    }
 
     "confidenceLevel" when {
       Seq(
@@ -84,11 +57,10 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         case (definitionEnabled, cl) =>
           s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
             s"return $cl" in new Test {
-              MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
+              MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
               apiDefinitionFactory.confidenceLevel shouldBe cl
             }
           }
       }
     }
-  }
 }

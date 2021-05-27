@@ -17,8 +17,8 @@
 package v1.controllers.requestParsers
 
 import javax.inject.Inject
-import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeletePensionChargesValidator
+import v1.models.domain.Nino
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.{DeletePensionCharges, DesTaxYear}
 
