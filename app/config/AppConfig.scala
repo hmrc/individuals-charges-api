@@ -42,6 +42,8 @@ trait AppConfig {
   def confidenceLevelConfig: ConfidenceLevelConfig
 
   def minTaxYearPensionCharge: String
+
+  def desEnvironmentHeaders: Option[Seq[String]]
 }
 
 @Singleton
@@ -51,6 +53,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desBaseUrl: String = config.baseUrl("des")
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
+  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
   val apiGatewayContext: String = config.getString("api.gateway.context")
 

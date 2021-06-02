@@ -19,8 +19,8 @@ package v1.connectors
 import data.AmendPensionChargesData.pensionCharges
 import data.RetrievePensionChargesData.retrieveResponse
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
+import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
@@ -39,9 +39,10 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     val connector: PensionChargesConnector = new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "Delete pension charges" when {
@@ -51,7 +52,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
-          .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .delete(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(
@@ -68,7 +73,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
-          .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .delete(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(
@@ -85,7 +94,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError)))
 
         MockedHttpClient
-          .delete(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .delete(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(
@@ -104,7 +117,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
         MockedHttpClient
-          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .get(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
@@ -121,7 +138,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
-          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .get(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
@@ -138,7 +159,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
-          .get(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", desRequestHeaders: _*)
+          .get(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(
@@ -156,7 +181,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(ResponseWrapper(correlationId, Unit))
 
         MockedHttpClient
-          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
+          .put(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            body = pensionCharges,
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(
@@ -173,7 +203,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         MockedHttpClient
-          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
+          .put(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            body = pensionCharges,
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(
@@ -190,7 +225,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
-          .put(s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear", pensionCharges, desRequestHeaders: _*)
+          .put(
+            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            body = pensionCharges,
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
         await(connector.amendPensionCharges(

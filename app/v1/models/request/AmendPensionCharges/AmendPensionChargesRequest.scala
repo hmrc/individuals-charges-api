@@ -16,7 +16,7 @@
 
 package v1.models.request.AmendPensionCharges
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.models.request.{DesTaxYear, RawData}
 
 case class AmendPensionChargesRequest(nino: Nino, taxYear: DesTaxYear, pensionCharges: PensionCharges) extends RawData

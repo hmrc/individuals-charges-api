@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PensionChargesConnector @Inject()(val http: HttpClient,
-                                        val appConfig: AppConfig) extends DesConnector {
+                                        val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def deletePensionCharges(request: DeletePensionChargesRequest)(
     implicit hc: HeaderCarrier,
@@ -39,7 +39,7 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val taxYear = request.taxYear.value
 
-    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,desHeaderCarrier(appConfig),ec)
+    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,downstreamHeaderCarrier(),ec)
   }
 
   def retrievePensionCharges(request: RetrievePensionChargesRequest)(
@@ -53,7 +53,7 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
       http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
     }
 
-    doIt(desHeaderCarrier(appConfig))
+    doIt(downstreamHeaderCarrier())
   }
 
   def amendPensionCharges(request: AmendPensionChargesRequest)(
@@ -66,6 +66,6 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
       http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)
 
-    doIt(desHeaderCarrier(appConfig))
+    doIt(downstreamHeaderCarrier())
   }
 }
