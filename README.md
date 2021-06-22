@@ -31,9 +31,13 @@ To view documentation locally ensure the Charges API is running, and run api-doc
 Then go to http://localhost:9680/api-documentation/docs/api/preview and use this port and version:
 `http://localhost:9765/api/conf/1.0/application.raml`
 
-## Reporting Issues
+## Changelog
 
-You can create a GitHub issue [here](https://github.com/hmrc/individuals-charges-api/issues)
+You can see our changelog [here](https://github.com/hmrc/income-tax-mtd-changelog/wiki)
+
+## Support and Reporting Issues
+
+You can create a GitHub issue [here](https://github.com/hmrc/income-tax-mtd-changelog/issues)
 
 ## API Reference / Documentation 
 Available on the [Individuals Charges Documentation](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/individuals-charges-api/1.0)
