@@ -16,17 +16,16 @@
 
 package v1r6.connectors
 
+import mocks.{MockAppConfig, MockHttpClient}
 import v1r6.data.AmendPensionChargesData.pensionCharges
 import v1r6.data.RetrievePensionChargesData.retrieveResponse
-import mocks.MockAppConfig
-import v1r6.mocks.MockHttpClient
 import v1r6.models.domain.Nino
 import v1r6.models.errors._
 import v1r6.models.outcomes.ResponseWrapper
 import v1r6.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1r6.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1r6.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1r6.models.request.{AmendPensionCharges, DeletePensionCharges, RetrievePensionCharges, _}
+import v1r6.models.request._
 
 import scala.concurrent.Future
 
