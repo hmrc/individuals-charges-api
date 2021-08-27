@@ -37,4 +37,14 @@ case class FeatureSwitch(value: Option[Configuration]) {
 
     enabled.getOrElse(false)
   }
+
+  def isRelease6RoutingEnabled: Boolean = {
+    val enabled = for {
+      config    <- value
+      enabled   <- config.getOptional[Boolean](s"release-6.enabled")
+    } yield enabled
+
+    enabled.getOrElse(true)
+  }
+
 }
