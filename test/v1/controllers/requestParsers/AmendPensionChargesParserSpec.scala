@@ -20,8 +20,8 @@ import support.UnitSpec
 import v1.mocks.validators.MockAmendPensionChargesValidator
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request._
-import data.AmendPensionChargesData
 import play.api.mvc.AnyContentAsJson
+import v1.data.AmendPensionChargesData
 import v1.models.domain.Nino
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 

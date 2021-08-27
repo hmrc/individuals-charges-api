@@ -17,7 +17,7 @@
 package v1.services
 
 import v1.models.request.DesTaxYear
-import data.RetrievePensionChargesData._
+import v1.data.RetrievePensionChargesData._
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.outcomes.ResponseWrapper

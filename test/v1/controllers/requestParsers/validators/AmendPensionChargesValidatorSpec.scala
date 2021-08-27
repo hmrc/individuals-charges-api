@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators
 
-import data.AmendPensionChargesData._
+import v1.data.AmendPensionChargesData._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson

@@ -17,7 +17,7 @@
 package v1.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import data.AmendPensionChargesData._
+import v1.data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}

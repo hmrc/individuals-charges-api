@@ -16,8 +16,8 @@
 
 package v1.connectors
 
-import data.AmendPensionChargesData.pensionCharges
-import data.RetrievePensionChargesData.retrieveResponse
+import v1.data.AmendPensionChargesData.pensionCharges
+import v1.data.RetrievePensionChargesData.retrieveResponse
 import mocks.MockAppConfig
 import v1.mocks.MockHttpClient
 import v1.models.domain.Nino

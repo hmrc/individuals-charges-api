@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package data
+package v1.data
 
 import play.api.libs.json.{JsValue, Json}
 import v1.models.response.retrieve._
@@ -22,7 +22,7 @@ import v1.models.response.retrieve._
 object RetrievePensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA","00123456RA"),
+    Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
     true,
@@ -30,19 +30,19 @@ object RetrievePensionChargesData {
     Some(false)
   )
 
-  val overseasSchemeProvider: OverseasSchemeProvider =  OverseasSchemeProvider(
+  val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
     "Overseas Pensions Plc",
     "111 Main Street, George Town, Grand Cayman",
     "ESP",
     Some(Seq("Q123456")),
     None
   )
-  val pensionOverseasTransfer : PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
+  val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
-  val pensionUnauthorisedPayments : PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
+  val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
     Seq("00123456RA", "00123456RA"),
     Some(Charge(123.45, 123.45)),
     Some(Charge(123.45, 123.45))
@@ -52,7 +52,7 @@ object RetrievePensionChargesData {
     123.45,
     123.45
   )
-  val overseasPensionContributions : OverseasPensionContributions = OverseasPensionContributions (
+  val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
     Seq(overseasSchemeProvider),
     123.45,
     0
