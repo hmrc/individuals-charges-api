@@ -11,9 +11,5 @@
             <td><p>N/A - DEFAULT</p></td>
             <td><p>Simulates a success response.</p></td>
        </tr> 
-        <tr>
-            <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates a scenario where the supplied income source could not be found.</p></td>
-        </tr> 
     </tbody>
 </table>
