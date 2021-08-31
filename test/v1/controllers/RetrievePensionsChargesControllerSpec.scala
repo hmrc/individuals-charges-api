@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
+import v1.data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result

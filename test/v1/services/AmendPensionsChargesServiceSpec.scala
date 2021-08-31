@@ -16,7 +16,7 @@
 
 package v1.services
 
-import data.AmendPensionChargesData._
+import v1.data.AmendPensionChargesData._
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
