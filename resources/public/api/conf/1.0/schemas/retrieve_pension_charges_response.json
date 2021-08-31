@@ -114,8 +114,7 @@
             "required": [
               "providerName",
               "providerAddress",
-              "providerCountryCode",
-              "qualifyingRecognisedOverseasPensionScheme"
+              "providerCountryCode"
             ]
           }
         },
@@ -260,8 +259,7 @@
             "required": [
               "providerName",
               "providerAddress",
-              "providerCountryCode",
-              "qualifyingRecognisedOverseasPensionScheme"
+              "providerCountryCode"
             ]
           }
         },
