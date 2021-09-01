@@ -28,6 +28,8 @@ import v1r6.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
+  override lazy val release6Enabled = true
+
   private trait Test {
 
     val nino = "AA123456A"
@@ -231,10 +233,12 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          (Status.NOT_FOUND, "INVALID_TAXABLE_ENTITY_ID", Status.NOT_FOUND, NotFoundError),
+          (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
           (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
           (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.BAD_REQUEST, "INVALID_PAYLOAD", Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_TYPE_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, DownstreamError),
+          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, DownstreamError)
         )

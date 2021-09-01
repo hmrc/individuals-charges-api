@@ -162,7 +162,6 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
           }
         }
 
-        // TODO: update when validator complete
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
@@ -179,7 +178,6 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
           (RuleIsAnnualAllowanceReducedError, BAD_REQUEST),
           (RuleBenefitExcessesError, BAD_REQUEST),
           (RulePensionReferenceError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -211,7 +209,7 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
         val input = Seq(
           (TaxYearFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
+          (NinoFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (serviceErrors _).tupled(args))
