@@ -14,30 +14,38 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    scalaVersion := "2.12.12"
+    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
+    scalaVersion := "2.12.13"
   )
   .settings(
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
-  .settings(Test/fork:=true)
-  .settings(majorVersion := 0)
+  .settings(majorVersion := 1)
   .settings(publishingSettings: _*)
   .settings(CodeCoverageSettings.settings: _*)
   .settings(defaultSettings(): _*)
   .configs(ItTest)
-  .settings(inConfig(ItTest)(Defaults.itSettings): _*)
   .settings(
-    fork in ItTest := true,
-    unmanagedSourceDirectories in ItTest := Seq((baseDirectory in ItTest).value / "it"),
-    unmanagedClasspath in ItTest += baseDirectory.value / "resources",
-    unmanagedClasspath in Runtime += baseDirectory.value / "resources",
-    javaOptions in ItTest += "-Dlogger.resource=logback-test.xml",
-    parallelExecution in ItTest := false,
-    addTestReportOption(ItTest, "int-test-reports")
+    inConfig(ItTest)(Defaults.itSettings ++ headerSettings(ItTest) ++ automateHeaderSettings(ItTest)),
+    ItTest / fork := true,
+    ItTest / unmanagedSourceDirectories := Seq((ItTest / baseDirectory).value / "it"),
+    ItTest / unmanagedClasspath += baseDirectory.value / "resources",
+    Runtime / unmanagedClasspath += baseDirectory.value / "resources",
+    ItTest / javaOptions += "-Dlogger.resource=logback-test.xml",
+    ItTest / parallelExecution := false,
+    addTestReportOption(ItTest, directory = "int-test-reports")
   )
   .settings(
     resolvers += Resolver.jcenterRepo
   )
   .settings(PlayKeys.playDefaultPort := 9765)
   .settings(SilencerSettings())
+
+dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
+dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
+dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
+dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
+dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-scalacheck")
+dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-28")
+dependencyUpdatesFailBuild := true
+

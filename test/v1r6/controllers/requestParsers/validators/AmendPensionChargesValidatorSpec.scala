@@ -47,16 +47,16 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
     "return country errors" when {
       "multiple country codes are invalid for multiple reasons" in new Test {
         validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountries))) shouldBe List(
-          RuleCountryCodeError.copy(paths = Some(
-            Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
-              "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
-            )
-          )),
           CountryCodeFormatError.copy(paths = Some(
             Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
               "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
+            )
+          )),
+          RuleCountryCodeError.copy(paths = Some(
+            Seq(
+              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
+              "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
             )
           ))
         )
