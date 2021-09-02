@@ -1,4 +1,4 @@
-This API allows developers to provide taxpayers financial data for their pension charges. Here a developer can:
+This API allows developers to provide financial data for a customer’s pension charges. Here a developer can:
 
 * retrieve pension charges
 * create and amend pension charges
