@@ -39,7 +39,7 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val taxYear = request.taxYear.value
 
-    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,downstreamHeaderCarrier(),ec)
+    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,desHeaderCarrier(),ec)
   }
 
   def retrievePensionCharges(request: RetrievePensionChargesRequest)(
@@ -53,7 +53,7 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
       http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
     }
 
-    doIt(downstreamHeaderCarrier())
+    doIt(desHeaderCarrier())
   }
 
   def amendPensionCharges(request: AmendPensionChargesRequest)(
@@ -64,8 +64,8 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear.value
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
-      http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)
+      http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)
 
-    doIt(downstreamHeaderCarrier())
+    doIt(ifsHeaderCarrier())
   }
 }

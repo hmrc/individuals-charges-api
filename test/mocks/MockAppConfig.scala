@@ -35,6 +35,13 @@ trait MockAppConfig extends MockFactory {
 
     def desEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.desEnvironmentHeaders _).expects()
 
+    // IFS config
+    def ifsBaseUrl: CallHandler[String] = (mockAppConfig.ifsBaseUrl _: () => String).expects()
+    def ifsToken: CallHandler[String] = (mockAppConfig.ifsToken _).expects()
+    def ifsEnvironment: CallHandler[String] = (mockAppConfig.ifsEnv _).expects()
+    def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifsEnvironmentHeaders _).expects()
+    // END
+
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
     def featureSwitch: CallHandler[Option[Configuration]] = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()

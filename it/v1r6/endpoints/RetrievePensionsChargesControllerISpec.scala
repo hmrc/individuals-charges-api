@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1r6.models.errors._
-import v1r6.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
@@ -63,7 +63,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Status.OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Status.OK, fullJson)
         }
 
         val response: WSResponse = await(request().get())
@@ -113,7 +113,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().get())

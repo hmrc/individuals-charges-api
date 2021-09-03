@@ -21,7 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1r6.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AuthISpec extends IntegrationBaseSpec {
 
@@ -74,7 +74,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.DELETE, desUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, Status.NO_CONTENT)
         }
 
         val response: WSResponse = await(request().delete())
