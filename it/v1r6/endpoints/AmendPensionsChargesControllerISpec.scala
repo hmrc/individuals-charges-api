@@ -24,7 +24,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1r6.models.errors._
-import v1r6.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
@@ -36,7 +36,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
     val taxYear = "2021-22"
 
     def uri: String = s"/pensions/$nino/$taxYear"
-    def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -89,7 +89,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(fullValidJson))
@@ -104,7 +104,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(boolean1Json))
@@ -223,7 +223,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.PUT, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().put(fullValidJson))
