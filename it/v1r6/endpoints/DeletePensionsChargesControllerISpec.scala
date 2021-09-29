@@ -21,11 +21,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json._
 import play.api.libs.ws._
-import support.IntegrationBaseSpec
+import support.V1R6IntegrationSpec
 import v1r6.models.errors._
 import v1r6.stubs._
 
-class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
+class DeletePensionsChargesControllerISpec extends V1R6IntegrationSpec {
 
   private trait Test {
 
