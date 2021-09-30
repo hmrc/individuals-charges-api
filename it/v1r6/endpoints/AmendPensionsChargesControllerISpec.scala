@@ -22,13 +22,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.V1R6IntegrationSpec
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
-
-  override lazy val release6Enabled = true
+class AmendPensionsChargesControllerISpec extends V1R6IntegrationSpec {
 
   private trait Test {
 
