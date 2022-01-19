@@ -23,7 +23,7 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"   %% "bootstrap-backend-play-28" % "5.19.0",
-    "org.typelevel" %% "cats-core"                 % "2.6.0",
+    "org.typelevel" %% "cats-core"                 % "2.7.0",
     "com.chuusai"   %% "shapeless"                 % "2.4.0-M1",
     compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
     "com.github.ghik"    % "silencer-lib"   % "1.7.0" % Provided cross CrossVersion.full,
@@ -33,10 +33,10 @@ object AppDependencies {
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(
-    "org.scalatest"          %% "scalatest"            % "3.2.7"             % scope,
-    "com.vladsch.flexmark"   % "flexmark-all"          % "0.36.8"            % scope,
+    "org.scalatest"          %% "scalatest"            % "3.2.10"            % scope,
+    "com.vladsch.flexmark"   % "flexmark-all"          % "0.62.2"            % scope,
     "org.scalacheck"         %% "scalacheck"           % "1.15.1"            % scope,
-    "org.scalamock"          %% "scalamock"            % "5.1.0"             % scope,
+    "org.scalamock"          %% "scalamock"            % "5.2.0"             % scope,
     "org.pegdown"            % "pegdown"               % "1.6.0"             % scope,
     "com.typesafe.play"      %% "play-test"            % PlayVersion.current % scope,
     "org.scalatestplus.play" %% "scalatestplus-play"   % "5.1.0"             % scope,

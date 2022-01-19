@@ -8,7 +8,7 @@ This API allows software packages to show and provide a taxpayers' financial dat
 ## Requirements
 - Scala 2.12.x
 - Java 8
-- sbt 1.3.7
+- sbt 1.6.x
 - [Service Manager](https://github.com/hmrc/service-manager)
 
 ## Development Setup
