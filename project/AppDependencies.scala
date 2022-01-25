@@ -27,15 +27,15 @@ object AppDependencies {
     "com.chuusai"   %% "shapeless"                 % "2.4.0-M1",
     compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
     "com.github.ghik"    % "silencer-lib"   % "1.7.0" % Provided cross CrossVersion.full,
-    "org.json4s"         %% "json4s-native" % "3.6.8",
-    "org.json4s"         %% "json4s-ext"    % "3.6.8",
-    "com.neovisionaries" % "nv-i18n"        % "1.27"
+    "org.json4s"         %% "json4s-native" % "3.6.12",
+    "org.json4s"         %% "json4s-ext"    % "3.6.12",
+    "com.neovisionaries" % "nv-i18n"        % "1.29"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(
     "org.scalatest"          %% "scalatest"            % "3.2.10"            % scope,
     "com.vladsch.flexmark"   % "flexmark-all"          % "0.62.2"            % scope,
-    "org.scalacheck"         %% "scalacheck"           % "1.15.1"            % scope,
+    "org.scalacheck"         %% "scalacheck"           % "1.15.4"            % scope,
     "org.scalamock"          %% "scalamock"            % "5.2.0"             % scope,
     "org.pegdown"            % "pegdown"               % "1.6.0"             % scope,
     "com.typesafe.play"      %% "play-test"            % PlayVersion.current % scope,
