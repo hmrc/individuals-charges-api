@@ -1,5 +1,5 @@
 import sbt._
-import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
+import uk.gov.hmrc.DefaultBuildSettings.{ addTestReportOption, defaultSettings }
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
@@ -48,4 +48,3 @@ dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
 dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-scalacheck")
 dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-28")
 dependencyUpdatesFailBuild := true
-
