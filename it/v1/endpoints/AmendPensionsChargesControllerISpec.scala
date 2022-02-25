@@ -22,11 +22,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
+import support.IntegrationBaseSpec
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
+class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -34,7 +34,7 @@ class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
     val taxYear = "2021-22"
 
     def uri: String = s"/pensions/$nino/$taxYear"
-    def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -87,7 +87,7 @@ class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(fullValidJson))
@@ -102,7 +102,7 @@ class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(boolean1Json))
@@ -221,7 +221,7 @@ class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.PUT, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().put(fullValidJson))
@@ -231,10 +231,12 @@ class AmendPensionsChargesControllerISpec extends V1IntegrationSpec {
         }
 
         val input = Seq(
-          (Status.NOT_FOUND, "INVALID_TAXABLE_ENTITY_ID", Status.NOT_FOUND, NotFoundError),
+          (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
           (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
           (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.BAD_REQUEST, "INVALID_PAYLOAD", Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_TYPE_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, DownstreamError),
+          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, DownstreamError)
         )

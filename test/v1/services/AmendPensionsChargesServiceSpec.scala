@@ -75,12 +75,14 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          "INVALID_TAXABLE_ENTITY_ID" -> NotFoundError,
-          "INVALID_TAX_YEAR" -> TaxYearFormatError,
-          "INVALID_PAYLOAD" -> RuleIncorrectOrEmptyBodyError,
-          "INVALID_CORRELATIONID" -> DownstreamError,
-          "SERVER_ERROR" -> DownstreamError,
-          "SERVICE_UNAVAILABLE" -> DownstreamError
+          "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
+          "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+          "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
+          "INVALID_CORRELATIONID"        -> DownstreamError,
+          "REDUCTION_TYPE_NOT_SPECIFIED" -> DownstreamError,
+          "REDUCTION_NOT_SPECIFIED"      -> DownstreamError,
+          "SERVER_ERROR"                 -> DownstreamError,
+          "SERVICE_UNAVAILABLE"          -> DownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))
