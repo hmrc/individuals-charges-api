@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package v1r6.models.request.AmendPensionCharges
+package v1.connectors
 
-import play.api.libs.json.{Json, OFormat}
+trait DownstreamUri[Resp] {
+  val value: String
+}
 
-case class PensionSchemeOverseasTransfers(overseasSchemeProvider: Seq[OverseasSchemeProvider],
-                                          transferCharge: BigDecimal,
-                                          transferChargeTaxPaid: BigDecimal)
-
-object PensionSchemeOverseasTransfers {
-  implicit val format: OFormat[PensionSchemeOverseasTransfers] = Json.format[PensionSchemeOverseasTransfers]
+object DownstreamUri {
+  case class DesUri[Resp](value: String) extends DownstreamUri[Resp]
+  case class IfsUri[Resp](value: String) extends DownstreamUri[Resp]
 }

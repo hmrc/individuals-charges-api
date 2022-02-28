@@ -44,18 +44,42 @@ trait ConnectorSpec extends UnitSpec
     HeaderCarrier.Config(
       Seq("^not-test-BaseUrl?$".r),
       Seq.empty[String],
-      Some("individual-disclosures-api")
+      Some("individual-charges-api")
     )
 
   val requiredDesHeaders: Seq[(String, String)] = Seq(
     "Authorization" -> "Bearer des-token",
     "Environment" -> "des-environment",
-    "User-Agent" -> "individual-disclosures-api",
+    "User-Agent" -> "individual-charges-api",
     "CorrelationId" -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
   val allowedDesHeaders: Seq[String] = Seq(
+    "Accept",
+    "Gov-Test-Scenario",
+    "Content-Type",
+    "Location",
+    "X-Request-Timestamp",
+    "X-Session-Id"
+  )
+
+  val dummyIfsHeaderCarrierConfig: HeaderCarrier.Config =
+    HeaderCarrier.Config(
+      Seq("^not-test-BaseUrl?$".r),
+      Seq.empty[String],
+      Some("individual-charges-api")
+    )
+
+  val requiredIfsHeaders: Seq[(String, String)] = Seq(
+    "Authorization" -> "Bearer ifs-token",
+    "Environment" -> "ifs-environment",
+    "User-Agent" -> "individual-charges-api",
+    "CorrelationId" -> correlationId,
+    "Gov-Test-Scenario" -> "DEFAULT"
+  )
+
+  val allowedIfsHeaders: Seq[String] = Seq(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
