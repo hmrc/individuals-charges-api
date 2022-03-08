@@ -25,8 +25,6 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "bootstrap-backend-play-28" % "5.20.0",
     "org.typelevel" %% "cats-core"                 % "2.7.0",
     "com.chuusai"   %% "shapeless"                 % "2.4.0-M1",
-    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
-    "com.github.ghik"              % "silencer-lib"          % "1.7.0" % Provided cross CrossVersion.full,
     "org.json4s"                   %% "json4s-native"        % "3.6.12",
     "org.json4s"                   %% "json4s-ext"           % "3.6.12",
     "com.neovisionaries"           % "nv-i18n"               % "1.29",

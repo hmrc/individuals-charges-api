@@ -93,18 +93,16 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
     }
   }
 
-  private def errorResult(errorWrapper: ErrorWrapper): Result = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper): Result =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError |
            TaxYearFormatError | RuleTaxYearRangeInvalid |
            RuleTaxYearNotSupportedError
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
-  }
-
-
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)

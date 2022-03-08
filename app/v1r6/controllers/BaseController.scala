@@ -17,11 +17,21 @@
 package v1r6.controllers
 
 import play.api.Logger
+import play.api.libs.json.Json
 import play.api.mvc.Result
+import play.api.mvc.Results.InternalServerError
+import v1r6.models.errors.{DownstreamError, ErrorWrapper}
 
 trait BaseController {
 
-  protected val logger = Logger(this.getClass)
+  protected val logger: Logger = Logger(this.getClass)
+
+  protected def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
+    logger.error(
+      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+        s"Unhandled error: $errorWrapper")
+    InternalServerError(Json.toJson(DownstreamError))
+  }
 
   implicit class Response(result: Result) {
 

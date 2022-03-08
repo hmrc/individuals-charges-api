@@ -103,8 +103,8 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
     }
   }
 
-  private def errorResult(errorWrapper: ErrorWrapper): Result = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper): Result =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError |
            TaxYearFormatError | RuleTaxYearRangeInvalid |
            RuleTaxYearNotSupportedError | RuleIncorrectOrEmptyBodyError |
@@ -115,9 +115,8 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
            RuleBenefitExcessesError | RulePensionReferenceError
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
-  }
-
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)
