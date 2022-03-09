@@ -21,11 +21,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json._
 import play.api.libs.ws._
-import support.V1IntegrationSpec
+import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs._
 
-class DeletePensionsChargesControllerISpec extends V1IntegrationSpec {
+class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -63,7 +63,7 @@ class DeletePensionsChargesControllerISpec extends V1IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
         }
 
         val response: WSResponse = await(request().delete())
@@ -112,7 +112,7 @@ class DeletePensionsChargesControllerISpec extends V1IntegrationSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.DELETE, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().delete())

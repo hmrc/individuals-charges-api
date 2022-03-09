@@ -114,7 +114,6 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
            MtdErrorWithCustomMessage(ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError |
            RuleBenefitExcessesError | RulePensionReferenceError
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _ => unhandledError(errorWrapper)
     }

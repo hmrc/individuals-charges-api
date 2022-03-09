@@ -42,6 +42,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     MockAppConfig.desToken returns "des-token"
     MockAppConfig.desEnvironment returns "des-environment"
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+
+    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
+    MockAppConfig.ifsBaseUrl returns baseUrl
+    MockAppConfig.ifsToken returns "ifs-token"
+    MockAppConfig.ifsEnvironment returns "ifs-environment"
+    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "Delete pension charges" when {
@@ -174,7 +180,9 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
   "Amend pension charges" when {
+
     "a valid request is supplied" should {
       "return a successful response with the correct correlationId" in new Test {
         val expected = Right(ResponseWrapper(correlationId, Unit))
@@ -183,8 +191,8 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .put(
             url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
@@ -205,8 +213,8 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .put(
             url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
@@ -227,8 +235,8 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           .put(
             url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(expected))
 
