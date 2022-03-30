@@ -25,7 +25,8 @@ class PensionSchemeTaxReferenceValidationSpec extends UnitSpec {
     "validateOptional" must {
       "validate correctly for some valid Pension Scheme Tax Ref" in {
         PensionSchemeTaxReferenceValidation.validate(
-          pensionSchemeTaxRef = "00123456RA", "path"
+          pensionSchemeTaxRef = "00123456RA",
+          "path"
         ) shouldBe NoValidationErrors
       }
 

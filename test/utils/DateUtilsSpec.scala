@@ -21,7 +21,7 @@ import java.time.LocalDate
 import support.UnitSpec
 import v1.models.request.DesTaxYear
 
-class DateUtilsSpec extends UnitSpec{
+class DateUtilsSpec extends UnitSpec {
 
   "getDesTaxYear with tax year param" should {
     "return a valid DesTaxYear" when {
@@ -42,4 +42,5 @@ class DateUtilsSpec extends UnitSpec{
       }
     }
   }
+
 }

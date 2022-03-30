@@ -31,19 +31,25 @@ import scala.concurrent.Future
 
 class PensionChargesConnectorSpec extends ConnectorSpec {
 
-  val nino = "AA123456A"
+  val nino    = "AA123456A"
   val taxYear = "2019-20"
 
   class Test extends MockHttpClient with MockAppConfig {
-    val connector: PensionChargesConnector = new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+    val connector: PensionChargesConnector =
+      new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
+    val desRequestHeaders: Seq[(String, String)] =
+      Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+
     MockAppConfig.desBaseUrl returns baseUrl
     MockAppConfig.desToken returns "des-token"
     MockAppConfig.desEnvironment returns "des-environment"
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
-    val ifsRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
+    val ifsRequestHeaders: Seq[(String, String)] =
+      Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
+
     MockAppConfig.ifsBaseUrl returns baseUrl
     MockAppConfig.ifsToken returns "ifs-token"
     MockAppConfig.ifsEnvironment returns "ifs-environment"
@@ -58,18 +64,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.deletePensionCharges(
-          DeletePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.deletePensionCharges(
+            DeletePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
 
@@ -79,18 +87,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.deletePensionCharges(
-          DeletePensionCharges.DeletePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.deletePensionCharges(
+            DeletePensionCharges.DeletePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
 
@@ -100,18 +110,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.deletePensionCharges(
-          DeletePensionCharges.DeletePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.deletePensionCharges(
+            DeletePensionCharges.DeletePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
   }
@@ -123,18 +135,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.retrievePensionCharges(
-          RetrievePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.retrievePensionCharges(
+            RetrievePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
 
@@ -144,18 +158,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.retrievePensionCharges(
-          RetrievePensionCharges.RetrievePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.retrievePensionCharges(
+            RetrievePensionCharges.RetrievePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
 
@@ -165,18 +181,20 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.retrievePensionCharges(
-          RetrievePensionCharges.RetrievePensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear)
-          )
-        )) shouldBe expected
+        await(
+          connector.retrievePensionCharges(
+            RetrievePensionCharges.RetrievePensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear)
+            )
+          )) shouldBe expected
       }
     }
   }
@@ -189,20 +207,22 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.amendPensionCharges(
-          AmendPensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear),
-            pensionCharges
-          )
-        )) shouldBe expected
+        await(
+          connector.amendPensionCharges(
+            AmendPensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear),
+              pensionCharges
+            )
+          )) shouldBe expected
       }
     }
     "A request returning a single error" should {
@@ -211,20 +231,22 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.amendPensionCharges(
-          AmendPensionCharges.AmendPensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear),
-            pensionCharges
-          )
-        )) shouldBe expected
+        await(
+          connector.amendPensionCharges(
+            AmendPensionCharges.AmendPensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear),
+              pensionCharges
+            )
+          )) shouldBe expected
       }
     }
     "a request returning multiple errors" should {
@@ -233,21 +255,24 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url =s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(expected))
 
-        await(connector.amendPensionCharges(
-          AmendPensionCharges.AmendPensionChargesRequest(
-            nino = Nino(nino),
-            taxYear = DesTaxYear(taxYear),
-            pensionCharges
-          )
-        )) shouldBe expected
+        await(
+          connector.amendPensionCharges(
+            AmendPensionCharges.AmendPensionChargesRequest(
+              nino = Nino(nino),
+              taxYear = DesTaxYear(taxYear),
+              pensionCharges
+            )
+          )) shouldBe expected
       }
     }
   }
+
 }

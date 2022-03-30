@@ -37,19 +37,19 @@ import v1.services._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              service: AmendPensionChargesService,
-                                              requestParser: AmendPensionChargesParser,
-                                              hateoasFactory: HateoasFactory,
-                                              auditService: AuditService,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) with BaseController {
+class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               service: AmendPensionChargesService,
+                                               requestParser: AmendPensionChargesParser,
+                                               hateoasFactory: HateoasFactory,
+                                               auditService: AuditService,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "AmendPensionChargesController",
-      endpointName = "Amend a Pensions Charge")
+    EndpointLogContext(controllerName = "AmendPensionChargesController", endpointName = "Amend a Pensions Charge")
 
   def amend(nino: String, taxYear: String): Action[JsValue] = {
     authorisedAction(nino).async(parse.json) { implicit request =>
@@ -61,14 +61,16 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
       val result =
         for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.amendPensions(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory.wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear)).asRight[ErrorWrapper])
-      } yield {
-        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-          s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.amendPensions(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear))
+              .asRight[ErrorWrapper])
+        } yield {
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
           auditSubmission(
             GenericAuditDetail(
@@ -79,13 +81,14 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
               response = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
-        Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
-      }
+          Ok(Json.toJson(vendorResponse))
+            .withApiHeaders(serviceResponse.correlationId)
+            .as(MimeTypes.JSON)
+        }
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -96,7 +99,8 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = Some(request.body),
             `X-CorrelationId` = correlationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))))
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          ))
 
         result
       }.merge
@@ -105,21 +109,19 @@ class AmendPensionChargesController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper): Result =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError |
-           TaxYearFormatError | RuleTaxYearRangeInvalid |
-           RuleTaxYearNotSupportedError | RuleIncorrectOrEmptyBodyError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(RuleCountryCodeError.code) |
-           MtdErrorWithCustomMessage(CountryCodeFormatError.code) | MtdErrorWithCustomMessage(QOPSRefFormatError.code) |
-           MtdErrorWithCustomMessage(PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) |
-           MtdErrorWithCustomMessage(ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError |
-           RuleBenefitExcessesError | RulePensionReferenceError
-      => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError |
+          RuleIncorrectOrEmptyBodyError | MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(RuleCountryCodeError.code) |
+          MtdErrorWithCustomMessage(CountryCodeFormatError.code) | MtdErrorWithCustomMessage(QOPSRefFormatError.code) | MtdErrorWithCustomMessage(
+            PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) | MtdErrorWithCustomMessage(
+            ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError | RuleBenefitExcessesError | RulePensionReferenceError =>
+        BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _               => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)
     auditService.auditEvent(event)
   }
+
 }

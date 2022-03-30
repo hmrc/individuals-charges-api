@@ -45,6 +45,7 @@ trait HttpParser {
         logger.warn(s"[KnownJsonResponse][validateJson] Unable to parse JSON: $error")
         None
     }
+
   }
 
   def retrieveCorrelationId(response: HttpResponse): String = response.header("CorrelationId").getOrElse("")
@@ -59,7 +60,8 @@ trait HttpParser {
   def parseErrors(response: HttpResponse): DesError = {
     val singleError         = response.validateJson[DesErrorCode].map(err => DesErrors(List(err)))
     lazy val multipleErrors = response.validateJson(multipleErrorReads).map(errs => DesErrors(errs))
-    lazy val bvrErrors      = response.validateJson(bvrErrorReads).map(errs => OutboundError(BVRError, Some(errs.map(_.toMtd))))
+    lazy val bvrErrors =
+      response.validateJson(bvrErrorReads).map(errs => OutboundError(BVRError, Some(errs.map(_.toMtd))))
     lazy val unableToParseJsonError = {
       logger.warn(s"unable to parse errors from response: ${response.body}")
       OutboundError(DownstreamError)

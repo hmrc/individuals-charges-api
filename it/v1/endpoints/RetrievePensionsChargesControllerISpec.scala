@@ -30,10 +30,10 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino    = "AA123456A"
     val taxYear = "2021-22"
 
-    def uri: String = s"/pensions/$nino/$taxYear"
+    def uri: String    = s"/pensions/$nino/$taxYear"
     def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
@@ -51,6 +51,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
+
   }
 
   "Calling the retrieve endpoint" should {
@@ -80,7 +81,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -135,4 +136,5 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

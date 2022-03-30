@@ -24,20 +24,21 @@ object TaxYearValidation {
 
   def validate(taxYear: String): List[MtdError] = {
 
-      if (taxYear.matches(taxYearFormat)) {
+    if (taxYear.matches(taxYearFormat)) {
 
-        //scalastyle:off
-        val start = taxYear.substring(2, 4).toInt
-        val end   = taxYear.substring(5, 7).toInt
-        //scalastyle:on
+      // scalastyle:off
+      val start = taxYear.substring(2, 4).toInt
+      val end   = taxYear.substring(5, 7).toInt
+      // scalastyle:on
 
-        if (end - start == 1) {
-          NoValidationErrors
-        } else {
-          List(RuleTaxYearRangeInvalid)
-        }
+      if (end - start == 1) {
+        NoValidationErrors
       } else {
-        List(TaxYearFormatError)
+        List(RuleTaxYearRangeInvalid)
       }
+    } else {
+      List(TaxYearFormatError)
     }
+  }
+
 }

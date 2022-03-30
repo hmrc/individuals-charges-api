@@ -35,37 +35,40 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
   val authService: EnrolmentsAuthService
   val lookupService: MtdIdLookupService
 
-  def authorisedAction(nino: String): ActionBuilder[UserRequest, AnyContent] = new ActionBuilder[UserRequest, AnyContent] {
+  def authorisedAction(nino: String): ActionBuilder[UserRequest, AnyContent] =
+    new ActionBuilder[UserRequest, AnyContent] {
 
-    override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+      override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
-    override protected def executionContext: ExecutionContext = cc.executionContext
+      override protected def executionContext: ExecutionContext = cc.executionContext
 
-    def predicate(mtdId: String): Predicate =
-      Enrolment("HMRC-MTD-IT")
-        .withIdentifier("MTDITID", mtdId)
-        .withDelegatedAuthRule("mtd-it-auth")
+      def predicate(mtdId: String): Predicate =
+        Enrolment("HMRC-MTD-IT")
+          .withIdentifier("MTDITID", mtdId)
+          .withDelegatedAuthRule("mtd-it-auth")
 
-    def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(
-        implicit headerCarrier: HeaderCarrier): Future[Result] = {
-      authService.authorised(predicate(mtdId)).flatMap[Result] {
-        case Right(userDetails)      => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-        case Left(UnauthorisedError) => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
-        case Left(_)                 => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
+      def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
+          headerCarrier: HeaderCarrier): Future[Result] = {
+        authService.authorised(predicate(mtdId)).flatMap[Result] {
+          case Right(userDetails)      => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
+          case Left(UnauthorisedError) => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
+          case Left(_)                 => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
+        }
       }
+
+      override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] = {
+
+        implicit val headerCarrier: HeaderCarrier = hc(request)
+
+        lookupService.lookup(nino).flatMap[Result] {
+          case Right(mtdId)                  => invokeBlockWithAuthCheck(mtdId, request, block)
+          case Left(NinoFormatError)         => Future.successful(BadRequest(Json.toJson(NinoFormatError)))
+          case Left(UnauthorisedError)       => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
+          case Left(InvalidBearerTokenError) => Future.successful(Unauthorized(Json.toJson(InvalidBearerTokenError)))
+          case Left(_)                       => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
+        }
+      }
+
     }
 
-    override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] = {
-
-      implicit val headerCarrier: HeaderCarrier = hc(request)
-
-      lookupService.lookup(nino).flatMap[Result] {
-        case Right(mtdId)            => invokeBlockWithAuthCheck(mtdId, request, block)
-        case Left(NinoFormatError)   => Future.successful(BadRequest(Json.toJson(NinoFormatError)))
-        case Left(UnauthorisedError) => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
-        case Left(InvalidBearerTokenError) => Future.successful(Unauthorized(Json.toJson(InvalidBearerTokenError)))
-        case Left(_)                 => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
-      }
-    }
-  }
 }

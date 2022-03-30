@@ -19,15 +19,15 @@ package v1.controllers.requestParsers.validators.validations
 import play.api.libs.json._
 import v1.models.errors.MtdError
 
-/**
-  * Utilities to assist using validations where the value to validate comes from a JSON element
+/** Utilities to assist using validations where the value to validate comes from a JSON element
   */
 object JsonValidation {
 
   def validate[T: Reads](jsLookupResult: JsLookupResult)(validation: T => List[MtdError]): List[MtdError] = {
     jsLookupResult.validate[T] match {
       case JsSuccess(value, _) => validation(value)
-      case _: JsError        => Nil
+      case _: JsError          => Nil
     }
   }
+
 }

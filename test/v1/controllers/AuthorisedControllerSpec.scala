@@ -28,8 +28,7 @@ import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class
-AuthorisedControllerSpec extends ControllerBaseSpec {
+class AuthorisedControllerSpec extends ControllerBaseSpec {
 
   trait Test extends MockEnrolmentsAuthService with MockMtdIdLookupService {
     val hc = HeaderCarrier()
@@ -41,6 +40,7 @@ AuthorisedControllerSpec extends ControllerBaseSpec {
       def action(nino: String): Action[AnyContent] = authorisedAction(nino).async {
         Future.successful(Ok(Json.obj()))
       }
+
     }
 
     lazy val target = new TestController()
@@ -166,4 +166,5 @@ AuthorisedControllerSpec extends ControllerBaseSpec {
       status(result) shouldBe FORBIDDEN
     }
   }
+
 }

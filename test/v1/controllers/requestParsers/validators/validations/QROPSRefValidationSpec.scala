@@ -23,9 +23,9 @@ class QROPSRefValidationSpec extends UnitSpec {
 
   "QOPSRefValidation" when {
     "validate correctly for some valid qopsRef" in {
-      QROPSRefValidation.validate("Q123456","path") shouldBe NoValidationErrors
-      QROPSRefValidation.validate("Q143533","path") shouldBe NoValidationErrors
-      QROPSRefValidation.validate("Q100000","path") shouldBe NoValidationErrors
+      QROPSRefValidation.validate("Q123456", "path") shouldBe NoValidationErrors
+      QROPSRefValidation.validate("Q143533", "path") shouldBe NoValidationErrors
+      QROPSRefValidation.validate("Q100000", "path") shouldBe NoValidationErrors
     }
 
     "validate correctly for some invalid qopsRef" in {
@@ -35,4 +35,5 @@ class QROPSRefValidationSpec extends UnitSpec {
       ) shouldBe List(QOPSRefFormatError.copy(paths = Some(Seq("/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"))))
     }
   }
+
 }

@@ -25,16 +25,25 @@ import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
 trait MockRetrievePensionsChargesService extends MockFactory {
 
   val mockRetrievePensionsChargesService: RetrievePensionChargesService = mock[RetrievePensionChargesService]
 
   object MockRetrievePensionsChargesService {
+
     def retrieve(retrievePensionChargesRequest: RetrievePensionChargesRequest): CallHandler[Future[RetrievePensionChargesOutcome]] = {
-      (mockRetrievePensionsChargesService.retrievePensions(_: RetrievePensionChargesRequest)
-      (_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (
+        mockRetrievePensionsChargesService
+          .retrievePensions(_: RetrievePensionChargesRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(retrievePensionChargesRequest, *, *, *, *)
     }
+
   }
+
 }

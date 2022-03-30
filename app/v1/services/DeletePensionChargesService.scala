@@ -29,13 +29,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesService @Inject()(connector: PensionChargesConnector) extends DesResponseMappingSupport with Logging {
+class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends DesResponseMappingSupport with Logging {
 
-  def deletePensionCharges(request: DeletePensionChargesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[DeletePensionChargesOutcome] = {
+  def deletePensionCharges(request: DeletePensionChargesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[DeletePensionChargesOutcome] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.deletePensionCharges(request)).leftMap(mapDesErrors(desErrorMap))
@@ -51,4 +51,5 @@ class DeletePensionChargesService @Inject()(connector: PensionChargesConnector) 
     "SERVER_ERROR"              -> DownstreamError,
     "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
+
 }

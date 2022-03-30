@@ -22,9 +22,10 @@ import v1.models.domain.Nino
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.{DeletePensionCharges, DesTaxYear}
 
-class DeletePensionChargesParser @Inject()(val validator: DeletePensionChargesValidator) extends RequestParser[DeletePensionChargesRawData,
-  DeletePensionChargesRequest] {
+class DeletePensionChargesParser @Inject() (val validator: DeletePensionChargesValidator)
+    extends RequestParser[DeletePensionChargesRawData, DeletePensionChargesRequest] {
 
   override protected def requestFor(data: DeletePensionChargesRawData): DeletePensionChargesRequest =
     DeletePensionCharges.DeletePensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear))
+
 }

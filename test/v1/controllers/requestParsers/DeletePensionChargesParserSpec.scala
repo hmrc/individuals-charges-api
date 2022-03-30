@@ -23,9 +23,9 @@ import v1.models.errors._
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.DesTaxYear
 
-class DeletePensionChargesParserSpec extends UnitSpec{
-  val nino = "AA123456B"
-  val taxYear = "2019-20"
+class DeletePensionChargesParserSpec extends UnitSpec {
+  val nino                   = "AA123456B"
+  val taxYear                = "2019-20"
   implicit val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val inputData = DeletePensionChargesRawData(nino, taxYear)
@@ -59,4 +59,5 @@ class DeletePensionChargesParserSpec extends UnitSpec{
       }
     }
   }
+
 }

@@ -24,9 +24,10 @@ object RuleIsAnnualAllowanceReducedValidation {
     (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
       case (true, Some(true), Some(false)) => NoValidationErrors
       case (true, Some(false), Some(true)) => NoValidationErrors
-      case (true, None, Some(true)) => NoValidationErrors
-      case (true, Some(true), None) => NoValidationErrors
-      case (false, _, _) => NoValidationErrors
-      case _ => List(RuleIsAnnualAllowanceReducedError)
+      case (true, None, Some(true))        => NoValidationErrors
+      case (true, Some(true), None)        => NoValidationErrors
+      case (false, _, _)                   => NoValidationErrors
+      case _                               => List(RuleIsAnnualAllowanceReducedError)
     }
+
 }

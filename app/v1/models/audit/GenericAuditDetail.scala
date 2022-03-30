@@ -28,6 +28,7 @@ case class GenericAuditDetail(userType: String,
                               response: AuditResponse)
 
 object GenericAuditDetail {
+
   implicit val writes: OWrites[GenericAuditDetail] = (
     (JsPath \ "userType").write[String] and
       (JsPath \ "agentReferenceNumber").writeNullable[String] and
@@ -35,7 +36,7 @@ object GenericAuditDetail {
       (JsPath \ "request").writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
       (JsPath \ "response").write[AuditResponse]
-    ) (unlift(GenericAuditDetail.unapply))
+  )(unlift(GenericAuditDetail.unapply))
 
   def apply(userDetails: UserDetails,
             params: Map[String, String],
@@ -52,4 +53,5 @@ object GenericAuditDetail {
       response
     )
   }
+
 }

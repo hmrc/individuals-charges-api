@@ -35,8 +35,10 @@ object Enums {
   def reads[E: MkValues: ClassTag](implicit ev: Show[E] = Shows.toStringShow[E]): Reads[E] =
     implicitly[Reads[String]].collect(JsonValidationError(s"error.expected.$typeName"))(parser)
 
-  def writes[E: MkValues](implicit ev: Show[E] = Shows.toStringShow[E]): Writes[E] = Writes[E](e => JsString(ev.show(e)))
+  def writes[E: MkValues](implicit ev: Show[E] = Shows.toStringShow[E]): Writes[E] =
+    Writes[E](e => JsString(ev.show(e)))
 
   def format[E: MkValues: ClassTag](implicit ev: Show[E] = Shows.toStringShow[E]): Format[E] =
     Format(reads, writes)
+
 }

@@ -26,32 +26,30 @@ trait BaseDownstreamConnector {
 
   val logger: Logger = Logger(this.getClass)
 
-  def desHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier,
-                                                                   correlationId: String): HeaderCarrier =
+  def desHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
     HeaderCarrier(
       extraHeaders = hc.extraHeaders ++
         // Contract headers
         Seq(
           "Authorization" -> s"Bearer ${appConfig.desToken}",
-          "Environment" -> appConfig.desEnv,
+          "Environment"   -> appConfig.desEnv,
           "CorrelationId" -> correlationId
         ) ++
         // Other headers (i.e Gov-Test-Scenario, Content-Type)
         hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
-
     )
 
-  def ifsHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier,
-                                                               correlationId: String): HeaderCarrier =
+  def ifsHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
     HeaderCarrier(
       extraHeaders = hc.extraHeaders ++
         // Contract headers
         Seq(
           "Authorization" -> s"Bearer ${appConfig.ifsToken}",
-          "Environment" -> appConfig.ifsEnv,
+          "Environment"   -> appConfig.ifsEnv,
           "CorrelationId" -> correlationId
         ) ++
         // Other headers (i.e Gov-Test-Scenario, Content-Type)
         hc.headers(additionalHeaders ++ appConfig.ifsEnvironmentHeaders.getOrElse(Seq.empty))
     )
+
 }

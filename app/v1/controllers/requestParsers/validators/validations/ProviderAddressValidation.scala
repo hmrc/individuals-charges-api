@@ -23,7 +23,7 @@ object ProviderAddressValidation {
   private val addressMaxLength = 250
 
   def validate(providerAddress: String, path: String): List[MtdError] = {
-    if(providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty){
+    if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
       NoValidationErrors
     } else {
       List(ProviderAddressFormatError.copy(paths = Some(Seq(path))))

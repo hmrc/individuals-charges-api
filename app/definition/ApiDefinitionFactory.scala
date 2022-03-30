@@ -23,14 +23,15 @@ import play.api.Logger
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 @Singleton
-class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
+class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
 
-  private val readScope = "read:self-assessment"
+  private val readScope  = "read:self-assessment"
   private val writeScope = "write:self-assessment"
 
   private val logger: Logger = Logger(this.getClass)
 
-  def confidenceLevel: ConfidenceLevel = if (appConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
+  def confidenceLevel: ConfidenceLevel =
+    if (appConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
 
   lazy val definition: Definition =
     Definition(
@@ -54,20 +55,19 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         context = appConfig.apiGatewayContext,
         categories = Seq("INCOME_TAX_MTD"),
         versions = Seq(
-          APIVersion(
-            version = VERSION_1,
-            status = buildAPIStatus(VERSION_1),
-            endpointsEnabled = appConfig.endpointsEnabled(VERSION_1))
+          APIVersion(version = VERSION_1, status = buildAPIStatus(VERSION_1), endpointsEnabled = appConfig.endpointsEnabled(VERSION_1))
         ),
         requiresTrust = None
       )
     )
 
   private[definition] def buildAPIStatus(version: String): APIStatus = {
-    APIStatus.parser.lift(appConfig.apiStatus(version))
+    APIStatus.parser
+      .lift(appConfig.apiStatus(version))
       .getOrElse {
         logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
         APIStatus.ALPHA
       }
   }
+
 }

@@ -45,7 +45,7 @@ class JsonValidationSpec extends UnitSpec {
     "the path element is readable by the Reads" when {
       "the value is valid" must {
         "return empty" in {
-          JsonValidation.validate[String](json \ "field1")((_: String) => Nil)  shouldBe Nil
+          JsonValidation.validate[String](json \ "field1")((_: String) => Nil) shouldBe Nil
         }
       }
 
@@ -56,4 +56,5 @@ class JsonValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

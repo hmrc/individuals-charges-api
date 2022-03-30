@@ -22,16 +22,14 @@ import v1.models.response.retrieve.{Charge, PensionSchemeUnauthorisedPayments}
 
 class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
 
-
   val responseModel =
     PensionSchemeUnauthorisedPayments(
-    Seq("00123456RA", "00123456RA"),
-    Some(Charge(123.12, 123.12)),
-    Some(Charge(123.12, 123.12))
-  )
+      Seq("00123456RA", "00123456RA"),
+      Some(Charge(123.12, 123.12)),
+      Some(Charge(123.12, 123.12))
+    )
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "surcharge": {
@@ -52,6 +50,7 @@ class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -59,4 +58,5 @@ class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
       }
     }
   }
+
 }

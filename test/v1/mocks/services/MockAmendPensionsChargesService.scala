@@ -25,15 +25,18 @@ import v1.services.{AmendPensionChargesOutcome, AmendPensionChargesService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-
 trait MockAmendPensionsChargesService extends MockFactory {
 
   val mockAmendPensionsChargesService: AmendPensionChargesService = mock[AmendPensionChargesService]
 
   object MockAmendPensionsChargesService {
+
     def amend(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[AmendPensionChargesOutcome]] = {
-      (mockAmendPensionsChargesService.amendPensions(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (mockAmendPensionsChargesService
+        .amendPensions(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(amendPensionChargesRequest, *, *, *, *)
     }
+
   }
+
 }

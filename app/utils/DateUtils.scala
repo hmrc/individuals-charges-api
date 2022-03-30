@@ -27,10 +27,11 @@ object DateUtils {
     case current: LocalDate =>
       val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
 
-      if(current.isAfter(fiscalYearStartDate)){
+      if (current.isAfter(fiscalYearStartDate)) {
         DesTaxYear((current.getYear + 1).toString)
       } else {
         DesTaxYear(current.getYear.toString)
       }
   }
+
 }

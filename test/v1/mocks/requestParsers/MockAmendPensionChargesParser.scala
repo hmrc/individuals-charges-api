@@ -27,8 +27,11 @@ trait MockAmendPensionChargesParser extends MockFactory {
   val mockAmendPensionChargesParser: AmendPensionChargesParser = mock[AmendPensionChargesParser]
 
   object MockAmendPensionChargesParser {
+
     def parseRequest(data: AmendPensionChargesRawData): CallHandler[Either[ErrorWrapper, AmendPensionChargesRequest]] = {
       (mockAmendPensionChargesParser.parseRequest(_: AmendPensionChargesRawData)(_: String)).expects(data, *)
     }
+
   }
+
 }

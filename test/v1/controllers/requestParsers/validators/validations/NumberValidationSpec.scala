@@ -22,7 +22,7 @@ import v1.models.errors.ValueFormatError
 class NumberValidationSpec extends UnitSpec {
 
   val number = Some(BigDecimal(123.45))
-  val path = "path"
+  val path   = "path"
 
   "Number validation" when {
     "invalid number is supplied" must {
@@ -43,4 +43,5 @@ class NumberValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

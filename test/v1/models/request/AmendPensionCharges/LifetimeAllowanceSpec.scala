@@ -23,8 +23,7 @@ class LifetimeAllowanceSpec extends UnitSpec {
 
   val responseModel = LifetimeAllowance(123.12, 123.12)
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       | "amount": 123.12,
       | "taxPaid": 123.12
@@ -38,6 +37,7 @@ class LifetimeAllowanceSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -45,4 +45,5 @@ class LifetimeAllowanceSpec extends UnitSpec {
       }
     }
   }
+
 }

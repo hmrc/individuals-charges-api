@@ -22,7 +22,7 @@ import v1.models.request.AmendPensionCharges._
 object AmendPensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA","00123456RA"),
+    Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
     isAnnualAllowanceReduced = true,
@@ -30,33 +30,38 @@ object AmendPensionChargesData {
     Some(false)
   )
 
-  val overseasSchemeProvider: OverseasSchemeProvider =  OverseasSchemeProvider(
+  val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
     "Overseas Pensions Plc",
     "111 Main Street, George Town, Grand Cayman",
     "ESP",
     Some(Seq("Q123456")),
     None
   )
-  val pensionOverseasTransfer : PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
+
+  val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
-  val pensionUnauthorisedPayments : PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
+
+  val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
     Seq("00123456RA", "00123456RA"),
     Some(Charge(123.45, 123.45)),
     Some(Charge(123.45, 123.45))
   )
+
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
     123.45
   )
-  val overseasPensionContributions : OverseasPensionContributions = OverseasPensionContributions (
+
+  val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
+
   val pensionCharges: PensionCharges = PensionCharges(
     Some(pensionSavingsCharge),
     Some(pensionOverseasTransfer),
@@ -143,6 +148,7 @@ object AmendPensionChargesData {
       |}
       |""".stripMargin
   )
+
   val invalidNameJson: JsValue = Json.parse(
     """
       |{
@@ -177,6 +183,7 @@ object AmendPensionChargesData {
       |}
       |""".stripMargin
   )
+
   val invalidAddressJson: JsValue = Json.parse(
     """
       |{
@@ -478,7 +485,7 @@ object AmendPensionChargesData {
       |""".stripMargin
   )
 
-  //scalastyle:off
+  // scalastyle:off
   def fullReferencesJson(qrop: String, pensionRef: String): JsValue = Json.parse(
     s"""
        |{
@@ -640,7 +647,8 @@ object AmendPensionChargesData {
       |}
       |""".stripMargin
   )
-  //scalastyle:off
+
+  // scalastyle:off
   def fullJsonWithInvalidCountryFormat(cc: String): JsValue = Json.parse(
     s"""
        |{
@@ -704,7 +712,7 @@ object AmendPensionChargesData {
        |""".stripMargin
   )
 
-  //scalastyle:off
+  // scalastyle:off
   def fullJson(bigDecimal: BigDecimal): JsValue = Json.parse(
     s"""
        |{
@@ -790,6 +798,5 @@ object AmendPensionChargesData {
       |}
       |""".stripMargin
   )
-
 
 }

@@ -21,13 +21,9 @@ import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val responseModel = PensionContributions(
-    Seq("00123456RA","00123456RA"),
-    123.12,
-    123.12)
+  val responseModel = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
@@ -42,6 +38,7 @@ class PensionContributionsSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -49,4 +46,5 @@ class PensionContributionsSpec extends UnitSpec {
       }
     }
   }
+
 }

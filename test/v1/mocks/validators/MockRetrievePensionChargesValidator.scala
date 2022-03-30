@@ -27,9 +27,11 @@ class MockRetrievePensionChargesValidator extends MockFactory {
   val mockValidator: RetrievePensionChargesValidator = mock[RetrievePensionChargesValidator]
 
   object MockValidator {
+
     def validate(data: RetrievePensionChargesRawData): CallHandler1[RetrievePensionChargesRawData, List[MtdError]] = {
       (mockValidator.validate(_: RetrievePensionChargesRawData)).expects(data)
     }
+
   }
 
 }

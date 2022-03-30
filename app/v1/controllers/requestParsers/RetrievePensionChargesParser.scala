@@ -22,9 +22,10 @@ import v1.models.domain.Nino
 import v1.models.request.{DesTaxYear, RetrievePensionCharges}
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
-class RetrievePensionChargesParser @Inject()(val validator: RetrievePensionChargesValidator) extends RequestParser[RetrievePensionChargesRawData,
-  RetrievePensionChargesRequest] {
+class RetrievePensionChargesParser @Inject() (val validator: RetrievePensionChargesValidator)
+    extends RequestParser[RetrievePensionChargesRawData, RetrievePensionChargesRequest] {
 
   override protected def requestFor(data: RetrievePensionChargesRawData): RetrievePensionChargesRequest =
     RetrievePensionCharges.RetrievePensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear))
+
 }

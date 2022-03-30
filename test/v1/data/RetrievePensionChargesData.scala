@@ -37,26 +37,31 @@ object RetrievePensionChargesData {
     Some(Seq("Q123456")),
     None
   )
+
   val pensionOverseasTransfer: PensionSchemeOverseasTransfers = PensionSchemeOverseasTransfers(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
+
   val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
     Seq("00123456RA", "00123456RA"),
     Some(Charge(123.45, 123.45)),
     Some(Charge(123.45, 123.45))
   )
+
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
     123.45
   )
+
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
+
   val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
     Some(pensionSavingsCharge),
     Some(pensionOverseasTransfer),
@@ -223,4 +228,5 @@ object RetrievePensionChargesData {
       |}
       |""".stripMargin
   )
+
 }

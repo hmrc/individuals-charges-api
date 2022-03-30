@@ -32,14 +32,15 @@ import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthService,
-                                               val lookupService: MtdIdLookupService,
-                                               requestParser: DeletePensionChargesParser,
-                                               service: DeletePensionChargesService,
-                                               auditService: AuditService,
-                                               cc: ControllerComponents,
-                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController {
+class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                requestParser: DeletePensionChargesParser,
+                                                service: DeletePensionChargesService,
+                                                auditService: AuditService,
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
     controllerName = "DeletePensionChargesController",
@@ -48,7 +49,6 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -57,36 +57,40 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
       val rawData = DeletePensionChargesRawData(nino, taxYear)
 
       val result = for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
         serviceResponse <- EitherT(service.deletePensionCharges(parsedRequest))
       } yield {
-        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-          s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        auditSubmission(GenericAuditDetail(
-          userDetails = request.userDetails,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
-          `X-CorrelationId` = serviceResponse.correlationId,
-          response = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))))
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            request = None,
+            `X-CorrelationId` = serviceResponse.correlationId,
+            response = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+          ))
 
         NoContent.withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
       }
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-        auditSubmission(GenericAuditDetail(
-          userDetails = request.userDetails,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
-          `X-CorrelationId` = correlationId,
-          response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-        ))
+        auditSubmission(
+          GenericAuditDetail(
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            request = None,
+            `X-CorrelationId` = correlationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          ))
 
         result
       }.merge
@@ -95,17 +99,16 @@ class DeletePensionChargesController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper): Result =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError |
-           TaxYearFormatError | RuleTaxYearRangeInvalid |
-           RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _               => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)
     auditService.auditEvent(event)
   }
+
 }

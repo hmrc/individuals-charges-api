@@ -26,7 +26,7 @@ import v1.models.request.AmendPensionCharges
 
 class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
 
   class Test extends MockAppConfig {
@@ -40,13 +40,16 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   "Running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJson))) shouldBe Nil
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJson))) shouldBe Nil
       }
     }
 
     "return country errors" when {
       "multiple country codes are invalid for multiple reasons" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountries))) shouldBe List(
+        validator.validate(
+          AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountries))) shouldBe List(
           CountryCodeFormatError.copy(paths = Some(
             Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
@@ -62,7 +65,9 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
         )
       }
       "multiple country codes are invalid format" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("INVALID")))) shouldBe List(
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("INVALID")))) shouldBe List(
           CountryCodeFormatError.copy(paths = Some(
             Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
@@ -72,7 +77,9 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
         )
       }
       "multiple country codes are invalid rule" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("BOB")))) shouldBe List(
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJsonWithInvalidCountryFormat("BOB")))) shouldBe List(
           RuleCountryCodeError.copy(paths = Some(
             Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
@@ -85,8 +92,11 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
 
     "return big decimal error" when {
       "an too large number is supplied" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(999999999999.99)))) shouldBe List(
-          MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99",
+        validator.validate(
+          AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(999999999999.99)))) shouldBe List(
+          MtdError(
+            "FORMAT_VALUE",
+            "The field should be between 0 and 99999999999.99",
             Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -100,12 +110,17 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
               "/pensionContributions/inExcessOfTheAnnualAllowance",
               "/overseasPensionContributions/shortServiceRefund",
               "/overseasPensionContributions/shortServiceRefundTaxPaid"
-            )))
+            ))
+          )
         )
       }
       "an too small number is supplied" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(-69420.00)))) shouldBe List(
-          MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99",
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullJson(-69420.00)))) shouldBe List(
+          MtdError(
+            "FORMAT_VALUE",
+            "The field should be between 0 and 99999999999.99",
             Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -119,35 +134,45 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
               "/pensionContributions/inExcessOfTheAnnualAllowance",
               "/overseasPensionContributions/shortServiceRefund",
               "/overseasPensionContributions/shortServiceRefundTaxPaid"
-            )))
+            ))
+          )
         )
       }
     }
 
     "return a path parameter error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData("badNino", validTaxYear, AnyContentAsJson(fullJson))) shouldBe List(NinoFormatError)
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData("badNino", validTaxYear, AnyContentAsJson(fullJson))) shouldBe List(NinoFormatError)
       }
       "an invalid tax year is supplied" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, "2000", AnyContentAsJson(fullJson))) shouldBe List(TaxYearFormatError)
+        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, "2000", AnyContentAsJson(fullJson))) shouldBe List(
+          TaxYearFormatError)
       }
       "the taxYear range is invalid" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, "2021-24", AnyContentAsJson(fullJson))) shouldBe List(RuleTaxYearRangeInvalid)
+        validator.validate(
+          AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, "2021-24", AnyContentAsJson(fullJson))) shouldBe List(RuleTaxYearRangeInvalid)
       }
       "all path parameters are invalid" in new Test {
-        validator.validate(AmendPensionCharges.AmendPensionChargesRawData("badNino", "2000", AnyContentAsJson(fullJson))) shouldBe List(NinoFormatError, TaxYearFormatError)
+        validator.validate(AmendPensionCharges.AmendPensionChargesRawData("badNino", "2000", AnyContentAsJson(fullJson))) shouldBe List(
+          NinoFormatError,
+          TaxYearFormatError)
       }
       "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
         "an empty body" in new Test {
-          validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(emptyJson))) shouldBe List(
-            RuleIncorrectOrEmptyBodyError)
+          validator.validate(AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(emptyJson))) shouldBe List(RuleIncorrectOrEmptyBodyError)
         }
       }
       "not return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
         "only one field is supplied in body" in new Test {
-          validator.validate(AmendPensionCharges.AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(minimalJson))) shouldBe List()
+          validator.validate(AmendPensionCharges
+            .AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(minimalJson))) shouldBe List()
         }
       }
     }
   }
+
 }

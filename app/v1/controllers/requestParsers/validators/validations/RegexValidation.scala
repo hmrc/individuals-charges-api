@@ -25,6 +25,7 @@ trait RegexValidation {
 
   def validate(value: String): List[MtdError] =
     RegexValidation.validate(error, value, regexFormat)
+
 }
 
 object RegexValidation {
@@ -32,4 +33,5 @@ object RegexValidation {
   def validate(error: MtdError, value: String, regexFormat: String): List[MtdError] = {
     if (value.matches(regexFormat)) NoValidationErrors else List(error)
   }
+
 }
