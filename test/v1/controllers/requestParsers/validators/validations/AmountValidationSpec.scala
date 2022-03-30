@@ -45,4 +45,5 @@ class AmountValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

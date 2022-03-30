@@ -21,10 +21,11 @@ import v1.models.errors.{MtdError, QOPSRefFormatError}
 object QROPSRefValidation {
 
   def validate(qropsRef: String, path: String): List[MtdError] = {
-    if (qropsRef.matches("^[Q]{1}[0-9]{6}$")){
+    if (qropsRef.matches("^[Q]{1}[0-9]{6}$")) {
       NoValidationErrors
     } else {
       List(QOPSRefFormatError.copy(paths = Some(Seq(path))))
     }
   }
+
 }

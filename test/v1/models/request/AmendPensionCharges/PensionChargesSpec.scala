@@ -22,47 +22,49 @@ import support.UnitSpec
 class PensionChargesSpec extends UnitSpec {
 
   val responseModel = PensionCharges(
-    Some(PensionSavingsTaxCharges(
-      Seq("00123456RA"),
-      Some(LifetimeAllowance(123.12, 123.12)),
-      Some(LifetimeAllowance(123.12, 123.12)),
-      true,
-      Some(true),
-      Some(true))),
-    Some(PensionSchemeOverseasTransfers(
-      Seq(OverseasSchemeProvider(
-        "name",
-        "address",
-        "postcode",
-        Some(Seq("Q123456")),
-        None
+    Some(
+      PensionSavingsTaxCharges(
+        Seq("00123456RA"),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        true,
+        Some(true),
+        Some(true))),
+    Some(
+      PensionSchemeOverseasTransfers(
+        Seq(
+          OverseasSchemeProvider(
+            "name",
+            "address",
+            "postcode",
+            Some(Seq("Q123456")),
+            None
+          )),
+        123.12,
+        123.12)),
+    Some(
+      PensionSchemeUnauthorisedPayments(
+        Seq("00123456RA", "00123456RA"),
+        Some(Charge(123.12, 123.12)),
+        Some(Charge(123.12, 123.12))
       )),
-      123.12,
-      123.12)),
-    Some(PensionSchemeUnauthorisedPayments(
-      Seq("00123456RA", "00123456RA"),
-      Some(Charge(123.12, 123.12)),
-      Some(Charge(123.12, 123.12))
-    )),
-    Some(PensionContributions(
-      Seq("00123456RA","00123456RA"),
-      123.12,
-      123.12)),
-    Some(OverseasPensionContributions(
-      Seq(OverseasSchemeProvider(
-        "Overseas Pensions Plc",
-        "111 Main Street, George Town, Grand Cayman",
-        "CYM",
-        Some(Seq("Q123456")),
-        None
-      )),
-      123.12,
-      123.12
-    ))
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(
+      OverseasPensionContributions(
+        Seq(
+          OverseasSchemeProvider(
+            "Overseas Pensions Plc",
+            "111 Main Street, George Town, Grand Cayman",
+            "CYM",
+            Some(Seq("Q123456")),
+            None
+          )),
+        123.12,
+        123.12
+      ))
   )
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
@@ -134,6 +136,7 @@ class PensionChargesSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -141,4 +144,5 @@ class PensionChargesSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -21,6 +21,7 @@ import play.api.Configuration
 import support.UnitSpec
 
 class FeatureSwitchSpec extends UnitSpec {
+
   private def createFeatureSwitch(config: String) =
     FeatureSwitch(Some(Configuration(ConfigFactory.parseString(config))))
 
@@ -43,8 +44,7 @@ class FeatureSwitchSpec extends UnitSpec {
       }
 
       "config set" must {
-        val featureSwitch = createFeatureSwitch(
-          """
+        val featureSwitch = createFeatureSwitch("""
             |version-1.enabled = false
             |version-2.enabled = true
         """.stripMargin)
@@ -65,4 +65,5 @@ class FeatureSwitchSpec extends UnitSpec {
       }
     }
   }
+
 }

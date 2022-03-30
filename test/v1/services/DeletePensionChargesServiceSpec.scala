@@ -29,11 +29,11 @@ import scala.concurrent.Future
 
 class DeletePensionChargesServiceSpec extends ServiceSpec {
 
-  val nino = Nino("AA123456A")
+  val nino    = Nino("AA123456A")
   val taxYear = DesTaxYear("2020-21")
 
   trait Test extends MockPensionChargesConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     lazy val service = new DeletePensionChargesService(connector)
@@ -44,7 +44,9 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   "Delete Pension Charges" should {
     "return a Right" when {
       "the connector call is successful" in new Test {
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
+        MockPensionChargesConnector
+          .deletePensionCharges(request)
+          .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
         await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
       }
@@ -52,8 +54,8 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError:MtdError = DownstreamError
-        val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
+        val someError: MtdError = DownstreamError
+        val desResponse         = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
@@ -63,7 +65,8 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
     "service" when {
       "a service call is successful" should {
         "return a mapped result" in new Test {
-          MockPensionChargesConnector.deletePensionCharges(request)
+          MockPensionChargesConnector
+            .deletePensionCharges(request)
             .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
           await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
@@ -73,7 +76,8 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"return ${error.code} error when $desErrorCode error is returned from the connector" in new Test {
 
-            MockPensionChargesConnector.deletePensionCharges(request)
+            MockPensionChargesConnector
+              .deletePensionCharges(request)
               .returns(Future.successful(Left(ResponseWrapper("resultId", DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
@@ -86,11 +90,12 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "INVALID_CORRELATIONID"     -> DownstreamError,
           "SERVER_ERROR"              -> DownstreamError,
           "SERVICE_UNAVAILABLE"       -> DownstreamError,
-          "UNEXPECTED_ERROR"    -> DownstreamError
+          "UNEXPECTED_ERROR"          -> DownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
   }
+
 }

@@ -23,20 +23,18 @@ import v1.models.response.retrieve.{OverseasSchemeProvider, PensionSchemeOversea
 class PensionSchemeOverseasTransfersSpec extends UnitSpec {
 
   val responseModel = PensionSchemeOverseasTransfers(
-    Seq(OverseasSchemeProvider(
-      "name",
-      "address",
-      "postcode",
-      Some(Seq("Q123456")),
-      None
-    )),
+    Seq(
+      OverseasSchemeProvider(
+        "name",
+        "address",
+        "postcode",
+        Some(Seq("Q123456")),
+        None
+      )),
     123.12,
     123.12)
 
-
-
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |     "overseasSchemeProvider": [
       |       {
@@ -60,6 +58,7 @@ class PensionSchemeOverseasTransfersSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -67,4 +66,5 @@ class PensionSchemeOverseasTransfersSpec extends UnitSpec {
       }
     }
   }
+
 }

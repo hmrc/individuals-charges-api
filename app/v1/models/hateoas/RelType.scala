@@ -17,10 +17,10 @@
 package v1.models.hateoas
 
 object RelType {
-  val DELETE_BF_LOSS = "delete-brought-forward-loss"
-  val AMEND_BF_LOSS = "amend-brought-forward-loss"
-  val CREATE_BF_LOSS = "create-brought-forward-loss"
+  val DELETE_BF_LOSS         = "delete-brought-forward-loss"
+  val AMEND_BF_LOSS          = "amend-brought-forward-loss"
+  val CREATE_BF_LOSS         = "create-brought-forward-loss"
   val DELETE_PENSION_CHARGES = "delete-charges-pensions"
-  val AMEND_PENSION_CHARGES = "create-and-amend-charges-pensions"
-  val SELF = "self"
+  val AMEND_PENSION_CHARGES  = "create-and-amend-charges-pensions"
+  val SELF                   = "self"
 }

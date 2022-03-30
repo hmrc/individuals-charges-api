@@ -19,7 +19,7 @@ package v1.models.errors
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class ErrorSpec extends UnitSpec{
+class ErrorSpec extends UnitSpec {
 
   "reads" should {
     val error = MtdError("FORMAT_NINO", "The provided NINO is invalid")
@@ -37,4 +37,5 @@ class ErrorSpec extends UnitSpec{
       json.as[MtdError] shouldBe error
     }
   }
+
 }

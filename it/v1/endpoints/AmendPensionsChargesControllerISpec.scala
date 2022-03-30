@@ -30,10 +30,10 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino    = "AA123456A"
     val taxYear = "2021-22"
 
-    def uri: String = s"/pensions/$nino/$taxYear"
+    def uri: String    = s"/pensions/$nino/$taxYear"
     def ifsUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
@@ -75,6 +75,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
          |}
     """.stripMargin
     )
+
   }
 
   "Calling the retrieve endpoint" should {
@@ -128,13 +129,15 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue,
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error ${
-            if(expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID else ""
-          }" in new Test {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
+          s"validation fails with ${expectedBody.code} error ${if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
+            else ""}" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -156,58 +159,99 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2021-22", invalidNameJson, Status.BAD_REQUEST, ProviderNameFormatError.copy(
-            paths = Some(Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
-              "/overseasPensionContributions/overseasSchemeProvider/0/providerName"
+          (
+            "AA123456A",
+            "2021-22",
+            invalidNameJson,
+            Status.BAD_REQUEST,
+            ProviderNameFormatError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
+                  "/overseasPensionContributions/overseasSchemeProvider/0/providerName"
+                ))
+            )),
+          (
+            "AA123456A",
+            "2021-22",
+            invalidAddressJson,
+            Status.BAD_REQUEST,
+            ProviderAddressFormatError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerAddress",
+                  "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress"
+                ))
+            )),
+          (
+            "AA123456A",
+            "2021-22",
+            fullReferencesJson("Q123456", "453"),
+            Status.BAD_REQUEST,
+            PensionSchemeTaxRefFormatError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
+                  "/overseasPensionContributions/overseasSchemeProvider/1/pensionSchemeTaxReference/0"
+                ))
+            )),
+          (
+            "AA123456A",
+            "2021-22",
+            fullReferencesJson("234", "00123456RA"),
+            Status.BAD_REQUEST,
+            QOPSRefFormatError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
+                  "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
+                ))
+            )),
+          (
+            "AA123456A",
+            "2021-22",
+            fullJsonWithInvalidCountryFormat("1YM"),
+            Status.BAD_REQUEST,
+            RuleCountryCodeError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+                  "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+                ))
+            )),
+          (
+            "AA123456A",
+            "2021-22",
+            fullJsonWithInvalidCountryFormat("INVALID"),
+            Status.BAD_REQUEST,
+            CountryCodeFormatError.copy(paths = Some(
+              Seq(
+                "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
+                "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
+              )
+            ))),
+          (
+            "AA123456A",
+            "2021-22",
+            fullJson(999999999999.99),
+            Status.BAD_REQUEST,
+            ValueFormatError.copy(
+              paths = Some(
+                Seq(
+                  "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
+                  "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
+                  "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
+                  "/pensionSchemeOverseasTransfers/transferCharge",
+                  "/pensionSchemeUnauthorisedPayments/surcharge/amount",
+                  "/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid",
+                  "/pensionSchemeUnauthorisedPayments/noSurcharge/amount",
+                  "/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid",
+                  "/pensionContributions/annualAllowanceTaxPaid",
+                  "/pensionContributions/inExcessOfTheAnnualAllowance",
+                  "/overseasPensionContributions/shortServiceRefund",
+                  "/overseasPensionContributions/shortServiceRefundTaxPaid"
+                ))
             ))
-          )),("AA123456A", "2021-22", invalidAddressJson, Status.BAD_REQUEST, ProviderAddressFormatError.copy(
-            paths = Some(Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerAddress",
-              "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress"
-            ))
-          )),
-          ("AA123456A", "2021-22", fullReferencesJson("Q123456","453"), Status.BAD_REQUEST, PensionSchemeTaxRefFormatError.copy(
-            paths = Some(Seq(
-            "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
-            "/overseasPensionContributions/overseasSchemeProvider/1/pensionSchemeTaxReference/0"
-            ))
-          )),
-          ("AA123456A", "2021-22", fullReferencesJson("234","00123456RA"), Status.BAD_REQUEST, QOPSRefFormatError.copy(
-            paths = Some(Seq(
-            "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
-            "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
-            ))
-          )),
-          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("1YM"), Status.BAD_REQUEST, RuleCountryCodeError.copy(
-            paths = Some(Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
-              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
-            ))
-          )),
-          ("AA123456A", "2021-22", fullJsonWithInvalidCountryFormat("INVALID"), Status.BAD_REQUEST, CountryCodeFormatError.copy(paths = Some(
-            Seq(
-              "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
-              "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
-            )
-          ))
-          ),
-          ("AA123456A", "2021-22", fullJson(999999999999.99), Status.BAD_REQUEST, ValueFormatError.copy(
-            paths = Some(Seq(
-              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
-              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
-              "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
-              "/pensionSchemeOverseasTransfers/transferCharge",
-              "/pensionSchemeUnauthorisedPayments/surcharge/amount",
-              "/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid",
-              "/pensionSchemeUnauthorisedPayments/noSurcharge/amount",
-              "/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid",
-              "/pensionContributions/annualAllowanceTaxPaid",
-              "/pensionContributions/inExcessOfTheAnnualAllowance",
-              "/overseasPensionContributions/shortServiceRefund",
-              "/overseasPensionContributions/shortServiceRefundTaxPaid"
-            ))
-          ))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -245,4 +289,5 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

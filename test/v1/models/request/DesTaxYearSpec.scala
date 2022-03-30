@@ -38,7 +38,7 @@ class DesTaxYearSpec extends UnitSpec {
         year.toString shouldBe taxYear
       }
     }
-    "generate a tax year as a string" when{
+    "generate a tax year as a string" when {
       "given a string" in {
         val year = DesTaxYear("2018-19")
         year.value shouldBe taxYear

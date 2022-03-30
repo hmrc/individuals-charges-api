@@ -29,24 +29,23 @@ import v1.models.response.retrieve.RetrievePensionChargesResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class PensionChargesConnector @Inject()(val http: HttpClient,
-                                        val appConfig: AppConfig) extends BaseDownstreamConnector {
+class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deletePensionCharges(request: DeletePensionChargesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
+  def deletePensionCharges(
+      request: DeletePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear.value
 
-    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty,desHeaderCarrier(),ec)
+    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty, desHeaderCarrier(), ec)
   }
 
-  def retrievePensionCharges(request: RetrievePensionChargesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext, correlationId: String): Future[DesOutcome[RetrievePensionChargesResponse]] = {
+  def retrievePensionCharges(request: RetrievePensionChargesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DesOutcome[RetrievePensionChargesResponse]] = {
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear.value
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[RetrievePensionChargesResponse]] = {
@@ -56,11 +55,10 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
     doIt(desHeaderCarrier())
   }
 
-  def amendPensionCharges(request: AmendPensionChargesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
+  def amendPensionCharges(
+      request: AmendPensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear.value
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
@@ -68,4 +66,5 @@ class PensionChargesConnector @Inject()(val http: HttpClient,
 
     doIt(ifsHeaderCarrier())
   }
+
 }

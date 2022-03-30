@@ -35,12 +35,14 @@ trait MockHttpClient extends MockFactory {
                excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .GET(_: String, _: Seq[(String, String)], _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(where { (actualUrl: String, _: Seq[(String, String)], _: Seq[(String, String)], _: HttpReads[T], hc: HeaderCarrier, _: ExecutionContext) => {
-          val headersForUrl = hc.headersForUrl(config)(actualUrl)
-          url == actualUrl &&
-            requiredHeaders.forall(h => headersForUrl.contains(h)) &&
-            excludedHeaders.forall(h => !headersForUrl.contains(h))
-        }
+        .expects(where {
+          (actualUrl: String, _: Seq[(String, String)], _: Seq[(String, String)], _: HttpReads[T], hc: HeaderCarrier, _: ExecutionContext) =>
+            {
+              val headersForUrl = hc.headersForUrl(config)(actualUrl)
+              url == actualUrl &&
+              requiredHeaders.forall(h => headersForUrl.contains(h)) &&
+              excludedHeaders.forall(h => !headersForUrl.contains(h))
+            }
         })
     }
 
@@ -51,12 +53,13 @@ trait MockHttpClient extends MockFactory {
                    excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .POST[I, T](_: String, _: I, _: Seq[(String, String)])(_: Writes[I], _: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(where { (actualUrl: String, actualBody: I, _, _, _, hc: HeaderCarrier, _) => {
-          val headersForUrl = hc.headersForUrl(config)(actualUrl)
-          url == actualUrl && body == actualBody &&
+        .expects(where { (actualUrl: String, actualBody: I, _, _, _, hc: HeaderCarrier, _) =>
+          {
+            val headersForUrl = hc.headersForUrl(config)(actualUrl)
+            url == actualUrl && body == actualBody &&
             requiredHeaders.forall(h => headersForUrl.contains(h)) &&
             excludedHeaders.forall(h => !headersForUrl.contains(h))
-        }
+          }
         })
     }
 
@@ -67,12 +70,13 @@ trait MockHttpClient extends MockFactory {
                   excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .PUT[I, T](_: String, _: I, _: Seq[(String, String)])(_: Writes[I], _: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(where { (actualUrl: String, actualBody: I, _, _, _, hc: HeaderCarrier, _) => {
-          val headersForUrl = hc.headersForUrl(config)(actualUrl)
-          url == actualUrl && body == actualBody &&
+        .expects(where { (actualUrl: String, actualBody: I, _, _, _, hc: HeaderCarrier, _) =>
+          {
+            val headersForUrl = hc.headersForUrl(config)(actualUrl)
+            url == actualUrl && body == actualBody &&
             requiredHeaders.forall(h => headersForUrl.contains(h)) &&
             excludedHeaders.forall(h => !headersForUrl.contains(h))
-        }
+          }
         })
     }
 
@@ -82,13 +86,16 @@ trait MockHttpClient extends MockFactory {
                   excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .DELETE(_: String, _: Seq[(String, String)])(_: HttpReads[T], _: HeaderCarrier, _: ExecutionContext))
-        .expects(where { (actualUrl: String, _, _, hc: HeaderCarrier, _) => {
-          val headersForUrl = hc.headersForUrl(config)(actualUrl)
-          url == actualUrl &&
+        .expects(where { (actualUrl: String, _, _, hc: HeaderCarrier, _) =>
+          {
+            val headersForUrl = hc.headersForUrl(config)(actualUrl)
+            url == actualUrl &&
             requiredHeaders.forall(h => headersForUrl.contains(h)) &&
             excludedHeaders.forall(h => !headersForUrl.contains(h))
-        }
+          }
         })
     }
+
   }
+
 }

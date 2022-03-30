@@ -29,8 +29,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
     Some(true),
     Some(true))
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
@@ -56,6 +55,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -63,4 +63,5 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       }
     }
   }
+
 }

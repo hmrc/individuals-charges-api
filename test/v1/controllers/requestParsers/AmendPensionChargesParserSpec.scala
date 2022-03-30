@@ -25,12 +25,13 @@ import v1.data.AmendPensionChargesData
 import v1.models.domain.Nino
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
-class AmendPensionChargesParserSpec extends UnitSpec{
-  val nino = "AA123456B"
-  val taxYear = "2019-20"
+class AmendPensionChargesParserSpec extends UnitSpec {
+  val nino                           = "AA123456B"
+  val taxYear                        = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputData: AmendPensionChargesRawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullJson))
+  val inputData: AmendPensionChargesRawData =
+    AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullJson))
 
   trait Test extends MockAmendPensionChargesValidator {
     lazy val parser = new AmendPensionChargesParser(mockValidator)
@@ -43,9 +44,7 @@ class AmendPensionChargesParserSpec extends UnitSpec{
         MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(AmendPensionChargesRequest(Nino(nino),
-                                           DesTaxYear(taxYear),
-                                           AmendPensionChargesData.pensionCharges))
+          Right(AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), AmendPensionChargesData.pensionCharges))
       }
     }
 
@@ -64,4 +63,5 @@ class AmendPensionChargesParserSpec extends UnitSpec{
       }
     }
   }
+
 }

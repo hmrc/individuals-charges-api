@@ -29,7 +29,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     MockAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
-
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
@@ -46,18 +45,18 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
   }
 
-    "confidenceLevel" when {
-      Seq(
-        (true, ConfidenceLevel.L200),
-        (false, ConfidenceLevel.L50)
-      ).foreach {
-        case (definitionEnabled, cl) =>
-          s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
-            s"return $cl" in new Test {
-              MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
-              apiDefinitionFactory.confidenceLevel shouldBe cl
-            }
-          }
+  "confidenceLevel" when {
+    Seq(
+      (true, ConfidenceLevel.L200),
+      (false, ConfidenceLevel.L50)
+    ).foreach { case (definitionEnabled, cl) =>
+      s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
+        s"return $cl" in new Test {
+          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
+          apiDefinitionFactory.confidenceLevel shouldBe cl
+        }
       }
     }
+  }
+
 }

@@ -31,21 +31,21 @@ import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuthService,
-                                                 val lookupService: MtdIdLookupService,
-                                                 service: RetrievePensionChargesService,
-                                                 requestParser: RetrievePensionChargesParser,
-                                                 hateoasFactory: HateoasFactory,
-                                                 cc: ControllerComponents, val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController {
+class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
+                                                  val lookupService: MtdIdLookupService,
+                                                  service: RetrievePensionChargesService,
+                                                  requestParser: RetrievePensionChargesParser,
+                                                  hateoasFactory: HateoasFactory,
+                                                  cc: ControllerComponents,
+                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "RetrievePensionChargesController",
-      endpointName = "Retrieve a Pensions Charge")
+    EndpointLogContext(controllerName = "RetrievePensionChargesController", endpointName = "Retrieve a Pensions Charge")
 
   def retrieve(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -54,21 +54,24 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
       val rawData = RetrievePensionChargesRawData(nino, taxYear)
 
       val result = for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
         serviceResponse <- EitherT(service.retrievePensions(parsedRequest))
       } yield {
-        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-          s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        val hateoasResponse = hateoasFactory.wrap(serviceResponse.responseData, RetrievePensionChargesHateoasData(nino,taxYear))
+        val hateoasResponse =
+          hateoasFactory.wrap(serviceResponse.responseData, RetrievePensionChargesHateoasData(nino, taxYear))
 
-        Ok(Json.toJson(hateoasResponse)).withApiHeaders(serviceResponse.correlationId)
+        Ok(Json.toJson(hateoasResponse))
+          .withApiHeaders(serviceResponse.correlationId)
           .as(MimeTypes.JSON)
       }
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -80,12 +83,11 @@ class RetrievePensionChargesController @Inject()(val authService: EnrolmentsAuth
 
   private def errorResult(errorWrapper: ErrorWrapper): Result =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError |
-           TaxYearFormatError | RuleTaxYearRangeInvalid |
-           RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _               => unhandledError(errorWrapper)
     }
+
 }

@@ -18,9 +18,7 @@ package v1.models.request.AmendPensionCharges
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String],
-                                             surcharge: Option[Charge],
-                                             noSurcharge: Option[Charge])
+case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String], surcharge: Option[Charge], noSurcharge: Option[Charge])
 
 object PensionSchemeUnauthorisedPayments {
   implicit val format: OFormat[PensionSchemeUnauthorisedPayments] = Json.format[PensionSchemeUnauthorisedPayments]

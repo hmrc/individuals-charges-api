@@ -28,12 +28,12 @@ class MinTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
   "validate" should {
     "return no errors" when {
       "a tax year greater than minimum is supplied" in {
-        val validationResult = MinTaxYearValidation.validate("2020-21",  minTaxYear)
+        val validationResult = MinTaxYearValidation.validate("2020-21", minTaxYear)
         validationResult shouldBe empty
       }
 
       "a tax year equal to minimum is supplied" in {
-        val validationResult = MinTaxYearValidation.validate("2019-20",  minTaxYear)
+        val validationResult = MinTaxYearValidation.validate("2019-20", minTaxYear)
         validationResult shouldBe empty
       }
     }
@@ -46,7 +46,8 @@ class MinTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
     }
     "a tax year in the wrong format is supplied" in {
       val validationResult = MinTaxYearValidation.validate("BEAN-OH", minTaxYear)
-      validationResult shouldBe  List(TaxYearFormatError)
+      validationResult shouldBe List(TaxYearFormatError)
     }
   }
+
 }

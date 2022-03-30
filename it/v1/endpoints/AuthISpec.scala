@@ -27,7 +27,7 @@ class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino    = "AA123456A"
     val taxYear = "2021-22"
 
     def uri: String = s"/pensions/$nino/$taxYear"
@@ -48,6 +48,7 @@ class AuthISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
+
   }
 
   "Calling the sample endpoint" when {
@@ -114,4 +115,5 @@ class AuthISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

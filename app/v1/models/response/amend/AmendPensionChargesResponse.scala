@@ -23,14 +23,14 @@ import v1.models.hateoas.{HateoasData, Link}
 object AmendPensionChargesResponse extends HateoasLinks {
 
   implicit object AmendLinksFactory extends HateoasLinksFactory[Unit, AmendPensionChargesHateoasData] {
+
     override def links(appConfig: AppConfig, data: AmendPensionChargesHateoasData): Seq[Link] = {
       import data._
-      Seq(
-        getRetrievePensions(appConfig, nino, taxYear),
-        getAmendPensions(appConfig, nino, taxYear),
-        getDeletePensions(appConfig, nino, taxYear))
+      Seq(getRetrievePensions(appConfig, nino, taxYear), getAmendPensions(appConfig, nino, taxYear), getDeletePensions(appConfig, nino, taxYear))
     }
+
   }
+
 }
 
 case class AmendPensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData

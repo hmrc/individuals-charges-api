@@ -29,8 +29,7 @@ class OverseasSchemeProviderSpec extends UnitSpec {
     None
   )
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |        "providerName": "Overseas Pensions Plc",
       |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
@@ -48,6 +47,7 @@ class OverseasSchemeProviderSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -55,4 +55,5 @@ class OverseasSchemeProviderSpec extends UnitSpec {
       }
     }
   }
+
 }

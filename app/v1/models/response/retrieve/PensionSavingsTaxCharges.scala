@@ -29,6 +29,7 @@ case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
 object PensionSavingsTaxCharges {
 
   implicit val writes: Writes[PensionSavingsTaxCharges] = Json.writes[PensionSavingsTaxCharges]
+
   implicit val reads: Reads[PensionSavingsTaxCharges] = (
     (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
@@ -36,6 +37,6 @@ object PensionSavingsTaxCharges {
       (__ \ "isAnnualAllowanceReduced").read[Boolean] and
       (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
       (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
-    ) (PensionSavingsTaxCharges.apply _)
+  )(PensionSavingsTaxCharges.apply _)
 
 }

@@ -22,14 +22,15 @@ import com.github.fge.jsonschema.main.{JsonSchemaFactory, JsonValidator}
 import play.api.mvc.AnyContentAsJson
 
 trait JsonValidation {
+
   def isValidateJsonAccordingToJsonSchema(inputDoc: AnyContentAsJson, schemaDoc: String): Boolean = {
     try {
-      val schemaFileInputStream = getClass.getResourceAsStream(schemaDoc)
-      val schemaString = scala.io.Source.fromInputStream(schemaFileInputStream).getLines().mkString("\n")
-      val mapper: ObjectMapper = new ObjectMapper()
-      val inputJson: JsonNode = mapper.readTree(inputDoc.asJson.get.toString())
-      val jsonSchema: JsonNode = mapper.readTree(schemaString)
-      val factory = JsonSchemaFactory.byDefault()
+      val schemaFileInputStream    = getClass.getResourceAsStream(schemaDoc)
+      val schemaString             = scala.io.Source.fromInputStream(schemaFileInputStream).getLines().mkString("\n")
+      val mapper: ObjectMapper     = new ObjectMapper()
+      val inputJson: JsonNode      = mapper.readTree(inputDoc.asJson.get.toString())
+      val jsonSchema: JsonNode     = mapper.readTree(schemaString)
+      val factory                  = JsonSchemaFactory.byDefault()
       val validator: JsonValidator = factory.getValidator
       val report: ProcessingReport = validator.validate(jsonSchema, inputJson)
       report.isSuccess
@@ -37,4 +38,5 @@ trait JsonValidation {
       case e: Exception => false
     }
   }
+
 }

@@ -21,52 +21,65 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.hateoas.Link
 import v1.models.hateoas.Method._
-import v1.models.response.retrieve.{Charge, LifetimeAllowance, OverseasPensionContributions, OverseasSchemeProvider, PensionContributions, PensionSavingsTaxCharges, PensionSchemeOverseasTransfers, PensionSchemeUnauthorisedPayments, RetrievePensionChargesHateoasData, RetrievePensionChargesResponse}
+import v1.models.response.retrieve.{
+  Charge,
+  LifetimeAllowance,
+  OverseasPensionContributions,
+  OverseasSchemeProvider,
+  PensionContributions,
+  PensionSavingsTaxCharges,
+  PensionSchemeOverseasTransfers,
+  PensionSchemeUnauthorisedPayments,
+  RetrievePensionChargesHateoasData,
+  RetrievePensionChargesResponse
+}
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseModel = RetrievePensionChargesResponse(
-    Some(PensionSavingsTaxCharges(
-      Seq("00123456RA"),
-      Some(LifetimeAllowance(123.12, 123.12)),
-      Some(LifetimeAllowance(123.12, 123.12)),
-      true,
-      Some(true),
-      Some(true))),
-    Some(PensionSchemeOverseasTransfers(
-      Seq(OverseasSchemeProvider(
-        "name",
-        "address",
-        "postcode",
-        Some(Seq("Q123456")),
-        None
+    Some(
+      PensionSavingsTaxCharges(
+        Seq("00123456RA"),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        true,
+        Some(true),
+        Some(true))),
+    Some(
+      PensionSchemeOverseasTransfers(
+        Seq(
+          OverseasSchemeProvider(
+            "name",
+            "address",
+            "postcode",
+            Some(Seq("Q123456")),
+            None
+          )),
+        123.12,
+        123.12)),
+    Some(
+      PensionSchemeUnauthorisedPayments(
+        Seq("00123456RA", "00123456RA"),
+        Some(Charge(123.12, 123.12)),
+        Some(Charge(123.12, 123.12))
       )),
-      123.12,
-      123.12)),
-    Some(PensionSchemeUnauthorisedPayments(
-      Seq("00123456RA", "00123456RA"),
-      Some(Charge(123.12, 123.12)),
-      Some(Charge(123.12, 123.12))
-    )),
-    Some(PensionContributions(
-      Seq("00123456RA","00123456RA"),
-      123.12,
-      123.12)),
-    Some(OverseasPensionContributions(
-      Seq(OverseasSchemeProvider(
-        "Overseas Pensions Plc",
-        "111 Main Street, George Town, Grand Cayman",
-        "CYM",
-        Some(Seq("Q123456")),
-        None
-      )),
-      123.12,
-      123.12
-    ))
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(
+      OverseasPensionContributions(
+        Seq(
+          OverseasSchemeProvider(
+            "Overseas Pensions Plc",
+            "111 Main Street, George Town, Grand Cayman",
+            "CYM",
+            Some(Seq("Q123456")),
+            None
+          )),
+        123.12,
+        123.12
+      ))
   )
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
@@ -131,7 +144,6 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       |}
       |""".stripMargin)
 
-
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
@@ -139,6 +151,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -149,16 +162,19 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory" should {
     "return the correct links" in {
-      val nino = "mynino"
+      val nino    = "mynino"
       val taxYear = "2017-18"
 
       MockAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes
-      RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(mockAppConfig, RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
+      RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(
+        mockAppConfig,
+        RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
         Seq(
           Link(s"/my/context/pensions/$nino/$taxYear", GET, "self"),
           Link(s"/my/context/pensions/$nino/$taxYear", PUT, "create-and-amend-charges-pensions"),
-          Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions"),
+          Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions")
         )
     }
   }
+
 }

@@ -23,13 +23,14 @@ case class MtdError(code: String, message: String, paths: Option[Seq[String]] = 
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
+
   implicit val reads: Reads[MtdError] = (
     (__ \ "code").read[String] and
       (__ \ "reason").read[String] and
       (__ \ "paths").readNullable[Seq[String]]
-    ) (MtdError.apply _)
+  )(MtdError.apply _)
 
   implicit def genericWrites[T <: MtdError]: Writes[T] =
     writes.contramap[T](c => c: MtdError)
-}
 
+}

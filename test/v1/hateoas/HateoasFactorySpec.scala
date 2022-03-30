@@ -42,11 +42,13 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
   "wrap" should {
 
     implicit object LinksFactory1 extends HateoasLinksFactory[Response, Data1] {
-      override def links(appConfig: AppConfig, data: Data1): Seq[Link] = Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel1"))
+      override def links(appConfig: AppConfig, data: Data1): Seq[Link] =
+        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel1"))
     }
 
     implicit object LinksFactory2 extends HateoasLinksFactory[Response, Data2] {
-      override def links(appConfig: AppConfig, data: Data2): Seq[Link] = Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel2"))
+      override def links(appConfig: AppConfig, data: Data2): Seq[Link] =
+        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel2"))
     }
 
     "use the response specific links" in new Test {
@@ -68,7 +70,8 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
       override def itemLinks(appConfig: AppConfig, data: Data1, item: Response): Seq[Link] =
         Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}/${item.foo}", GET, "item"))
 
-      override def links(appConfig: AppConfig, data: Data1): Seq[Link] = Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
+      override def links(appConfig: AppConfig, data: Data1): Seq[Link] =
+        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
     }
 
     "work" in new Test {
@@ -76,4 +79,5 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
         HateoasWrapper(ListResponse(Seq(HateoasWrapper(response, Seq(Link("context/id/X", GET, "item"))))), Seq(Link("context/id", GET, "rel")))
     }
   }
+
 }

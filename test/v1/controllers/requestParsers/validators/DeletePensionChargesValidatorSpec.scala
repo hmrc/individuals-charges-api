@@ -23,7 +23,7 @@ import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 
 class DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
 
   class Test extends MockAppConfig {
@@ -70,4 +70,5 @@ class DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
 }

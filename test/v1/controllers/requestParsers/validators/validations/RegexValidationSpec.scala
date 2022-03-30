@@ -24,7 +24,7 @@ class RegexValidationSpec extends UnitSpec {
   object TestError extends MtdError("SOME_ERR", "some message")
 
   object TestValidator extends RegexValidation {
-    override protected val regexFormat = "[a-z]{3}[0-9]{3}"
+    override protected val regexFormat           = "[a-z]{3}[0-9]{3}"
     override protected val error: TestError.type = TestError
   }
 
@@ -46,4 +46,5 @@ class RegexValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

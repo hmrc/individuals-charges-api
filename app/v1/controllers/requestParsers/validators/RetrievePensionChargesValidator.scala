@@ -22,15 +22,14 @@ import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidatio
 import v1.models.errors.{MtdError, TaxYearFormatError}
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 
-class RetrievePensionChargesValidator @Inject()(appConfig: AppConfig) extends Validator[RetrievePensionChargesRawData]{
+class RetrievePensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[RetrievePensionChargesRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
   private def parameterFormatValidation: RetrievePensionChargesRawData => List[List[MtdError]] = { data =>
-
     val taxYearValidation = TaxYearValidation.validate(data.taxYear)
 
-    val minTaxYearValidation = if(taxYearValidation.contains(TaxYearFormatError)){
+    val minTaxYearValidation = if (taxYearValidation.contains(TaxYearFormatError)) {
       Seq()
     } else {
       Seq(MinTaxYearValidation.validate(data.taxYear, appConfig.minTaxYearPensionCharge.toInt))

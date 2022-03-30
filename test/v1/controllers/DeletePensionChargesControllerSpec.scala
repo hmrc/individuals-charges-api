@@ -32,17 +32,18 @@ import v1.models.request.DesTaxYear
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeletePensionChargesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockDeletePensionChargesService
-  with MockDeletePensionChargesParser
-  with MockAuditService
-  with MockIdGenerator {
+class DeletePensionChargesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockDeletePensionChargesService
+    with MockDeletePensionChargesParser
+    with MockAuditService
+    with MockIdGenerator {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val nino   = "AA123456A"
+  val nino    = "AA123456A"
   val taxYear = "2020-21"
 
   val rawData = DeletePensionChargesRawData(nino, taxYear)
@@ -65,7 +66,6 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-
     def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "DeletePensionsCharges",
@@ -79,6 +79,7 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
           response = auditResponse
         )
       )
+
   }
 
   "delete" should {
@@ -87,7 +88,9 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
 
         MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
 
-        MockDeletePensionChargesService.delete(request).returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+        MockDeletePensionChargesService
+          .delete(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
         status(result) shouldBe NO_CONTENT
@@ -130,7 +133,9 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
 
           MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
 
-          MockDeletePensionChargesService.delete(request).returns(Future.successful(Left(ErrorWrapper(correlationId, error))))
+          MockDeletePensionChargesService
+            .delete(request)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, error))))
 
           val response: Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
           status(response) shouldBe expectedStatus
@@ -151,4 +156,5 @@ class DeletePensionChargesControllerSpec extends ControllerBaseSpec
       errorsFromServiceTester(DownstreamError, INTERNAL_SERVER_ERROR)
     }
   }
+
 }

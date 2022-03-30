@@ -22,7 +22,7 @@ import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxY
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 
 class RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
 
   class Test extends MockAppConfig {
@@ -69,4 +69,5 @@ class RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
 }

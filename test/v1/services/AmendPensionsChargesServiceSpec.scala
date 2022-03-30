@@ -30,13 +30,13 @@ import scala.concurrent.Future
 
 class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: Nino          = Nino("AA123456A")
   val taxYear: DesTaxYear = DesTaxYear("2020-21")
 
   private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
   trait Test extends MockPensionChargesConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new AmendPensionChargesService(connector)
@@ -45,7 +45,8 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockPensionChargesConnector.amendPensionCharges(request)
+        MockPensionChargesConnector
+          .amendPensionCharges(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         await(service.amendPensions(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
@@ -54,7 +55,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connectot returns an outbound error" in new Test {
-        val someError = MtdError("SOME_CODE", "some message")
+        val someError   = MtdError("SOME_CODE", "some message")
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
 
@@ -68,7 +69,8 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockPensionChargesConnector.amendPensionCharges(request)
+            MockPensionChargesConnector
+              .amendPensionCharges(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -89,4 +91,5 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

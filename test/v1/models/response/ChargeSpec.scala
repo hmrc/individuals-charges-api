@@ -22,10 +22,9 @@ import v1.models.response.retrieve.Charge
 
 class ChargeSpec extends UnitSpec {
 
-  val responseModel = Charge(123.12,123.12)
+  val responseModel = Charge(123.12, 123.12)
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       | "amount": 123.12,
       | "foreignTaxPaid": 123.12
@@ -39,6 +38,7 @@ class ChargeSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {

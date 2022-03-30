@@ -30,21 +30,22 @@ import scala.concurrent.Future
 
 class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: Nino          = Nino("AA123456A")
   val taxYear: DesTaxYear = DesTaxYear("2020-21")
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
   trait Test extends MockPensionChargesConnector {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    val service = new RetrievePensionChargesService(connector)
+    val service                                 = new RetrievePensionChargesService(connector)
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockPensionChargesConnector.retrievePensions(request)
+        MockPensionChargesConnector
+          .retrievePensions(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
         await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
@@ -53,7 +54,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connectot returns an outbound error" in new Test {
-        val someError = MtdError("SOME_CODE", "some message")
+        val someError   = MtdError("SOME_CODE", "some message")
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
@@ -64,7 +65,8 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
     "service" should {
       "return a successful response" when {
         "a successful response is passed through" in new Test {
-          MockPensionChargesConnector.retrievePensions(request)
+          MockPensionChargesConnector
+            .retrievePensions(request)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
           await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
@@ -74,7 +76,8 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockPensionChargesConnector.retrievePensions(request)
+            MockPensionChargesConnector
+              .retrievePensions(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -82,15 +85,16 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
         val input = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR" -> TaxYearFormatError,
-          "NO_DATA_FOUND" -> NotFoundError,
-          "INVALID_CORRELATIONID" -> DownstreamError,
-          "SERVER_ERROR" -> DownstreamError,
-          "SERVICE_UNAVAILABLE" -> DownstreamError
+          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+          "NO_DATA_FOUND"             -> NotFoundError,
+          "INVALID_CORRELATIONID"     -> DownstreamError,
+          "SERVER_ERROR"              -> DownstreamError,
+          "SERVICE_UNAVAILABLE"       -> DownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
   }
+
 }

@@ -21,12 +21,12 @@ import play.api.Configuration
 import play.api.http.Status
 import play.api.http.Status.UNSUPPORTED_MEDIA_TYPE
 import play.api.libs.json.Json
-import play.api.mvc.{ AnyContent, RequestHeader, Result }
+import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
-import uk.gov.hmrc.http.{ HeaderCarrier, JsValidationException, NotFoundException }
+import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -35,7 +35,7 @@ import v1.models.errors._
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NoStackTrace
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
@@ -77,6 +77,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
       "bootstrap.errorHandler.suppress4xxErrorMessages" -> false,
       "bootstrap.errorHandler.suppress5xxErrorMessages" -> false
     )
+
     val handler = new ErrorHandler(configuration, auditConnector, httpAuditEvent)
   }
 
@@ -132,7 +133,8 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     "return 404 with error body" when {
       "NotFoundException thrown" in new Test() {
-        val result: Future[Result] = handler.onServerError(requestHeader, new NotFoundException("test") with NoStackTrace)
+        val result: Future[Result] =
+          handler.onServerError(requestHeader, new NotFoundException("test") with NoStackTrace)
         status(result) shouldBe NOT_FOUND
 
         contentAsJson(result) shouldBe Json.toJson(NotFoundError)
@@ -141,7 +143,8 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
 
     "return 401 with error body" when {
       "AuthorisationException thrown" in new Test() {
-        val result: Future[Result] = handler.onServerError(requestHeader, new InsufficientEnrolments("test") with NoStackTrace)
+        val result: Future[Result] =
+          handler.onServerError(requestHeader, new InsufficientEnrolments("test") with NoStackTrace)
         status(result) shouldBe UNAUTHORIZED
 
         contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)
@@ -167,4 +170,5 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
       }
     }
   }
+
 }

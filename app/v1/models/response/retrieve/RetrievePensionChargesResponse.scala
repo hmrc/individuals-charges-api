@@ -25,14 +25,13 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
                                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                                           pensionContributions: Option[PensionContributions],
-                                          overseasPensionContributions: Option[OverseasPensionContributions]) {
+                                          overseasPensionContributions: Option[OverseasPensionContributions]) {}
 
-}
-
-object RetrievePensionChargesResponse extends HateoasLinks{
+object RetrievePensionChargesResponse extends HateoasLinks {
   implicit val format: OFormat[RetrievePensionChargesResponse] = Json.format[RetrievePensionChargesResponse]
 
   implicit object RetrievePensionChargesLinksFactory extends HateoasLinksFactory[RetrievePensionChargesResponse, RetrievePensionChargesHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrievePensionChargesHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -41,7 +40,9 @@ object RetrievePensionChargesResponse extends HateoasLinks{
         getDeletePensions(appConfig, nino, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrievePensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData

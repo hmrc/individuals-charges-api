@@ -38,21 +38,23 @@ import v1.models.response.amend.AmendPensionChargesHateoasData
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockAmendPensionChargesParser
-  with MockAmendPensionsChargesService
-  with MockAppConfig
-  with MockAuditService
-  with MockHateoasFactory
-  with MockIdGenerator {
+class AmendPensionsChargesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockAmendPensionChargesParser
+    with MockAmendPensionsChargesService
+    with MockAppConfig
+    with MockAuditService
+    with MockHateoasFactory
+    with MockIdGenerator {
 
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val nino = "AA123456A"
-  private val taxYear = "2021-22"
-  private val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
-  private val requestData = AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), pensionCharges)
+  private val nino          = "AA123456A"
+  private val taxYear       = "2021-22"
+  private val rawData       = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
+  private val requestData   = AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), pensionCharges)
+
   private val testHateoasLinks = Seq(
     Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = "self"),
     Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = "create-and-amend-charges-pensions"),
@@ -114,7 +116,8 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
         params = Map("nino" -> nino, "taxYear" -> taxYear),
         request = requestBody,
         `X-CorrelationId` = correlationId,
-        response = auditResponse)
+        response = auditResponse
+      )
     )
 
   "amend" should {
@@ -216,4 +219,5 @@ class AmendPensionsChargesControllerSpec extends ControllerBaseSpec
       }
     }
   }
+
 }

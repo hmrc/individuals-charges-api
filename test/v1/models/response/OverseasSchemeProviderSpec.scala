@@ -23,15 +23,14 @@ import v1.models.response.retrieve.OverseasSchemeProvider
 class OverseasSchemeProviderSpec extends UnitSpec {
 
   val responseModel = OverseasSchemeProvider(
-      "Overseas Pensions Plc",
-      "111 Main Street, George Town, Grand Cayman",
-      "CYM",
-      Some(Seq("Q123456")),
-      None
-    )
+    "Overseas Pensions Plc",
+    "111 Main Street, George Town, Grand Cayman",
+    "CYM",
+    Some(Seq("Q123456")),
+    None
+  )
 
-  val responseJson = Json.parse(
-    """
+  val responseJson = Json.parse("""
       |{
       |        "providerName": "Overseas Pensions Plc",
       |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
@@ -49,6 +48,7 @@ class OverseasSchemeProviderSpec extends UnitSpec {
       }
     }
   }
+
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
@@ -56,4 +56,5 @@ class OverseasSchemeProviderSpec extends UnitSpec {
       }
     }
   }
+
 }

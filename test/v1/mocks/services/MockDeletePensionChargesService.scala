@@ -32,8 +32,11 @@ trait MockDeletePensionChargesService extends MockFactory {
   object MockDeletePensionChargesService {
 
     def delete(requestData: DeletePensionChargesRequest): CallHandler[Future[DeletePensionChargesOutcome]] = {
-      (mockDeleteBFLossService.deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (mockDeleteBFLossService
+        .deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
+
 }

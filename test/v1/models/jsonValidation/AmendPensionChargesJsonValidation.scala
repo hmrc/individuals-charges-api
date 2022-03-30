@@ -177,6 +177,7 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       |}
       |""".stripMargin
   )
+
   val fullJsonWithArraysSwapped: JsValue = Json.parse(
     """
       |{
@@ -645,7 +646,10 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       JsonTest("pensionSavingsTaxCharges benefit in excess example", benefitInExcessPensionSavingsTaxChargesJson, true),
       JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers example", pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson, true),
       JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments example", partialJson1, true),
-      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments pensionContributions example", partialJson2, true),
+      JsonTest(
+        "pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments pensionContributions example",
+        partialJson2,
+        true),
       JsonTest("invalid json", invalidJson, false),
       JsonTest("invalid json no boolean fields supplied", invalidJsonNoBooleans, false),
       JsonTest("valid minimum boolean fields supplied", validMinimumBooleansSupplied1, true),
@@ -655,15 +659,14 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       JsonTest("invalid Booleans only first one", invalidBooleansSupplied1, false)
     )
 
-    jsonSchemaTests.foreach {
-      jsonTest =>
-        s"correctly validate the json for scenario - ${jsonTest.name}" in {
-          isValidateJsonAccordingToJsonSchema(FakeRequest().withJsonBody(jsonTest.json).body, schemaJsonDoc) shouldBe jsonTest.outcome
+    jsonSchemaTests.foreach { jsonTest =>
+      s"correctly validate the json for scenario - ${jsonTest.name}" in {
+        isValidateJsonAccordingToJsonSchema(FakeRequest().withJsonBody(jsonTest.json).body, schemaJsonDoc) shouldBe jsonTest.outcome
 
-          if(jsonTest.outcome){
-            jsonTest.json.asOpt[PensionCharges].isDefined shouldBe true
-          }
+        if (jsonTest.outcome) {
+          jsonTest.json.asOpt[PensionCharges].isDefined shouldBe true
         }
+      }
     }
   }
 
@@ -675,4 +678,5 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       result.isDefined shouldBe false
     }
   }
+
 }

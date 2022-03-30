@@ -23,7 +23,8 @@ object ProviderNameValidation {
   private val nameMaxLength = 105
 
   def validate(providerName: String, path: String): List[MtdError] = {
-    if(providerName.length() <= nameMaxLength && providerName.nonEmpty) NoValidationErrors else List(ProviderNameFormatError.copy(paths = Some(Seq(path))))
+    if (providerName.length() <= nameMaxLength && providerName.nonEmpty) NoValidationErrors
+    else List(ProviderNameFormatError.copy(paths = Some(Seq(path))))
   }
 
 }
