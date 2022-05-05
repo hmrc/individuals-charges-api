@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.libs.json._
 import play.api.libs.ws._
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs._
@@ -41,7 +42,10 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -100,7 +104,6 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalid)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -129,11 +132,8 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
           (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, DownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
-
     }
   }
-
 }
