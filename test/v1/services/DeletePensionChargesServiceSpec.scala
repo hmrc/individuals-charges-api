@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class DeletePensionChargesServiceSpec extends ServiceSpec {
 
-  val nino    = Nino("AA123456A")
-  val taxYear = DesTaxYear("2020-21")
+  val nino: Nino          = Nino("AA123456A")
+  val taxYear: DesTaxYear = DesTaxYear("2020-21")
 
   trait Test extends MockPensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -39,7 +39,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
     lazy val service = new DeletePensionChargesService(connector)
   }
 
-  lazy val request = DeletePensionChargesRequest(nino, taxYear)
+  lazy val request: DeletePensionChargesRequest = DeletePensionChargesRequest(nino, taxYear)
 
   "Delete Pension Charges" should {
     "return a Right" when {
@@ -54,8 +54,8 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError: MtdError = DownstreamError
-        val desResponse         = ResponseWrapper(correlationId, OutboundError(someError))
+        val someError: MtdError                         = DownstreamError
+        val desResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
@@ -86,7 +86,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         val input = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "NOT_FOUND"                 -> NotFoundError,
+          "NO_DATA_FOUND"             -> NotFoundError,
           "INVALID_CORRELATIONID"     -> DownstreamError,
           "SERVER_ERROR"              -> DownstreamError,
           "SERVICE_UNAVAILABLE"       -> DownstreamError,

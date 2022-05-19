@@ -30,6 +30,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
+    val baseUrl = "http://test-id-lookup-baseUrl"
     MockAppConfig.mtdIdBaseUrl returns baseUrl
   }
 

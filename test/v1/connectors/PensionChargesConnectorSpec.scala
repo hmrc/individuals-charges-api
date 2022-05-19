@@ -42,7 +42,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     val desRequestHeaders: Seq[(String, String)] =
       Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
-    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desBaseUrl returns desBaseUrl
     MockAppConfig.desToken returns "des-token"
     MockAppConfig.desEnvironment returns "des-environment"
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
@@ -50,7 +50,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     val ifsRequestHeaders: Seq[(String, String)] =
       Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
+    MockAppConfig.ifsBaseUrl returns ifsBaseUrl
     MockAppConfig.ifsToken returns "ifs-token"
     MockAppConfig.ifsEnvironment returns "ifs-environment"
     MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
@@ -64,9 +64,9 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -87,9 +87,9 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -110,9 +110,9 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .delete(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -135,7 +135,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -158,7 +158,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -181,7 +181,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -207,7 +207,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
@@ -231,7 +231,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
@@ -255,7 +255,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/$taxYear",
+            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
             body = pensionCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
