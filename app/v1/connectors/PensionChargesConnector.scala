@@ -37,7 +37,10 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
     val nino    = request.nino.nino
     val taxYear = request.taxYear.value
 
-    http.DELETE[DesOutcome[Unit]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")(readsEmpty, desHeaderCarrier(), ec)
+    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
+      http.DELETE[DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
+
+    doIt(ifsHeaderCarrier())
   }
 
   def retrievePensionCharges(request: RetrievePensionChargesRequest)(implicit
