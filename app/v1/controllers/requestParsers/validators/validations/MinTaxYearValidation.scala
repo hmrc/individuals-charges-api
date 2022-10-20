@@ -24,9 +24,9 @@ object MinTaxYearValidation {
   // @param taxYear In format YYYY-YY
   def validate(taxYear: String, minTaxYear: Int): List[MtdError] = {
     try {
-      val desTaxYear = Integer.parseInt(DesTaxYear.toYearYYYY(taxYear).value)
+      val year = Integer.parseInt(DesTaxYear.toYearYYYY(taxYear).value)
 
-      if (desTaxYear >= minTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
+      if (year >= minTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
     } catch {
       case e: NumberFormatException => List(TaxYearFormatError)
     }
