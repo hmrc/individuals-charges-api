@@ -20,15 +20,15 @@ import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import support.UnitSpec
 
-class FeatureSwitchSpec extends UnitSpec {
+class FeatureSwitchesSpec extends UnitSpec {
 
   private def createFeatureSwitch(config: String) =
-    FeatureSwitch(Some(Configuration(ConfigFactory.parseString(config))))
+    FeatureSwitches(Configuration(ConfigFactory.parseString(config)))
 
   "FeatureSwitch" when {
     "getting version enabled" when {
       "no config" must {
-        val featureSwitch = FeatureSwitch(None)
+        val featureSwitch = FeatureSwitches(Configuration.empty)
 
         "return false" in {
           featureSwitch.isVersionEnabled("1.0") shouldBe false

@@ -75,7 +75,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -98,7 +98,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionCharges.DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -121,7 +121,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionCharges.DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -146,7 +146,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -169,7 +169,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionCharges.RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -192,7 +192,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionCharges.RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -219,7 +219,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected
@@ -243,7 +243,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionCharges.AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected
@@ -267,7 +267,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionCharges.AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected

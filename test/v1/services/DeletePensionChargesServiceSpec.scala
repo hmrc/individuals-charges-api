@@ -23,14 +23,14 @@ import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 
 import scala.concurrent.Future
 
 class DeletePensionChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino          = Nino("AA123456A")
-  val taxYear: DesTaxYear = DesTaxYear("2020-21")
+  val nino: Nino       = Nino("AA123456A")
+  val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   trait Test extends MockPensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

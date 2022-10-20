@@ -24,14 +24,14 @@ import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 
 import scala.concurrent.Future
 
 class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino          = Nino("AA123456A")
-  val taxYear: DesTaxYear = DesTaxYear("2020-21")
+  val nino: Nino       = Nino("AA123456A")
+  val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 

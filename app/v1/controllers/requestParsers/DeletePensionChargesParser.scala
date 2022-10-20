@@ -20,12 +20,12 @@ import javax.inject.Inject
 import v1.controllers.requestParsers.validators.DeletePensionChargesValidator
 import v1.models.domain.Nino
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
-import v1.models.request.{DeletePensionCharges, DesTaxYear}
+import v1.models.request.{DeletePensionCharges, TaxYear}
 
 class DeletePensionChargesParser @Inject() (val validator: DeletePensionChargesValidator)
     extends RequestParser[DeletePensionChargesRawData, DeletePensionChargesRequest] {
 
   override protected def requestFor(data: DeletePensionChargesRawData): DeletePensionChargesRequest =
-    DeletePensionCharges.DeletePensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear))
+    DeletePensionCharges.DeletePensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
 
 }

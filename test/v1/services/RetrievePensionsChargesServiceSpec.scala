@@ -16,7 +16,7 @@
 
 package v1.services
 
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 import v1.data.RetrievePensionChargesData._
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino          = Nino("AA123456A")
-  val taxYear: DesTaxYear = DesTaxYear("2020-21")
+  val nino: Nino       = Nino("AA123456A")
+  val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 

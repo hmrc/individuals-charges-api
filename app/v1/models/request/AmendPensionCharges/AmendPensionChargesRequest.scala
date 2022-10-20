@@ -17,6 +17,6 @@
 package v1.models.request.AmendPensionCharges
 
 import v1.models.domain.Nino
-import v1.models.request.{DesTaxYear, RawData}
+import v1.models.request.{TaxYear, RawData}
 
-case class AmendPensionChargesRequest(nino: Nino, taxYear: DesTaxYear, pensionCharges: PensionCharges) extends RawData
+case class AmendPensionChargesRequest(nino: Nino, taxYear: TaxYear, pensionCharges: PensionCharges) extends RawData

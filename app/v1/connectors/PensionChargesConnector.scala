@@ -35,7 +35,7 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
       request: DeletePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
       http.DELETE[DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
@@ -49,7 +49,7 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
       correlationId: String): Future[DesOutcome[RetrievePensionChargesResponse]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[RetrievePensionChargesResponse]] = {
       http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
@@ -62,7 +62,7 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
       request: AmendPensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
     def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
       http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)

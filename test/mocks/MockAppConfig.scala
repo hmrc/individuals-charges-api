@@ -44,8 +44,8 @@ trait MockAppConfig extends MockFactory {
 
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
-    def featureSwitch: CallHandler[Option[Configuration]] =
-      (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
+    def featureSwitch: CallHandler[Configuration] =
+      (mockAppConfig.featureSwitches _: () => Configuration).expects()
 
     def apiGatewayContext: CallHandler[String] = (mockAppConfig.apiGatewayContext _: () => String).expects()
 
