@@ -54,7 +54,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError: MtdError                         = DownstreamError
+        val someError: MtdError                         = StandardDownstreamError
         val desResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
 
@@ -78,7 +78,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
             MockPensionChargesConnector
               .deletePensionCharges(request)
-              .returns(Future.successful(Left(ResponseWrapper("resultId", DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
           }
@@ -87,10 +87,10 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> DownstreamError,
-          "SERVER_ERROR"              -> DownstreamError,
-          "SERVICE_UNAVAILABLE"       -> DownstreamError,
-          "UNEXPECTED_ERROR"          -> DownstreamError
+          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+          "SERVER_ERROR"              -> StandardDownstreamError,
+          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError,
+          "UNEXPECTED_ERROR"          -> StandardDownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))

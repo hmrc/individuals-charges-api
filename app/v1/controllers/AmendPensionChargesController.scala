@@ -115,8 +115,8 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
             PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) | MtdErrorWithCustomMessage(
             ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError | RuleBenefitExcessesError | RulePensionReferenceError =>
         BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

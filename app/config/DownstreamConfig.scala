@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-package v1.connectors
+package config
 
-trait DownstreamUri[Resp] {
-  val value: String
-}
-
-object DownstreamUri {
-  case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class IfsUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
-}
+case class DownstreamConfig(baseUrl: String, env: String, token: String, environmentHeaders: Option[Seq[String]])

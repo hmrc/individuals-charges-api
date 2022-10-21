@@ -106,7 +106,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
 
         MockedHttpClient
           .delete(
@@ -136,7 +136,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -159,7 +159,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -177,12 +177,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -251,7 +251,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     }
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .put(

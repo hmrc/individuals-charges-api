@@ -99,7 +99,7 @@ object RulePensionReferenceError
 
 //Standard Errors
 object NotFoundError           extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
-object DownstreamError         extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
+object StandardDownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 object BadRequestError         extends MtdError("INVALID_REQUEST", "Invalid request")
 object BVRError                extends MtdError("BUSINESS_ERROR", "Business validation error")
 object ServiceUnavailableError extends MtdError("SERVICE_UNAVAILABLE", "Internal server error")

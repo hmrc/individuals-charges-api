@@ -124,7 +124,7 @@ class DeletePensionChargesControllerSpec
       errorsFromParserTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
       errorsFromParserTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromParserTester(NotFoundError, NOT_FOUND)
-      errorsFromParserTester(DownstreamError, INTERNAL_SERVER_ERROR)
+      errorsFromParserTester(StandardDownstreamError, INTERNAL_SERVER_ERROR)
     }
 
     "handle non-mdtp validation errors as per spec" when {
@@ -153,7 +153,7 @@ class DeletePensionChargesControllerSpec
       errorsFromServiceTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
       errorsFromServiceTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromServiceTester(NotFoundError, NOT_FOUND)
-      errorsFromServiceTester(DownstreamError, INTERNAL_SERVER_ERROR)
+      errorsFromServiceTester(StandardDownstreamError, INTERNAL_SERVER_ERROR)
     }
   }
 

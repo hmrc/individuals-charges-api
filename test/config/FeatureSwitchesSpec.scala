@@ -16,52 +16,70 @@
 
 package config
 
-import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import support.UnitSpec
 
 class FeatureSwitchesSpec extends UnitSpec {
 
-  private def createFeatureSwitch(config: String) =
-    FeatureSwitches(Configuration(ConfigFactory.parseString(config)))
+  "a feature switch" should {
+    "be true" when {
 
-  "FeatureSwitch" when {
-    "getting version enabled" when {
-      "no config" must {
-        val featureSwitch = FeatureSwitches(Configuration.empty)
+      "absent from the config" in {
+        val configuration   = Configuration.empty
+        val featureSwitches = FeatureSwitches(configuration)
 
-        "return false" in {
-          featureSwitch.isVersionEnabled("1.0") shouldBe false
-        }
+        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
       }
 
-      "no config value" must {
-        val featureSwitch = createFeatureSwitch("")
+      "enabled" in {
+        val configuration   = Configuration("tys-api.enabled" -> true)
+        val featureSwitches = FeatureSwitches(configuration)
 
-        "return false" in {
-          featureSwitch.isVersionEnabled("1.0") shouldBe false
-        }
+        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
+
+      }
+    }
+
+    "be false" when {
+      "disabled" in {
+        val configuration   = Configuration("tys-api.enabled" -> false)
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
+      }
+    }
+  }
+
+  "isVersionEnabled()" should {
+    val configuration = Configuration(
+      "version-1.enabled" -> true,
+      "version-2.enabled" -> false
+    )
+    val featureSwitches = FeatureSwitches(configuration)
+
+    "return false" when {
+      "the version is blank" in {
+        featureSwitches.isVersionEnabled("") shouldBe false
       }
 
-      "config set" must {
-        val featureSwitch = createFeatureSwitch("""
-            |version-1.enabled = false
-            |version-2.enabled = true
-        """.stripMargin)
+      "the version is an invalid format" in {
+        featureSwitches.isVersionEnabled("ABCDE-1") shouldBe false
+        featureSwitches.isVersionEnabled("1.") shouldBe false
+        featureSwitches.isVersionEnabled("1.ABC") shouldBe false
+      }
 
-        "return false for disabled versions" in {
-          featureSwitch.isVersionEnabled("1.0") shouldBe false
-        }
+      "the version isn't in the config" in {
+        featureSwitches.isVersionEnabled("3.0") shouldBe false
+      }
 
-        "return true for enabled versions" in {
-          featureSwitch.isVersionEnabled("2.0") shouldBe true
-        }
+      "the version is disabled in the config" in {
+        featureSwitches.isVersionEnabled("2.0") shouldBe false
+      }
+    }
 
-        "return false for non-version strings" in {
-          featureSwitch.isVersionEnabled("x.x") shouldBe false
-          featureSwitch.isVersionEnabled("2x") shouldBe false
-          featureSwitch.isVersionEnabled("2.x") shouldBe false
-        }
+    "return true" when {
+      "the version is enabled in the config" in {
+        featureSwitches.isVersionEnabled("1.0") shouldBe true
       }
     }
   }

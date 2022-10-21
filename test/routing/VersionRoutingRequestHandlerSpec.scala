@@ -74,7 +74,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     (filters.filters _).stubs().returns(Seq.empty)
 
     // TODO
-    MockAppConfig.featureSwitch.returns(Configuration(ConfigFactory.parseString("""
+    MockAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString("""
                                                                                          |version-1.enabled = true
                                                                                          |version-2.enabled = true
                                                                          """.stripMargin)))

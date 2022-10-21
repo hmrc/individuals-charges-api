@@ -78,7 +78,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
             MockPensionChargesConnector
               .retrievePensions(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -87,9 +87,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> DownstreamError,
-          "SERVER_ERROR"              -> DownstreamError,
-          "SERVICE_UNAVAILABLE"       -> DownstreamError
+          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+          "SERVER_ERROR"              -> StandardDownstreamError,
+          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))

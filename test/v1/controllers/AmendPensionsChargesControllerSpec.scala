@@ -181,7 +181,7 @@ class AmendPensionsChargesControllerSpec
           (RuleIsAnnualAllowanceReducedError, BAD_REQUEST),
           (RuleBenefitExcessesError, BAD_REQUEST),
           (RulePensionReferenceError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
@@ -213,7 +213,7 @@ class AmendPensionsChargesControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (serviceErrors _).tupled(args))
       }
