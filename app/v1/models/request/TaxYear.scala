@@ -59,44 +59,6 @@ final case class TaxYear private (private val value: String) {
   override def toString: String = s"TaxYear($value)"
 }
 
-//
-///** Represents a tax year for DES
-//  *
-//  * @param value
-//  *   the tax year string (2017-18)
-//  */
-//case class TaxYear(value: String) extends AnyVal {
-//  override def toString: String = value
-//}
-//
-//object TaxYear {
-//
-//  val startOfYear      = 2
-//  val startYearAndDash = 5
-//
-//  // TODO MOVE TO VALIDATION ONLY
-//  def toYearYYYY(taxYear: String): TaxYear = TaxYear(taxYear.take(startOfYear) + taxYear.drop(startYearAndDash))
-//
-//  /** Converts YYYY year to MTD year YYYY-YY. E.g. 2018 -> 2017-18
-//    *
-//    * @param taxYear
-//    *   the tax year string (2018)
-//    */
-//  def toMTDYear(taxYear: String): TaxYear =
-//    TaxYear((taxYear.toInt - 1) + "-" + taxYear.drop(startOfYear))
-//
-//  // TODO UPDATE IF NEEDED TO USE 2017-18 FORMAT
-//  def mostRecentTaxYear(date: LocalDate = LocalDate.now()): TaxYear = {
-//    val limit = LocalDate.parse(s"${date.getYear}-04-05", DateTimeFormatter.ISO_DATE)
-//    if (date.isBefore(limit)) {
-//      TaxYear(s"${date.getYear - 1}")
-//    } else {
-//      TaxYear(s"${date.getYear}")
-//    }
-//  }
-//
-//}
-
 object TaxYear {
 
   /** @param taxYear
