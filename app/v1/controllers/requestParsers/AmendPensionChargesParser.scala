@@ -26,6 +26,6 @@ class AmendPensionChargesParser @Inject() (val validator: AmendPensionChargesVal
     extends RequestParser[AmendPensionChargesRawData, AmendPensionChargesRequest] {
 
   override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest =
-    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), DesTaxYear(data.taxYear), data.body.json.as[PensionCharges])
+    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[PensionCharges])
 
 }

@@ -24,14 +24,14 @@ import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 
 import scala.concurrent.Future
 
 class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino          = Nino("AA123456A")
-  val taxYear: DesTaxYear = DesTaxYear("2020-21")
+  val nino: Nino       = Nino("AA123456A")
+  val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
@@ -71,7 +71,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
             MockPensionChargesConnector
               .amendPensionCharges(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -80,11 +80,11 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
           "INVALID_TAX_YEAR"             -> TaxYearFormatError,
           "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
-          "INVALID_CORRELATIONID"        -> DownstreamError,
-          "REDUCTION_TYPE_NOT_SPECIFIED" -> DownstreamError,
-          "REDUCTION_NOT_SPECIFIED"      -> DownstreamError,
-          "SERVER_ERROR"                 -> DownstreamError,
-          "SERVICE_UNAVAILABLE"          -> DownstreamError
+          "INVALID_CORRELATIONID"        -> StandardDownstreamError,
+          "REDUCTION_TYPE_NOT_SPECIFIED" -> StandardDownstreamError,
+          "REDUCTION_NOT_SPECIFIED"      -> StandardDownstreamError,
+          "SERVER_ERROR"                 -> StandardDownstreamError,
+          "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))

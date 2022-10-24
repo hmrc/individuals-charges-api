@@ -44,7 +44,7 @@ class AmendPensionChargesParserSpec extends UnitSpec {
         MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), AmendPensionChargesData.pensionCharges))
+          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
       }
     }
 

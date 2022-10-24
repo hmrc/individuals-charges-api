@@ -16,7 +16,7 @@
 
 package v1.services
 
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 import v1.data.RetrievePensionChargesData._
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
-  val nino: Nino          = Nino("AA123456A")
-  val taxYear: DesTaxYear = DesTaxYear("2020-21")
+  val nino: Nino       = Nino("AA123456A")
+  val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
@@ -78,7 +78,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
             MockPensionChargesConnector
               .retrievePensions(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -87,9 +87,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> DownstreamError,
-          "SERVER_ERROR"              -> DownstreamError,
-          "SERVICE_UNAVAILABLE"       -> DownstreamError
+          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+          "SERVER_ERROR"              -> StandardDownstreamError,
+          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))

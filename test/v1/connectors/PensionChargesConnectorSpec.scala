@@ -75,7 +75,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -98,7 +98,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionCharges.DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -106,7 +106,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
 
         MockedHttpClient
           .delete(
@@ -121,7 +121,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.deletePensionCharges(
             DeletePensionCharges.DeletePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -136,7 +136,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -146,7 +146,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -159,7 +159,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -169,7 +169,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionCharges.RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -177,12 +177,12 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .get(
             url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -192,7 +192,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.retrievePensionCharges(
             RetrievePensionCharges.RetrievePensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear)
+              taxYear = TaxYear.fromMtd(taxYear)
             )
           )) shouldBe expected
       }
@@ -219,7 +219,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected
@@ -243,7 +243,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionCharges.AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected
@@ -251,7 +251,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
     }
     "a request returning multiple errors" should {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, DownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
 
         MockedHttpClient
           .put(
@@ -267,7 +267,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
           connector.amendPensionCharges(
             AmendPensionCharges.AmendPensionChargesRequest(
               nino = Nino(nino),
-              taxYear = DesTaxYear(taxYear),
+              taxYear = TaxYear.fromMtd(taxYear),
               pensionCharges
             )
           )) shouldBe expected

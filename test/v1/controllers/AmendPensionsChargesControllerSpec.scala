@@ -32,7 +32,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 import v1.models.response.amend.AmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,7 +53,7 @@ class AmendPensionsChargesControllerSpec
   private val nino          = "AA123456A"
   private val taxYear       = "2021-22"
   private val rawData       = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
-  private val requestData   = AmendPensionChargesRequest(Nino(nino), DesTaxYear(taxYear), pensionCharges)
+  private val requestData   = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
 
   private val testHateoasLinks = Seq(
     Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = "self"),
@@ -181,7 +181,7 @@ class AmendPensionsChargesControllerSpec
           (RuleIsAnnualAllowanceReducedError, BAD_REQUEST),
           (RuleBenefitExcessesError, BAD_REQUEST),
           (RulePensionReferenceError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
@@ -213,7 +213,7 @@ class AmendPensionsChargesControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (serviceErrors _).tupled(args))
       }

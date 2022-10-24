@@ -31,7 +31,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 
@@ -54,7 +54,7 @@ class RetrievePensionsChargesControllerSpec
   private val taxYear       = "2021-22"
 
   private val rawData     = RetrievePensionChargesRawData(nino, taxYear)
-  private val requestData = RetrievePensionChargesRequest(Nino(nino), DesTaxYear(taxYear))
+  private val requestData = RetrievePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
   private val retrieveHateoasLink =
     Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = SELF)
@@ -130,7 +130,7 @@ class RetrievePensionsChargesControllerSpec
           (RuleTaxYearRangeInvalid, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
@@ -160,7 +160,7 @@ class RetrievePensionsChargesControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (serviceErrors _).tupled(args))
       }

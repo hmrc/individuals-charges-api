@@ -40,12 +40,17 @@ trait MockAppConfig extends MockFactory {
     def ifsToken: CallHandler[String]                           = (mockAppConfig.ifsToken _).expects()
     def ifsEnvironment: CallHandler[String]                     = (mockAppConfig.ifsEnv _).expects()
     def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifsEnvironmentHeaders _).expects()
-    // END
+
+    // Tax Year Specific IFS Config
+    def tysIfsBaseUrl: CallHandler[String]                         = (mockAppConfig.tysIfsBaseUrl _: () => String).expects()
+    def tysIfsToken: CallHandler[String]                           = (mockAppConfig.tysIfsToken _).expects()
+    def tysIfsEnvironment: CallHandler[String]                     = (mockAppConfig.tysIfsEnv _).expects()
+    def tysIfsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.tysIfsEnvironmentHeaders _).expects()
 
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
-    def featureSwitch: CallHandler[Option[Configuration]] =
-      (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
+    def featureSwitches: CallHandler[Configuration] =
+      (mockAppConfig.featureSwitches _: () => Configuration).expects()
 
     def apiGatewayContext: CallHandler[String] = (mockAppConfig.apiGatewayContext _: () => String).expects()
 

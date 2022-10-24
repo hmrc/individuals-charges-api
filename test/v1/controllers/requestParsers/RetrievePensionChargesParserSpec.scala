@@ -20,7 +20,7 @@ import support.UnitSpec
 import v1.mocks.validators.MockRetrievePensionChargesValidator
 import v1.models.domain.Nino
 import v1.models.errors.{BadRequestError, ErrorWrapper, LossIdFormatError, NinoFormatError}
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
 class RetrievePensionChargesParserSpec extends UnitSpec {
@@ -40,7 +40,7 @@ class RetrievePensionChargesParserSpec extends UnitSpec {
       "valid request data is supplied" in new Test {
         MockValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe Right(RetrievePensionChargesRequest(Nino(nino), DesTaxYear(taxYear)))
+        parser.parseRequest(inputData) shouldBe Right(RetrievePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear)))
       }
     }
 

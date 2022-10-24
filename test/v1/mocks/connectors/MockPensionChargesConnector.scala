@@ -19,7 +19,7 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, PensionChargesConnector}
+import v1.connectors.{DownstreamOutcome, PensionChargesConnector}
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
@@ -33,19 +33,19 @@ trait MockPensionChargesConnector extends MockFactory {
 
   object MockPensionChargesConnector {
 
-    def deletePensionCharges(deletePensionChargesRequest: DeletePensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def deletePensionCharges(deletePensionChargesRequest: DeletePensionChargesRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (connector
         .deletePensionCharges(_: DeletePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(deletePensionChargesRequest, *, *, *)
     }
 
-    def amendPensionCharges(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendPensionCharges(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (connector
         .amendPensionCharges(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(amendPensionChargesRequest, *, *, *)
     }
 
-    def retrievePensions(request: RetrievePensionChargesRequest): CallHandler[Future[DesOutcome[RetrievePensionChargesResponse]]] = {
+    def retrievePensions(request: RetrievePensionChargesRequest): CallHandler[Future[DownstreamOutcome[RetrievePensionChargesResponse]]] = {
       (connector
         .retrievePensionCharges(_: RetrievePensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

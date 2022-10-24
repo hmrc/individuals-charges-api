@@ -24,10 +24,10 @@ import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockDeletePensionChargesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
-import v1.models.errors.{NotFoundError, _}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +47,7 @@ class DeletePensionChargesControllerSpec
   val taxYear = "2020-21"
 
   val rawData = DeletePensionChargesRawData(nino, taxYear)
-  val request = DeletePensionChargesRequest(Nino(nino), DesTaxYear(taxYear))
+  val request = DeletePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
   trait Test {
     val hc = HeaderCarrier()
@@ -124,7 +124,7 @@ class DeletePensionChargesControllerSpec
       errorsFromParserTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
       errorsFromParserTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromParserTester(NotFoundError, NOT_FOUND)
-      errorsFromParserTester(DownstreamError, INTERNAL_SERVER_ERROR)
+      errorsFromParserTester(StandardDownstreamError, INTERNAL_SERVER_ERROR)
     }
 
     "handle non-mdtp validation errors as per spec" when {
@@ -153,7 +153,7 @@ class DeletePensionChargesControllerSpec
       errorsFromServiceTester(RuleTaxYearRangeInvalid, BAD_REQUEST)
       errorsFromServiceTester(RuleTaxYearNotSupportedError, BAD_REQUEST)
       errorsFromServiceTester(NotFoundError, NOT_FOUND)
-      errorsFromServiceTester(DownstreamError, INTERNAL_SERVER_ERROR)
+      errorsFromServiceTester(StandardDownstreamError, INTERNAL_SERVER_ERROR)
     }
   }
 

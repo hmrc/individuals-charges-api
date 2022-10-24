@@ -17,11 +17,13 @@
 package v1.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v1.connectors.DownstreamUri.{DesUri, IfsUri}
 import v1.connectors.httpparsers.StandardDesHttpParser._
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequest, PensionCharges}
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.response.retrieve.RetrievePensionChargesResponse
@@ -31,43 +33,42 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deletePensionCharges(
-      request: DeletePensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
+  def deletePensionCharges(request: DeletePensionChargesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
-    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
-      http.DELETE[DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
-
-    doIt(ifsHeaderCarrier())
+    val downstreamUri = IfsUri[Unit](s"income-tax/charges/pensions/$nino/$taxYear")
+    delete(downstreamUri)
   }
 
   def retrievePensionCharges(request: RetrievePensionChargesRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DesOutcome[RetrievePensionChargesResponse]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
-    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[RetrievePensionChargesResponse]] = {
-      http.GET[DesOutcome[RetrievePensionChargesResponse]](s"${appConfig.desBaseUrl}/income-tax/charges/pensions/$nino/$taxYear")
-    }
-
-    doIt(desHeaderCarrier())
+    val downstreamUri = DesUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/$taxYear")
+    get(downstreamUri)
   }
 
-  def amendPensionCharges(
-      request: AmendPensionChargesRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DesOutcome[Unit]] = {
+  def amendPensionCharges(request: AmendPensionChargesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.asMtd
 
-    def doIt(implicit hc: HeaderCarrier): Future[DesOutcome[Unit]] =
-      http.PUT[PensionCharges, DesOutcome[Unit]](s"${appConfig.ifsBaseUrl}/income-tax/charges/pensions/$nino/$taxYear", request.pensionCharges)
-
-    doIt(ifsHeaderCarrier())
+    put(
+      uri = IfsUri[Unit](s"income-tax/charges/pensions/$nino/$taxYear"),
+      body = request.pensionCharges
+    )
   }
 
 }

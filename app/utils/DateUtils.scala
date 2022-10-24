@@ -18,19 +18,19 @@ package utils
 
 import java.time.LocalDate
 
-import v1.models.request.DesTaxYear
+import v1.models.request.TaxYear
 
 object DateUtils {
 
-  def getDesTaxYear(dateProvided: Any): DesTaxYear = dateProvided match {
-    case taxYear: String => DesTaxYear.toYearYYYY(taxYear)
+  def getDesTaxYear(dateProvided: Any): TaxYear = dateProvided match {
+    case taxYear: String => TaxYear.fromMtd(taxYear)
     case current: LocalDate =>
       val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
 
       if (current.isAfter(fiscalYearStartDate)) {
-        DesTaxYear((current.getYear + 1).toString)
+        TaxYear((current.getYear + 1).toString)
       } else {
-        DesTaxYear(current.getYear.toString)
+        TaxYear(current.getYear.toString)
       }
   }
 

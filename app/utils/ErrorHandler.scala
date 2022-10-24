@@ -89,8 +89,8 @@ class ErrorHandler @Inject() (
       case _: JsValidationException  => (BAD_REQUEST, BadRequestError, "ServerValidationError")
       case e: HttpException          => (e.responseCode, BadRequestError, "ServerValidationError")
       case e: Upstream4xxResponse    => (e.reportAs, BadRequestError, "ServerValidationError")
-      case e: Upstream5xxResponse    => (e.reportAs, DownstreamError, "ServerInternalError")
-      case _                         => (INTERNAL_SERVER_ERROR, DownstreamError, "ServerInternalError")
+      case e: Upstream5xxResponse    => (e.reportAs, StandardDownstreamError, "ServerInternalError")
+      case _                         => (INTERNAL_SERVER_ERROR, StandardDownstreamError, "ServerInternalError")
     }
 
     auditConnector.sendEvent(
