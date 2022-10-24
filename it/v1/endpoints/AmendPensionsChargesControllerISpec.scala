@@ -19,111 +19,58 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import v1.data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status
+import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.IntegrationBaseSpec
+import support.{IntegrationBaseSpec, WireMockMethods}
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
+class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
-  private trait Test {
-
-    val nino    = "AA123456A"
-    val taxYear = "2021-22"
-
-    def uri: String    = s"/pensions/$nino/$taxYear"
-    def ifsUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    def errorBody(code: String): String =
-      s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "des message"
-         |      }
-    """.stripMargin
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"GET",
-         |         "rel":"self"
-         |      },
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"PUT",
-         |         "rel":"create-and-amend-charges-pensions"
-         |      },
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"DELETE",
-         |         "rel":"delete-charges-pensions"
-         |      }
-         |   ]
-         |}
-    """.stripMargin
-    )
-
-  }
-
-  "Calling the retrieve endpoint" should {
+  "Calling the amend endpoint" should {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(fullValidJson))
-        response.status shouldBe Status.OK
+        val response: WSResponse = await(mtdRequest.put(fullValidJson))
+        response.status shouldBe OK
         response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }
-      "any valid request is made with different booleans" in new Test {
+      "any valid request is made with different booleans" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, Status.NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(boolean1Json))
-        response.status shouldBe Status.OK
+        val response: WSResponse = await(mtdRequest.put(boolean1Json))
+        response.status shouldBe OK
         response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
 
-        val response2: WSResponse = await(request().put(boolean2Json))
-        response2.status shouldBe Status.OK
+        val response2: WSResponse = await(mtdRequest.put(boolean2Json))
+        response2.status shouldBe OK
         response2.json shouldBe hateoasResponse
         response2.header("X-CorrelationId").nonEmpty shouldBe true
         response2.header("Content-Type") shouldBe Some("application/json")
 
-        val response3: WSResponse = await(request().put(booleans3Json))
-        response3.status shouldBe Status.OK
+        val response3: WSResponse = await(mtdRequest.put(booleans3Json))
+        response3.status shouldBe OK
         response3.json shouldBe hateoasResponse
         response3.header("X-CorrelationId").nonEmpty shouldBe true
         response3.header("Content-Type") shouldBe Some("application/json")
@@ -138,8 +85,9 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
+
           s"validation fails with ${expectedBody.code} error ${if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
-            else ""}" in new Test {
+            else ""}" in new NonTysTest {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
@@ -150,24 +98,24 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(requestNino)
             }
 
-            val response: WSResponse = await(request().put(requestBody))
+            val response: WSResponse = await(mtdRequest.put(requestBody))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
         val input = Seq(
-          ("Badnino", "2019-20", fullValidJson, Status.BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "beans", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "20!0-22", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "203100", fullValidJson, Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2018-19", fullValidJson, Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2021-22", invalidJson, Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("Badnino", "2019-20", fullValidJson, BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "beans", fullValidJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "20!0-22", fullValidJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "203100", fullValidJson, BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2021-22", invalidJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "2021-22",
             invalidNameJson,
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             ProviderNameFormatError.copy(paths = Some(
               Seq(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
@@ -176,7 +124,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             invalidAddressJson,
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             ProviderAddressFormatError.copy(paths = Some(
               Seq(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerAddress",
@@ -185,7 +133,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             fullReferencesJson("Q123456", "453"),
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/pensionSchemeTaxReference/0",
               "/overseasPensionContributions/overseasSchemeProvider/1/pensionSchemeTaxReference/0"
@@ -194,7 +142,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             fullReferencesJson("234", "00123456RA"),
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             QOPSRefFormatError.copy(paths = Some(Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
               "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
@@ -203,7 +151,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             fullJsonWithInvalidCountryFormat("1YM"),
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
               "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
@@ -212,7 +160,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             fullJsonWithInvalidCountryFormat("INVALID"),
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             CountryCodeFormatError.copy(paths = Some(Seq(
               "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
               "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
@@ -221,7 +169,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2021-22",
             fullJson(999999999999.99),
-            Status.BAD_REQUEST,
+            BAD_REQUEST,
             ValueFormatError.copy(paths = Some(Seq(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -240,36 +188,109 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().put(fullValidJson))
+            val response: WSResponse = await(mtdRequest.put(fullValidJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        val input = Seq(
-          (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
-          (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
-          (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.BAD_REQUEST, "INVALID_PAYLOAD", Status.BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_TYPE_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.UNPROCESSABLE_ENTITY, "REDUCTION_NOT_SPECIFIED", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        def errorBody(code: String): String =
+          s"""
+             |{
+             |   "code": "$code",
+             |   "reason": "message"
+             |}
+                    """.stripMargin
+
+        val errors = Seq(
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          (UNPROCESSABLE_ENTITY, "REDUCTION_TYPE_NOT_SPECIFIED", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "REDUCTION_NOT_SPECIFIED", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (INTERNAL_SERVER_ERROR,"MISSING_ANNUAL_ALLOWANCE_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "MISSING_TYPE_OF_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+  }
+
+  private trait Test {
+
+    def taxYear: String
+    def downstreamTaxYear: String
+    def downstreamUri: String
+
+    val nino: String = "AA123456A"
+
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |  "links":[
+         |      {
+         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
+         |         "rel":"create-and-amend-charges-pensions",
+         |         "method":"PUT"
+         |      },
+         |      {
+         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
+         |         "rel":"self",
+         |         "method":"GET"
+         |      },
+         |      {
+         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
+         |         "rel":"delete-charges-pensions",
+         |         "method":"DELETE"
+         |      }
+         |   ]
+         |}""".stripMargin)
+
+
+    def setupStubs(): StubMapping
+
+    def mtdRequest: WSRequest = {
+      setupStubs()
+      buildRequest(s"/pensions/$nino/$taxYear")
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123")
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+
+    def taxYear: String           = "2020-21"
+    def downstreamTaxYear: String = "2020-21"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+
+    def taxYear: String           = "2023-24"
+    def downstreamTaxYear: String = "23-24"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
   }
 
 }
