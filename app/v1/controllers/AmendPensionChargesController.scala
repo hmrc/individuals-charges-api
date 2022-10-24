@@ -107,17 +107,33 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
     }
   }
 
-  private def errorResult(errorWrapper: ErrorWrapper): Result =
+  private def errorResult(errorWrapper: ErrorWrapper): Result = {
+
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError |
-          RuleIncorrectOrEmptyBodyError | MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(RuleCountryCodeError.code) |
-          MtdErrorWithCustomMessage(CountryCodeFormatError.code) | MtdErrorWithCustomMessage(QOPSRefFormatError.code) | MtdErrorWithCustomMessage(
-            PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) | MtdErrorWithCustomMessage(
-            ProviderAddressFormatError.code) | RuleIsAnnualAllowanceReducedError | RuleBenefitExcessesError | RulePensionReferenceError =>
-        BadRequest(Json.toJson(errorWrapper))
+      case _
+        if errorWrapper.containsAnyOf(
+          BadRequestError,
+          NinoFormatError,
+          TaxYearFormatError,
+          RuleTaxYearRangeInvalid,
+          RuleTaxYearNotSupportedError,
+          RuleIncorrectOrEmptyBodyError,
+          MtdErrorWithCustomMessage(ValueFormatError.code),
+          MtdErrorWithCustomMessage(RuleCountryCodeError.code),
+          MtdErrorWithCustomMessage(CountryCodeFormatError.code),
+          MtdErrorWithCustomMessage(QOPSRefFormatError.code),
+          MtdErrorWithCustomMessage(PensionSchemeTaxRefFormatError.code),
+          MtdErrorWithCustomMessage(ProviderNameFormatError.code),
+          MtdErrorWithCustomMessage(ProviderAddressFormatError.code),
+          RuleIsAnnualAllowanceReducedError,
+          RuleBenefitExcessesError,
+          RulePensionReferenceError
+        ) => BadRequest(Json.toJson(errorWrapper))
+
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)
