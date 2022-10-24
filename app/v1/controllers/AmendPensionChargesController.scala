@@ -74,11 +74,11 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
           auditSubmission(
             GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              request = Some(request.body),
+              userDetails       = request.userDetails,
+              params            = Map("nino" -> nino, "taxYear" -> taxYear),
+              request           = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              response = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
+              response          = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
           Ok(Json.toJson(vendorResponse))
@@ -95,11 +95,11 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
         auditSubmission(
           GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = Some(request.body),
+            userDetails       = request.userDetails,
+            params            = Map("nino" -> nino, "taxYear" -> taxYear),
+            request           = Some(request.body),
             `X-CorrelationId` = correlationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            response          = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           ))
 
         result
