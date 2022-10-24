@@ -63,7 +63,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendPensions(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
+          vendorResponse  <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear))
               .asRight[ErrorWrapper])
