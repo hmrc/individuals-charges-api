@@ -23,7 +23,7 @@ import v1.models.request.TaxYear
 object DateUtils {
 
   def getDesTaxYear(dateProvided: Any): TaxYear = dateProvided match {
-    case taxYear: String => TaxYear.fromMtd(taxYear) // toYearYYYY(taxYear)
+    case taxYear: String => TaxYear.fromMtd(taxYear)
     case current: LocalDate =>
       val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
 
