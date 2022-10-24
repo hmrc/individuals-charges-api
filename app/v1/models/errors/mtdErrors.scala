@@ -21,6 +21,7 @@ object MtdErrorWithCustomMessage {
   def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }
 
+// Format errors
 object NinoFormatError    extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object AmountFormatError  extends MtdError("FORMAT_LOSS_AMOUNT", "The format of the loss amount is invalid")

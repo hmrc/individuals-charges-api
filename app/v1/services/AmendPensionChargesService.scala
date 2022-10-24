@@ -39,21 +39,30 @@ class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) 
       correlationId: String): Future[AmendPensionChargesOutcome] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendPensionCharges(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendPensionCharges(request)).leftMap(mapDesErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
-    "INVALID_TAX_YEAR"             -> TaxYearFormatError,
-    "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
-    "INVALID_CORRELATIONID"        -> StandardDownstreamError,
-    "REDUCTION_TYPE_NOT_SPECIFIED" -> StandardDownstreamError,
-    "REDUCTION_NOT_SPECIFIED"      -> StandardDownstreamError,
-    "SERVER_ERROR"                 -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
-  )
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
+      "INVALID_CORRELATIONID"        -> StandardDownstreamError,
+      "REDUCTION_TYPE_NOT_SPECIFIED" -> StandardDownstreamError,
+      "REDUCTION_NOT_SPECIFIED"      -> StandardDownstreamError,
+      "SERVER_ERROR"                 -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
+    )
+    val extraTysErrors = Map(
+      "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> StandardDownstreamError,
+      "MISSING_TYPE_OF_REDUCTION"          -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
