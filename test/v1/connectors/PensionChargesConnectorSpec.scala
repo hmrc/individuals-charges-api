@@ -31,248 +31,236 @@ import scala.concurrent.Future
 
 class PensionChargesConnectorSpec extends ConnectorSpec {
 
-  val nino    = "AA123456A"
-  val taxYear = "2019-20"
+  val nino = "AA123456A"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
+
+    def taxYear: TaxYear
+
+    protected val amendRequest: AmendPensionChargesRequest = AmendPensionChargesRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      pensionCharges = pensionCharges
+    )
+
+    protected val deleteRequest: DeletePensionChargesRequest = DeletePensionChargesRequest(
+      nino = Nino(nino),
+      taxYear = taxYear
+    )
+
+    protected val retrieveRequest: RetrievePensionChargesRequest = RetrievePensionChargesRequest(
+      nino = Nino(nino),
+      taxYear = taxYear
+    )
 
     val connector: PensionChargesConnector =
       new PensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    val desRequestHeaders: Seq[(String, String)] =
-      Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
-
-    MockAppConfig.desBaseUrl returns desBaseUrl
-    MockAppConfig.desToken returns "des-token"
-    MockAppConfig.desEnvironment returns "des-environment"
-    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-
-    val ifsRequestHeaders: Seq[(String, String)] =
-      Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
-
-    MockAppConfig.ifsBaseUrl returns ifsBaseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
-  "Delete pension charges" when {
+    "Delete pension charges" when {
 
-    "a valid request is supplied" should {
-      "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(ResponseWrapper(correlationId, ()))
+      "a valid request is supplied" should {
+        "return a successful response with the correct correlationId" in new IfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .delete(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
+          val expected = Right(ResponseWrapper(correlationId, ()))
 
-        await(
-          connector.deletePensionCharges(
-            DeletePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
+          MockedHttpClient
+            .delete(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
             )
-          )) shouldBe expected
+            .returns(Future.successful(expected))
+
+          await(connector.deletePensionCharges(deleteRequest)) shouldBe expected
+        }
+      }
+
+      "a request returning a single error" should {
+        "return an unsuccessful response with the correct correlationId and a single error" in new IfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+
+          MockedHttpClient
+            .delete(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.deletePensionCharges(deleteRequest)) shouldBe expected
+        }
+      }
+
+      "a request returning multiple errors" should {
+        "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
+
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
+
+          MockedHttpClient
+            .delete(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.deletePensionCharges(deleteRequest)) shouldBe expected
+        }
       }
     }
 
-    "a request returning a single error" should {
-      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+    "Retrieve pension charges" when {
 
-        MockedHttpClient
-          .delete(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
+      "a valid request is supplied" should {
+        "return a successful response with the correct correlationId" in new DesTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        await(
-          connector.deletePensionCharges(
-            DeletePensionCharges.DeletePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
+          val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+
+          MockedHttpClient
+            .get(
+              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
             )
-          )) shouldBe expected
+            .returns(Future.successful(expected))
+
+          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+        }
+      }
+
+      "a request returning a single error" should {
+        "return an unsuccessful response with the correct correlationId and a single error" in new DesTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+
+          MockedHttpClient
+            .get(
+              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+        }
+      }
+
+      "a request returning multiple errors" should {
+        "return an unsuccessful response with the correct correlationId and multiple errors" in new DesTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
+
+          MockedHttpClient
+            .get(
+              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              config = dummyHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+        }
       }
     }
 
-    "a request returning multiple errors" should {
-      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
+    "Amend pension charges" when {
 
-        MockedHttpClient
-          .delete(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
+      "a valid request is supplied" should {
+        "return a successful response with the correct correlationId" in new IfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        await(
-          connector.deletePensionCharges(
-            DeletePensionCharges.DeletePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
+          val expected = Right(ResponseWrapper(correlationId, Unit))
+
+          MockedHttpClient
+            .put(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              body = pensionCharges,
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
             )
-          )) shouldBe expected
+            .returns(Future.successful(expected))
+
+          await(connector.amendPensionCharges(amendRequest)) shouldBe expected
+        }
+      }
+
+      "a valid request is supplied for a Tax Year Specific tax year" should {
+        "return a successful response with the correct correlationId" in new TysIfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+          val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+
+          MockedHttpClient
+            .put(
+              url = s"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino",
+              body = pensionCharges,
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredTysIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.amendPensionCharges(amendRequest)) shouldBe expected
+        }
+      }
+
+      "A request returning a single error" should {
+        "return an unsuccessful response with the correct correlationId and a single error" in new IfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+
+          MockedHttpClient
+            .put(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              body = pensionCharges,
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.amendPensionCharges(amendRequest)) shouldBe expected
+        }
+      }
+
+      "a request returning multiple errors" should {
+        "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
+
+          MockedHttpClient
+            .put(
+              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              body = pensionCharges,
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(expected))
+
+          await(connector.amendPensionCharges(amendRequest)) shouldBe expected
+        }
       }
     }
+
   }
-
-  "Retrieve pension charges" when {
-    "a valid request is supplied" should {
-      "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
-
-        MockedHttpClient
-          .get(
-            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.retrievePensionCharges(
-            RetrievePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
-            )
-          )) shouldBe expected
-      }
-    }
-
-    "a request returning a single error" should {
-      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
-
-        MockedHttpClient
-          .get(
-            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.retrievePensionCharges(
-            RetrievePensionCharges.RetrievePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
-            )
-          )) shouldBe expected
-      }
-    }
-
-    "a request returning multiple errors" should {
-      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
-
-        MockedHttpClient
-          .get(
-            url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.retrievePensionCharges(
-            RetrievePensionCharges.RetrievePensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear)
-            )
-          )) shouldBe expected
-      }
-    }
-  }
-
-  "Amend pension charges" when {
-
-    "a valid request is supplied" should {
-      "return a successful response with the correct correlationId" in new Test {
-        val expected = Right(ResponseWrapper(correlationId, Unit))
-
-        MockedHttpClient
-          .put(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            body = pensionCharges,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.amendPensionCharges(
-            AmendPensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear),
-              pensionCharges
-            )
-          )) shouldBe expected
-      }
-    }
-    "A request returning a single error" should {
-      "return an unsuccessful response with the correct correlationId and a single error" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
-
-        MockedHttpClient
-          .put(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            body = pensionCharges,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.amendPensionCharges(
-            AmendPensionCharges.AmendPensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear),
-              pensionCharges
-            )
-          )) shouldBe expected
-      }
-    }
-    "a request returning multiple errors" should {
-      "return an unsuccessful response with the correct correlationId and multiple errors" in new Test {
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
-
-        MockedHttpClient
-          .put(
-            url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
-            body = pensionCharges,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(expected))
-
-        await(
-          connector.amendPensionCharges(
-            AmendPensionCharges.AmendPensionChargesRequest(
-              nino = Nino(nino),
-              taxYear = TaxYear.fromMtd(taxYear),
-              pensionCharges
-            )
-          )) shouldBe expected
-      }
-    }
-  }
-
-}
