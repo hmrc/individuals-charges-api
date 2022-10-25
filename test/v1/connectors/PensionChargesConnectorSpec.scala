@@ -16,7 +16,6 @@
 
 package v1.connectors
 
-import mocks.{MockAppConfig, MockHttpClient}
 import v1.data.AmendPensionChargesData.pensionCharges
 import v1.data.RetrievePensionChargesData.retrieveResponse
 import v1.models.domain.Nino
@@ -69,7 +68,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .delete(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -88,7 +87,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .delete(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -108,7 +107,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .delete(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -130,7 +129,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .get(
-              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyHeaderCarrierConfig,
               requiredHeaders = requiredDesHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -149,7 +148,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .get(
-              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyHeaderCarrierConfig,
               requiredHeaders = requiredDesHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -168,7 +167,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .get(
-              url = s"$desBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               config = dummyHeaderCarrierConfig,
               requiredHeaders = requiredDesHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -190,7 +189,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .put(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               body = pensionCharges,
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
@@ -230,7 +229,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .put(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               body = pensionCharges,
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
@@ -250,7 +249,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
           MockedHttpClient
             .put(
-              url = s"$ifsBaseUrl/income-tax/charges/pensions/$nino/$taxYear",
+              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
               body = pensionCharges,
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredIfsHeaders,
