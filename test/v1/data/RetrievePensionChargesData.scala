@@ -141,8 +141,8 @@ object RetrievePensionChargesData {
       |""".stripMargin
   )
 
-  val fullJsonWithHateoas: JsValue = Json.parse(
-    """
+  def fullJsonWithHateoas(taxYear: String): JsValue = Json.parse(
+    s"""
       |{
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
@@ -210,17 +210,17 @@ object RetrievePensionChargesData {
       |	},
       | "links":[
       |    {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
+      |      "href":"/individuals/charges/pensions/AA123456A/$taxYear",
       |      "method":"GET",
       |      "rel":"self"
       |    },
       |     {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
+      |      "href":"/individuals/charges/pensions/AA123456A/$taxYear",
       |      "method":"PUT",
       |      "rel":"create-and-amend-charges-pensions"
       |    },
       |    {
-      |      "href":"/individuals/charges/pensions/AA123456A/2021-22",
+      |      "href":"/individuals/charges/pensions/AA123456A/$taxYear",
       |      "method":"DELETE",
       |      "rel":"delete-charges-pensions"
       |    }

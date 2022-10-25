@@ -101,7 +101,7 @@ class RetrievePensionsChargesControllerSpec
 
         val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe fullJsonWithHateoas
+        contentAsJson(result) shouldBe fullJsonWithHateoas(taxYear)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -159,10 +159,13 @@ class RetrievePensionsChargesControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
-        input.foreach(args => (serviceErrors _).tupled(args))
+        val extraTysErrors = Seq((RuleTaxYearNotSupportedError, BAD_REQUEST))
+
+        (input ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }

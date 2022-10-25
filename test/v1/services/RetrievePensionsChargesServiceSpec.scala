@@ -83,7 +83,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
@@ -92,7 +92,12 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          "NOT_FOUND"              -> NotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }
