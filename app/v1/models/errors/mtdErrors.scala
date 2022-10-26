@@ -18,7 +18,6 @@ package v1.models.errors
 //scalastyle:off
 
 object MtdErrorWithCustomMessage {
-  def apply(code: String): MtdError = ???
 
   def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }

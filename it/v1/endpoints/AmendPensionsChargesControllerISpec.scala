@@ -48,6 +48,23 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }
+
+      "a valid request is made for a Tax Year Specific tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(mtdRequest.put(fullValidJson))
+        response.status shouldBe OK
+        response.json shouldBe hateoasResponse
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
       "any valid request is made with different booleans" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
@@ -211,7 +228,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
              |   "code": "$code",
              |   "reason": "message"
              |}
-                    """.stripMargin
+            """.stripMargin
 
         val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
@@ -227,7 +244,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
         val extraTysErrors = Seq(
           (INTERNAL_SERVER_ERROR,"MISSING_ANNUAL_ALLOWANCE_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "MISSING_TYPE_OF_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
@@ -246,24 +263,26 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
     val hateoasResponse: JsValue = Json.parse(
       s"""
          |{
-         |  "links":[
+         |   "links":[
          |      {
          |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "rel":"create-and-amend-charges-pensions",
-         |         "method":"PUT"
+         |         "method":"GET",
+         |         "rel":"self"
          |      },
          |      {
          |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "rel":"self",
-         |         "method":"GET"
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-charges-pensions"
          |      },
          |      {
          |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "rel":"delete-charges-pensions",
-         |         "method":"DELETE"
+         |         "method":"DELETE",
+         |         "rel":"delete-charges-pensions"
          |      }
          |   ]
-         |}""".stripMargin)
+         |}
+          """.stripMargin
+    )
 
 
     def setupStubs(): StubMapping
@@ -281,8 +300,8 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
 
   private trait NonTysTest extends Test {
 
-    def taxYear: String           = "2020-21"
-    def downstreamTaxYear: String = "2020-21"
+    def taxYear: String           = "2021-22"
+    def downstreamTaxYear: String = "2021-22"
     def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
   }
 

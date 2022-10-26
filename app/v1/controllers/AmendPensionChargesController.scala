@@ -118,20 +118,20 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
           RuleTaxYearRangeInvalid,
           RuleTaxYearNotSupportedError,
           RuleIncorrectOrEmptyBodyError,
-          MtdErrorWithCustomMessage(ValueFormatError.code),
-          MtdErrorWithCustomMessage(RuleCountryCodeError.code),
-          MtdErrorWithCustomMessage(CountryCodeFormatError.code),
-          MtdErrorWithCustomMessage(QOPSRefFormatError.code),
-          MtdErrorWithCustomMessage(PensionSchemeTaxRefFormatError.code),
-          MtdErrorWithCustomMessage(ProviderNameFormatError.code),
-          MtdErrorWithCustomMessage(ProviderAddressFormatError.code),
+          ValueFormatError,
+          RuleCountryCodeError,
+          CountryCodeFormatError,
+          QOPSRefFormatError,
+          PensionSchemeTaxRefFormatError,
+          ProviderNameFormatError,
+          ProviderAddressFormatError,
           RuleIsAnnualAllowanceReducedError,
           RuleBenefitExcessesError,
           RulePensionReferenceError
         ) => BadRequest(Json.toJson(errorWrapper))
 
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
     }
   }
 
