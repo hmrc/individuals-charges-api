@@ -242,7 +242,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireM
         )
 
         val extraTysErrors = Seq(
-          (UNPROCESSABLE_ENTITY,"MISSING_ANNUAL_ALLOWANCE_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "MISSING_ANNUAL_ALLOWANCE_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "MISSING_TYPE_OF_REDUCTION", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
