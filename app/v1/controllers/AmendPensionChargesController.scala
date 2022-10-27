@@ -132,6 +132,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
   }
 
