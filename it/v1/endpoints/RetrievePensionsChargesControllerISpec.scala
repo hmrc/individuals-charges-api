@@ -75,7 +75,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new NonTysTest {
+      "any valid Non-TYS request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -133,7 +133,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("Badnino", "2019-20", Status.BAD_REQUEST, NinoFormatError),
           ("AA123456A", "203100", Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalid)
+          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

@@ -109,7 +109,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper): Result =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalid | RuleTaxYearNotSupportedError |
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
           RuleIncorrectOrEmptyBodyError | MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(RuleCountryCodeError.code) |
           MtdErrorWithCustomMessage(CountryCodeFormatError.code) | MtdErrorWithCustomMessage(QOPSRefFormatError.code) | MtdErrorWithCustomMessage(
             PensionSchemeTaxRefFormatError.code) | MtdErrorWithCustomMessage(ProviderNameFormatError.code) | MtdErrorWithCustomMessage(

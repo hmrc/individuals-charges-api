@@ -53,7 +53,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
     }
 
     "return that wrapped error as-is" when {
-      "the connectot returns an outbound error" in new Test {
+      "the connector returns an outbound error" in new Test {
         val someError   = MtdError("SOME_CODE", "some message")
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))

@@ -87,7 +87,7 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
             BadRequestError,
             NinoFormatError,
             TaxYearFormatError,
-            RuleTaxYearRangeInvalid,
+            RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError
           ) =>
         BadRequest(Json.toJson(errorWrapper))

@@ -38,10 +38,7 @@ class RetrievePensionChargesService @Inject() (connector: PensionChargesConnecto
       logContext: EndpointLogContext,
       correlationId: String): Future[RetrievePensionChargesOutcome] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrievePensionCharges(request)).leftMap(mapDesErrors(downstreamErrorMap))
-    } yield desResponseWrapper
-
+    val result = EitherT(connector.retrievePensionCharges(request)).leftMap(mapDesErrors(downstreamErrorMap))
     result.value
   }
 

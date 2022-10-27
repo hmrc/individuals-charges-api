@@ -153,7 +153,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       "the taxYear range is invalid" in new Test {
         validator.validate(
           AmendPensionCharges
-            .AmendPensionChargesRawData(validNino, "2021-24", AnyContentAsJson(fullJson))) shouldBe List(RuleTaxYearRangeInvalid)
+            .AmendPensionChargesRawData(validNino, "2021-24", AnyContentAsJson(fullJson))) shouldBe List(RuleTaxYearRangeInvalidError)
       }
       "all path parameters are invalid" in new Test {
         validator.validate(AmendPensionCharges.AmendPensionChargesRawData("badNino", "2000", AnyContentAsJson(fullJson))) shouldBe List(
