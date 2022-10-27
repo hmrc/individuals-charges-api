@@ -24,12 +24,12 @@ import v1.connectors.PensionChargesConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends DesResponseMappingSupport with Logging {
+class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def deletePensionCharges(request: DeletePensionChargesRequest)(implicit
       hc: HeaderCarrier,
@@ -38,7 +38,7 @@ class DeletePensionChargesService @Inject() (connector: PensionChargesConnector)
       correlationId: String): Future[DeletePensionChargesOutcome] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.deletePensionCharges(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.deletePensionCharges(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
     result.value
   }

@@ -23,11 +23,11 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.{IntegrationBaseSpec, WireMockMethods}
+import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
+class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   "Calling the amend endpoint" should {
 
