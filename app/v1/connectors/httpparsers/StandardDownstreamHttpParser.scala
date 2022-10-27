@@ -25,11 +25,11 @@ import v1.models.errors.{OutboundError, StandardDownstreamError}
 import v1.models.outcomes.ResponseWrapper
 
 object StandardDownstreamHttpParser extends HttpParser {
-  
+
   case class SuccessCode(status: Int) extends AnyVal
   
   override val logger = Logger(getClass)
-  
+
   // Return Right[DownstreamOutcome[Unit]] as success response has no body - no need to assign it a value
   implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DownstreamOutcome[Unit]] =
     (_: String, url: String, response: HttpResponse) =>

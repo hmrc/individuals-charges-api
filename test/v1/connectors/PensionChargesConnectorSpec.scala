@@ -119,66 +119,6 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       }
     }
 
-    "Retrieve pension charges" when {
-
-      "a valid request is supplied" should {
-        "return a successful response with the correct correlationId" in new DesTest with Test {
-          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-
-          val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
-
-          MockedHttpClient
-            .get(
-              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-              config = dummyHeaderCarrierConfig,
-              requiredHeaders = requiredDesHeaders,
-              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(expected))
-
-          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
-        }
-      }
-
-      "a request returning a single error" should {
-        "return an unsuccessful response with the correct correlationId and a single error" in new DesTest with Test {
-          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-
-          val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
-
-          MockedHttpClient
-            .get(
-              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-              config = dummyHeaderCarrierConfig,
-              requiredHeaders = requiredDesHeaders,
-              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(expected))
-
-          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
-        }
-      }
-
-      "a request returning multiple errors" should {
-        "return an unsuccessful response with the correct correlationId and multiple errors" in new DesTest with Test {
-          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-
-          val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
-
-          MockedHttpClient
-            .get(
-              url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-              config = dummyHeaderCarrierConfig,
-              requiredHeaders = requiredDesHeaders,
-              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(expected))
-
-          await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
-        }
-      }
-    }
-
     "Amend pension charges" when {
 
       "a valid request is supplied" should {
@@ -262,4 +202,83 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       }
     }
 
+  "Retrieve pension charges" when {
+
+    "a valid request is supplied" should {
+      "return a successful response with the correct correlationId" in new DesTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+
+        MockedHttpClient
+          .get(
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+      }
+    }
+
+    "a valid request is supplied for a Tax Year Specific tax year" should {
+      "return a successful response with the correct correlationId" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+
+        MockedHttpClient
+          .get(
+            url = s"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino",
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredTysIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+      }
+    }
+
+    "a request returning a single error" should {
+      "return an unsuccessful response with the correct correlationId and a single error" in new DesTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+
+        MockedHttpClient
+          .get(
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+      }
+    }
+
+    "a request returning multiple errors" should {
+      "return an unsuccessful response with the correct correlationId and multiple errors" in new DesTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
+
+        MockedHttpClient
+          .get(
+            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(expected))
+
+        await(connector.retrievePensionCharges(retrieveRequest)) shouldBe expected
+      }
+    }
   }
+
+}
