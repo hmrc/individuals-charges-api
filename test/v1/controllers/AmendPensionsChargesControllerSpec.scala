@@ -169,7 +169,7 @@ class AmendPensionsChargesControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalid, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST),
           (RuleCountryCodeError, BAD_REQUEST),

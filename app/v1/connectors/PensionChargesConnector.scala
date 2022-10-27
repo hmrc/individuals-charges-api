@@ -21,8 +21,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.{DesUri, IfsUri}
-import v1.connectors.httpparsers.StandardDesHttpParser._
+import v1.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
+import v1.connectors.httpparsers.StandardDownstreamHttpParser._
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
@@ -51,9 +51,14 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
       correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.asMtd
+    val taxYear = request.taxYear
 
-    val downstreamUri = DesUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/$taxYear")
+    val downstreamUri =
+      if (request.taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+      } else {
+        DesUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+      }
     get(downstreamUri)
   }
 

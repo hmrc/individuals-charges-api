@@ -24,13 +24,13 @@ import v1.connectors.DownstreamOutcome
 import v1.models.errors.{StandardDownstreamError, OutboundError}
 import v1.models.outcomes.ResponseWrapper
 
-object StandardDesHttpParser extends HttpParser {
+object StandardDownstreamHttpParser extends HttpParser {
 
   case class SuccessCode(status: Int) extends AnyVal
 
   override val logger = Logger(getClass)
 
-  // Return Right[DesResponse[Unit]] as success response has no body - no need to assign it a value
+  // Return Right[DownstreamOutcome[Unit]] as success response has no body - no need to assign it a value
   implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DownstreamOutcome[Unit]] =
     (_: String, url: String, response: HttpResponse) =>
       doRead(url, response) { correlationId =>
@@ -53,19 +53,19 @@ object StandardDesHttpParser extends HttpParser {
 
     if (response.status != successCode.status) {
       logger.warn(
-        "[StandardDesHttpParser][read] - " +
-          s"Error response received from DES with status: ${response.status} and body\n" +
+        "[StandardDownstreamHttpParser][read] - " +
+          s"Error response received from downstream with status: ${response.status} and body\n" +
           s"${response.body} and correlationId: $correlationId when calling $url")
     }
 
     response.status match {
       case successCode.status =>
         logger.info(
-          "[StandardDesHttpParser][read] - " +
-            s"Success response received from DES with correlationId: $correlationId when calling $url")
+          "[StandardDownstreamHttpParser][read] - " +
+            s"Success response received from downstream with correlationId: $correlationId when calling $url")
         successOutcomeFactory(correlationId)
-      case BAD_REQUEST | NOT_FOUND | FORBIDDEN | CONFLICT => Left(ResponseWrapper(correlationId, parseErrors(response)))
-      case _                                              => Left(ResponseWrapper(correlationId, OutboundError(StandardDownstreamError)))
+      case BAD_REQUEST | NOT_FOUND | FORBIDDEN | CONFLICT | UNPROCESSABLE_ENTITY => Left(ResponseWrapper(correlationId, parseErrors(response)))
+      case _ => Left(ResponseWrapper(correlationId, OutboundError(StandardDownstreamError)))
     }
   }
 

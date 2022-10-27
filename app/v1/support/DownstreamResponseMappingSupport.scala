@@ -21,10 +21,10 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.{BadRequestError, DownstreamError, DownstreamErrors, StandardDownstreamError, ErrorWrapper, MtdError, OutboundError}
 import v1.models.outcomes.ResponseWrapper
 
-trait DesResponseMappingSupport {
+trait DownstreamResponseMappingSupport {
   self: Logging =>
 
-  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DownstreamError])(implicit
+  final def mapDownstreamErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DownstreamError])(implicit
       logContext: EndpointLogContext): ErrorWrapper = {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>

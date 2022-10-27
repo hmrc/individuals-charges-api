@@ -25,12 +25,12 @@ import v1.connectors.PensionChargesConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionChargesService @Inject() (connector: PensionChargesConnector) extends DesResponseMappingSupport with Logging {
+class RetrievePensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def retrievePensions(request: RetrievePensionChargesRequest)(implicit
       hc: HeaderCarrier,
@@ -38,20 +38,25 @@ class RetrievePensionChargesService @Inject() (connector: PensionChargesConnecto
       logContext: EndpointLogContext,
       correlationId: String): Future[RetrievePensionChargesOutcome] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrievePensionCharges(request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper
-
+    val result = EitherT(connector.retrievePensionCharges(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "NO_DATA_FOUND"             -> NotFoundError,
-    "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-    "SERVER_ERROR"              -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
-  )
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+    )
+    val extraTysErrors = Map(
+      "NOT_FOUND"              -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

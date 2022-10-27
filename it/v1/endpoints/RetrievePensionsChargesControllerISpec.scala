@@ -29,15 +29,28 @@ import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
+  private trait NonTysTest extends Test {
+    def mtdTaxYear: String        = "2021-22"
+    def downstreamTaxYear: String = "2021-22"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def mtdTaxYear: String        = "2023-24"
+    def downstreamTaxYear: String = "23-24"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
+  }
+
   private trait Test {
 
-    val nino    = "AA123456A"
-    val taxYear = "2021-22"
+    val nino = "AA123456A"
 
-    def uri: String    = s"/pensions/$nino/$taxYear"
-    def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
-
+    def mtdTaxYear: String
+    def downstreamTaxYear: String
+    def downstreamUri: String
     def setupStubs(): StubMapping
+
+    def uri: String = s"/pensions/$nino/$mtdTaxYear"
 
     def request(): WSRequest = {
       setupStubs()
@@ -62,18 +75,34 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new Test {
+      "any valid Non-TYS request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Status.OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Status.OK, fullJson)
         }
 
         val response: WSResponse = await(request().get())
         response.status shouldBe Status.OK
-        response.json shouldBe fullJsonWithHateoas
+        response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made with a Tax Year Specific year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Status.OK, fullJson)
+        }
+
+        val response: WSResponse = await(request().get())
+        response.status shouldBe Status.OK
+        response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }
@@ -83,10 +112,10 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-            override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String       = requestNino
+            override def mtdTaxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -104,20 +133,20 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("Badnino", "2019-20", Status.BAD_REQUEST, NinoFormatError),
           ("AA123456A", "203100", Status.BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalid)
+          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "des service error" when {
         def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+          s"des returns an $desCode error and status $desStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().get())
@@ -134,7 +163,12 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (Status.NOT_FOUND, "NOT_FOUND", Status.NOT_FOUND, NotFoundError),
+          (Status.UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", Status.BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+        (input ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
