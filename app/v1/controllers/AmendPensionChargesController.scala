@@ -115,7 +115,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
           BadRequestError,
           NinoFormatError,
           TaxYearFormatError,
-          RuleTaxYearRangeInvalid,
+          RuleTaxYearRangeInvalidError,
           RuleTaxYearNotSupportedError,
           RuleIncorrectOrEmptyBodyError,
           ValueFormatError,
