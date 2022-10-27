@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalid, TaxYearFormatError}
+import v1.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 
 class DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
@@ -50,7 +50,7 @@ class DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
     "return a tax year format error" when {
       "an invalid tax year range is supplied" in new Test {
         validator.validate(DeletePensionChargesRawData(validNino, "2020-22")) shouldBe
-          List(RuleTaxYearRangeInvalid)
+          List(RuleTaxYearRangeInvalidError)
       }
     }
 

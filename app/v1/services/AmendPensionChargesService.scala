@@ -38,9 +38,7 @@ class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) 
       logContext: EndpointLogContext,
       correlationId: String): Future[AmendPensionChargesOutcome] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendPensionCharges(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.amendPensionCharges(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }
