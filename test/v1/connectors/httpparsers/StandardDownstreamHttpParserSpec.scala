@@ -150,7 +150,7 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
   )
 
   private def handleErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
-    Seq(BAD_REQUEST, NOT_FOUND, FORBIDDEN, CONFLICT).foreach(responseCode =>
+    Seq(BAD_REQUEST, NOT_FOUND, FORBIDDEN, CONFLICT, UNPROCESSABLE_ENTITY).foreach(responseCode =>
       s"receiving a $responseCode response" should {
         "be able to parse a single error" in {
           val httpResponse = HttpResponse(responseCode, singleErrorJson, Map("CorrelationId" -> Seq(correlationId)))
@@ -209,18 +209,18 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
   private def handleBvrsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
 
     val singleBvrJson = Json.parse("""
-        |{
-        |   "bvrfailureResponseElement": {
-        |     "validationRuleFailures": [
-        |       {
-        |         "id": "BVR1"
-        |       },
-        |       {
-        |         "id": "BVR2"
-        |       }
-        |     ]
-        |   }
-        |}
+                                     |{
+                                     |   "bvrfailureResponseElement": {
+                                     |     "validationRuleFailures": [
+                                     |       {
+                                     |         "id": "BVR1"
+                                     |       },
+                                     |       {
+                                     |         "id": "BVR2"
+                                     |       }
+                                     |     ]
+                                     |   }
+                                     |}
       """.stripMargin)
 
     s"receiving a response with a bvr errors" should {

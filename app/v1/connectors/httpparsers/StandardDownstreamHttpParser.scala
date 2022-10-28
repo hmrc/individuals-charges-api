@@ -21,13 +21,13 @@ import play.api.http.Status._
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import v1.connectors.DownstreamOutcome
-import v1.models.errors.{StandardDownstreamError, OutboundError}
+import v1.models.errors.{OutboundError, StandardDownstreamError}
 import v1.models.outcomes.ResponseWrapper
 
 object StandardDownstreamHttpParser extends HttpParser {
 
   case class SuccessCode(status: Int) extends AnyVal
-
+  
   override val logger = Logger(getClass)
 
   // Return Right[DownstreamOutcome[Unit]] as success response has no body - no need to assign it a value
@@ -36,7 +36,7 @@ object StandardDownstreamHttpParser extends HttpParser {
       doRead(url, response) { correlationId =>
         Right(ResponseWrapper(correlationId, ()))
       }
-
+  
   implicit def reads[A: Reads](implicit successCode: SuccessCode = SuccessCode(OK)): HttpReads[DownstreamOutcome[A]] =
     (_: String, url: String, response: HttpResponse) =>
       doRead(url, response) { correlationId =>
@@ -45,12 +45,12 @@ object StandardDownstreamHttpParser extends HttpParser {
           case None      => Left(ResponseWrapper(correlationId, OutboundError(StandardDownstreamError)))
         }
       }
-
+  
   private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
-      successCode: SuccessCode): DownstreamOutcome[A] = {
-
+                                                                                                                    successCode: SuccessCode): DownstreamOutcome[A] = {
+    
     val correlationId = retrieveCorrelationId(response)
-
+    
     if (response.status != successCode.status) {
       logger.warn(
         "[StandardDownstreamHttpParser][read] - " +
@@ -68,5 +68,5 @@ object StandardDownstreamHttpParser extends HttpParser {
       case _ => Left(ResponseWrapper(correlationId, OutboundError(StandardDownstreamError)))
     }
   }
-
+  
 }

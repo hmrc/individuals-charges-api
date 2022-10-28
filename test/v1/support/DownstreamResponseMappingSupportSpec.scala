@@ -24,7 +24,8 @@ import v1.models.outcomes.ResponseWrapper
 
 class DownstreamResponseMappingSupportSpec extends UnitSpec {
 
-  implicit val logContext: EndpointLogContext                = EndpointLogContext("ctrl", "ep")
+  implicit val logContext: EndpointLogContext = EndpointLogContext("ctrl", "ep")
+
   val mapping: DownstreamResponseMappingSupport with Logging = new DownstreamResponseMappingSupport with Logging {}
 
   val correlationId = "someCorrelationId"

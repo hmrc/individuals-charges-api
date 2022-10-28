@@ -18,9 +18,11 @@ package v1.models.errors
 //scalastyle:off
 
 object MtdErrorWithCustomMessage {
+
   def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }
 
+// Format errors
 object NinoFormatError    extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object AmountFormatError  extends MtdError("FORMAT_LOSS_AMOUNT", "The format of the loss amount is invalid")
@@ -50,8 +52,7 @@ object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTE
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
-object RuleTaxYearRangeInvalidError
-    extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
+object RuleTaxYearRangeInvalidError extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
 
 object RuleTaxYearNotEndedError extends MtdError("RULE_TAX_YEAR_NOT_ENDED", "The tax year for this brought forward loss has not yet ended")
 

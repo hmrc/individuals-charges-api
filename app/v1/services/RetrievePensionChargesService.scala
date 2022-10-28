@@ -39,6 +39,7 @@ class RetrievePensionChargesService @Inject() (connector: PensionChargesConnecto
       correlationId: String): Future[RetrievePensionChargesOutcome] = {
 
     val result = EitherT(connector.retrievePensionCharges(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+
     result.value
   }
 

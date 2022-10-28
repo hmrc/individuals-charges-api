@@ -54,10 +54,10 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
     }
 
     "return that wrapped error as-is" when {
-      "the connectot returns an outbound error" in new Test {
+      "the connector returns an outbound error" in new Test {
         val someError   = MtdError("SOME_CODE", "some message")
-        val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(desResponse)))
+        val downstreamResponse = ResponseWrapper(correlationId, OutboundError(someError))
+        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
         await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -66,17 +66,17 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
     "unsuccessful" must {
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockPensionChargesConnector
               .amendPensionCharges(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
           "INVALID_TAX_YEAR"             -> TaxYearFormatError,
           "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
@@ -87,7 +87,13 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> StandardDownstreamError,
+          "MISSING_TYPE_OF_REDUCTION"          -> StandardDownstreamError,
+          "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

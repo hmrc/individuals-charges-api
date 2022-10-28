@@ -65,7 +65,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
       s"""
          |      {
          |        "code": "$code",
-         |        "reason": "des message"
+         |        "reason": "downstream message"
          |      }
     """.stripMargin
 

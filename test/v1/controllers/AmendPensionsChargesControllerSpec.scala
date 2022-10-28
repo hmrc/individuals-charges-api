@@ -209,13 +209,15 @@ class AmendPensionsChargesControllerSpec
           }
         }
 
-        val input = Seq(
+        val errors = Seq(
           (TaxYearFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
         )
-        input.foreach(args => (serviceErrors _).tupled(args))
+        val extraTysErrors = Seq((RuleTaxYearNotSupportedError, BAD_REQUEST))
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }
