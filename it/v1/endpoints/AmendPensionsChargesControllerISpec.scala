@@ -255,7 +255,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     def taxYear: String
-    def downstreamTaxYear: String
     def downstreamUri: String
 
     val nino: String = "AA123456A"
@@ -301,15 +300,13 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test {
 
     def taxYear: String           = "2021-22"
-    def downstreamTaxYear: String = "2021-22"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/2021-22"
   }
 
   private trait TysIfsTest extends Test {
 
     def taxYear: String           = "2023-24"
-    def downstreamTaxYear: String = "23-24"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/23-24/$nino"
   }
 
 }

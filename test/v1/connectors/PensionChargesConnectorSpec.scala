@@ -145,11 +145,11 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
         "return a successful response with the correct correlationId" in new TysIfsTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-          val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+          val expected = Right(ResponseWrapper(correlationId, Unit))
 
           MockedHttpClient
             .put(
-              url = s"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino",
+              url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
               body = pensionCharges,
               config = dummyIfsHeaderCarrierConfig,
               requiredHeaders = requiredTysIfsHeaders,
@@ -231,7 +231,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino",
+            url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
             config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredTysIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
