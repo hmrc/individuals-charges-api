@@ -18,7 +18,7 @@ package v1.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status
+import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws._
 import play.api.test.Helpers.AUTHORIZATION
@@ -30,18 +30,20 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino    = "AA123456A"
-    val taxYear = "2021-22"
+    val nino = "AA123456A"
 
-    def uri: String = s"/pensions/$nino/$taxYear"
+    def taxYear: String
+    def downstreamTaxYear: String
 
-    def desUri: String = s"/income-tax/charges/pensions/$nino/$taxYear"
+    def mtdUri: String = s"/pensions/$nino/$taxYear"
+
+    def downstreamUri: String
 
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(uri)
+      buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -61,21 +63,47 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   }
 
+  private trait NonTysTest extends Test {
+    def taxYear: String           = "2021-22"
+    def downstreamTaxYear: String = "2021-22"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String           = "2023-24"
+    def downstreamTaxYear: String = "23-24"
+    def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
+  }
+
   "calling the delete endpoint" should {
 
     "return a 204 status" when {
 
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest with Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
         }
 
         val response: WSResponse = await(request().delete())
-        response.status shouldBe Status.NO_CONTENT
+        response.status shouldBe NO_CONTENT
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+      }
+
+      "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest with Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
+        }
+
+        val response: WSResponse = await(request().delete())
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }
@@ -83,7 +111,7 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest with Test {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
@@ -102,23 +130,23 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("Badnino", "2019-20", Status.BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "203100", Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalidError)
+          ("Badnino", "2019-20", BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2018-22", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest with Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.DELETE, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().delete())
@@ -127,15 +155,22 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
-          (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
-          (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
-          (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, NotFoundError),
-          (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        val errors = Seq(
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
