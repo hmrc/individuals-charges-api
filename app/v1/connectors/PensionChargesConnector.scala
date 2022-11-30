@@ -38,10 +38,15 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear.asMtd
+    import request._
 
-    val downstreamUri = IfsUri[Unit](s"income-tax/charges/pensions/$nino/$taxYear")
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/${nino.nino}")
+    }
+    else {
+      IfsUri[Unit](s"income-tax/charges/pensions/${nino.nino}/${taxYear.asMtd}")
+    }
+
     delete(downstreamUri)
   }
 
