@@ -42,8 +42,7 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/${nino.nino}")
-    }
-    else {
+    } else {
       IfsUri[Unit](s"income-tax/charges/pensions/${nino.nino}/${taxYear.asMtd}")
     }
 
@@ -75,7 +74,7 @@ class PensionChargesConnector @Inject() (val http: HttpClient, val appConfig: Ap
     val nino    = request.nino.nino
     val taxYear = request.taxYear
 
-    val downstreamUri = if(request.taxYear.useTaxYearSpecificApi) {
+    val downstreamUri = if (request.taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
     } else {
       IfsUri[Unit](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")

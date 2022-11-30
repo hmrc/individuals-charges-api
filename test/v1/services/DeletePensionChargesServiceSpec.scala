@@ -83,7 +83,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
             await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
@@ -93,7 +93,13 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "UNEXPECTED_ERROR"          -> StandardDownstreamError
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Map(
+          "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+          "NOT_FOUND"              -> NotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }
