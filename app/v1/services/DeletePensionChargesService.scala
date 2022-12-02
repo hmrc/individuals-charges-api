@@ -37,19 +37,28 @@ class DeletePensionChargesService @Inject() (connector: PensionChargesConnector)
       logContext: EndpointLogContext,
       correlationId: String): Future[DeletePensionChargesOutcome] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.deletePensionCharges(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.deletePensionCharges(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "NO_DATA_FOUND"             -> NotFoundError,
-    "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-    "SERVER_ERROR"              -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
-  )
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+    )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "NOT_FOUND"              -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
