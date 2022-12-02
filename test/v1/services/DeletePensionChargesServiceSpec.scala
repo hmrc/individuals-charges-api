@@ -54,9 +54,9 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError: MtdError                         = StandardDownstreamError
-        val desResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(desResponse)))
+        val someError: MtdError                                = StandardDownstreamError
+        val downstreamResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
+        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -73,12 +73,12 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         }
       }
       "a service call is unsuccessful" should {
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"return ${error.code} error when $desErrorCode error is returned from the connector" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
 
             MockPensionChargesConnector
               .deletePensionCharges(request)
-              .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
           }
