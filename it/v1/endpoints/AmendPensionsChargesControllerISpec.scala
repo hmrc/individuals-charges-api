@@ -91,6 +91,24 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         response3.json shouldBe hateoasResponse
         response3.header("X-CorrelationId").nonEmpty shouldBe true
         response3.header("Content-Type") shouldBe Some("application/json")
+
+        val responseUpdated: WSResponse = await(mtdRequest.put(boolean1JsonUpdated))
+        responseUpdated.status shouldBe OK
+        responseUpdated.json shouldBe hateoasResponse
+        responseUpdated.header("X-CorrelationId").nonEmpty shouldBe true
+        responseUpdated.header("Content-Type") shouldBe Some("application/json")
+
+        val response2Updated: WSResponse = await(mtdRequest.put(boolean2JsonUpdated))
+        response2Updated.status shouldBe OK
+        response2Updated.json shouldBe hateoasResponse
+        response2Updated.header("X-CorrelationId").nonEmpty shouldBe true
+        response2Updated.header("Content-Type") shouldBe Some("application/json")
+
+        val response3Updated: WSResponse = await(mtdRequest.put(booleans3JsonUpdated))
+        response3Updated.status shouldBe OK
+        response3Updated.json shouldBe hateoasResponse
+        response3Updated.header("X-CorrelationId").nonEmpty shouldBe true
+        response3Updated.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -128,6 +146,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "203100", fullValidJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("AA123456A", "2021-22", duplicateBooleansJson, BAD_REQUEST, RuleDuplicateDataSubmittedError),
           (
             "AA123456A",
             "2021-22",
@@ -283,7 +302,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           """.stripMargin
     )
 
-
     def setupStubs(): StubMapping
 
     def mtdRequest: WSRequest = {
@@ -299,14 +317,14 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait NonTysTest extends Test {
 
-    def taxYear: String           = "2021-22"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/2021-22"
+    def taxYear: String       = "2021-22"
+    def downstreamUri: String = s"/income-tax/charges/pensions/$nino/2021-22"
   }
 
   private trait TysIfsTest extends Test {
 
-    def taxYear: String           = "2023-24"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/23-24/$nino"
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/charges/pensions/23-24/$nino"
   }
 
 }

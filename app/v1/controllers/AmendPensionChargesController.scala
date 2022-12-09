@@ -63,7 +63,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendPensions(parsedRequest))
-          vendorResponse  <- EitherT.fromEither[Future](
+          vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear))
               .asRight[ErrorWrapper])
@@ -74,11 +74,11 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
           auditSubmission(
             GenericAuditDetail(
-              userDetails       = request.userDetails,
-              params            = Map("nino" -> nino, "taxYear" -> taxYear),
-              request           = Some(request.body),
+              userDetails = request.userDetails,
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              response          = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
+              response = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
             )
           )
           Ok(Json.toJson(vendorResponse))
@@ -95,11 +95,11 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
         auditSubmission(
           GenericAuditDetail(
-            userDetails       = request.userDetails,
-            params            = Map("nino" -> nino, "taxYear" -> taxYear),
-            request           = Some(request.body),
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            request = Some(request.body),
             `X-CorrelationId` = correlationId,
-            response          = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           ))
 
         result
@@ -111,26 +111,28 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
     errorWrapper.error match {
       case _
-        if errorWrapper.containsAnyOf(
-          BadRequestError,
-          NinoFormatError,
-          TaxYearFormatError,
-          RuleTaxYearRangeInvalidError,
-          RuleTaxYearNotSupportedError,
-          RuleIncorrectOrEmptyBodyError,
-          ValueFormatError,
-          RuleCountryCodeError,
-          CountryCodeFormatError,
-          QOPSRefFormatError,
-          PensionSchemeTaxRefFormatError,
-          ProviderNameFormatError,
-          ProviderAddressFormatError,
-          RuleIsAnnualAllowanceReducedError,
-          RuleBenefitExcessesError,
-          RulePensionReferenceError
-        ) => BadRequest(Json.toJson(errorWrapper))
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            RuleIncorrectOrEmptyBodyError,
+            ValueFormatError,
+            RuleCountryCodeError,
+            CountryCodeFormatError,
+            QOPSRefFormatError,
+            PensionSchemeTaxRefFormatError,
+            ProviderNameFormatError,
+            ProviderAddressFormatError,
+            RuleIsAnnualAllowanceReducedError,
+            RuleBenefitExcessesError,
+            RulePensionReferenceError,
+            RuleDuplicateDataSubmittedError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
 
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }

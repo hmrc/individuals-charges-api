@@ -9,17 +9,17 @@
       "description":"Object holding the booleans for annual allowance.",
       "properties":{
         "isAnnualAllowanceReduced":{
-          "description":"A boolean indicating whether annual allowance has been reduced.If this field is set to true then taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
+          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether annual allowance has been reduced.If this field is set to true then taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
           "type":"boolean",
           "example":"false"
         },
         "taperedAnnualAllowance":{
-          "description":"A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
+          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
           "type":"boolean",
           "example":"true"
         },
         "moneyPurchasedAllowance":{
-          "description":"A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
+          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
           "type":"boolean",
           "example":"false"
         },
@@ -73,8 +73,7 @@
         }
       },
       "required":[
-        "pensionSchemeTaxReference",
-        "isAnnualAllowanceReduced"
+        "pensionSchemeTaxReference"
       ]
     },
     "pensionSchemeOverseasTransfers":{
@@ -223,6 +222,21 @@
           "description":"The amount of tax paid on annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type":"number",
           "example":"1999.99"
+        },
+        "isAnnualAllowanceReduced":{
+          "description":"A boolean indicating whether annual allowance has been reduced.If this field is set to true then taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
+          "type":"boolean",
+          "example":"false"
+        },
+        "taperedAnnualAllowance":{
+          "description":"A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
+          "type":"boolean",
+          "example":"true"
+        },
+        "moneyPurchasedAllowance":{
+          "description":"A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
+          "type":"boolean",
+          "example":"false"
         }
       },
       "required": [

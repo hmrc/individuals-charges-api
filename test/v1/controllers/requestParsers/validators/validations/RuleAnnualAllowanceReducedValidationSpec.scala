@@ -24,17 +24,22 @@ class RuleAnnualAllowanceReducedValidationSpec extends UnitSpec {
   "Rule annual allowance" when {
     "only is annual allowance reduced provided" must {
       "return a validation error when only isOnlyAnnualAllowanceReduced" in {
-        RuleIsAnnualAllowanceReducedValidation.validate(true, Some(false), Some(false)) shouldBe List(RuleIsAnnualAllowanceReducedError)
+        RuleIsAnnualAllowanceReducedValidation.validate(Some(true), Some(false), Some(false)) shouldBe List(RuleIsAnnualAllowanceReducedError)
       }
     }
     "two are provided there should be no errors" must {
       "return no errors with isAnnualAllowanceReduced and moeyPurchasedAllowance" in {
-        RuleIsAnnualAllowanceReducedValidation.validate(true, Some(false), Some(true)) shouldBe Nil
+        RuleIsAnnualAllowanceReducedValidation.validate(Some(true), Some(false), Some(true)) shouldBe Nil
       }
       "return no errors with is annualAllowanceReduced and moneyPurchasedAllowance" in {
-        RuleIsAnnualAllowanceReducedValidation.validate(true, Some(true), Some(false)) shouldBe Nil
+        RuleIsAnnualAllowanceReducedValidation.validate(Some(true), Some(true), Some(false)) shouldBe Nil
       }
-      "return no errors when all booleans are false" in {}
+      "return no errors when isAnnualAllowanceReduced is false" in {
+        RuleIsAnnualAllowanceReducedValidation.validate(Some(false), None, None) shouldBe Nil
+      }
+        "return no errors when all booleans are false" in {
+        RuleIsAnnualAllowanceReducedValidation.validate(None, None, None) shouldBe Nil
+      }
     }
   }
 

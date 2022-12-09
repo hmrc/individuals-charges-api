@@ -16,10 +16,55 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OFormat, Reads, Writes, __}
 
-case class PensionContributions(pensionSchemeTaxReference: Seq[String], inExcessOfTheAnnualAllowance: BigDecimal, annualAllowanceTaxPaid: BigDecimal)
+case class PensionContributions(pensionSchemeTaxReference: Seq[String],
+                                isAnnualAllowanceReduced: Option[Boolean],
+                                taperedAnnualAllowance: Option[Boolean],
+                                moneyPurchasedAllowance: Option[Boolean],
+                                inExcessOfTheAnnualAllowance: BigDecimal,
+                                annualAllowanceTaxPaid: BigDecimal)
 
 object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]
+  implicit val writes: Writes[PensionContributions]  = Json.writes[PensionContributions]
+
+  implicit val reads: Reads[PensionContributions] = (
+    (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
+      ((__ \ "isAnnualAllowanceReduced").read[Boolean].map(c => Option(c)) orElse
+        (JsPath \ "pensionSavingsTaxCharges" \ "isAnnualAllowanceReduced").readNullable[Boolean])
+      and
+      ((__ \ "taperedAnnualAllowance").read[Boolean] map (c => Option(c)) orElse (JsPath \ "pensionSavingsTaxCharges" \ "moneyPurchasedAllowance")
+        .readNullable[Boolean]) and
+      ((__ \ "moneyPurchasedAllowance").read[Boolean] map (c => Option(c)) orElse (JsPath \ "pensionSavingsTaxCharges" \ "taperedAnnualAllowance")
+        .readNullable[Boolean]) and
+      (__ \ "inExcessOfTheAnnualAllowance").read[BigDecimal] and
+      (__ \ "annualAllowancePaid").read[BigDecimal]
+  )(PensionContributions.apply _)
+
+  /*  private def setIsAnnualAllowanceReduced: Reads[Option[Boolean]] = implicitly[Reads[Option[Boolean]]]
+    .map(x)
+
+    isAnnualAllowance.e match {
+      case None => (JsPath \ "pensionSavingsTaxCharges" \ "isAnnualAllowanceReduced").readNullable[Boolean].flatMap(_)
+      case _    => isAnnualAllowance
+    }
+
+  private def setMoneyPurchasedAllowance(moneyPurchasedAllowance: Option[Boolean]): Option[Boolean] = {
+
+    moneyPurchasedAllowance match {
+      case None => Option[Boolean]((json \ "pensionSavingsTaxCharges" \ "moneyPurchasedAllowance"))
+      case _    => moneyPurchasedAllowance
+    }
+  }
+
+  private def setTaperedAnnualAllowance(taperedAnnualAllowance: Option[Boolean]): Option[Boolean] = {
+
+    taperedAnnualAllowance match {
+      case None => Option[Boolean]((json \ "pensionSavingsTaxCharges" \ "taperedAnnualAllowance"))
+      case _    => taperedAnnualAllowance
+    }
+  }
+   */
 }

@@ -52,7 +52,8 @@ object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTE
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
-object RuleTaxYearRangeInvalidError extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
+object RuleTaxYearRangeInvalidError
+    extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required")
 
 object RuleTaxYearNotEndedError extends MtdError("RULE_TAX_YEAR_NOT_ENDED", "The tax year for this brought forward loss has not yet ended")
 
@@ -114,3 +115,8 @@ object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is
 // Accept header Errors
 object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
 object UnsupportedVersionError  extends MtdError("NOT_FOUND", "The requested resource could not be found")
+
+object RuleDuplicateDataSubmittedError
+    extends MtdError(
+      "DUPLICATE_DATA_SUBMITTED",
+      "More than one of isAnnualAllowanceReduced, taperedAnnualAllowance or moneyPurchasedAllowance has been submitted")

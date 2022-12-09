@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val responseModel = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
+  val responseModel = PensionContributions(Seq("00123456RA", "00123456RA"), None, None, None, 123.12, 123.12)
 
   val responseJson = Json.parse("""
       |{

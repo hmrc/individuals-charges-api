@@ -27,7 +27,7 @@ class PensionChargesSpec extends UnitSpec {
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
         Some(LifetimeAllowance(123.12, 123.12)),
-        true,
+        Some(true),
         Some(true),
         Some(true))),
     Some(
@@ -48,7 +48,7 @@ class PensionChargesSpec extends UnitSpec {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), None, None, None, 123.12, 123.12)),
     Some(
       OverseasPensionContributions(
         Seq(
