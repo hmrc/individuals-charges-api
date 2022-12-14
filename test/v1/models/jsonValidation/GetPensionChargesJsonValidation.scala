@@ -591,10 +591,10 @@ class GetPensionChargesJsonValidation extends UnitSpec with JsonValidation {
 
   "A json with no booleans" should {
 
-    "not read to the model" in {
+    "read to the model" in {
       val result = invalidJsonNoBooleans.asOpt[RetrievePensionChargesResponse]
 
-      result.isDefined shouldBe false
+      result.isDefined shouldBe true
     }
   }
 
