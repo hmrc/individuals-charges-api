@@ -22,7 +22,7 @@ import play.api.libs.json._
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    isAnnualAllowanceReduced: Boolean,
+                                    isAnnualAllowanceReduced: Option[Boolean],
                                     taperedAnnualAllowance: Option[Boolean],
                                     moneyPurchasedAllowance: Option[Boolean])
 
@@ -34,9 +34,23 @@ object PensionSavingsTaxCharges {
     (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
-      (__ \ "isAnnualAllowanceReduced").read[Boolean] and
+      (__ \ "isAnnualAllowanceReduced").readNullable[Boolean] and
       (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
       (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
   )(PensionSavingsTaxCharges.apply _)
 
 }
+
+/*
+
+  implicit val reads: Reads[PensionContributions] = (
+    (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
+      ((__ \ "isAnnualAllowanceReduced").read[Boolean].map(c => Option(c)) orElse
+        (JsPath \ "pensionSavingsTaxCharges" \ "isAnnualAllowanceReduced").readNullable[Boolean]) and
+      ((__ \ "taperedAnnualAllowance").read[Boolean] map (c => Option(c)) orElse (JsPath \ "pensionSavingsTaxCharges" \ "moneyPurchasedAllowance").readNullable[Boolean]) and
+      ((__ \ "moneyPurchasedAllowance").read[Boolean] map (c => Option(c)) orElse (JsPath \ "pensionSavingsTaxCharges" \ "taperedAnnualAllowance").readNullable[Boolean]) and
+      (__ \ "inExcessOfTheAnnualAllowance").read[BigDecimal] and
+      (__ \ "annualAllowancePaid").read[BigDecimal]
+  )(PensionContributions.apply _)
+
+ */

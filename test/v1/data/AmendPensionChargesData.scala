@@ -25,7 +25,7 @@ object AmendPensionChargesData {
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
-    isAnnualAllowanceReduced = true,
+    Some(true),
     Some(true),
     Some(false)
   )

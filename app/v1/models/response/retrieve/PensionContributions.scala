@@ -16,10 +16,27 @@
 
 package v1.models.response.retrieve
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-case class PensionContributions(pensionSchemeTaxReference: Seq[String], inExcessOfTheAnnualAllowance: BigDecimal, annualAllowanceTaxPaid: BigDecimal)
+case class PensionContributions(pensionSchemeTaxReference: Seq[String],
+                                inExcessOfTheAnnualAllowance: BigDecimal,
+                                annualAllowanceTaxPaid: BigDecimal,
+                                isAnnualAllowanceReduced: Option[Boolean],
+                                taperedAnnualAllowance: Option[Boolean],
+                                moneyPurchasedAllowance: Option[Boolean])
 
 object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]
+
+  implicit val writes: Writes[PensionContributions] = Json.writes[PensionContributions]
+
+  implicit val reads: Reads[PensionContributions] = (
+    (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
+      (__ \ "inExcessOfTheAnnualAllowance").read[BigDecimal] and
+      (__ \ "annualAllowanceTaxPaid").read[BigDecimal] and
+      (__ \ "isAnnualAllowanceReduced").readNullable[Boolean] and
+      (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
+      (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
+    ) (PensionContributions.apply _)
 }

@@ -37,6 +37,12 @@ class RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       }
     }
 
+    "return no errors when pensionContributions updated" when {
+      "a valid request is supplied" in new Test {
+        validator.validate(RetrievePensionChargesRawData(validNino, validTaxYear)) shouldBe Nil
+      }
+    }
+
     // invalid nino
     "return nino format error" when {
       "an invalid nino is supplied" in new Test {

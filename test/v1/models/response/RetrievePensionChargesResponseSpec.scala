@@ -42,7 +42,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
         Some(LifetimeAllowance(123.12, 123.12)),
-        true,
+        Some(true),
         Some(true),
         Some(true))),
     Some(
@@ -63,7 +63,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
+      Some(true),
+      Some(true),
+      Some(true))),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -125,7 +128,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       |   "pensionContributions": {
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
+      |     "annualAllowanceTaxPaid": 123.12,
+      |     "isAnnualAllowanceReduced": true,
+      |     "taperedAnnualAllowance": true,
+      |     "moneyPurchasedAllowance": true
       |   },
       |   "overseasPensionContributions": {
       |    "overseasSchemeProvider": [

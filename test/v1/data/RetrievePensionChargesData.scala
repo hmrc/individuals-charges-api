@@ -25,9 +25,9 @@ object RetrievePensionChargesData {
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
-    true,
     Some(true),
-    Some(false)
+    Some(true),
+    Some(true)
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -53,7 +53,10 @@ object RetrievePensionChargesData {
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
-    123.45
+    123.45,
+    None,
+    None,
+    None
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
@@ -87,7 +90,7 @@ object RetrievePensionChargesData {
       |		},
       |		"isAnnualAllowanceReduced": true,
       |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		"moneyPurchasedAllowance": true
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -158,7 +161,7 @@ object RetrievePensionChargesData {
       |		},
       |		"isAnnualAllowanceReduced": true,
       |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		"moneyPurchasedAllowance": true
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
