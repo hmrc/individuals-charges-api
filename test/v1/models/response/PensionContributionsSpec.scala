@@ -16,20 +16,29 @@
 
 package v1.models.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.response.retrieve.PensionContributions
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val responseModel = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
+  val responseModel = PensionContributions(
+    pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
+    inExcessOfTheAnnualAllowance = 123.12,
+    annualAllowanceTaxPaid = 123.12,
+    isAnnualAllowanceReduced = true,
+    taperedAnnualAllowance = Some(true),
+    moneyPurchasedAllowance = Some(true))
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
-      |   }
+      |     "annualAllowanceTaxPaid": 123.12,
+      |     "isAnnualAllowanceReduced": true,
+      |     "taperedAnnualAllowance": true,
+      |     "moneyPurchasedAllowance": true
+      |}
       |""".stripMargin)
 
   "reads" when {

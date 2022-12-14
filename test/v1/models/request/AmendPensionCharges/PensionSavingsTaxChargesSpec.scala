@@ -24,10 +24,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
   val responseModel = PensionSavingsTaxCharges(
     Seq("00123456RA"),
     Some(LifetimeAllowance(123.12, 123.12)),
-    Some(LifetimeAllowance(123.12, 123.12)),
-    true,
-    Some(true),
-    Some(true))
+    Some(LifetimeAllowance(123.12, 123.12)))
 
   val responseJson = Json.parse("""
       |{
@@ -41,10 +38,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       |         {
       |            "amount":123.12,
       |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
+      |         }
       |   }
       |""".stripMargin)
 

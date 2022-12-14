@@ -17,10 +17,11 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, PensionCharges, PensionSavingsTaxCharges, OverseasSchemeProvider}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+
+import javax.inject.Inject
 
 class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
 
@@ -64,7 +65,7 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validatePensionSchemeTaxReference(model) ++
           validateNames(model) ++
           validateAddresses(model) ++
-          validateRuleIsAnnualAllowanceReduced(model.pensionSavingsTaxCharges) ++
+          validateRuleIsAnnualAllowanceReduced(model.pensionContributions) ++
           validateRulePensionReference(model)
       } else {
         List(RuleIncorrectOrEmptyBodyError)
@@ -215,14 +216,14 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
       pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
   }
 
-  private def validateRuleIsAnnualAllowanceReduced(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): List[MtdError] = {
-    pensionSavingsTaxCharges
-      .map { pensionSavingsTaxCharges =>
+  private def validateRuleIsAnnualAllowanceReduced(pensionContributions: Option[PensionContributions]): List[MtdError] = {
+    pensionContributions
+      .map { pensionContributions =>
         List(
           RuleIsAnnualAllowanceReducedValidation.validate(
-            pensionSavingsTaxCharges.isAnnualAllowanceReduced,
-            pensionSavingsTaxCharges.taperedAnnualAllowance,
-            pensionSavingsTaxCharges.moneyPurchasedAllowance)
+            pensionContributions.isAnnualAllowanceReduced,
+            pensionContributions.taperedAnnualAllowance,
+            pensionContributions.moneyPurchasedAllowance)
         ).flatten
       }
       .getOrElse(NoValidationErrors)

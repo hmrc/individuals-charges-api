@@ -16,20 +16,18 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class PensionChargesSpec extends UnitSpec {
 
-  val responseModel = PensionCharges(
+  val responseModel: PensionCharges = PensionCharges(
     Some(
       PensionSavingsTaxCharges(
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
-        Some(LifetimeAllowance(123.12, 123.12)),
-        true,
-        Some(true),
-        Some(true))),
+        Some(LifetimeAllowance(123.12, 123.12)))
+    ),
     Some(
       PensionSchemeOverseasTransfers(
         Seq(
@@ -48,7 +46,10 @@ class PensionChargesSpec extends UnitSpec {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
+      isAnnualAllowanceReduced = true,
+      Some(true),
+      Some(true))),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -64,7 +65,7 @@ class PensionChargesSpec extends UnitSpec {
       ))
   )
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
@@ -77,10 +78,7 @@ class PensionChargesSpec extends UnitSpec {
       |         {
       |            "amount":123.12,
       |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
+      |         }
       |   },
       |   "pensionSchemeOverseasTransfers": {
       |     "overseasSchemeProvider": [
@@ -110,7 +108,10 @@ class PensionChargesSpec extends UnitSpec {
       |   "pensionContributions": {
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
+      |     "annualAllowanceTaxPaid": 123.12,
+      |      "isAnnualAllowanceReduced": true,
+      |      "taperedAnnualAllowance": true,
+      |      "moneyPurchasedAllowance": true
       |   },
       |   "overseasPensionContributions": {
       |    "overseasSchemeProvider": [
