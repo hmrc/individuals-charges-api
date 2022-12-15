@@ -16,13 +16,20 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class PensionChargesSpec extends UnitSpec {
 
   val responseModel = PensionCharges(
-    Some(PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)), Some(LifetimeAllowance(123.12, 123.12)))),
+    Some(
+      PensionSavingsTaxCharges(
+        Seq("00123456RA"),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        Some(LifetimeAllowance(123.12, 123.12)),
+        Some(true),
+        Some(true),
+        Some(true))),
     Some(
       PensionSchemeOverseasTransfers(
         Seq(
@@ -41,7 +48,10 @@ class PensionChargesSpec extends UnitSpec {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), Some(true), Some(true), Some(true), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
+      isAnnualAllowanceReduced = Some(true),
+      Some(true),
+      Some(true))),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -57,70 +67,70 @@ class PensionChargesSpec extends UnitSpec {
       ))
   )
 
-  val requestJson = Json.parse("""
-                                 |{
-                                 |   "pensionSavingsTaxCharges": {
-                                 |      "pensionSchemeTaxReference": ["00123456RA"],
-                                 |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
-                                 |         {
-                                 |            "amount":123.12,
-                                 |            "taxPaid":123.12
-                                 |         },
-                                 |      "benefitInExcessOfLifetimeAllowance":
-                                 |         {
-                                 |            "amount":123.12,
-                                 |            "taxPaid":123.12
-                                 |         }
-                                 |   },
-                                 |   "pensionSchemeOverseasTransfers": {
-                                 |     "overseasSchemeProvider": [
-                                 |       {
-                                 |         "providerName": "name",
-                                 |         "providerAddress": "address",
-                                 |         "providerCountryCode": "postcode",
-                                 |         "qualifyingRecognisedOverseasPensionScheme": [
-                                 |              "Q123456"
-                                 |         ]
-                                 |       }
-                                 |     ],
-                                 |     "transferCharge": 123.12,
-                                 |     "transferChargeTaxPaid": 123.12
-                                 |   },
-                                 |   "pensionSchemeUnauthorisedPayments": {
-                                 |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-                                 |     "surcharge": {
-                                 |         "amount": 123.12,
-                                 |         "foreignTaxPaid": 123.12
-                                 |       },
-                                 |     "noSurcharge": {
-                                 |         "amount": 123.12,
-                                 |         "foreignTaxPaid": 123.12
-                                 |       }
-                                 |   },
-                                 |   "pensionContributions": {
-                                 |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-                                 |     "inExcessOfTheAnnualAllowance": 123.12,
-                                 |     "annualAllowanceTaxPaid": 123.12,
-                                 |      "isAnnualAllowanceReduced": true,
-                                 |      "taperedAnnualAllowance": true,
-                                 |      "moneyPurchasedAllowance": true
-                                 |   },
-                                 |   "overseasPensionContributions": {
-                                 |    "overseasSchemeProvider": [
-                                 |      {
-                                 |        "providerName": "Overseas Pensions Plc",
-                                 |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
-                                 |        "providerCountryCode": "CYM",
-                                 |        "qualifyingRecognisedOverseasPensionScheme": [
-                                 |          "Q123456"
-                                 |        ]
-                                 |      }
-                                 |    ],
-                                 |    "shortServiceRefund": 123.12,
-                                 |    "shortServiceRefundTaxPaid": 123.12
-                                 |  }
-                                 |}
-                                 |""".stripMargin)
+  val responseJson: JsValue = Json.parse("""
+      |{
+      |   "pensionSavingsTaxCharges": {
+      |      "pensionSchemeTaxReference": ["00123456RA"],
+      |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
+      |         {
+      |            "amount":123.12,
+      |            "taxPaid":123.12
+      |         },
+      |      "benefitInExcessOfLifetimeAllowance":
+      |         {
+      |            "amount":123.12,
+      |            "taxPaid":123.12
+      |         }
+      |   },
+      |   "pensionSchemeOverseasTransfers": {
+      |     "overseasSchemeProvider": [
+      |       {
+      |         "providerName": "name",
+      |         "providerAddress": "address",
+      |         "providerCountryCode": "postcode",
+      |         "qualifyingRecognisedOverseasPensionScheme": [
+      |              "Q123456"
+      |         ]
+      |       }
+      |     ],
+      |     "transferCharge": 123.12,
+      |     "transferChargeTaxPaid": 123.12
+      |   },
+      |   "pensionSchemeUnauthorisedPayments": {
+      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |     "surcharge": {
+      |         "amount": 123.12,
+      |         "foreignTaxPaid": 123.12
+      |       },
+      |     "noSurcharge": {
+      |         "amount": 123.12,
+      |         "foreignTaxPaid": 123.12
+      |       }
+      |   },
+      |   "pensionContributions": {
+      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |     "inExcessOfTheAnnualAllowance": 123.12,
+      |     "annualAllowanceTaxPaid": 123.12,
+      |      "isAnnualAllowanceReduced": true,
+      |      "taperedAnnualAllowance": true,
+      |      "moneyPurchasedAllowance": true
+      |   },
+      |   "overseasPensionContributions": {
+      |    "overseasSchemeProvider": [
+      |      {
+      |        "providerName": "Overseas Pensions Plc",
+      |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |        "providerCountryCode": "CYM",
+      |        "qualifyingRecognisedOverseasPensionScheme": [
+      |          "Q123456"
+      |        ]
+      |      }
+      |    ],
+      |    "shortServiceRefund": 123.12,
+      |    "shortServiceRefundTaxPaid": 123.12
+      |  }
+      |}
+      |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {

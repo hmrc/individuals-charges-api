@@ -16,12 +16,16 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
   val requestModel = PensionContributions(Seq("00123456RA", "00123456RA"), Option(true), Option(false), Option(true), 123.12, 123.12)
+  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
+    isAnnualAllowanceReduced = true,
+    Some(true),
+    Some(true))
 
   val requestJson = Json.parse("""
       |{

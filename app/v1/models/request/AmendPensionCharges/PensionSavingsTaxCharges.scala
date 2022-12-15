@@ -16,7 +16,8 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
@@ -24,5 +25,12 @@ case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
 
 object PensionSavingsTaxCharges {
 
-  implicit val format: OFormat[PensionSavingsTaxCharges] = Json.format[PensionSavingsTaxCharges]
+  implicit val reads: Reads[PensionSavingsTaxCharges] = Json.reads[PensionSavingsTaxCharges]
+
+  implicit val writes: Writes[PensionSavingsTaxCharges] = (
+    (__ \ "pensionSchemeTaxReference").write[Seq[String]] and
+      (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
+      (__ \ "benefitInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance]
+  )(unlift(PensionSavingsTaxCharges.unapply))
+
 }

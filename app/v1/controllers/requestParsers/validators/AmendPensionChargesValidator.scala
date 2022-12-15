@@ -17,11 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-
-import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+
+import javax.inject.Inject
 
 class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
 
@@ -68,6 +69,8 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validateRulePensionReference(model) ++
           validateRulePensionReference(model) ++
           validateBooleans(model.pensionContributions)
+          validateRuleIsAnnualAllowanceReduced(model.pensionContributions) ++
+          validateRulePensionReference(model)
       } else {
         List(RuleIncorrectOrEmptyBodyError)
       }
@@ -217,7 +220,7 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
       pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
   }
 
-  private def validateRulePensionContributionsIsAnnualAllowanceReduced(pensionContributions: Option[PensionContributions]): List[MtdError] = {
+  private def validateRuleIsAnnualAllowanceReduced(pensionContributions: Option[PensionContributions]): List[MtdError] = {
     pensionContributions
       .map { pensionContributions =>
         List(

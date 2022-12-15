@@ -18,7 +18,12 @@ package v1.models.response.retrieve
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionContributions(pensionSchemeTaxReference: Seq[String], inExcessOfTheAnnualAllowance: BigDecimal, annualAllowanceTaxPaid: BigDecimal)
+case class PensionContributions(pensionSchemeTaxReference: Seq[String],
+                                inExcessOfTheAnnualAllowance: BigDecimal,
+                                annualAllowanceTaxPaid: BigDecimal,
+                                isAnnualAllowanceReduced: Boolean,
+                                taperedAnnualAllowance: Option[Boolean],
+                                moneyPurchasedAllowance: Option[Boolean])
 
 object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]

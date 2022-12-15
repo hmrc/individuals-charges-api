@@ -16,21 +16,18 @@
 
 package v1.models.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.response.retrieve.{LifetimeAllowance, PensionSavingsTaxCharges}
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel = PensionSavingsTaxCharges(
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA"),
     Some(LifetimeAllowance(123.12, 123.12)),
-    Some(LifetimeAllowance(123.12, 123.12)),
-    true,
-    Some(true),
-    Some(true))
+    Some(LifetimeAllowance(123.12, 123.12)))
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
@@ -42,10 +39,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       |         {
       |            "amount":123.12,
       |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
+      |         }
       |   }
       |""".stripMargin)
 

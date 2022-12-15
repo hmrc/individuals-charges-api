@@ -175,13 +175,6 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
             .AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(emptyJson))) shouldBe List(RuleIncorrectOrEmptyBodyError)
         }
       }
-      "not return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
-        "only one field is supplied in body" in new Test {
-          validator.validate(AmendPensionCharges
-            .AmendPensionChargesRawData(validNino, validTaxYear, body = AnyContentAsJson(minimalJson))) shouldBe List()
-        }
-      }
     }
   }
-
 }
