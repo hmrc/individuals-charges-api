@@ -20,7 +20,6 @@ import config.AppConfig
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
 
 import javax.inject.Inject
 
@@ -67,8 +66,6 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validateNames(model) ++
           validateAddresses(model) ++
           validateRulePensionReference(model) ++
-          validateRulePensionReference(model) ++
-          validateBooleans(model.pensionContributions)
           validateRuleIsAnnualAllowanceReduced(model.pensionContributions) ++
           validateRulePensionReference(model)
       } else {
@@ -231,12 +228,6 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
         ).flatten
       }
       .getOrElse(NoValidationErrors)
-  }
-
-  def validateBooleans(pensionContributions: Option[PensionContributions]): List[MtdError] = {
-
-    validateRulePensionContributionsIsAnnualAllowanceReduced(pensionContributions)
-
   }
 
   private def validateCharges(pensionCharges: PensionCharges): List[MtdError] = {

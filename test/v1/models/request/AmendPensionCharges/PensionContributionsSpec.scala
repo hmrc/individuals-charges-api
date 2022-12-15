@@ -16,25 +16,22 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Json}
 import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val requestModel = PensionContributions(Seq("00123456RA", "00123456RA"), Option(true), Option(false), Option(true), 123.12, 123.12)
-  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
-    isAnnualAllowanceReduced = true,
-    Some(true),
-    Some(true))
+  val requestModel = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, Option(true), Option(false), Option(true))
+  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, Some(true), Some(true), Some(true))
 
   val requestJson = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": false,
-      |      "moneyPurchasedAllowance": true,
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
+      |     "annualAllowanceTaxPaid": 123.12,
+      |      "isAnnualAllowanceReduced": true,
+      |      "taperedAnnualAllowance": false,
+      |      "moneyPurchasedAllowance": true
       |}""".stripMargin)
 
   "reads" when {

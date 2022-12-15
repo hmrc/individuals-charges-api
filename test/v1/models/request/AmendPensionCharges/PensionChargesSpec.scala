@@ -26,10 +26,7 @@ class PensionChargesSpec extends UnitSpec {
       PensionSavingsTaxCharges(
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
-        Some(LifetimeAllowance(123.12, 123.12)),
-        Some(true),
-        Some(true),
-        Some(true))),
+        Some(LifetimeAllowance(123.12, 123.12)))),
     Some(
       PensionSchemeOverseasTransfers(
         Seq(
@@ -135,7 +132,7 @@ class PensionChargesSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe requestJson.as[PensionCharges]
+        responseModel shouldBe responseJson.as[PensionCharges]
       }
     }
   }
@@ -143,7 +140,7 @@ class PensionChargesSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(responseModel) shouldBe requestJson
+        Json.toJson(responseModel) shouldBe responseJson
       }
     }
   }
