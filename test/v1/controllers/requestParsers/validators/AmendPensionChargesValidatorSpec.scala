@@ -53,13 +53,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
             .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJsonUpdatedPensionContributions))) shouldBe Nil
       }
     }
-    "return bad request" when {
-      "a request is made with both booleans" in new Test {
-        validator.validate(
-          AmendPensionCharges
-            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(invalidJsonDuplicatedBooleans))) shouldBe List(RuleDuplicateDataSubmittedError)
-      }
-    }
+
 
     "return country errors" when {
       "multiple country codes are invalid for multiple reasons" in new Test {

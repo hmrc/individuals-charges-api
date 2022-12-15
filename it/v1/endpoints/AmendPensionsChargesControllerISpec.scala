@@ -33,7 +33,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new NonTysTest {
+      "any valid request is made with the original data structure" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -43,6 +43,22 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
+        response.status shouldBe OK
+        response.json shouldBe hateoasResponse
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+        "any valid request is made with the updated data structure" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(mtdRequest.put(fullValidJsonUpdated))
         response.status shouldBe OK
         response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -146,7 +162,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "203100", fullValidJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-22", invalidJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2021-22", duplicateBooleansJson, BAD_REQUEST, RuleDuplicateDataSubmittedError),
           (
             "AA123456A",
             "2021-22",
@@ -155,7 +170,8 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             ProviderNameFormatError.copy(paths = Some(
               Seq(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
-                "/overseasPensionContributions/overseasSchemeProvider/0/providerName")))),
+                "/overseasPensionContributions/overseasSchemeProvider/0/providerName")))
+          ),
           (
             "AA123456A",
             "2021-22",

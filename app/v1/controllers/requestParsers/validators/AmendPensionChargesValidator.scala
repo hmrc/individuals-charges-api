@@ -20,14 +20,8 @@ import config.AppConfig
 
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleDuplicateDataSubmittedError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
-import v1.models.request.AmendPensionCharges.{
-  AmendPensionChargesRawData,
-  OverseasSchemeProvider,
-  PensionCharges,
-  PensionContributions,
-  PensionSavingsTaxCharges
-}
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
 
 class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[AmendPensionChargesRawData] {
 
@@ -73,7 +67,7 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validateAddresses(model) ++
           validateRulePensionReference(model) ++
           validateRulePensionReference(model) ++
-          validateBooleans(model.pensionContributions, model.pensionSavingsTaxCharges)
+          validateBooleans(model.pensionContributions)
       } else {
         List(RuleIncorrectOrEmptyBodyError)
       }
@@ -223,20 +217,6 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
       pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
   }
 
-  private def validateRulePensionSavingsTaxChargesIsAnnualAllowanceReduced(
-      pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): List[MtdError] = {
-    pensionSavingsTaxCharges
-      .map { pensionSavingsTaxCharges =>
-        List(
-          RuleIsAnnualAllowanceReducedValidation.validate(
-            pensionSavingsTaxCharges.isAnnualAllowanceReduced,
-            pensionSavingsTaxCharges.taperedAnnualAllowance,
-            pensionSavingsTaxCharges.moneyPurchasedAllowance)
-        ).flatten
-      }
-      .getOrElse(NoValidationErrors)
-  }
-
   private def validateRulePensionContributionsIsAnnualAllowanceReduced(pensionContributions: Option[PensionContributions]): List[MtdError] = {
     pensionContributions
       .map { pensionContributions =>
@@ -250,29 +230,10 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
       .getOrElse(NoValidationErrors)
   }
 
-  def validateBooleans(pensionContributions: Option[PensionContributions], pensionSavings: Option[PensionSavingsTaxCharges]): List[MtdError] = {
+  def validateBooleans(pensionContributions: Option[PensionContributions]): List[MtdError] = {
 
-    def dataExists(bool: Seq[Option[Boolean]]): Boolean = bool.flatten.nonEmpty
-    val noDuplicates = (pensionContributions, pensionSavings) match {
-      case (None, _) => NoValidationErrors
-      case (_, None) => NoValidationErrors
-      case (Some(pensionContributions), Some(pensionSavings))
-          if dataExists(
-            Seq(
-              pensionContributions.isAnnualAllowanceReduced,
-              pensionContributions.taperedAnnualAllowance,
-              pensionContributions.moneyPurchasedAllowance))
-            && dataExists(
-              Seq(pensionSavings.isAnnualAllowanceReduced, pensionSavings.taperedAnnualAllowance, pensionSavings.moneyPurchasedAllowance)) =>
-        List(RuleDuplicateDataSubmittedError)
-      case _ => NoValidationErrors
-    }
-    noDuplicates match {
-      case NoValidationErrors =>
-        validateRulePensionSavingsTaxChargesIsAnnualAllowanceReduced(pensionSavings) ++ validateRulePensionContributionsIsAnnualAllowanceReduced(
-          pensionContributions)
-      case _ => noDuplicates
-    }
+    validateRulePensionContributionsIsAnnualAllowanceReduced(pensionContributions)
+
   }
 
   private def validateCharges(pensionCharges: PensionCharges): List[MtdError] = {

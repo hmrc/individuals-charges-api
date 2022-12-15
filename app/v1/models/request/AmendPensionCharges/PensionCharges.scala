@@ -26,4 +26,5 @@ case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxChar
 
 object PensionCharges {
   implicit val format: OFormat[PensionCharges] = Json.format[PensionCharges]
+
 }

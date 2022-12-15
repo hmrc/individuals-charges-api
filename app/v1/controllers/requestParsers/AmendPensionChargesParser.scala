@@ -16,6 +16,9 @@
 
 package v1.controllers.requestParsers
 
+import play.api.libs.json._
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.AmendPensionChargesValidator
 import v1.models.domain.Nino
@@ -25,7 +28,35 @@ import v1.models.request.{AmendPensionCharges, _}
 class AmendPensionChargesParser @Inject() (val validator: AmendPensionChargesValidator)
     extends RequestParser[AmendPensionChargesRawData, AmendPensionChargesRequest] {
 
-  override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest =
-    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[PensionCharges])
+  private def getBoolean(request: JsValue, key: String): JsValue = {
+    val exists = (request \ "pensionContributions" \ key).isEmpty
+    val value  = (request \ "pensionSavingsTaxCharges" \ key).asOpt[Boolean]
+    exists match {
+      case true if ((request \ "pensionSavingsTaxCharges" \ key).isEmpty == false) => {
+        val jsonTransformer = (__ \ "pensionContributions" \ key).json.put(JsBoolean(value.get))
+
+        request.transform(jsonTransformer) match {
+          case JsSuccess(value, _) =>
+            request.as[JsObject].deepMerge(value)
+          case JsError(errors) =>
+            throw new Exception()
+        }
+      }
+      case _ => request
+    }
+  }
+
+  def updateJson(value: JsValue): JsValue = {
+    val setAllowanceReduced = getBoolean(value, "isAnnualAllowanceReduced")
+    val setTaperedAllowance = getBoolean(setAllowanceReduced, "taperedAnnualAllowance")
+    getBoolean(setTaperedAllowance, "moneyPurchasedAllowance")
+
+  }
+
+  override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest = {
+
+    val updatedJson = updateJson(data.body.json)
+    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), updatedJson.as[PensionCharges])
+  }
 
 }

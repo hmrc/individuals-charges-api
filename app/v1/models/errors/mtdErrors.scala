@@ -115,8 +115,3 @@ object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is
 // Accept header Errors
 object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
 object UnsupportedVersionError  extends MtdError("NOT_FOUND", "The requested resource could not be found")
-
-object RuleDuplicateDataSubmittedError
-    extends MtdError(
-      "DUPLICATE_DATA_SUBMITTED",
-      "More than one of isAnnualAllowanceReduced, taperedAnnualAllowance or moneyPurchasedAllowance has been submitted")

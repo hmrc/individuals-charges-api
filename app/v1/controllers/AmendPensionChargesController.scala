@@ -127,8 +127,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
             ProviderAddressFormatError,
             RuleIsAnnualAllowanceReducedError,
             RuleBenefitExcessesError,
-            RulePensionReferenceError,
-            RuleDuplicateDataSubmittedError
+            RulePensionReferenceError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
 
