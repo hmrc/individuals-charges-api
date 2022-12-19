@@ -22,7 +22,7 @@ import support.UnitSpec
 class PensionContributionsSpec extends UnitSpec {
 
   val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
-    isAnnualAllowanceReduced = true,
+    isAnnualAllowanceReduced = Some(true),
     Some(true),
     Some(true))
 

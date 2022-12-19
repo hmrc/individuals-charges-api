@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 case class PensionContributions(pensionSchemeTaxReference: Seq[String],
                                 inExcessOfTheAnnualAllowance: BigDecimal,
                                 annualAllowanceTaxPaid: BigDecimal,
-                                isAnnualAllowanceReduced: Boolean,
+                                isAnnualAllowanceReduced: Option[Boolean],
                                 taperedAnnualAllowance: Option[Boolean],
                                 moneyPurchasedAllowance: Option[Boolean])
 

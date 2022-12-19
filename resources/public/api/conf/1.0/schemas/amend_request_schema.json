@@ -58,8 +58,7 @@
         }
       },
       "required":[
-        "pensionSchemeTaxReference",
-        "isAnnualAllowanceReduced"
+        "pensionSchemeTaxReference"
       ]
     },
     "pensionSchemeOverseasTransfers":{
@@ -228,8 +227,7 @@
       "required": [
         "pensionSchemeTaxReference",
         "inExcessOfTheAnnualAllowance",
-        "annualAllowanceTaxPaid",
-        "isAnnualAllowanceReduced"
+        "annualAllowanceTaxPaid"
       ]
     },
     "overseasPensionContributions":{
