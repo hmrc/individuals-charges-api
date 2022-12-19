@@ -21,10 +21,7 @@ import play.api.libs.functional.syntax._
 
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    isAnnualAllowanceReduced: Boolean,
-                                    taperedAnnualAllowance: Option[Boolean],
-                                    moneyPurchasedAllowance: Option[Boolean])
+                                    benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance])
 
 object PensionSavingsTaxCharges {
 
@@ -33,10 +30,7 @@ object PensionSavingsTaxCharges {
   implicit val writes: Writes[PensionSavingsTaxCharges] = (
     (__ \ "pensionSchemeTaxReference").write[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
-      (__ \ "benefitInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
-      (__ \ "isAnnualAllowanceReduced").write[Boolean] and
-      (__ \ "taperedAnnualAllowance").writeNullable[Boolean] and
-      (__ \ "moneyPurchasedAllowance").writeNullable[Boolean]
+      (__ \ "benefitInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance]
   )(unlift(PensionSavingsTaxCharges.unapply))
 
 }

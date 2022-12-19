@@ -1,8 +1,5 @@
 {
   "pensionSavingsTaxCharges": {
-    "isAnnualAllowanceReduced": true,
-    "taperedAnnualAllowance": true,
-    "moneyPurchasedAllowance": true,
     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
     "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
       {
@@ -43,7 +40,10 @@
   "pensionContributions": {
     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
     "inExcessOfTheAnnualAllowance": 100,
-    "annualAllowanceTaxPaid": 100
+    "annualAllowanceTaxPaid": 100,
+    "isAnnualAllowanceReduced": true,
+    "taperedAnnualAllowance": true,
+    "moneyPurchasedAllowance": true
   },
   "overseasPensionContributions": {
     "overseasSchemeProvider": [

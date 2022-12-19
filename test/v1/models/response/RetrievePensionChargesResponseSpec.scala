@@ -17,34 +17,21 @@
 package v1.models.response
 
 import mocks.MockAppConfig
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.hateoas.Link
 import v1.models.hateoas.Method._
-import v1.models.response.retrieve.{
-  Charge,
-  LifetimeAllowance,
-  OverseasPensionContributions,
-  OverseasSchemeProvider,
-  PensionContributions,
-  PensionSavingsTaxCharges,
-  PensionSchemeOverseasTransfers,
-  PensionSchemeUnauthorisedPayments,
-  RetrievePensionChargesHateoasData,
-  RetrievePensionChargesResponse
-}
+import v1.models.response.retrieve._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
-  val responseModel = RetrievePensionChargesResponse(
+  val responseModel: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
     Some(
       PensionSavingsTaxCharges(
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
-        Some(LifetimeAllowance(123.12, 123.12)),
-        true,
-        Some(true),
-        Some(true))),
+        Some(LifetimeAllowance(123.12, 123.12)))
+    ),
     Some(
       PensionSchemeOverseasTransfers(
         Seq(
@@ -63,7 +50,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
+      isAnnualAllowanceReduced = Some(true),
+      Some(true),
+      Some(true))),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -79,7 +69,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       ))
   )
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
@@ -92,10 +82,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       |         {
       |            "amount":123.12,
       |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
+      |         }
       |   },
       |   "pensionSchemeOverseasTransfers": {
       |     "overseasSchemeProvider": [
@@ -125,7 +112,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       |   "pensionContributions": {
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
+      |     "annualAllowanceTaxPaid": 123.12,
+      |      "isAnnualAllowanceReduced": true,
+      |      "taperedAnnualAllowance": true,
+      |      "moneyPurchasedAllowance": true
       |   },
       |   "overseasPensionContributions": {
       |    "overseasSchemeProvider": [

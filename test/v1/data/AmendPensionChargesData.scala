@@ -24,10 +24,7 @@ object AmendPensionChargesData {
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
-    Some(LifetimeAllowance(123.45, 12.34)),
-    isAnnualAllowanceReduced = true,
-    Some(true),
-    Some(false)
+    Some(LifetimeAllowance(123.45, 12.34))
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -53,7 +50,10 @@ object AmendPensionChargesData {
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
-    123.45
+    123.45,
+    isAnnualAllowanceReduced = Some(true),
+    Some(true),
+    Some(false)
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
@@ -92,10 +92,7 @@ object AmendPensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -129,7 +126,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -229,10 +229,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -266,7 +263,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -296,9 +296,7 @@ object AmendPensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -332,7 +330,9 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -362,9 +362,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |   "moneyPurchasedAllowance": true
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -398,7 +396,9 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |   "moneyPurchasedAllowance": true
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -428,10 +428,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": false,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": true
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -465,7 +462,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": false,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": true
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -496,10 +496,7 @@ object AmendPensionChargesData {
        |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
        |			"amount": 123.45,
        |			"taxPaid": 12.45
-       |		},
-       |		"isAnnualAllowanceReduced": true,
-       |		"taperedAnnualAllowance": true,
-       |		"moneyPurchasedAllowance": false
+       |		}
        |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
@@ -540,7 +537,10 @@ object AmendPensionChargesData {
        |			"00123456RA","00123456RA"
        |		],
        |		"inExcessOfTheAnnualAllowance": 123.45,
-       |		"annualAllowanceTaxPaid": 123.45
+       |		"annualAllowanceTaxPaid": 123.45,
+       |		"isAnnualAllowanceReduced": true,
+       |		"taperedAnnualAllowance": true,
+       |		"moneyPurchasedAllowance": false
        |	},
        |	"overseasPensionContributions": {
        |		"overseasSchemeProvider": [
@@ -577,10 +577,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -621,7 +618,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -723,10 +723,7 @@ object AmendPensionChargesData {
        |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
        |			"amount": $bigDecimal,
        |			"taxPaid": $bigDecimal
-       |		},
-       |		"isAnnualAllowanceReduced": true,
-       |		"taperedAnnualAllowance": true,
-       |		"moneyPurchasedAllowance": false
+       |		}
        |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
@@ -760,7 +757,10 @@ object AmendPensionChargesData {
        |			"00123456RA","00123456RA"
        |		],
        |		"inExcessOfTheAnnualAllowance": $bigDecimal,
-       |		"annualAllowanceTaxPaid": $bigDecimal
+       |		"annualAllowanceTaxPaid": $bigDecimal,
+       |		"isAnnualAllowanceReduced": true,
+       |		"taperedAnnualAllowance": true,
+       |		"moneyPurchasedAllowance": false
        |	},
        |	"overseasPensionContributions": {
        |		"overseasSchemeProvider": [
@@ -783,19 +783,6 @@ object AmendPensionChargesData {
   val emptyJson: JsValue = Json.parse(
     """
       |{}
-      |""".stripMargin
-  )
-
-  val minimalJson: JsValue = Json.parse(
-    """{
-      |	"pensionContributions": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA"
-      |		],
-      |		"inExcessOfTheAnnualAllowance": 0,
-      |		"annualAllowanceTaxPaid": 0
-      |	}
-      |}
       |""".stripMargin
   )
 

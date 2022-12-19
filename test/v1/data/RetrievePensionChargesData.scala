@@ -24,10 +24,7 @@ object RetrievePensionChargesData {
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
-    Some(LifetimeAllowance(123.45, 12.34)),
-    true,
-    Some(true),
-    Some(false)
+    Some(LifetimeAllowance(123.45, 12.34))
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -53,7 +50,10 @@ object RetrievePensionChargesData {
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
-    123.45
+    123.45,
+    isAnnualAllowanceReduced = Some(true),
+    Some(true),
+    Some(false)
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
@@ -84,10 +84,7 @@ object RetrievePensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -121,7 +118,10 @@ object RetrievePensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -155,10 +155,7 @@ object RetrievePensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -192,7 +189,10 @@ object RetrievePensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
