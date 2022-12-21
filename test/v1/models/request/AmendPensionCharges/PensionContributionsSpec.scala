@@ -16,7 +16,7 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{Json}
+import play.api.libs.json.{Json, JsValue}
 import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {

@@ -51,7 +51,7 @@ object RetrievePensionChargesData {
     Seq("00123456RA", "00123456RA"),
     123.45,
     123.45,
-    isAnnualAllowanceReduced = true,
+    isAnnualAllowanceReduced = Some(true),
     Some(true),
     Some(false)
   )
