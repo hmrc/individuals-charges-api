@@ -50,7 +50,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       "a valid request is supplied" in new Test {
         validator.validate(
           AmendPensionCharges
-            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJsonUpdatedPensionContributions))) shouldBe Nil
+            .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJsonUpdated))) shouldBe Nil
       }
     }
 
