@@ -16,31 +16,28 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Json}
 import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12,
-    isAnnualAllowanceReduced = Some(true),
-    Some(true),
-    Some(true))
+  val requestModel = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, Option(true), Option(false), Option(true))
+  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, Some(true), Some(true), Some(true))
 
-  val responseJson: JsValue = Json.parse("""
+  val requestJson = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
       |     "annualAllowanceTaxPaid": 123.12,
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": true
-      |   }
-      |""".stripMargin)
+      |      "isAnnualAllowanceReduced": true,
+      |      "taperedAnnualAllowance": false,
+      |      "moneyPurchasedAllowance": true
+      |}""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionContributions]
+        requestModel shouldBe requestJson.as[PensionContributions]
       }
     }
   }
@@ -48,7 +45,7 @@ class PensionContributionsSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(responseModel) shouldBe responseJson
+        Json.toJson(requestModel) shouldBe requestJson
       }
     }
   }

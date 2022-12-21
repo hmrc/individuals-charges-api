@@ -65,6 +65,7 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validatePensionSchemeTaxReference(model) ++
           validateNames(model) ++
           validateAddresses(model) ++
+          validateRulePensionReference(model) ++
           validateRuleIsAnnualAllowanceReduced(model.pensionContributions) ++
           validateRulePensionReference(model)
       } else {

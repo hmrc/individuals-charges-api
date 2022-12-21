@@ -16,6 +16,9 @@
 
 package v1.controllers.requestParsers
 
+import play.api.libs.json._
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+
 import javax.inject.Inject
 import v1.controllers.requestParsers.validators.AmendPensionChargesValidator
 import v1.models.domain.Nino
@@ -25,7 +28,34 @@ import v1.models.request.{AmendPensionCharges, _}
 class AmendPensionChargesParser @Inject() (val validator: AmendPensionChargesValidator)
     extends RequestParser[AmendPensionChargesRawData, AmendPensionChargesRequest] {
 
-  override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest =
-    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[PensionCharges])
+  private def setBoolean(request: JsValue, key: String): JsValue = {
+    val empty = (request \ "pensionContributions" \ key).isEmpty
+    val value  = (request \ "pensionSavingsTaxCharges" \ key).asOpt[Boolean]
+    empty match {
+      case true if ((request \ "pensionSavingsTaxCharges" \ key).isEmpty == false) =>
+      {
+        val jsonTransformer = (__ \ "pensionContributions" \ key).json.put(JsBoolean(value.get))
+        request.transform(jsonTransformer) match {
+          case JsSuccess(value, _) =>
+            request.as[JsObject].deepMerge(value)
+          case JsError(errors) =>
+            logger.warn(s"[KnownJsonResponse][validateJson] Unable to parse JSON: $errors")
+            request
+        }
+      }
+      case _ => request
+    }
+  }
+
+  private def updateRequestJson(value: JsValue): JsValue = {
+    val setAllowanceReduced = setBoolean(value, "isAnnualAllowanceReduced")
+    val setTaperedAllowance = setBoolean(setAllowanceReduced, "taperedAnnualAllowance")
+    setBoolean(setTaperedAllowance, "moneyPurchasedAllowance")
+  }
+
+  override protected def requestFor(data: AmendPensionChargesRawData): AmendPensionChargesRequest = {
+
+    AmendPensionCharges.AmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear),  updateRequestJson(data.body.json).as[PensionCharges])
+  }
 
 }

@@ -21,13 +21,12 @@ import support.UnitSpec
 
 class PensionChargesSpec extends UnitSpec {
 
-  val responseModel: PensionCharges = PensionCharges(
+  val responseModel = PensionCharges(
     Some(
       PensionSavingsTaxCharges(
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
-        Some(LifetimeAllowance(123.12, 123.12)))
-    ),
+        Some(LifetimeAllowance(123.12, 123.12)))),
     Some(
       PensionSchemeOverseasTransfers(
         Seq(

@@ -33,7 +33,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code" when {
 
-      "any valid request is made" in new NonTysTest {
+      "any valid request is made with the original data structure" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -43,6 +43,22 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
+        response.status shouldBe OK
+        response.json shouldBe hateoasResponse
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+        "any valid request is made with the updated data structure" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(mtdRequest.put(fullValidJsonUpdated))
         response.status shouldBe OK
         response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -91,6 +107,24 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         response3.json shouldBe hateoasResponse
         response3.header("X-CorrelationId").nonEmpty shouldBe true
         response3.header("Content-Type") shouldBe Some("application/json")
+
+        val responseUpdated: WSResponse = await(mtdRequest.put(boolean1JsonUpdated))
+        responseUpdated.status shouldBe OK
+        responseUpdated.json shouldBe hateoasResponse
+        responseUpdated.header("X-CorrelationId").nonEmpty shouldBe true
+        responseUpdated.header("Content-Type") shouldBe Some("application/json")
+
+        val response2Updated: WSResponse = await(mtdRequest.put(boolean2JsonUpdated))
+        response2Updated.status shouldBe OK
+        response2Updated.json shouldBe hateoasResponse
+        response2Updated.header("X-CorrelationId").nonEmpty shouldBe true
+        response2Updated.header("Content-Type") shouldBe Some("application/json")
+
+        val response3Updated: WSResponse = await(mtdRequest.put(booleans3JsonUpdated))
+        response3Updated.status shouldBe OK
+        response3Updated.json shouldBe hateoasResponse
+        response3Updated.header("X-CorrelationId").nonEmpty shouldBe true
+        response3Updated.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -136,7 +170,8 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
             ProviderNameFormatError.copy(paths = Some(
               Seq(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
-                "/overseasPensionContributions/overseasSchemeProvider/0/providerName")))),
+                "/overseasPensionContributions/overseasSchemeProvider/0/providerName")))
+          ),
           (
             "AA123456A",
             "2021-22",
@@ -283,7 +318,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           """.stripMargin
     )
 
-
     def setupStubs(): StubMapping
 
     def mtdRequest: WSRequest = {
@@ -299,14 +333,14 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait NonTysTest extends Test {
 
-    def taxYear: String           = "2021-22"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/2021-22"
+    def taxYear: String       = "2021-22"
+    def downstreamUri: String = s"/income-tax/charges/pensions/$nino/2021-22"
   }
 
   private trait TysIfsTest extends Test {
 
-    def taxYear: String           = "2023-24"
-    def downstreamUri: String     = s"/income-tax/charges/pensions/23-24/$nino"
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/charges/pensions/23-24/$nino"
   }
 
 }

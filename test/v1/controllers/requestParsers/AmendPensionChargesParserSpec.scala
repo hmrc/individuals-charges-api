@@ -33,6 +33,9 @@ class AmendPensionChargesParserSpec extends UnitSpec {
   val inputData: AmendPensionChargesRawData =
     AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullJson))
 
+  val inputDataUpdated: AmendPensionChargesRawData =
+    AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(AmendPensionChargesData.fullValidJsonUpdated))
+
   trait Test extends MockAmendPensionChargesValidator {
     lazy val parser = new AmendPensionChargesParser(mockValidator)
   }
@@ -45,6 +48,12 @@ class AmendPensionChargesParserSpec extends UnitSpec {
 
         parser.parseRequest(inputData) shouldBe
           Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
+      }
+      "valid updated request data is supplied" in new Test {
+        MockValidator.validate(inputDataUpdated).returns(Nil)
+
+        parser.parseRequest(inputDataUpdated) shouldBe
+        Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
       }
     }
 

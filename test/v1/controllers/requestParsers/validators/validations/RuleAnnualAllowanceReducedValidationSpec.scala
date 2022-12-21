@@ -37,7 +37,9 @@ class RuleAnnualAllowanceReducedValidationSpec extends UnitSpec {
         RuleIsAnnualAllowanceReducedValidation.
           validate(isAnnualAllowanceReduced = Some(true), Some(true), Some(false)) shouldBe Nil
       }
-      "return no errors when all booleans are false" in {}
+        "return no errors when all booleans are false" in {
+        RuleIsAnnualAllowanceReducedValidation.validate(None, None, None) shouldBe Nil
+      }
     }
   }
 
