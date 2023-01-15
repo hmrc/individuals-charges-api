@@ -1,0 +1,6 @@
+get:
+  $ref: "./retrievePensionCharges.yaml"
+put:
+  $ref: "./amendPensionCharges.yaml"
+delete:
+  $ref: "./deletePensionCharges.yaml"
