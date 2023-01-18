@@ -1,6 +1,26 @@
 get:
   $ref: "./retrievePensionCharges.yaml"
+
+  summary: Retrieve Pension Charges
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
 put:
   $ref: "./amendPensionCharges.yaml"
+
+  summary: Create and Amend Pension Charges
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
 delete:
   $ref: "./deletePensionCharges.yaml"
+
+  summary: Delete Pension Charges
+
+  security:
+    - User-Restricted:
+        - write:self-assessment

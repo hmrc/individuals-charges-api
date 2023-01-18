@@ -1,4 +1,3 @@
-summary: Retrieve Pension Charges
 description: |
   This endpoint enables you to retrieve previously populated charges for pensions. A National Insurance number and tax year must be provided.
   
@@ -30,10 +29,6 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
   - $ref: './common/headers.yaml#/components/parameters/authorization'
-
-security:
-  - User-Restricted:
-      - read:self-assessment
 
 responses:
   "200":
