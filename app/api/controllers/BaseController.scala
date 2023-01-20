@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package v1.controllers
+package api.controllers
 
-import api.models.errors.{ErrorWrapper, StandardDownstreamError}
+import api.models.errors.ErrorWrapper
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import play.api.mvc.Results.InternalServerError
+import play.api.mvc.Results.Status
+import v1.controllers.EndpointLogContext
 
 trait BaseController {
 
   protected val logger: Logger = Logger(this.getClass)
 
-  protected def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
-    logger.error(
+  protected def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
+    val resCorrelationId = errorWrapper.correlationId
+    logger.warn(
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-        s"Unhandled error: $errorWrapper")
-    InternalServerError(Json.toJson(StandardDownstreamError))
+        s"Error response received with CorrelationId: $resCorrelationId")
+
+    Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
+      .withApiHeaders(resCorrelationId)
   }
 
   implicit class Response(result: Result) {

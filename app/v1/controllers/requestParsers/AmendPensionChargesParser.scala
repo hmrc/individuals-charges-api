@@ -16,14 +16,14 @@
 
 package v1.controllers.requestParsers
 
-import play.api.libs.json._
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-
-import javax.inject.Inject
+import play.api.libs.json._
 import v1.controllers.requestParsers.validators.AmendPensionChargesValidator
 import v1.models.domain.Nino
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest, PensionCharges}
-import v1.models.request.{AmendPensionCharges, _}
+import v1.models.request._
+
+import javax.inject.Inject
 
 class AmendPensionChargesParser @Inject() (val validator: AmendPensionChargesValidator)
     extends RequestParser[AmendPensionChargesRawData, AmendPensionChargesRequest] {

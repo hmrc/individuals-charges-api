@@ -34,7 +34,7 @@ class PensionSchemeTaxReferenceValidationSpec extends UnitSpec {
         PensionSchemeTaxReferenceValidation.validate(
           pensionSchemeTaxRef = "This pensionSchemeTaxRef string is 91 characters long ---------------------------------------------- 91",
           "/pensionSchemeOverseasTransfers/0/pensionSchemeTaxReference"
-        ) shouldBe List(PensionSchemeTaxRefFormatError.copy(paths = Some(Seq("/pensionSchemeOverseasTransfers/0/pensionSchemeTaxReference"))))
+        ) shouldBe List(PensionSchemeTaxRefFormatError.copy(paths = Some(List("/pensionSchemeOverseasTransfers/0/pensionSchemeTaxReference"))))
       }
     }
   }

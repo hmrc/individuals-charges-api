@@ -34,6 +34,7 @@ package v1.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, ValueFormatError}
 
+
 object NumberValidation {
 
   def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {

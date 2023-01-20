@@ -16,19 +16,17 @@
 
 package v1.services
 
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.PensionChargesConnector
 import v1.controllers.EndpointLogContext
-import api.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

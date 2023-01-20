@@ -16,9 +16,10 @@
 
 package v1.models.request
 
+import config.FeatureSwitches
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import config.FeatureSwitches
 
 /** Opaque representation of a tax year.
   *

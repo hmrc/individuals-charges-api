@@ -24,7 +24,6 @@ import v1.controllers.EndpointLogContext
 import v1.models.outcomes.ResponseWrapper
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.domain.Nino
-import api.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 
 import scala.concurrent.Future
@@ -55,7 +54,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError   = MtdError("SOME_CODE", "some message")
+        val someError   = MtdError("SOME_CODE", "some message", BAD_REQUEST)
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 

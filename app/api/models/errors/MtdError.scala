@@ -19,18 +19,22 @@ package api.models.errors
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
+case class MtdError(code: String, message: String, httpStatus: Int, paths: Option[Seq[String]] = None) {
+  val asJson: JsObject = Json.toJson(this).as[JsObject]
+}
 
 object MtdError {
-  implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 
-  implicit val reads: Reads[MtdError] = (
-    (__ \ "code").read[String] and
-      (__ \ "reason").read[String] and
-      (__ \ "paths").readNullable[Seq[String]]
-  )(MtdError.apply _)
+  implicit val writes: OWrites[MtdError] = (
+    (JsPath \ "code").write[String] and
+      (JsPath \ "message").write[String] and
+      (JsPath \ "paths").writeNullable[Seq[String]]
+  )(unlift(MtdError.unapply))
 
-  implicit def genericWrites[T <: MtdError]: Writes[T] =
+  // excludes httpStatus
+  def unapply(e: MtdError): Option[(String, String, Option[Seq[String]])] = Some((e.code, e.message, e.paths))
+
+  implicit def genericWrites[T <: MtdError]: OWrites[T] =
     writes.contramap[T](c => c: MtdError)
 
 }

@@ -16,7 +16,7 @@
 
 package v1.support
 
-import api.models.errors.{BadRequestError, DownstreamError, DownstreamErrors, ErrorWrapper, MtdError, OutboundError, StandardDownstreamError}
+import api.models.errors._
 import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.outcomes.ResponseWrapper

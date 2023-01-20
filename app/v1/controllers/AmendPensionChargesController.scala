@@ -16,14 +16,13 @@
 
 package v1.controllers
 
+import api.controllers.BaseController
 import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
@@ -34,8 +33,8 @@ import v1.models.request.AmendPensionCharges
 import v1.models.response.amend.AmendPensionChargesHateoasData
 import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services._
-import api.models.errors._
 
+import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -106,36 +105,6 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
 
         result
       }.merge
-    }
-  }
-
-  private def errorResult(errorWrapper: ErrorWrapper): Result = {
-
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError,
-            RuleIncorrectOrEmptyBodyError,
-            ValueFormatError,
-            RuleCountryCodeError,
-            CountryCodeFormatError,
-            QOPSRefFormatError,
-            PensionSchemeTaxRefFormatError,
-            ProviderNameFormatError,
-            ProviderAddressFormatError,
-            RuleIsAnnualAllowanceReducedError,
-            RuleBenefitExcessesError,
-            RulePensionReferenceError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
     }
   }
 

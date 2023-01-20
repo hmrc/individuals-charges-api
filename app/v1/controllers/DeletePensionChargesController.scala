@@ -16,21 +16,19 @@
 
 package v1.controllers
 
+import api.controllers.BaseController
 import cats.data.EitherT
-
-import javax.inject.Inject
 import play.api.http.MimeTypes
-import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 import v1.services._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
@@ -97,21 +95,6 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
       }.merge
     }
   }
-
-  private def errorResult(errorWrapper: ErrorWrapper): Result =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
-    }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)

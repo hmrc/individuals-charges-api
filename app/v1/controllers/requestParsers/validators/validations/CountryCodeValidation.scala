@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import com.neovisionaries.i18n.CountryCode
 import api.models.errors._
+import com.neovisionaries.i18n.CountryCode
 
 object CountryCodeValidation {
 

@@ -16,21 +16,19 @@
 
 package v1.controllers
 
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.controllers.BaseController
 import cats.data.EitherT
-
-import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
-import api.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 import v1.services._
 
+import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
 class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
@@ -81,20 +79,5 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
       }.merge
     }
   }
-
-  private def errorResult(errorWrapper: ErrorWrapper): Result =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError
-          ) => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
-    }
 
 }

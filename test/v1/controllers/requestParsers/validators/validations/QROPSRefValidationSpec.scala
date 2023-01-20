@@ -32,7 +32,7 @@ class QROPSRefValidationSpec extends UnitSpec {
       QROPSRefValidation.validate(
         "This qopsRef string is 91 characters long ---------------------------------------------- 91",
         "/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"
-      ) shouldBe List(QOPSRefFormatError.copy(paths = Some(Seq("/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"))))
+      ) shouldBe List(QOPSRefFormatError.copy(paths = Some(List("/overseasPensionContributions/0/qualifyingRecognisedOverseasPensionScheme"))))
     }
   }
 

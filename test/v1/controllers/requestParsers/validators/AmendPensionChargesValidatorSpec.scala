@@ -23,6 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import api.models.errors._
+import play.api.http.Status.BAD_REQUEST
 import v1.models.request.AmendPensionCharges
 
 class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
@@ -54,7 +55,6 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
             .AmendPensionChargesRawData(validNino, validTaxYear, AnyContentAsJson(fullValidJsonUpdated))) shouldBe Nil
       }
     }
-
 
     "return country errors" when {
       "multiple country codes are invalid for multiple reasons" in new Test {
@@ -107,6 +107,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
           MtdError(
             "FORMAT_VALUE",
             "The field should be between 0 and 99999999999.99",
+            BAD_REQUEST,
             Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -131,6 +132,7 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
           MtdError(
             "FORMAT_VALUE",
             "The field should be between 0 and 99999999999.99",
+            BAD_REQUEST,
             Some(List(
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
               "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -178,4 +180,5 @@ class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
       }
     }
   }
+
 }

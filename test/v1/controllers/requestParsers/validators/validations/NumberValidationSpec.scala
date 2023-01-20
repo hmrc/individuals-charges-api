@@ -28,7 +28,7 @@ class NumberValidationSpec extends UnitSpec {
     "invalid number is supplied" must {
       "return errors" in {
         NumberValidation.validateOptional(Some(BigDecimal(-9.00)), path) shouldBe List(
-          ValueFormatError.copy(paths = Some(Seq(path)))
+          ValueFormatError.copy(paths = Some(List(path)))
         )
       }
     }

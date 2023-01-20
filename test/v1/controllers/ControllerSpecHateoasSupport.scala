@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.controllers
 
-import api.models.errors.{MtdError, PensionSchemeTaxRefFormatError}
+import play.api.libs.json.{JsObject, Json}
+import v1.models.hateoas.Link
+import v1.models.hateoas.Method.GET
 
+trait ControllerSpecHateoasSupport {
 
-object PensionSchemeTaxReferenceValidation {
+  val hateoaslinks: Seq[Link] = Seq(Link(href = "/foo/bar", method = GET, rel = "test-relationship"))
 
-  private val regex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
-
-  def validate(pensionSchemeTaxRef: String, path: String): List[MtdError] = {
-    if (pensionSchemeTaxRef.matches(regex)) NoValidationErrors
-    else
-      List(
-        PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(path)))
-      )
-  }
+  val hateoaslinksJson: JsObject = Json
+    .parse("""
+        |{
+        |  "links": [{
+        |    "href": "/foo/bar",
+        |    "method": "GET",
+        |    "rel": "test-relationship"
+        |  }]
+        |}""".stripMargin)
+    .as[JsObject]
 
 }
