@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.errors.{BadRequestError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import v1.data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
 import mocks.MockAppConfig
 import play.api.libs.json.Json
@@ -26,7 +27,7 @@ import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
 import v1.models.domain.Nino
-import v1.models.errors._
+import api.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}

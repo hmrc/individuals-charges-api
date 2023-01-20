@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, RuleIsAnnualAllowanceReducedError}
+import api.models.errors.{MtdError, RuleIsAnnualAllowanceReducedError}
 
 object RuleIsAnnualAllowanceReducedValidation {
 

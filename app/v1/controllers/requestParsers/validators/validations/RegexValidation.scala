@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.MtdError
+import api.models.errors.MtdError
 
 trait RegexValidation {
   protected val regexFormat: String

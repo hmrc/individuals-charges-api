@@ -16,14 +16,16 @@
 
 package v1.services
 
+import api.models.errors.{MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.PensionChargesConnector
 import v1.controllers.EndpointLogContext
-import v1.models.errors._
+import api.models.errors._
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.support.DownstreamResponseMappingSupport
 

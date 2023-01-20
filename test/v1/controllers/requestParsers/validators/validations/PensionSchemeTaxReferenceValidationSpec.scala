@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.PensionSchemeTaxRefFormatError
 import support.UnitSpec
-import v1.models.errors.PensionSchemeTaxRefFormatError
 
 class PensionSchemeTaxReferenceValidationSpec extends UnitSpec {
 

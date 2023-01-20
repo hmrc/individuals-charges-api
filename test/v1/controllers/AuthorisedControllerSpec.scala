@@ -16,13 +16,14 @@
 
 package v1.controllers
 
+import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, UnauthorisedError}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.errors._
+import api.models.errors._
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.ExecutionContext.Implicits.global

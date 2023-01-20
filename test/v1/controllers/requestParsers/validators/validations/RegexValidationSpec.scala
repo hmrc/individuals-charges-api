@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.MtdError
 import support.UnitSpec
-import v1.models.errors.MtdError
 
 class RegexValidationSpec extends UnitSpec {
 

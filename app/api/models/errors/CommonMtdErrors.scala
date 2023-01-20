@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package api.models.errors
+
 //scalastyle:off
 
 object MtdErrorWithCustomMessage {

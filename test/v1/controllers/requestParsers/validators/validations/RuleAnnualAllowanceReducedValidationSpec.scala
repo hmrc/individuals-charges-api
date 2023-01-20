@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.RuleIsAnnualAllowanceReducedError
 import support.UnitSpec
-import v1.models.errors.RuleIsAnnualAllowanceReducedError
 
 class RuleAnnualAllowanceReducedValidationSpec extends UnitSpec {
 

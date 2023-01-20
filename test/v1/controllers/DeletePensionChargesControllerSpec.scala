@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.errors.{BadRequestError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -24,7 +25,7 @@ import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.{MockAuditService, MockDeletePensionChargesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
-import v1.models.errors._
+import api.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.TaxYear

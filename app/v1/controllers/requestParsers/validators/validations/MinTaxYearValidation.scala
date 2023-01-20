@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors.{MtdError, RuleTaxYearNotSupportedError, TaxYearFormatError}
 import v1.models.request.TaxYear
 
 object MinTaxYearValidation {

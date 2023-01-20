@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.{AmountFormatError, RuleInvalidLossAmount}
 import support.UnitSpec
-import v1.models.errors.{AmountFormatError, RuleInvalidLossAmount}
 
 class AmountValidationSpec extends UnitSpec {
 

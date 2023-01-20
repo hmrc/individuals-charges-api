@@ -16,8 +16,10 @@
 
 package v1.controllers
 
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsValue, Json}
@@ -28,11 +30,11 @@ import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit._
-import v1.models.errors._
 import v1.models.request.AmendPensionCharges
 import v1.models.response.amend.AmendPensionChargesHateoasData
 import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services._
+import api.models.errors._
 
 import scala.concurrent.{ExecutionContext, Future}
 

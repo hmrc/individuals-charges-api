@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.MtdError
 import play.api.libs.json._
-import v1.models.errors.MtdError
 
 /** Utilities to assist using validations where the value to validate comes from a JSON element
   */

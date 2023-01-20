@@ -16,7 +16,9 @@
 
 package v1.controllers
 
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import cats.data.EitherT
+
 import javax.inject._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
@@ -24,7 +26,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
 import v1.hateoas.HateoasFactory
-import v1.models.errors._
+import api.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 import v1.services._

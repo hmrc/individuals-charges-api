@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{AmountFormatError, MtdError, RuleInvalidLossAmount}
+import api.models.errors.{AmountFormatError, MtdError, RuleInvalidLossAmount}
 
 object AmountValidation {
 

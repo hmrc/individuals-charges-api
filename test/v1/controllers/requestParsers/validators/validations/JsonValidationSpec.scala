@@ -16,9 +16,9 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.NinoFormatError
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.models.errors.NinoFormatError
 
 class JsonValidationSpec extends UnitSpec {
   private def unusedValidation[T] = (_: T) => throw new RuntimeException

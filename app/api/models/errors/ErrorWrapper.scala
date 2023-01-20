@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.errors
+package api.models.errors
 
 import play.api.libs.json.{JsObject, Json, Writes}
 import v1.models.audit.AuditError

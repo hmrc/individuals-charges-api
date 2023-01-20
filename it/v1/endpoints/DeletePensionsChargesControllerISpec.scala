@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -23,7 +24,7 @@ import play.api.libs.json._
 import play.api.libs.ws._
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.models.errors._
+import api.models.errors._
 import v1.stubs._
 
 class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {

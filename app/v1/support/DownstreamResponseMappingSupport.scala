@@ -16,9 +16,9 @@
 
 package v1.support
 
+import api.models.errors.{BadRequestError, DownstreamError, DownstreamErrors, ErrorWrapper, MtdError, OutboundError, StandardDownstreamError}
 import utils.Logging
 import v1.controllers.EndpointLogContext
-import v1.models.errors.{BadRequestError, DownstreamError, DownstreamErrors, StandardDownstreamError, ErrorWrapper, MtdError, OutboundError}
 import v1.models.outcomes.ResponseWrapper
 
 trait DownstreamResponseMappingSupport {

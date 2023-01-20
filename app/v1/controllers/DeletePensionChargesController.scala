@@ -17,6 +17,7 @@
 package v1.controllers
 
 import cats.data.EitherT
+
 import javax.inject.Inject
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
@@ -26,7 +27,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import api.models.errors._
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 import v1.services._
 

@@ -16,10 +16,11 @@
 
 package v1.connectors
 
+import api.models.errors.{NinoFormatError, StandardDownstreamError, TaxYearFormatError}
 import v1.data.AmendPensionChargesData.pensionCharges
 import v1.data.RetrievePensionChargesData.retrieveResponse
 import v1.models.domain.Nino
-import v1.models.errors._
+import api.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest

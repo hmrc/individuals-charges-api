@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, MtdError, NinoFormatError, PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError, RuleBenefitExcessesError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, RuleIsAnnualAllowanceReducedError, RulePensionReferenceError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import v1.data.AmendPensionChargesData._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -27,7 +28,7 @@ import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
-import v1.models.errors._
+import api.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper

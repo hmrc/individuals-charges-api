@@ -16,6 +16,7 @@
 
 package utils
 
+import api.models.errors.{BadRequestError, InvalidBodyTypeError, MtdError, NotFoundError, StandardDownstreamError, UnauthorisedError}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.Status
@@ -31,7 +32,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
-import v1.models.errors._
+import api.models.errors._
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global

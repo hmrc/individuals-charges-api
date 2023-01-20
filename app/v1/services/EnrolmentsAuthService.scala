@@ -16,6 +16,7 @@
 
 package v1.services
 
+import api.models.errors.{StandardDownstreamError, UnauthorisedError}
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.Logger
@@ -27,7 +28,6 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.auth.UserDetails
-import v1.models.errors.{StandardDownstreamError, UnauthorisedError}
 import v1.models.outcomes.AuthOutcome
 
 import scala.concurrent.{ExecutionContext, Future}

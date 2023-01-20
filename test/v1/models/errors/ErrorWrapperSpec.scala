@@ -16,6 +16,7 @@
 
 package v1.models.errors
 
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.libs.json.Json
 import support.UnitSpec
 

@@ -16,11 +16,11 @@
 
 package v1.controllers
 
+import api.models.errors.{ErrorWrapper, StandardDownstreamError}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
-import v1.models.errors.{StandardDownstreamError, ErrorWrapper}
 
 trait BaseController {
 

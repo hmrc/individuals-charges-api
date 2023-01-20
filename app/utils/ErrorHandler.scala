@@ -16,6 +16,8 @@
 
 package utils
 
+import api.models.errors.{BadRequestError, InvalidBodyTypeError, MtdError, NotFoundError, StandardDownstreamError, UnauthorisedError}
+
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -28,7 +30,7 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
 import uk.gov.hmrc.play.bootstrap.backend.http.JsonErrorHandler
-import v1.models.errors._
+import api.models.errors._
 
 import scala.concurrent.{ExecutionContext, Future}
 

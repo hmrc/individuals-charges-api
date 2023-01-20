@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.models.errors.RulePensionReferenceError
 import support.UnitSpec
-import v1.models.errors.RulePensionReferenceError
 
 class RulePensionReferenceValidationSpec extends UnitSpec {
   val qualifyingRecognisedOverseasPensionSchemeReferenceNumber = Seq("Q123456")
