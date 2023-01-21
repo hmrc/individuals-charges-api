@@ -16,12 +16,11 @@
 
 package v1.support
 
-import api.models.errors.{BadRequestError, DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, OutboundError, StandardDownstreamError}
+import api.models.errors._
+import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
 import utils.Logging
 import v1.controllers.EndpointLogContext
-import api.models.errors._
-import play.api.http.Status.BAD_REQUEST
 import v1.models.outcomes.ResponseWrapper
 
 class DownstreamResponseMappingSupportSpec extends UnitSpec {

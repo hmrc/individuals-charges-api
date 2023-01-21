@@ -20,7 +20,6 @@ import api.models.errors.{BadRequestError, ErrorWrapper, LossIdFormatError, Nino
 import support.UnitSpec
 import v1.mocks.validators.MockDeletePensionChargesValidator
 import v1.models.domain.Nino
-import api.models.errors._
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 import v1.models.request.TaxYear
 

@@ -16,14 +16,14 @@
 
 package v1.controllers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, UnauthorisedError}
+import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, ClientNotAuthenticatedError}
+import app.controllers.ControllerBaseSpec
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.errors._
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -117,7 +117,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(UnauthorisedError)))
+        .returns(Future.successful(Left(ClientNotAuthenticatedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN
@@ -136,22 +136,6 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
     }
   }
 
-  "the MTD user is not authenticated" should {
-    "return a 401" in new Test {
-
-      MockedMtdIdLookupService
-        .lookup(nino)
-        .returns(Future.successful(Right(mtdId)))
-
-      MockedEnrolmentsAuthService
-        .authorised(predicate)
-        .returns(Future.successful(Left(UnauthorisedError)))
-
-      private val result = target.action(nino)(fakeGetRequest)
-      status(result) shouldBe FORBIDDEN
-    }
-  }
-
   "the MTD user is not authorised" should {
     "return a 403" in new Test {
 
@@ -161,7 +145,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedEnrolmentsAuthService
         .authorised(predicate)
-        .returns(Future.successful(Left(UnauthorisedError)))
+        .returns(Future.successful(Left(ClientNotAuthenticatedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN

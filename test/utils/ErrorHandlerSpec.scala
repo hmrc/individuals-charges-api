@@ -16,7 +16,7 @@
 
 package utils
 
-import api.models.errors.{BadRequestError, InvalidBodyTypeError, MtdError, NotFoundError, StandardDownstreamError, UnauthorisedError}
+import api.models.errors._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.Status
@@ -32,7 +32,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
-import api.models.errors._
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -89,7 +88,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onClientError(requestHeader, Status.NOT_FOUND, "test")
         status(result) shouldBe Status.NOT_FOUND
 
-        contentAsJson(result) shouldBe Json.toJson(NotFoundError)
+        contentAsJson(result) shouldBe NotFoundError.asJson
       }
     }
 
@@ -98,7 +97,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onClientError(requestHeader, BAD_REQUEST, "test")
         status(result) shouldBe BAD_REQUEST
 
-        contentAsJson(result) shouldBe Json.toJson(BadRequestError)
+        contentAsJson(result) shouldBe BadRequestError.asJson
       }
     }
 
@@ -107,7 +106,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onClientError(requestHeader, UNAUTHORIZED, "test")
         status(result) shouldBe UNAUTHORIZED
 
-        contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)
+        contentAsJson(result) shouldBe ClientNotAuthenticatedError.asJson
       }
     }
 
@@ -116,7 +115,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onClientError(requestHeader, UNSUPPORTED_MEDIA_TYPE, "test")
         status(result) shouldBe UNSUPPORTED_MEDIA_TYPE
 
-        contentAsJson(result) shouldBe Json.toJson(InvalidBodyTypeError)
+        contentAsJson(result) shouldBe InvalidBodyTypeError.asJson
       }
     }
 
@@ -125,7 +124,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onClientError(requestHeader, METHOD_NOT_ALLOWED, "test")
         status(result) shouldBe METHOD_NOT_ALLOWED
 
-        contentAsJson(result) shouldBe Json.toJson(MtdError("INVALID_REQUEST", "test", METHOD_NOT_ALLOWED))
+        contentAsJson(result) shouldBe MtdError("INVALID_REQUEST", "test", METHOD_NOT_ALLOWED).asJson
       }
     }
   }
@@ -138,7 +137,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
           handler.onServerError(requestHeader, new NotFoundException("test") with NoStackTrace)
         status(result) shouldBe NOT_FOUND
 
-        contentAsJson(result) shouldBe Json.toJson(NotFoundError)
+        contentAsJson(result) shouldBe NotFoundError.asJson
       }
     }
 
@@ -148,7 +147,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
           handler.onServerError(requestHeader, new InsufficientEnrolments("test") with NoStackTrace)
         status(result) shouldBe UNAUTHORIZED
 
-        contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)
+        contentAsJson(result) shouldBe ClientNotAuthenticatedError.asJson
       }
     }
 
@@ -158,7 +157,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
           handler.onServerError(requestHeader, new JsValidationException("test", "test", classOf[String], "errs") with NoStackTrace)
         status(result) shouldBe BAD_REQUEST
 
-        contentAsJson(result) shouldBe Json.toJson(BadRequestError)
+        contentAsJson(result) shouldBe BadRequestError.asJson
       }
     }
 
@@ -167,7 +166,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         val result: Future[Result] = handler.onServerError(requestHeader, new Exception with NoStackTrace)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        contentAsJson(result) shouldBe Json.toJson(StandardDownstreamError)
+        contentAsJson(result) shouldBe StandardDownstreamError.asJson
       }
     }
   }

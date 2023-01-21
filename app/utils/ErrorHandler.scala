@@ -18,7 +18,6 @@ package utils
 
 import api.models.errors._
 import play.api.http.Status._
-import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc.{RequestHeader, Result}
 import play.api.{Configuration, Logger}
@@ -54,13 +53,13 @@ class ErrorHandler @Inject() (
     statusCode match {
       case BAD_REQUEST =>
         auditConnector.sendEvent(dataEvent("ServerValidationError", "Request bad format exception", request))
-        Future.successful(BadRequest(Json.toJson(BadRequestError)))
+        Future.successful(BadRequest(BadRequestError.asJson))
       case NOT_FOUND =>
         auditConnector.sendEvent(dataEvent("ResourceNotFound", "Resource Endpoint Not Found", request))
-        Future.successful(NotFound(Json.toJson(NotFoundError)))
+        Future.successful(NotFound(NotFoundError.asJson))
       case _ =>
         val errorCode = statusCode match {
-          case UNAUTHORIZED           => UnauthorisedError
+          case UNAUTHORIZED           => ClientNotAuthenticatedError
           case UNSUPPORTED_MEDIA_TYPE => InvalidBodyTypeError
           case _                      => MtdError("INVALID_REQUEST", message, BAD_REQUEST)
         }
@@ -74,7 +73,7 @@ class ErrorHandler @Inject() (
           )
         )
 
-        Future.successful(Status(statusCode)(Json.toJson(errorCode)))
+        Future.successful(Status(statusCode)(errorCode.asJson))
     }
   }
 
@@ -85,7 +84,7 @@ class ErrorHandler @Inject() (
 
     val (status, errorCode, eventType) = ex match {
       case _: NotFoundException      => (NOT_FOUND, NotFoundError, "ResourceNotFound")
-      case _: AuthorisationException => (UNAUTHORIZED, UnauthorisedError, "ClientError")
+      case _: AuthorisationException => (UNAUTHORIZED, ClientNotAuthenticatedError, "ClientError")
       case _: JsValidationException  => (BAD_REQUEST, BadRequestError, "ServerValidationError")
       case e: HttpException          => (e.responseCode, BadRequestError, "ServerValidationError")
       case e: Upstream4xxResponse    => (e.reportAs, BadRequestError, "ServerValidationError")
@@ -102,7 +101,7 @@ class ErrorHandler @Inject() (
       )
     )
 
-    Future.successful(Status(status)(Json.toJson(errorCode)))
+    Future.successful(Status(status)(errorCode.asJson))
   }
 
 }

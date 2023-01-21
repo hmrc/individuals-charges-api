@@ -16,19 +16,18 @@
 
 package v1.controllers
 
-import api.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, MtdError, NinoFormatError, PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError, RuleBenefitExcessesError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, RuleIsAnnualAllowanceReducedError, RulePensionReferenceError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
-import v1.data.AmendPensionChargesData._
+import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
+import app.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
+import v1.data.AmendPensionChargesData._
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
-import api.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
@@ -41,6 +40,7 @@ import scala.concurrent.Future
 
 class AmendPensionsChargesControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAmendPensionChargesParser
@@ -50,11 +50,9 @@ class AmendPensionsChargesControllerSpec
     with MockHateoasFactory
     with MockIdGenerator {
 
-  private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val nino          = "AA123456A"
-  private val taxYear       = "2021-22"
-  private val rawData       = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
-  private val requestData   = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
+  private val taxYear     = "2021-22"
+  private val rawData     = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
+  private val requestData = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
 
   private val testHateoasLinks = Seq(
     Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = "self"),
@@ -86,8 +84,7 @@ class AmendPensionsChargesControllerSpec
     """.stripMargin
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  class Test extends ControllerTest {
 
     val controller = new AmendPensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -100,11 +97,7 @@ class AmendPensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockAppConfig.apiGatewayContext.returns("individuals/charges").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
+    override protected def callController(): Future[Result] = controller.amend(nino, taxYear)(fakePostRequest(fullJson))
   }
 
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
@@ -147,78 +140,25 @@ class AmendPensionsChargesControllerSpec
       }
     }
 
-    "return the error as per the spec" when {
-      "parser errors occur" should {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-            MockAmendPensionChargesParser
-              .parseRequest(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error)))
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockAmendPensionChargesParser
+          .parseRequest(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(fullJson))).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (RuleCountryCodeError, BAD_REQUEST),
-          (CountryCodeFormatError, BAD_REQUEST),
-          (PensionSchemeTaxRefFormatError, BAD_REQUEST),
-          (ProviderAddressFormatError, BAD_REQUEST),
-          (QOPSRefFormatError, BAD_REQUEST),
-          (ProviderNameFormatError, BAD_REQUEST),
-          (RuleIsAnnualAllowanceReducedError, BAD_REQUEST),
-          (RuleBenefitExcessesError, BAD_REQUEST),
-          (RulePensionReferenceError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
-        )
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" should {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockAmendPensionChargesParser
+          .parseRequest(rawData)
+          .returns(Right(requestData))
 
-            MockAmendPensionChargesParser
-              .parseRequest(rawData)
-              .returns(Right(requestData))
+        MockAmendPensionsChargesService
+          .amend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError))))
 
-            MockAmendPensionsChargesService
-              .amend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.amend(nino, taxYear)(fakePutRequest(fullJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(fullJson))).once
-          }
-        }
-
-        val errors = Seq(
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
-        )
-        val extraTysErrors = Seq((RuleTaxYearNotSupportedError, BAD_REQUEST))
-
-        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(RuleIncorrectOrEmptyBodyError)
       }
     }
   }

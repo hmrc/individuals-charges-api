@@ -16,15 +16,15 @@
 
 package v1.services
 
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, OutboundError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
-import v1.models.request.TaxYear
-import v1.data.RetrievePensionChargesData._
+import api.models.errors._
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.models.outcomes.ResponseWrapper
+import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.request.TaxYear
 
 import scala.concurrent.Future
 

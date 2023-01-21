@@ -16,8 +16,7 @@
 
 package v1.controllers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, UnauthorisedError}
-import play.api.libs.json.Json
+import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, ClientNotAuthenticatedError}
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -50,9 +49,9 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
       def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
           headerCarrier: HeaderCarrier): Future[Result] = {
         authService.authorised(predicate(mtdId)).flatMap[Result] {
-          case Right(userDetails)      => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-          case Left(UnauthorisedError) => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
-          case Left(_)                 => Future.successful(InternalServerError(Json.toJson(StandardDownstreamError)))
+          case Right(userDetails)                => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
+          case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(ClientNotAuthenticatedError.asJson))
+          case Left(_)                           => Future.successful(InternalServerError(StandardDownstreamError.asJson))
         }
       }
 
@@ -61,11 +60,11 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
         implicit val headerCarrier: HeaderCarrier = hc(request)
 
         lookupService.lookup(nino).flatMap[Result] {
-          case Right(mtdId)                  => invokeBlockWithAuthCheck(mtdId, request, block)
-          case Left(NinoFormatError)         => Future.successful(BadRequest(Json.toJson(NinoFormatError)))
-          case Left(UnauthorisedError)       => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
-          case Left(InvalidBearerTokenError) => Future.successful(Unauthorized(Json.toJson(InvalidBearerTokenError)))
-          case Left(_)                       => Future.successful(InternalServerError(Json.toJson(StandardDownstreamError)))
+          case Right(mtdId)                      => invokeBlockWithAuthCheck(mtdId, request, block)
+          case Left(NinoFormatError)             => Future.successful(BadRequest(NinoFormatError.asJson))
+          case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(ClientNotAuthenticatedError.asJson))
+          case Left(InvalidBearerTokenError)     => Future.successful(Unauthorized(InvalidBearerTokenError.asJson))
+          case Left(_)                           => Future.successful(InternalServerError(StandardDownstreamError.asJson))
         }
       }
 

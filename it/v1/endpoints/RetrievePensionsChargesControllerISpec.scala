@@ -21,11 +21,9 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import v1.data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import api.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
@@ -126,7 +124,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 
@@ -152,7 +150,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 

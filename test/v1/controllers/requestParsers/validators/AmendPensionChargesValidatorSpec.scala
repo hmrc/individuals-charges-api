@@ -16,14 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.models.errors.{CountryCodeFormatError, MtdError, NinoFormatError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import v1.data.AmendPensionChargesData._
+import api.models.errors._
 import mocks.MockAppConfig
+import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.errors._
-import play.api.http.Status.BAD_REQUEST
+import v1.data.AmendPensionChargesData._
 import v1.models.request.AmendPensionCharges
 
 class AmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {

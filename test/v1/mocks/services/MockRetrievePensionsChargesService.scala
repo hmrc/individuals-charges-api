@@ -17,11 +17,11 @@
 package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
-import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService}
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

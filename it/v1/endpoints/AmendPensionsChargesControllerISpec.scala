@@ -152,7 +152,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(mtdRequest.put(requestBody))
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 
@@ -254,7 +254,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(mtdRequest.put(fullValidJson))
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 

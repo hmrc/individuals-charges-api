@@ -125,7 +125,7 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
             response.header("Content-Type") shouldBe Some("application/json")
           }
         }
@@ -152,7 +152,7 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 

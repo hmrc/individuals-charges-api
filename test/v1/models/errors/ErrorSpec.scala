@@ -35,7 +35,7 @@ class ErrorSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(NinoFormatError) shouldBe json
+        NinoFormatError.asJson shouldBe json
       }
     }
   }

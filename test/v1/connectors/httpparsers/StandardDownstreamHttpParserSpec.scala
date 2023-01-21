@@ -16,13 +16,12 @@
 
 package v1.connectors.httpparsers
 
-import api.models.errors.{BVRError, DownstreamErrorCode, DownstreamErrors, MtdError, OutboundError, StandardDownstreamError}
+import api.models.errors._
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import v1.connectors.DownstreamOutcome
-import api.models.errors._
 import v1.models.outcomes.ResponseWrapper
 
 // WLOG if Reads tested elsewhere
