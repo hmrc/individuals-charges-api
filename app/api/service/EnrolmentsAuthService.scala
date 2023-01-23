@@ -14,42 +14,52 @@
  * limitations under the License.
  */
 
-package v1.services
+package api.service
 
-import api.models.errors.{StandardDownstreamError, ClientNotAuthenticatedError}
+import api.models.auth.UserDetails
+import api.models.errors.{ClientNotAuthorisedError, InternalError}
+import api.models.outcome.AuthOutcome
 import config.AppConfig
-import play.api.Logger
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.{
+  AffinityGroup,
+  AuthConnector,
+  AuthorisationException,
+  AuthorisedFunctions,
+  ConfidenceLevel,
+  Enrolment,
+  Enrolments,
+  MissingBearerToken
+}
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.auth.UserDetails
-import v1.models.outcomes.AuthOutcome
+import utils.Logging
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) {
-
-  val logger: Logger = Logger(getClass)
+class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) extends Logging {
 
   private val authFunction: AuthorisedFunctions = new AuthorisedFunctions {
     override def authConnector: AuthConnector = connector
   }
 
-  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] = enrolments
-    .getEnrolment("HMRC-AS-AGENT")
-    .flatMap(_.getIdentifier("AgentReferenceNumber"))
-    .map(_.value)
+  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] =
+    enrolments
+      .getEnrolment("HMRC-AS-AGENT")
+      .flatMap(_.getIdentifier("AgentReferenceNumber"))
+      .map(_.value)
 
   def buildPredicate(predicate: Predicate): Predicate =
     if (appConfig.confidenceLevelConfig.authValidationEnabled) {
       predicate and ((Individual and ConfidenceLevel.L200) or Organisation or Agent)
-    } else predicate
+    } else {
+      predicate
+    }
 
   def authorised(predicate: Predicate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuthOutcome] = {
     authFunction.authorised(buildPredicate(predicate)).retrieve(affinityGroup and authorisedEnrolments) {
@@ -66,17 +76,18 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
             user
           case None =>
             logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
-            Left(StandardDownstreamError)
+            Left(InternalError)
         }
-      case _ ~ _ =>
-        logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
-        Future.successful(Left(ClientNotAuthenticatedError))
+      case unexpected =>
+        logger.error(s"[EnrolmentsAuthService][authorised] Unexpected AuthorisedFunction: $unexpected")
+        Future.successful(Left(ClientNotAuthorisedError))
+
     } recoverWith {
-      case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthenticatedError))
-      case _: AuthorisationException => Future.successful(Left(ClientNotAuthenticatedError))
+      case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthorisedError))
+      case _: AuthorisationException => Future.successful(Left(ClientNotAuthorisedError))
       case error =>
         logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
-        Future.successful(Left(StandardDownstreamError))
+        Future.successful(Left(InternalError))
     }
   }
 
@@ -84,8 +95,9 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
     authFunction
       .authorised(AffinityGroup.Agent and Enrolment("HMRC-AS-AGENT"))
       .retrieve(Retrievals.agentCode and Retrievals.authorisedEnrolments) {
-        case _ ~ enrolments => Future.successful(getAgentReferenceFromEnrolments(enrolments))
-        case _              => Future.successful(None)
+        case _ ~ enrolments =>
+          Future.successful(getAgentReferenceFromEnrolments(enrolments))
+        case _ => Future.successful(None)
       }
 
 }

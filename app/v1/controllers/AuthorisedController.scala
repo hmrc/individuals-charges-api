@@ -16,14 +16,15 @@
 
 package v1.controllers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, ClientNotAuthenticatedError}
+import api.models.auth.UserDetails
+import api.models.errors.MtdError
+import api.service.EnrolmentsAuthService
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import v1.models.auth.UserDetails
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.MtdIdLookupService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,40 +35,36 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
   val authService: EnrolmentsAuthService
   val lookupService: MtdIdLookupService
 
-  def authorisedAction(nino: String): ActionBuilder[UserRequest, AnyContent] =
-    new ActionBuilder[UserRequest, AnyContent] {
+  def authorisedAction(nino: String): ActionBuilder[UserRequest, AnyContent] = new ActionBuilder[UserRequest, AnyContent] {
 
-      override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+    override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
-      override protected def executionContext: ExecutionContext = cc.executionContext
+    override protected def executionContext: ExecutionContext = cc.executionContext
 
-      def predicate(mtdId: String): Predicate =
-        Enrolment("HMRC-MTD-IT")
-          .withIdentifier("MTDITID", mtdId)
-          .withDelegatedAuthRule("mtd-it-auth")
+    def predicate(mtdId: String): Predicate =
+      Enrolment("HMRC-MTD-IT")
+        .withIdentifier("MTDITID", mtdId)
+        .withDelegatedAuthRule("mtd-it-auth")
 
-      def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
-          headerCarrier: HeaderCarrier): Future[Result] = {
-        authService.authorised(predicate(mtdId)).flatMap[Result] {
-          case Right(userDetails)                => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-          case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(ClientNotAuthenticatedError.asJson))
-          case Left(_)                           => Future.successful(InternalServerError(StandardDownstreamError.asJson))
-        }
+    def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
+        headerCarrier: HeaderCarrier): Future[Result] = {
+      authService.authorised(predicate(mtdId)).flatMap[Result] {
+        case Right(userDetails) => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
+        case Left(mtdError)     => errorResponse(mtdError)
       }
-
-      override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] = {
-
-        implicit val headerCarrier: HeaderCarrier = hc(request)
-
-        lookupService.lookup(nino).flatMap[Result] {
-          case Right(mtdId)                      => invokeBlockWithAuthCheck(mtdId, request, block)
-          case Left(NinoFormatError)             => Future.successful(BadRequest(NinoFormatError.asJson))
-          case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(ClientNotAuthenticatedError.asJson))
-          case Left(InvalidBearerTokenError)     => Future.successful(Unauthorized(InvalidBearerTokenError.asJson))
-          case Left(_)                           => Future.successful(InternalServerError(StandardDownstreamError.asJson))
-        }
-      }
-
     }
+
+    override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] = {
+
+      implicit val headerCarrier: HeaderCarrier = hc(request)
+
+      lookupService.lookup(nino).flatMap[Result] {
+        case Right(mtdId)   => invokeBlockWithAuthCheck(mtdId, request, block)
+        case Left(mtdError) => errorResponse(mtdError)
+      }
+    }
+
+    private def errorResponse[A](mtdError: MtdError): Future[Result] = Future.successful(Status(mtdError.httpStatus)(mtdError.asJson))
+  }
 
 }

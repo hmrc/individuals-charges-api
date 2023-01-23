@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models
+package api.models
 
+import api.models.auth.UserDetails
 import api.models.errors.MtdError
-import v1.models.auth.UserDetails
 
-package object outcomes {
+package object outcome {
 
   type AuthOutcome = Either[MtdError, UserDetails]
 

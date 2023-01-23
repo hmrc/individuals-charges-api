@@ -17,7 +17,9 @@
 package v1.controllers
 
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.outcome.ResponseWrapper
 import app.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import app.mocks.services.MockEnrolmentsAuthService
 import mocks.MockAppConfig
 import play.api.mvc.Result
 import v1.data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
@@ -29,7 +31,6 @@ import v1.models.domain.Nino
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.models.request.TaxYear
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData

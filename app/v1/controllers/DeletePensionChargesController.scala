@@ -17,6 +17,7 @@
 package v1.controllers
 
 import api.controllers.BaseController
+import api.service.EnrolmentsAuthService
 import cats.data.EitherT
 import play.api.http.MimeTypes
 import play.api.mvc.{Action, AnyContent, ControllerComponents}

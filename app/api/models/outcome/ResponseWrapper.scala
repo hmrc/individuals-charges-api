@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.outcomes
+package api.models.outcome
 
 case class ResponseWrapper[+A](correlationId: String, responseData: A) {
   def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))

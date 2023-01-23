@@ -17,12 +17,12 @@
 package v1.services
 
 import api.models.errors._
+import api.models.outcome.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.domain.Nino
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.request.TaxYear
 
@@ -87,9 +87,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-          "SERVER_ERROR"              -> StandardDownstreamError,
-          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+          "INVALID_CORRELATIONID"     -> InternalError,
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
         val extraTysErrors = Seq(

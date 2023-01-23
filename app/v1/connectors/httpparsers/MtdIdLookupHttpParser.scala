@@ -16,7 +16,7 @@
 
 package v1.connectors.httpparsers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError}
+import api.models.errors.{InvalidBearerTokenError, NinoFormatError, InternalError}
 import play.api.http.Status.{FORBIDDEN, OK, UNAUTHORIZED}
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
@@ -31,11 +31,11 @@ object MtdIdLookupHttpParser extends HttpParser {
       case OK =>
         response.validateJson[String](mtdIdJsonReads) match {
           case Some(mtdId) => Right(mtdId)
-          case None        => Left(StandardDownstreamError)
+          case None        => Left(InternalError)
         }
       case FORBIDDEN    => Left(NinoFormatError)
       case UNAUTHORIZED => Left(InvalidBearerTokenError)
-      case _            => Left(StandardDownstreamError)
+      case _            => Left(InternalError)
     }
   }
 

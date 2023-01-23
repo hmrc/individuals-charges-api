@@ -17,12 +17,12 @@
 package v1.services
 
 import api.models.errors._
+import api.models.outcome.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.data.AmendPensionChargesData._
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.domain.Nino
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.TaxYear
 
@@ -80,16 +80,16 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
           "INVALID_TAX_YEAR"             -> TaxYearFormatError,
           "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
-          "INVALID_CORRELATIONID"        -> StandardDownstreamError,
-          "REDUCTION_TYPE_NOT_SPECIFIED" -> StandardDownstreamError,
-          "REDUCTION_NOT_SPECIFIED"      -> StandardDownstreamError,
-          "SERVER_ERROR"                 -> StandardDownstreamError,
-          "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
+          "INVALID_CORRELATIONID"        -> InternalError,
+          "REDUCTION_TYPE_NOT_SPECIFIED" -> InternalError,
+          "REDUCTION_NOT_SPECIFIED"      -> InternalError,
+          "SERVER_ERROR"                 -> InternalError,
+          "SERVICE_UNAVAILABLE"          -> InternalError
         )
 
         val extraTysErrors = Seq(
-          "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> StandardDownstreamError,
-          "MISSING_TYPE_OF_REDUCTION"          -> StandardDownstreamError,
+          "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> InternalError,
+          "MISSING_TYPE_OF_REDUCTION"          -> InternalError,
           "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
         )
 

@@ -17,6 +17,7 @@
 package app.controllers
 
 import api.models.errors.MtdError
+import app.mocks.services.MockEnrolmentsAuthService
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.JsValue
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
@@ -26,7 +27,7 @@ import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.ControllerSpecHateoasSupport
 import v1.mocks.MockIdGenerator
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 
 import scala.concurrent.Future

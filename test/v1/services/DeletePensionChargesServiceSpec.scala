@@ -17,11 +17,11 @@
 package v1.services
 
 import api.models.errors._
+import api.models.outcome.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
 import v1.models.domain.Nino
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.TaxYear
 
@@ -54,7 +54,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError: MtdError                                = StandardDownstreamError
+        val someError: MtdError                                = InternalError
         val downstreamResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
@@ -87,14 +87,14 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-          "SERVER_ERROR"              -> StandardDownstreamError,
-          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError,
-          "UNEXPECTED_ERROR"          -> StandardDownstreamError
+          "INVALID_CORRELATIONID"     -> InternalError,
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError,
+          "UNEXPECTED_ERROR"          -> InternalError
         )
 
         val extraTysErrors = Map(
-          "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+          "INVALID_CORRELATION_ID" -> InternalError,
           "NOT_FOUND"              -> NotFoundError,
           "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
         )

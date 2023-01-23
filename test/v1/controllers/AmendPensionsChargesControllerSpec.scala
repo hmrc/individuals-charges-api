@@ -17,7 +17,9 @@
 package v1.controllers
 
 import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
+import api.models.outcome.ResponseWrapper
 import app.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import app.mocks.services.MockEnrolmentsAuthService
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
@@ -30,7 +32,6 @@ import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 import v1.models.request.TaxYear
 import v1.models.response.amend.AmendPensionChargesHateoasData

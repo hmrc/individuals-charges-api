@@ -16,15 +16,17 @@
 
 package v1.controllers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError, ClientNotAuthenticatedError}
+import api.models.errors.{ClientNotAuthorisedError, InvalidBearerTokenError, NinoFormatError, InternalError}
+import api.service.EnrolmentsAuthService
 import app.controllers.ControllerBaseSpec
+import app.mocks.services.MockEnrolmentsAuthService
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.mocks.services.MockMtdIdLookupService
+import v1.services.MtdIdLookupService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,7 +34,7 @@ import scala.concurrent.Future
 class AuthorisedControllerSpec extends ControllerBaseSpec {
 
   trait Test extends MockEnrolmentsAuthService with MockMtdIdLookupService {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     class TestController extends AuthorisedController(cc) {
       override val authService: EnrolmentsAuthService = mockEnrolmentsAuthService
@@ -47,8 +49,8 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
     lazy val target = new TestController()
   }
 
-  val nino  = "AA123456A"
-  val mtdId = "X123567890"
+  val nino: String  = "AA123456A"
+  val mtdId: String = "X123567890"
 
   val predicate: Predicate = Enrolment("HMRC-MTD-IT")
     .withIdentifier("MTDITID", mtdId)
@@ -79,7 +81,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
         MockedEnrolmentsAuthService
           .authorised(predicate)
-          .returns(Future.successful(Left(StandardDownstreamError)))
+          .returns(Future.successful(Left(InternalError)))
 
         private val result = target.action(nino)(fakeGetRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -117,7 +119,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(ClientNotAuthenticatedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN
@@ -129,7 +131,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(StandardDownstreamError)))
+        .returns(Future.successful(Left(InternalError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -145,7 +147,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedEnrolmentsAuthService
         .authorised(predicate)
-        .returns(Future.successful(Left(ClientNotAuthenticatedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN

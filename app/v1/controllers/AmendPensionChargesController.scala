@@ -18,6 +18,7 @@ package v1.controllers
 
 import api.controllers.BaseController
 import api.models.errors._
+import api.service.EnrolmentsAuthService
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
