@@ -16,26 +16,21 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import play.api.http.MimeTypes
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 import v1.services._
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
-                                                requestParser: DeletePensionChargesParser,
                                                 service: DeletePensionChargesService,
+                                                parser: DeletePensionChargesParser,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents,
                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -49,57 +44,24 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = DeletePensionChargesRawData(nino, taxYear)
 
-      val result = for {
-        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.deletePensionCharges(parsedRequest))
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.deletePensionCharges)
+          .withNoContentResult()
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "DeletePensionsCharges",
+              transactionName = "delete-pensions-charges",
+              params = Map("nino" -> nino, "taxYear" -> taxYear)))
 
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = None,
-            `X-CorrelationId` = serviceResponse.correlationId,
-            response = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
-          ))
-
-        NoContent.withApiHeaders(serviceResponse.correlationId).as(MimeTypes.JSON)
-      }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = None,
-            `X-CorrelationId` = correlationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          ))
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-  }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("DeletePensionsCharges", "delete-pensions-charges", details)
-    auditService.auditEvent(event)
   }
 
 }

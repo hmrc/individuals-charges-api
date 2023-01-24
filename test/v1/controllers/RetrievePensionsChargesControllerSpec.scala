@@ -70,7 +70,7 @@ class RetrievePensionsChargesControllerSpec
     val controller = new RetrievePensionChargesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrievePensionChargesParser,
+      parser = mockRetrievePensionChargesParser,
       service = mockRetrievePensionsChargesService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

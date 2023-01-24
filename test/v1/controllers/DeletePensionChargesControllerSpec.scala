@@ -53,7 +53,7 @@ class DeletePensionChargesControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       service = mockDeleteBFLossService,
-      requestParser = mockDeletePensionChargesParser,
+      parser = mockDeletePensionChargesParser,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

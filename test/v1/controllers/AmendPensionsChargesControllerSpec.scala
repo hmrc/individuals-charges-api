@@ -90,7 +90,7 @@ class AmendPensionsChargesControllerSpec
     val controller = new AmendPensionChargesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockAmendPensionChargesParser,
+      parser = mockAmendPensionChargesParser,
       service = mockAmendPensionsChargesService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,

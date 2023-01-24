@@ -16,26 +16,23 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import play.api.http.MimeTypes
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
-import api.hateoas.HateoasFactory
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 import v1.services._
 
 import javax.inject._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
                                                   service: RetrievePensionChargesService,
-                                                  requestParser: RetrievePensionChargesParser,
+                                                  parser: RetrievePensionChargesParser,
                                                   hateoasFactory: HateoasFactory,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -47,37 +44,17 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
 
   def retrieve(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = RetrievePensionChargesRawData(nino, taxYear)
 
-      val result = for {
-        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.retrievePensions(parsedRequest))
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.retrievePensions)
+          .withHateoasResult(hateoasFactory)(RetrievePensionChargesHateoasData(nino, taxYear))
 
-        val hateoasResponse =
-          hateoasFactory.wrap(serviceResponse.responseData, RetrievePensionChargesHateoasData(nino, taxYear))
-
-        Ok(Json.toJson(hateoasResponse))
-          .withApiHeaders(serviceResponse.correlationId)
-          .as(MimeTypes.JSON)
-      }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
   }
 
