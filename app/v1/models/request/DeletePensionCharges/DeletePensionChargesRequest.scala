@@ -16,7 +16,6 @@
 
 package v1.models.request.DeletePensionCharges
 
-import api.models.domain.TaxYear
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
 case class DeletePensionChargesRequest(nino: Nino, taxYear: TaxYear)

@@ -16,13 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import api.models.domain.TaxYear
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.data.AmendPensionChargesData
 import v1.mocks.validators.MockAmendPensionChargesValidator
-import api.models.domain.Nino
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
 class AmendPensionChargesParserSpec extends UnitSpec {

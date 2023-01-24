@@ -17,9 +17,8 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.TaxYear
+import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrievePensionChargesValidator
-import api.models.domain.Nino
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.models.request.RetrievePensionCharges
 

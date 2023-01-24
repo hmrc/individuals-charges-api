@@ -16,7 +16,6 @@
 
 package v1.models.request.RetrievePensionCharges
 
-import api.models.domain.TaxYear
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
 case class RetrievePensionChargesRequest(nino: Nino, taxYear: TaxYear)
