@@ -16,31 +16,23 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.PensionChargesConnector
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
 
-  def amendPensions(request: AmendPensionChargesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[AmendPensionChargesOutcome] = {
-
-    val result = EitherT(connector.amendPensionCharges(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+  def amendPensions(request: AmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendPensionChargesOutcome] = {
+    connector
+      .amendPensionCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {

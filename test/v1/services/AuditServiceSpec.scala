@@ -16,7 +16,7 @@
 
 package v1.services
 
-import api.service.AuditService
+import api.services.AuditService
 import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier

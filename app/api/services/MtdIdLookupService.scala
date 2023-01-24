@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.service
+package api.services
 
 import api.models.errors.NinoFormatError
 import uk.gov.hmrc.http.HeaderCarrier

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.service
+package api.services
 
 import play.api.libs.json.{Json, Writes}
 import play.api.{Configuration, Logger}

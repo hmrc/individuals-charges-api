@@ -18,7 +18,7 @@ package api.controllers
 
 import api.models.auth.UserDetails
 import api.models.errors.MtdError
-import api.service.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate

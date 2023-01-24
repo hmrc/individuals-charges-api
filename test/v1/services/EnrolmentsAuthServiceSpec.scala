@@ -18,7 +18,7 @@ package v1.services
 
 import api.models.auth.UserDetails
 import api.models.errors.{ClientNotAuthorisedError, InternalError}
-import api.service.EnrolmentsAuthService
+import api.services.EnrolmentsAuthService
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler

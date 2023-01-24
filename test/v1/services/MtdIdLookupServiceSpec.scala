@@ -17,7 +17,7 @@
 package v1.services
 
 import api.models.errors.{ClientNotAuthorisedError, InternalError, NinoFormatError}
-import api.service.MtdIdLookupService
+import api.services.MtdIdLookupService
 import v1.mocks.connectors.MockMtdIdLookupConnector
 import api.models.domain.Nino
 

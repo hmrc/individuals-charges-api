@@ -16,30 +16,24 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.BaseService
+import cats.implicits.toBifunctorOps
 import v1.connectors.PensionChargesConnector
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
 
-  def deletePensionCharges(request: DeletePensionChargesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[DeletePensionChargesOutcome] = {
-
-    val result = EitherT(connector.deletePensionCharges(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+  def deletePensionCharges(
+      request: DeletePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeletePensionChargesOutcome] = {
+    connector
+      .deletePensionCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {

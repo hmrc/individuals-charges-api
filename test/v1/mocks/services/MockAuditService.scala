@@ -16,7 +16,7 @@
 
 package v1.mocks.services
 
-import api.service.AuditService
+import api.services.AuditService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.Writes

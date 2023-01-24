@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.AuthorisedController
 import api.models.errors.{ClientNotAuthorisedError, InternalError, InvalidBearerTokenError, NinoFormatError}
-import api.service.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import app.controllers.ControllerBaseSpec
 import app.mocks.services.MockEnrolmentsAuthService
 import play.api.libs.json.Json

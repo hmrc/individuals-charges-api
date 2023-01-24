@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.service
+package api.services
 
 import api.models.auth.UserDetails
 import api.models.errors.{ClientNotAuthorisedError, InternalError}

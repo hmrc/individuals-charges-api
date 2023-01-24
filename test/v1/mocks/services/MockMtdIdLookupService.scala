@@ -16,7 +16,7 @@
 
 package v1.mocks.services
 
-import api.service.MtdIdLookupService
+import api.services.MtdIdLookupService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier

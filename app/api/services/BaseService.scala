@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.service
+package api.services
 
 import api.controllers.RequestContextImplicits
 import utils.Logging

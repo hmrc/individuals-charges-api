@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.errors._
-import api.service.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
