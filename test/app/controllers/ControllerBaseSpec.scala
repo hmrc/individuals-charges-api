@@ -28,7 +28,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.ControllerSpecHateoasSupport
 import v1.mocks.MockIdGenerator
 import v1.mocks.services.{MockAuditService, MockMtdIdLookupService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 
 import scala.concurrent.Future
 

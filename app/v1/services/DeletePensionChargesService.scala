@@ -16,12 +16,12 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
 import api.models.errors._
 import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.PensionChargesConnector
-import v1.controllers.EndpointLogContext
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.support.DownstreamResponseMappingSupport
 

@@ -16,12 +16,12 @@
 
 package v1.controllers.requestParsers
 
+import api.models.domain.TaxYear
 import api.models.errors.{BadRequestError, ErrorWrapper, LossIdFormatError, NinoFormatError}
 import support.UnitSpec
 import v1.mocks.validators.MockRetrievePensionChargesValidator
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
-import v1.models.request.TaxYear
 
 class RetrievePensionChargesParserSpec extends UnitSpec {
   val nino                   = "AA123456B"

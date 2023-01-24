@@ -16,15 +16,15 @@
 
 package v1.connectors
 
-import api.models.errors.{NinoFormatError, InternalError, TaxYearFormatError}
+import api.models.domain.TaxYear
+import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcome.ResponseWrapper
 import v1.data.AmendPensionChargesData.pensionCharges
 import v1.data.RetrievePensionChargesData.retrieveResponse
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1.models.request._
 
 import scala.concurrent.Future
 

@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcome.ResponseWrapper
 import app.controllers.{ControllerBaseSpec, ControllerTestRunner}
@@ -27,12 +28,12 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
-import v1.models.domain.Nino
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
-import v1.models.hateoas.{HateoasWrapper, Link}
+import api.models.domain.Nino
+import api.models.hateoas.Link
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
-import v1.models.request.TaxYear
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

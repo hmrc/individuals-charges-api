@@ -16,8 +16,8 @@
 
 package v1.controllers
 
-import api.controllers.BaseController
-import api.service.EnrolmentsAuthService
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.service.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import play.api.http.MimeTypes
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -25,7 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
 import v1.services._
 

@@ -16,14 +16,14 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
+import api.models.domain.TaxYear
 import api.models.errors._
 import api.models.outcome.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockPensionChargesConnector
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
-import v1.models.request.TaxYear
 
 import scala.concurrent.Future
 

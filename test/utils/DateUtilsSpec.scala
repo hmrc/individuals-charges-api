@@ -16,8 +16,8 @@
 
 package utils
 
+import api.models.domain.TaxYear
 import support.UnitSpec
-import v1.models.request.TaxYear
 
 import java.time.LocalDate
 

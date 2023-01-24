@@ -17,7 +17,7 @@
 package v1.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{ClientNotAuthenticatedError, ClientNotAuthorisedError, InternalError}
+import api.models.errors.{ClientNotAuthorisedError, InternalError}
 import api.service.EnrolmentsAuthService
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig

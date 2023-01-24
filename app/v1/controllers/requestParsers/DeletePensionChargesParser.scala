@@ -16,10 +16,12 @@
 
 package v1.controllers.requestParsers
 
+import api.controllers.requestParsers.RequestParser
+import api.models.domain.TaxYear
 import v1.controllers.requestParsers.validators.DeletePensionChargesValidator
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
-import v1.models.request.{DeletePensionCharges, TaxYear}
+import v1.models.request.DeletePensionCharges
 
 import javax.inject.Inject
 

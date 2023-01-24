@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.domain
+package api.models.domain
 
 import support.UnitSpec
 

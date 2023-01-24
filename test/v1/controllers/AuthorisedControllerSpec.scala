@@ -16,8 +16,9 @@
 
 package v1.controllers
 
-import api.models.errors.{ClientNotAuthorisedError, InvalidBearerTokenError, NinoFormatError, InternalError}
-import api.service.EnrolmentsAuthService
+import api.controllers.AuthorisedController
+import api.models.errors.{ClientNotAuthorisedError, InternalError, InvalidBearerTokenError, NinoFormatError}
+import api.service.{EnrolmentsAuthService, MtdIdLookupService}
 import app.controllers.ControllerBaseSpec
 import app.mocks.services.MockEnrolmentsAuthService
 import play.api.libs.json.Json
@@ -26,7 +27,6 @@ import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.services.MockMtdIdLookupService
-import v1.services.MtdIdLookupService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

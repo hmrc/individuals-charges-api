@@ -21,7 +21,6 @@ import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Status
-import v1.controllers.EndpointLogContext
 
 trait BaseController {
 

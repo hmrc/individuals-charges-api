@@ -16,6 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.{NoValidationErrors, PensionSchemeTaxReferenceValidation}
 import api.models.errors.PensionSchemeTaxRefFormatError
 import support.UnitSpec
 

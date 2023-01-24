@@ -16,15 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.BaseController
-import api.service.EnrolmentsAuthService
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.service.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionChargesParser
-import v1.hateoas.HateoasFactory
+import api.hateoas.HateoasFactory
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 import v1.services._

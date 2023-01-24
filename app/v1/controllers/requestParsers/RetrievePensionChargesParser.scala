@@ -16,10 +16,12 @@
 
 package v1.controllers.requestParsers
 
+import api.controllers.requestParsers.RequestParser
+import api.models.domain.TaxYear
 import v1.controllers.requestParsers.validators.RetrievePensionChargesValidator
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
-import v1.models.request.{RetrievePensionCharges, TaxYear}
+import v1.models.request.RetrievePensionCharges
 
 import javax.inject.Inject
 

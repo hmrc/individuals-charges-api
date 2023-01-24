@@ -16,9 +16,12 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{CountryCodeValidation, JsonFormatValidation, MinTaxYearValidation, NinoValidation, NumberValidation, PensionSchemeTaxReferenceValidation, ProviderAddressValidation, ProviderNameValidation, QROPSRefValidation, RuleIsAnnualAllowanceReducedValidation, RulePensionReferenceValidation, TaxYearValidation}
+import api.controllers.requestParsers.validators.validations.NoValidationErrors
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import config.AppConfig
-import v1.controllers.requestParsers.validators.validations._
+import api.controllers.requestParsers.validators.validations._
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
 
 import javax.inject.Inject

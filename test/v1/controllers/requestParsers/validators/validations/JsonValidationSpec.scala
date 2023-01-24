@@ -16,6 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.JsonValidation
 import api.models.errors.NinoFormatError
 import play.api.libs.json.Json
 import support.UnitSpec

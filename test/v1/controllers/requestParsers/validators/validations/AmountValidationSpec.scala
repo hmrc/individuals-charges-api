@@ -16,6 +16,7 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.AmountValidation
 import api.models.errors.{AmountFormatError, RuleInvalidLossAmount}
 import support.UnitSpec
 

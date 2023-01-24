@@ -16,9 +16,9 @@
 
 package v1.controllers
 
-import api.controllers.BaseController
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.errors._
-import api.service.EnrolmentsAuthService
+import api.service.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
@@ -28,8 +28,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.hateoas.HateoasFactory
-import v1.models.audit._
+import api.hateoas.HateoasFactory
+import api.models.audit._
 import v1.models.request.AmendPensionCharges
 import v1.models.response.amend.AmendPensionChargesHateoasData
 import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
