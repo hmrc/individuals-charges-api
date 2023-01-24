@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package v1.connectors.httpparsers
+package api.connectors.parsers
 
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, InternalError}
+import api.connectors.MtdIdLookupOutcome
+import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
+import api.models.errors.{InternalError, InvalidBearerTokenError, NinoFormatError}
 import play.api.libs.json.Writes.StringWrites
 import play.api.libs.json.{JsObject, Json}
 import play.api.test.Helpers.{FORBIDDEN, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import support.UnitSpec
 import uk.gov.hmrc.http.HttpResponse
-import api.connectors.MtdIdLookupOutcome
-import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
 
 class MtdIdLookupHttpParserSpec extends UnitSpec {
 

@@ -40,8 +40,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
                                                auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "AmendPensionChargesController", endpointName = "Amend a Pensions Charge")

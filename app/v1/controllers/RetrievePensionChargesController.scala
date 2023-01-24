@@ -36,8 +36,7 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
                                                   hateoasFactory: HateoasFactory,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrievePensionChargesController", endpointName = "Retrieve a Pensions Charge")
