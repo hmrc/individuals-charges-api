@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.audit.errors
+package api.models.errors
 
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.libs.json.Json
 import support.UnitSpec
 

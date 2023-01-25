@@ -19,7 +19,7 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import v1.data.AmendPensionChargesData.pensionCharges
 import v1.data.RetrievePensionChargesData.retrieveResponse
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest

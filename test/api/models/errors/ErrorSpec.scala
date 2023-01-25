@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.audit.errors
+package api.models.errors
 
-import api.models.errors.NinoFormatError
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 

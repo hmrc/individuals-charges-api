@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.audit.hateoas
+package api.models.hateoas
 
-import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.{Json, OWrites}
 import support.UnitSpec
 import api.models.hateoas.Method.GET

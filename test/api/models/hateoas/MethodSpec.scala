@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.audit.hateoas
+package api.models.hateoas
 
-import api.models.hateoas.Method
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
 import api.models.hateoas.Method._

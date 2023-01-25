@@ -20,7 +20,7 @@ import api.controllers.requestParsers.RequestParser
 import api.hateoas.{HateoasFactory, HateoasLinksFactory}
 import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.hateoas.{HateoasData, HateoasWrapper}
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
 import cats.data.EitherT
 import cats.implicits._

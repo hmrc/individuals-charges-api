@@ -18,7 +18,7 @@ package api.connectors.parsers
 
 import api.connectors.DownstreamOutcome
 import api.models.errors._
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec

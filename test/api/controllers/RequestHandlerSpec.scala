@@ -25,7 +25,7 @@ import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDeta
 import api.models.auth.UserDetails
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.hateoas.{HateoasData, HateoasWrapper, Link}
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
 import api.services.ServiceOutcome
 import config.AppConfig

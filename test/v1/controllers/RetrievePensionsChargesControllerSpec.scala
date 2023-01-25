@@ -20,18 +20,17 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.mvc.Result
-import v1.data.RetrievePensionChargesData.{fullJsonWithHateoas, retrieveResponse}
+import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
 import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
-import api.models.hateoas.Link
-import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_PENSION_CHARGES, DELETE_PENSION_CHARGES, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.hateoas.HateoasWrapper
+import play.api.libs.json.{JsObject, JsValue}
 import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.models.response.retrieve.RetrievePensionChargesHateoasData
 
@@ -55,16 +54,7 @@ class RetrievePensionsChargesControllerSpec
   private val rawData     = RetrievePensionChargesRawData(nino, taxYear)
   private val requestData = RetrievePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
-  private val retrieveHateoasLink =
-    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = GET, rel = SELF)
-
-  private val amendHateoasLink =
-    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = PUT, rel = AMEND_PENSION_CHARGES)
-
-  private val deleteHateoasLink =
-    Link(href = s"/individuals/charges/pensions/$nino/$taxYear", method = DELETE, rel = DELETE_PENSION_CHARGES)
-
-  class Test extends ControllerTest {
+  class Test extends ControllerTest with AuditEventChecking {
 
     val controller = new RetrievePensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -77,6 +67,21 @@ class RetrievePensionsChargesControllerSpec
     )
 
     override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeGetRequest)
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "RetrievePensionsCharges",
+        transactionName = "retrieve-pensions-charges",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = None,
+          `X-CorrelationId` = correlationId,
+          response = auditResponse
+        )
+      )
+
   }
 
   "retrieve" should {
@@ -93,12 +98,9 @@ class RetrievePensionsChargesControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveResponse, links = Seq(retrieveHateoasLink, amendHateoasLink, deleteHateoasLink)))
+          .returns(HateoasWrapper(retrieveResponse, links = hateoaslinks))
 
-        val result: Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe fullJsonWithHateoas(taxYear)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(OK, Some(fullJson.as[JsObject] ++ hateoaslinksJson))
       }
     }
 

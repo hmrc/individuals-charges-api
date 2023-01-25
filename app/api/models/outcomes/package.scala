@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package api.models.outcome
+package api.models
 
-case class ResponseWrapper[+A](correlationId: String, responseData: A) {
-  def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))
+import api.models.auth.UserDetails
+import api.models.errors.MtdError
+
+package object outcomes {
+
+  type AuthOutcome = Either[MtdError, UserDetails]
+
 }

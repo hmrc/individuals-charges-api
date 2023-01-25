@@ -18,7 +18,7 @@ package api.support
 
 import api.controllers.EndpointLogContext
 import api.models.errors._
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import utils.Logging
 
 trait DownstreamResponseMappingSupport {

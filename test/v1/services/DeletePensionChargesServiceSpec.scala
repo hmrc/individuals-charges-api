@@ -19,7 +19,7 @@ package v1.services
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.outcome.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockPensionChargesConnector

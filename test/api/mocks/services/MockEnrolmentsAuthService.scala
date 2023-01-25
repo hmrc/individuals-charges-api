@@ -17,7 +17,7 @@
 package api.mocks.services
 
 import api.models.auth.UserDetails
-import api.models.outcome.AuthOutcome
+import api.models.outcomes.AuthOutcome
 import api.services.EnrolmentsAuthService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
