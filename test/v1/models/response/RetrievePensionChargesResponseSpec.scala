@@ -19,8 +19,8 @@ package v1.models.response
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method._
+import api.models.hateoas.Link
+import api.models.hateoas.Method._
 import v1.models.response.retrieve._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {

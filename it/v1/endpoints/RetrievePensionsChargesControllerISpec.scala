@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
 
 package v1.endpoints
 
+import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, InternalError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import v1.data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
-import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
@@ -125,7 +124,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 
@@ -151,17 +150,17 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
+            response.json shouldBe expectedBody.asJson
           }
         }
 
         val input = Seq(
           (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
           (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
-          (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, InternalError),
           (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, NotFoundError),
-          (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, StandardDownstreamError)
+          (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, InternalError),
+          (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors = Seq(

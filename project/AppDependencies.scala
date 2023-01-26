@@ -22,13 +22,13 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"                  %% "bootstrap-backend-play-28" % "5.24.0",
-    "org.typelevel"                %% "cats-core"                 % "2.7.0",
+    "uk.gov.hmrc"                  %% "bootstrap-backend-play-28" % "7.11.0",
+    "org.typelevel"                %% "cats-core"                 % "2.8.0",
     "com.chuusai"                  %% "shapeless"                 % "2.4.0-M1",
     "org.json4s"                   %% "json4s-native"             % "3.6.12",
     "org.json4s"                   %% "json4s-ext"                % "3.6.12",
     "com.neovisionaries"            % "nv-i18n"                   % "1.29",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.13.1"
+    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.14.0"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(

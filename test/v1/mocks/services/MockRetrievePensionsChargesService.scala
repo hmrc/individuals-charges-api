@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
-import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService}
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,16 +31,9 @@ trait MockRetrievePensionsChargesService extends MockFactory {
   object MockRetrievePensionsChargesService {
 
     def retrieve(retrievePensionChargesRequest: RetrievePensionChargesRequest): CallHandler[Future[RetrievePensionChargesOutcome]] = {
-      (
-        mockRetrievePensionsChargesService
-          .retrievePensions(_: RetrievePensionChargesRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
-          )
-        )
-        .expects(retrievePensionChargesRequest, *, *, *, *)
+      (mockRetrievePensionsChargesService
+        .retrievePensions(_: RetrievePensionChargesRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(retrievePensionChargesRequest, *, *)
     }
 
   }

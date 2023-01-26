@@ -16,31 +16,24 @@
 
 package v1.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.PensionChargesConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrievePensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
 
-  def retrievePensions(request: RetrievePensionChargesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[RetrievePensionChargesOutcome] = {
-
-    val result = EitherT(connector.retrievePensionCharges(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+  def retrievePensions(
+      request: RetrievePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
+    connector
+      .retrievePensionCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {
@@ -48,9 +41,9 @@ class RetrievePensionChargesService @Inject() (connector: PensionChargesConnecto
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "NO_DATA_FOUND"             -> NotFoundError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
     val extraTysErrors = Map(
       "NOT_FOUND"              -> NotFoundError,

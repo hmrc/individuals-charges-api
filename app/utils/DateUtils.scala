@@ -16,9 +16,9 @@
 
 package utils
 
-import java.time.LocalDate
+import api.models.domain.TaxYear
 
-import v1.models.request.TaxYear
+import java.time.LocalDate
 
 object DateUtils {
 

@@ -16,11 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
+import api.models.errors.{MtdError, TaxYearFormatError}
 import config.AppConfig
-import javax.inject.Inject
-import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
-import v1.models.errors.{MtdError, TaxYearFormatError}
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+
+import javax.inject.Inject
 
 class DeletePensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[DeletePensionChargesRawData] {
 

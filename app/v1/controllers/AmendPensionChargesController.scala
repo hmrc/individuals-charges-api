@@ -16,130 +16,57 @@
 
 package v1.controllers
 
-import cats.data.EitherT
-import cats.implicits._
-import javax.inject._
-import play.api.http.MimeTypes
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents, Result}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import api.controllers._
+import api.hateoas.HateoasFactory
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.hateoas.HateoasFactory
-import v1.models.audit._
-import v1.models.errors._
 import v1.models.request.AmendPensionCharges
 import v1.models.response.amend.AmendPensionChargesHateoasData
 import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services._
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject._
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
                                                service: AmendPensionChargesService,
-                                               requestParser: AmendPensionChargesParser,
+                                               parser: AmendPensionChargesParser,
                                                hateoasFactory: HateoasFactory,
                                                auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "AmendPensionChargesController", endpointName = "Amend a Pensions Charge")
 
   def amend(nino: String, taxYear: String): Action[JsValue] = {
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+
       val rawData = AmendPensionCharges.AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendPensions(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, AmendPensionChargesHateoasData(nino, taxYear))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              request = Some(request.body),
-              `X-CorrelationId` = serviceResponse.correlationId,
-              response = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
-            )
-          )
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.amendPensions)
+          .withHateoasResult(hateoasFactory)(AmendPensionChargesHateoasData(nino, taxYear))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "CreateAmendPensionsCharges",
+            transactionName = "create-amend-pensions-charges",
             params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = Some(request.body),
-            `X-CorrelationId` = correlationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            Some(request.body),
+            includeResponse = true
           ))
 
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-  }
-
-  private def errorResult(errorWrapper: ErrorWrapper): Result = {
-
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError,
-            RuleIncorrectOrEmptyBodyError,
-            ValueFormatError,
-            RuleCountryCodeError,
-            CountryCodeFormatError,
-            QOPSRefFormatError,
-            PensionSchemeTaxRefFormatError,
-            ProviderNameFormatError,
-            ProviderAddressFormatError,
-            RuleIsAnnualAllowanceReducedError,
-            RuleBenefitExcessesError,
-            RulePensionReferenceError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
-    }
-  }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("CreateAmendPensionsCharges", "create-amend-pensions-charges", details)
-    auditService.auditEvent(event)
   }
 
 }

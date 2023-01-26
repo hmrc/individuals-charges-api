@@ -16,13 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import support.UnitSpec
-import v1.mocks.validators.MockAmendPensionChargesValidator
-import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import v1.models.request._
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.mvc.AnyContentAsJson
+import support.UnitSpec
 import v1.data.AmendPensionChargesData
-import v1.models.domain.Nino
+import v1.mocks.validators.MockAmendPensionChargesValidator
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
 
 class AmendPensionChargesParserSpec extends UnitSpec {
@@ -53,7 +52,7 @@ class AmendPensionChargesParserSpec extends UnitSpec {
         MockValidator.validate(inputDataUpdated).returns(Nil)
 
         parser.parseRequest(inputDataUpdated) shouldBe
-        Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
+          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
       }
     }
 

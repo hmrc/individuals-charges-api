@@ -16,11 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
+import api.models.errors.{MtdError, TaxYearFormatError}
 import config.AppConfig
-import javax.inject.Inject
-import v1.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
-import v1.models.errors.{MtdError, TaxYearFormatError}
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
+
+import javax.inject.Inject
 
 class RetrievePensionChargesValidator @Inject() (appConfig: AppConfig) extends Validator[RetrievePensionChargesRawData] {
 

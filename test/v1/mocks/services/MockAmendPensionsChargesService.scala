@@ -16,10 +16,9 @@
 
 package v1.mocks.services
 
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.services.{AmendPensionChargesOutcome, AmendPensionChargesService}
 
@@ -33,8 +32,8 @@ trait MockAmendPensionsChargesService extends MockFactory {
 
     def amend(amendPensionChargesRequest: AmendPensionChargesRequest): CallHandler[Future[AmendPensionChargesOutcome]] = {
       (mockAmendPensionsChargesService
-        .amendPensions(_: AmendPensionChargesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(amendPensionChargesRequest, *, *, *, *)
+        .amendPensions(_: AmendPensionChargesRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(amendPensionChargesRequest, *, *)
     }
 
   }

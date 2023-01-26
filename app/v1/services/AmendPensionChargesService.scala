@@ -16,31 +16,23 @@
 
 package v1.services
 
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.PensionChargesConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
-import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
 
-  def amendPensions(request: AmendPensionChargesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[AmendPensionChargesOutcome] = {
-
-    val result = EitherT(connector.amendPensionCharges(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+  def amendPensions(request: AmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendPensionChargesOutcome] = {
+    connector
+      .amendPensionCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {
@@ -48,15 +40,15 @@ class AmendPensionChargesService @Inject() (connector: PensionChargesConnector) 
       "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
       "INVALID_TAX_YEAR"             -> TaxYearFormatError,
       "INVALID_PAYLOAD"              -> RuleIncorrectOrEmptyBodyError,
-      "INVALID_CORRELATIONID"        -> StandardDownstreamError,
-      "REDUCTION_TYPE_NOT_SPECIFIED" -> StandardDownstreamError,
-      "REDUCTION_NOT_SPECIFIED"      -> StandardDownstreamError,
-      "SERVER_ERROR"                 -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"          -> StandardDownstreamError
+      "INVALID_CORRELATIONID"        -> InternalError,
+      "REDUCTION_TYPE_NOT_SPECIFIED" -> InternalError,
+      "REDUCTION_NOT_SPECIFIED"      -> InternalError,
+      "SERVER_ERROR"                 -> InternalError,
+      "SERVICE_UNAVAILABLE"          -> InternalError
     )
     val extraTysErrors = Map(
-      "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> StandardDownstreamError,
-      "MISSING_TYPE_OF_REDUCTION"          -> StandardDownstreamError,
+      "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> InternalError,
+      "MISSING_TYPE_OF_REDUCTION"          -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
     )
 

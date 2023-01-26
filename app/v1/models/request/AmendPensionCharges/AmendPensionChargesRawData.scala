@@ -16,7 +16,7 @@
 
 package v1.models.request.AmendPensionCharges
 
+import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
-import v1.models.request.RawData
 
 case class AmendPensionChargesRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

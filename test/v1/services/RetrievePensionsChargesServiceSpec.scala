@@ -16,14 +16,14 @@
 
 package v1.services
 
-import v1.models.request.TaxYear
-import v1.data.RetrievePensionChargesData._
+import api.controllers.EndpointLogContext
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
-import v1.models.outcomes.ResponseWrapper
+import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockPensionChargesConnector
-import v1.models.domain.Nino
-import v1.models.errors._
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 
 import scala.concurrent.Future
@@ -54,7 +54,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError   = MtdError("SOME_CODE", "some message")
+        val someError   = MtdError("SOME_CODE", "some message", BAD_REQUEST)
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
@@ -87,9 +87,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-          "SERVER_ERROR"              -> StandardDownstreamError,
-          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+          "INVALID_CORRELATIONID"     -> InternalError,
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
         val extraTysErrors = Seq(

@@ -16,15 +16,15 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
 import v1.data.AmendPensionChargesData.pensionCharges
 import v1.data.RetrievePensionChargesData.retrieveResponse
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
-import v1.models.request._
 
 import scala.concurrent.Future
 
@@ -88,7 +88,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError)))
 
         willDelete(
           url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
@@ -179,7 +179,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
         MockedHttpClient
           .put(
@@ -259,7 +259,7 @@ class PensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError, TaxYearFormatError)))
+        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
         MockedHttpClient
           .get(
