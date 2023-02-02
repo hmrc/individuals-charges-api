@@ -1,41 +1,49 @@
 description: |
-  This endpoint enables you to delete charges relating to pensions. A National Insurance number and tax year must be provided.
+  This endpoint enables you to retrieve previously populated charges for pensions. A National Insurance number and tax year must be provided.
   
   ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>   
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulates a success response.</p></td>
-            </tr>
-            <tr>
-                 <td><p>NOT_FOUND</p></td>
-                 <td><p>Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period.</p></td>
-            </tr>                     
-        </tbody>
-    </table>        
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates a successful pension charge response.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates a scenario where no data can be found.</p></td>
+          </tr>
+      </tbody>
+  </table>
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
   - $ref: './common/headers.yaml#/components/parameters/acceptJson'
-  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
-  - $ref: './common/headers.yaml#/components/parameters/authorization'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
 
 responses:
-  "204":
-    description: No Content
+  "200":
+    description: Success
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/retrieve_pension_charges_response.json'
+        examples:
+          example-response:
+            description: Example Response
+            value:
+              $ref: './examples/retrieve_pension_charges_response.json'
   "400":
     description: Bad request
     content:
@@ -51,7 +59,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-
   "403":
     description: Forbidden
     content:
@@ -61,7 +68,6 @@ responses:
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
-
   "404":
     description: Not Found
     content:
