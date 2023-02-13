@@ -16,14 +16,18 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel = PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)), Some(LifetimeAllowance(123.12, 123.12)))
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)),
+    Some(LifetimeAllowance(123.12, 123.12)),
+    isAnnualAllowanceReduced = true,
+    Some(true),
+    Some(true))
 
-  val oldResponseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
@@ -42,27 +46,10 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       |   }
       |""".stripMargin)
 
-  val newResponseJson = Json.parse("""
-                                     |{
-                                     |      "pensionSchemeTaxReference": ["00123456RA"],
-                                     |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
-                                     |         {
-                                     |            "amount":123.12,
-                                     |            "taxPaid":123.12
-                                     |         },
-                                     |      "benefitInExcessOfLifetimeAllowance":
-                                     |         {
-                                     |            "amount":123.12,
-                                     |            "taxPaid":123.12
-                                     |         }
-                                     |   }
-                                     |""".stripMargin)
-
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe oldResponseJson.as[PensionSavingsTaxCharges]
-        responseModel shouldBe newResponseJson.as[PensionSavingsTaxCharges]
+        responseModel shouldBe responseJson.as[PensionSavingsTaxCharges]
       }
     }
   }
@@ -70,7 +57,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(responseModel) shouldBe newResponseJson
+        Json.toJson(responseModel) shouldBe responseJson
       }
     }
   }

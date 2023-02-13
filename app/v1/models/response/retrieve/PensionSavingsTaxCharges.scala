@@ -21,7 +21,10 @@ import play.api.libs.json._
 
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance])
+                                    benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
+                                    isAnnualAllowanceReduced: Boolean,
+                                    taperedAnnualAllowance: Option[Boolean],
+                                    moneyPurchasedAllowance: Option[Boolean])
 
 object PensionSavingsTaxCharges {
 
@@ -30,7 +33,10 @@ object PensionSavingsTaxCharges {
   implicit val reads: Reads[PensionSavingsTaxCharges] = (
     (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
-      (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance]
+      (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
+      (__ \ "isAnnualAllowanceReduced").read[Boolean] and
+      (__ \ "taperedAnnualAllowance").readNullable[Boolean] and
+      (__ \ "moneyPurchasedAllowance").readNullable[Boolean]
   )(PensionSavingsTaxCharges.apply _)
 
 }

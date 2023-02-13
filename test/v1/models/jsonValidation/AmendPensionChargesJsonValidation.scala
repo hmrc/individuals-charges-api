@@ -636,27 +636,27 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
     val schemaJsonDoc = "/desJsonSchemas/amend_pension_charges_request.json"
 
     val jsonSchemaTests: List[JsonTest] = List(
-      JsonTest("minimal payload example", minimalPayload, true),
-      JsonTest("full json example", fullJson, true),
-      JsonTest("full json with differing arrays used example", fullJsonWithArraysSwapped, true),
-      JsonTest("only pensionSavingsTaxCharges example", pensionSavingsTaxChargesJson, true),
-      JsonTest("pensionSavingsTaxCharges first booleans example", booleans1PensionSavingsTaxChargesJson, true),
-      JsonTest("pensionSavingsTaxCharges second booleans example", booleans2PensionSavingsTaxChargesJson, true),
-      JsonTest("pensionSavingsTaxCharges lump sum example", lumpSumPensionSavingsTaxChargesJson, true),
-      JsonTest("pensionSavingsTaxCharges benefit in excess example", benefitInExcessPensionSavingsTaxChargesJson, true),
-      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers example", pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson, true),
-      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments example", partialJson1, true),
+      JsonTest("minimal payload example", minimalPayload, outcome = true),
+      JsonTest("full json example", fullJson, outcome = true),
+      JsonTest("full json with differing arrays used example", fullJsonWithArraysSwapped, outcome = true),
+      JsonTest("only pensionSavingsTaxCharges example", pensionSavingsTaxChargesJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges first booleans example", booleans1PensionSavingsTaxChargesJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges second booleans example", booleans2PensionSavingsTaxChargesJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges lump sum example", lumpSumPensionSavingsTaxChargesJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges benefit in excess example", benefitInExcessPensionSavingsTaxChargesJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers example", pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson, outcome = true),
+      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments example", partialJson1, outcome = true),
       JsonTest(
         "pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments pensionContributions example",
         partialJson2,
-        true),
-      JsonTest("invalid json", invalidJson, false),
-      JsonTest("invalid json no boolean fields supplied", invalidJsonNoBooleans, false),
-      JsonTest("valid minimum boolean fields supplied", validMinimumBooleansSupplied1, true),
-      JsonTest("valid minimum boolean fields supplied example 2", validMinimumBooleansSupplied2, true),
-      JsonTest("valid minimum boolean fields supplied example 3", validMinimumBooleansSupplied3, true),
-      JsonTest("invalid Booleans", invalidBooleans, false),
-      JsonTest("invalid Booleans only first one", invalidBooleansSupplied1, false)
+        outcome = true),
+      JsonTest("invalid json", invalidJson, outcome = false),
+      JsonTest("invalid json no boolean fields supplied", invalidJsonNoBooleans, outcome = false),
+      JsonTest("valid minimum boolean fields supplied", validMinimumBooleansSupplied1, outcome = true),
+      JsonTest("valid minimum boolean fields supplied example 2", validMinimumBooleansSupplied2, outcome = true),
+      JsonTest("valid minimum boolean fields supplied example 3", validMinimumBooleansSupplied3, outcome = true),
+      JsonTest("invalid Booleans", invalidBooleans, outcome = false),
+      JsonTest("invalid Booleans only first one", invalidBooleansSupplied1, outcome = false)
     )
 
     jsonSchemaTests.foreach { jsonTest =>
@@ -669,14 +669,4 @@ class AmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
       }
     }
   }
-
-  "A json with no booleans" should {
-
-    "read to the model" in {
-      val result = invalidJsonNoBooleans.asOpt[PensionCharges]
-
-      result.isDefined shouldBe true
-    }
-  }
-
 }
