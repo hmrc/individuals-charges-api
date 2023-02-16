@@ -17,12 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{CountryCodeValidation, JsonFormatValidation, MinTaxYearValidation, NinoValidation, NumberValidation, PensionSchemeTaxReferenceValidation, ProviderAddressValidation, ProviderNameValidation, QROPSRefValidation, RuleIsAnnualAllowanceReducedValidation, RulePensionReferenceValidation, TaxYearValidation}
-import api.controllers.requestParsers.validators.validations.NoValidationErrors
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import config.AppConfig
-import api.controllers.requestParsers.validators.validations._
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionSavingsTaxCharges}
 
 import javax.inject.Inject
 
@@ -69,7 +67,7 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
           validateNames(model) ++
           validateAddresses(model) ++
           validateRulePensionReference(model) ++
-          validateRuleIsAnnualAllowanceReduced(model.pensionContributions) ++
+          validateRuleIsAnnualAllowanceReduced(model.pensionSavingsTaxCharges) ++
           validateRulePensionReference(model)
       } else {
         List(RuleIncorrectOrEmptyBodyError)
@@ -220,14 +218,14 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
       pensionSavingsTaxChargesReferencesErrors ++ pensionSchemeUnauthorisedPaymentsReferencesErrors
   }
 
-  private def validateRuleIsAnnualAllowanceReduced(pensionContributions: Option[PensionContributions]): List[MtdError] = {
-    pensionContributions
-      .map { pensionContributions =>
+  private def validateRuleIsAnnualAllowanceReduced(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): List[MtdError] = {
+    pensionSavingsTaxCharges
+      .map { pensionSavingsTaxCharges =>
         List(
           RuleIsAnnualAllowanceReducedValidation.validate(
-            pensionContributions.isAnnualAllowanceReduced,
-            pensionContributions.taperedAnnualAllowance,
-            pensionContributions.moneyPurchasedAllowance)
+            pensionSavingsTaxCharges.isAnnualAllowanceReduced,
+            pensionSavingsTaxCharges.taperedAnnualAllowance,
+            pensionSavingsTaxCharges.moneyPurchasedAllowance)
         ).flatten
       }
       .getOrElse(NoValidationErrors)

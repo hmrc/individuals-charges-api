@@ -22,22 +22,16 @@ import v1.models.response.retrieve.PensionContributions
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val responseModel = PensionContributions(
+  val responseModel: PensionContributions = PensionContributions(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
     inExcessOfTheAnnualAllowance = 123.12,
-    annualAllowanceTaxPaid = 123.12,
-    isAnnualAllowanceReduced = Some(true),
-    taperedAnnualAllowance = Some(true),
-    moneyPurchasedAllowance = Some(true))
+    annualAllowanceTaxPaid = 123.12)
 
   val responseJson: JsValue = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12,
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": true
+      |     "annualAllowanceTaxPaid": 123.12
       |}
       |""".stripMargin)
 

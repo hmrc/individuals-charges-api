@@ -50,22 +50,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-        "any valid request is made with the updated data structure" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
-        }
-
-        val response: WSResponse = await(mtdRequest.put(fullValidJsonUpdated))
-        response.status shouldBe OK
-        response.json shouldBe hateoasResponse
-        response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Content-Type") shouldBe Some("application/json")
-      }
-
       "a valid request is made for a Tax Year Specific tax year" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
@@ -109,23 +93,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         response3.header("X-CorrelationId").nonEmpty shouldBe true
         response3.header("Content-Type") shouldBe Some("application/json")
 
-        val responseUpdated: WSResponse = await(mtdRequest.put(boolean1JsonUpdated))
-        responseUpdated.status shouldBe OK
-        responseUpdated.json shouldBe hateoasResponse
-        responseUpdated.header("X-CorrelationId").nonEmpty shouldBe true
-        responseUpdated.header("Content-Type") shouldBe Some("application/json")
-
-        val response2Updated: WSResponse = await(mtdRequest.put(boolean2JsonUpdated))
-        response2Updated.status shouldBe OK
-        response2Updated.json shouldBe hateoasResponse
-        response2Updated.header("X-CorrelationId").nonEmpty shouldBe true
-        response2Updated.header("Content-Type") shouldBe Some("application/json")
-
-        val response3Updated: WSResponse = await(mtdRequest.put(booleans3JsonUpdated))
-        response3Updated.status shouldBe OK
-        response3Updated.json shouldBe hateoasResponse
-        response3Updated.header("X-CorrelationId").nonEmpty shouldBe true
-        response3Updated.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
