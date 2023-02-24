@@ -19,13 +19,16 @@ package config
 import com.typesafe.config.Config
 import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import definition.Version
 
 import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
 
+  // MTD ID Lookup Config
   def mtdIdBaseUrl: String
 
+  // DES Config
   def desBaseUrl: String
   def desEnv: String
   def desToken: String
@@ -52,16 +55,12 @@ trait AppConfig {
   lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
 
+  // API Config
   def apiGatewayContext: String
-
-  def apiStatus(version: String): String
-
+  def apiStatus(version: Version): String
   def featureSwitches: Configuration
-
-  def endpointsEnabled(version: String): Boolean
-
+  def endpointsEnabled(version: Version): Boolean
   def confidenceLevelConfig: ConfidenceLevelConfig
-
   def minTaxYearPensionCharge: String
 
 }
@@ -69,10 +68,13 @@ trait AppConfig {
 @Singleton
 class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configuration) extends AppConfig {
 
+  // MTD ID Lookup COnfig
   val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
-  val desBaseUrl: String   = config.baseUrl("des")
-  val desEnv: String       = config.getString("microservice.services.des.env")
-  val desToken: String     = config.getString("microservice.services.des.token")
+
+  // DES Config
+  val desBaseUrl: String = config.baseUrl("des")
+  val desEnv: String     = config.getString("microservice.services.des.env")
+  val desToken: String   = config.getString("microservice.services.des.token")
 
   val desEnvironmentHeaders: Option[Seq[String]] =
     configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
@@ -82,22 +84,20 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val ifsEnv: String     = config.getString("microservice.services.ifs.env")
   val ifsToken: String   = config.getString("microservice.services.ifs.token")
 
+  val ifsEnvironmentHeaders: Option[Seq[String]] =
+    configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
+
   // Tax Year Specific (TYS) IFS Config
   val tysIfsBaseUrl: String                         = config.baseUrl("tys-ifs")
   val tysIfsEnv: String                             = config.getString("microservice.services.tys-ifs.env")
   val tysIfsToken: String                           = config.getString("microservice.services.tys-ifs.token")
   val tysIfsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.tys-ifs.environmentHeaders")
 
-  val ifsEnvironmentHeaders: Option[Seq[String]] =
-    configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
-
-  val apiGatewayContext: String = config.getString("api.gateway.context")
-
-  def apiStatus(version: String): String = config.getString(s"api.$version.status")
-
-  def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
-
-  def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+  // API Config
+  val apiGatewayContext: String                   = config.getString("api.gateway.context")
+  def apiStatus(version: Version): String         = config.getString(s"api.$version.status")
+  def featureSwitches: Configuration              = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig =
     configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")

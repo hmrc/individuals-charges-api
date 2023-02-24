@@ -17,6 +17,7 @@
 package mocks
 
 import config.{AppConfig, ConfidenceLevelConfig}
+import definition.Version
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
@@ -49,12 +50,12 @@ trait MockAppConfig extends MockFactory {
 
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
-    def featureSwitches: CallHandler[Configuration] =
-      (mockAppConfig.featureSwitches _: () => Configuration).expects()
+    def featureSwitches: CallHandler[Configuration] = (mockAppConfig.featureSwitches _: () => Configuration).expects()
 
     def apiGatewayContext: CallHandler[String] = (mockAppConfig.apiGatewayContext _: () => String).expects()
 
-    def apiStatus: CallHandler[String] = (mockAppConfig.apiStatus: String => String).expects("1.0")
+    def apiStatus(status: Version): CallHandler[String]          = (mockAppConfig.apiStatus: Version => String).expects(status)
+    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
 
     def minTaxYearPensionCharge: CallHandler[String] = (mockAppConfig.minTaxYearPensionCharge _: () => String).expects()
 
