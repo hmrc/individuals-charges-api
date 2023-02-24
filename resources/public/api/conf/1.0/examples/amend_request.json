@@ -10,7 +10,10 @@
       {
         "amount":100,
         "taxPaid":100
-      }
+      },
+    "isAnnualAllowanceReduced": true,
+    "taperedAnnualAllowance": true,
+    "moneyPurchasedAllowance": true
   },
   "pensionSchemeOverseasTransfers": {
     "overseasSchemeProvider": [
@@ -40,10 +43,7 @@
   "pensionContributions": {
     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
     "inExcessOfTheAnnualAllowance": 100,
-    "annualAllowanceTaxPaid": 100,
-    "isAnnualAllowanceReduced": true,
-    "taperedAnnualAllowance": true,
-    "moneyPurchasedAllowance": true
+    "annualAllowanceTaxPaid": 100
   },
   "overseasPensionContributions": {
     "overseasSchemeProvider": [
