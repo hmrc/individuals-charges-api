@@ -113,5 +113,5 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
     Future.successful(Status(errorCode.httpStatus)(errorCode.asJson))
   }
 
-  private def versionIfSpecified(request: RequestHeader): String = Versions.getFromRequest(request).getOrElse("<unspecified>")
+  private def versionIfSpecified(request: RequestHeader): String = Versions.getFromRequest(request).map(_.name).getOrElse("<unspecified>")
 }

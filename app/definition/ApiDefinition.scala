@@ -46,10 +46,7 @@ object APIStatus extends Enumeration {
   val parser: PartialFunction[String, APIStatus]   = Enums.parser[APIStatus]
 }
 
-case class APIVersion(version: String, status: APIStatus, endpointsEnabled: Boolean) {
-
-  require(version.nonEmpty, "version is required")
-}
+case class APIVersion(version: Version, status: APIStatus, endpointsEnabled: Boolean)
 
 object APIVersion {
   implicit val formatAPIVersion: OFormat[APIVersion] = Json.format[APIVersion]

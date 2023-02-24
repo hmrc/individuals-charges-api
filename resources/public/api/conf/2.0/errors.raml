@@ -1,0 +1,273 @@
+#%RAML 1.0 Library
+
+uses:
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+
+
+traits:
+  formatNino:
+   responses:
+     400:
+       body:
+         application/json:
+           type: types.errorResponse
+           examples:
+             formatNino:
+               description: The format of the supplied NINO field is not valid.
+               value:
+                 code: FORMAT_NINO
+  formatTaxYear:
+   responses:
+     400:
+       body:
+         application/json:
+           type: types.errorResponse
+           examples:
+             formatTaxYear:
+               description: The format of the supplied tax year field is not valid.
+               value:
+                 code: FORMAT_TAX_YEAR
+  formatSelfEmploymentId:
+   responses:
+     400:
+       body:
+         application/json:
+           type: types.errorResponse
+           examples:
+             formatSelfEmploymentId:
+               description: The format of the self-employment ID is not valid.
+               value:
+                 code: FORMAT_SELF_EMPLOYMENT_ID
+  ruleTaxYearRangeInvalid:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearRangeInvalid:
+                description: Tax year range invalid. A tax year range of one year is required.
+                value:
+                  code: RULE_TAX_YEAR_RANGE_INVALID
+  ruleSelfEmploymentId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleSelfEmploymentId:
+                description: A self-employment ID was not provided for a self-employment business.
+                value:
+                  code: RULE_SELF_EMPLOYMENT_ID
+  clientOrAgentNotAuthorised:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              clientOrAgentNotAuthorised:
+                description: The client or agent is not authorised. This is because the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+                value:
+                  code: CLIENT_OR_AGENT_NOT_AUTHORISED
+  notFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            example:
+              description: Matching resource not found.
+              value:
+                code: MATCHING_RESOURCE_NOT_FOUND
+  formatTypeOfBusiness:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatTypeOfBusiness:
+                    description: The format of the supplied type of business is not valid.
+                    value:
+                      code: FORMAT_TYPE_OF_BUSINESS
+  formatBusinessID:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatBusinessID:
+                      description: The format of the supplied Business ID field is not valid.
+                      value:
+                        code: FORMAT_BUSINESS_ID
+  ruleTaxYearNotSupported:
+            responses:
+              400:
+                body:
+                  application/json:
+                    type: types.errorResponse
+                    examples:
+                      ruleTaxYearNotSupported:
+                        description: The specified tax year is not supported. Either the tax year specified is before the minimum tax year value, or it is after the maximum tax year value.
+                        value:
+                          code: RULE_TAX_YEAR_NOT_SUPPORTED
+  ruleTaxYearRangeExceeded:
+            responses:
+              400:
+                body:
+                  application/json:
+                    type: types.errorResponse
+                    examples:
+                      ruleTaxYearRangeExceeded:
+                        description: Tax year range exceeded. A tax year range of one year is required.
+                        value:
+                          code: RULE_TAX_YEAR_RANGE_EXCEEDED
+  ruleBusinessId:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        ruleBusinessId:
+                          description: A Business ID was not provided for a foreign property business.
+                          value:
+                            code: RULE_BUSINESS_ID
+  ruleTypeOfBusiness:
+                responses:
+                  400:
+                    body:
+                      application/json:
+                        type: types.errorResponse
+                        examples:
+                          ruleTypeOfBusiness:
+                            description: A type of business was not provided.
+                            value:
+                              code: RULE_TYPE_OF_BUSINESS
+  notFoundIncomeSource:
+                responses:
+                  404:
+                    body:
+                      application/json:
+                        type: types.errorResponse
+                        examples:
+                          notFoundIncomeSource:
+                            description: The supplied income source could not be found.
+                            value:
+                              code: MATCHING_RESOURCE_NOT_FOUND
+  formatValue:
+                responses:
+                  400:
+                    body:
+                      application/json:
+                        type: types.errorResponse
+                        examples:
+                          formatValue:
+                            description: One or more values have been added with the incorrect format.
+                            value:
+                              code: FORMAT_VALUE
+  formatCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            formatCountryCode:
+                              description: The format of the supplied country code is not valid.
+                              value:
+                                code: FORMAT_COUNTRY_CODE
+  ruleCountryCode:
+                  responses:
+                    400:
+                      body:
+                        application/json:
+                          type: types.errorResponse
+                          examples:
+                            ruleCountryCode:
+                              description: Not a valid ISO 3166-1 alpha-3 country code.
+                              value:
+                                code: RULE_COUNTRY_CODE
+  formatProviderName:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderName:
+                               description: The format of providers name is invalid.
+                               value:
+                                 code: FORMAT_PROVIDER_NAME
+  formatProvidersAddress:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatProviderAddress:
+                               description: The format of providers address is invalid.
+                               value:
+                                 code: FORMAT_PROVIDERS_ADDRESS
+  ruleIncorrectOrEmptyBodySubmitted:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             ruleIncorrectOrEmptyBodySubmitted:
+                               description: An empty or non-matching body was submitted.
+                               value:
+                                 code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+  matchingResourceNotFound:
+                   responses:
+                     404:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             matchingResourceNotFound:
+                               description: The supplied income source could not be found.
+                               value:
+                                 code: MATCHING_RESOURCE_NOT_FOUND
+
+  formatQopsRef:
+                   responses:
+                     400:
+                       body:
+                         application/json:
+                           type: types.errorResponse
+                           examples:
+                             formatQopsRef:
+                               description: The format of QOPS reference number is not valid.
+                               value:
+                                 code: FORMAT_QOPS_REF
+  formatPensionSchemeTaxReference:
+                     responses:
+                       400:
+                         body:
+                           application/json:
+                             type: types.errorResponse
+                             examples:
+                               formatPensionSchemeTaxReference:
+                                 description: The format of pension scheme tax reference is not valid.
+                                 value:
+                                   code: FORMAT_PENSION_SCHEME_TAX_REFERENCE
+  ruleIsAnnualAllowanceReduced:
+                       responses:
+                         400:
+                           body:
+                             application/json:
+                               type: types.errorResponse
+                               examples:
+                                 ruleIsAnnualAllowanceReduced:
+                                   description: If annual allowance reduced is provided then tapered annual allowance or money purchased allowance must also be provided.
+                                   value:
+                                     code: RULE_IS_ANNUAL_ALLOWANCE_REDUCED
+
+

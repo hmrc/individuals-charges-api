@@ -1,0 +1,88 @@
+description: |
+  This endpoint enables you to create and amend charges relating to pensions. A National Insurance number and tax year must be provided.
+  
+  ### Test data
+    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Header Value (Gov-Test-Scenario)</th>
+                <th>Scenario</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr>
+                <td><p>N/A - DEFAULT</p></td>
+                <td><p>Simulates a success response.</p></td>
+           </tr> 
+        </tbody>
+    </table>
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
+  - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+  - $ref: './common/headers.yaml#/components/parameters/authorization'
+
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/amend_request_schema.json'
+      examples:
+        example-request:
+          description: Full Expenses request
+          value:
+            $ref: './examples/amend_request.json'
+
+responses:
+  "204":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+
+  "400":
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/formatCountryCode'
+          RULE_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
+          FORMAT_PROVIDER_NAME:
+            $ref: './common/errors.yaml#/components/examples/formatProviderName'
+          FORMAT_PROVIDERS_ADDRESS:
+            $ref: './common/errors.yaml#/components/examples/formatProvidersAddress'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          FORMAT_QOPS_REF:
+            $ref: './common/errors.yaml#/components/examples/formatQopsRef'
+          FORMAT_PENSION_SCHEME_TAX_REFERENCE:
+            $ref: './common/errors.yaml#/components/examples/formatPensionSchemeTaxReference'
+          RULE_IS_ANNUAL_ALLOWANCE_REDUCED:
+            $ref: './common/errors.yaml#/components/examples/ruleIsAnnualAllowanceReduced'
+
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'

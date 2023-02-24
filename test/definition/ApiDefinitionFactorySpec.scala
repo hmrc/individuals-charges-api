@@ -27,20 +27,31 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
     MockAppConfig.apiGatewayContext returns "api.gateway.context"
+
+    def confidenceLevel: ConfidenceLevel =
+      if (mockAppConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
+
   }
 
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
-      "return the correct status" in new Test {
-        MockAppConfig.apiStatus returns "BETA"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
+      Seq(
+        (Version1, ALPHA),
+        (Version2, BETA)
+      ).foreach { case (version, status) =>
+        s"return the correct $status for $version " in new Test {
+          MockAppConfig.apiStatus(version) returns status.toString
+          apiDefinitionFactory.buildAPIStatus(version) shouldBe status
+        }
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      "default to alpha" in new Test {
-        MockAppConfig.apiStatus returns "ALPHO"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
+      Seq(Version1, Version2).foreach { version =>
+        s"default to alpha for $version " in new Test {
+          MockAppConfig.apiStatus(version) returns "ALPHO"
+          apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
+        }
       }
     }
   }
