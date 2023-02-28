@@ -33,7 +33,7 @@ import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.hateoas.HateoasWrapper
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
-import v1.models.response.amend.AmendPensionChargesHateoasData
+import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

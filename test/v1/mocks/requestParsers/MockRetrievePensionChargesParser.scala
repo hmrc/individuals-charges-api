@@ -16,11 +16,11 @@
 
 package v1.mocks.requestParsers
 
+import anyVersion.controllers.requestParsers.RetrievePensionChargesParser
+import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.RetrievePensionChargesParser
-import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 
 trait MockRetrievePensionChargesParser extends MockFactory {
 

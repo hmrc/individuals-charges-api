@@ -18,7 +18,7 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
-import v1.models.response.retrieve.RetrievePensionChargesResponse
+import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 package object services {
 

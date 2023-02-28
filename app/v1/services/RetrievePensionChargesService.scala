@@ -16,18 +16,18 @@
 
 package v1.services
 
+import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
-import v1.connectors.PensionChargesConnector
-import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.connectors.RetrievePensionChargesConnector
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
+class RetrievePensionChargesService @Inject() (connector: RetrievePensionChargesConnector) extends BaseService {
 
   def retrievePensions(
       request: RetrievePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {

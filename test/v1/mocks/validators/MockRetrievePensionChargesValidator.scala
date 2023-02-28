@@ -16,11 +16,11 @@
 
 package v1.mocks.validators
 
+import anyVersion.controllers.requestParsers.validators.RetrievePensionChargesValidator
+import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRawData
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.RetrievePensionChargesValidator
-import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
 
 class MockRetrievePensionChargesValidator extends MockFactory {
 

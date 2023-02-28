@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
-import v1.services._
+import v1.services.DeletePensionChargesService
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext

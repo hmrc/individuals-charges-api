@@ -16,6 +16,7 @@
 
 package v1.services
 
+import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
@@ -23,8 +24,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.RetrievePensionChargesData._
-import v1.mocks.connectors.MockPensionChargesConnector
-import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
+import v1.mocks.connectors.MockRetrievePensionChargesConnector
 
 import scala.concurrent.Future
 
@@ -35,16 +35,16 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
-  trait Test extends MockPensionChargesConnector {
+  trait Test extends MockRetrievePensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    val service                                 = new RetrievePensionChargesService(connector)
+    val service                                 = new RetrievePensionChargesService(mockRetrievePensionChargesConnector)
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockPensionChargesConnector
+        MockRetrievePensionChargesConnector
           .retrievePensions(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
@@ -56,7 +56,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "the connector returns an outbound error" in new Test {
         val someError   = MtdError("SOME_CODE", "some message", BAD_REQUEST)
         val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
 
         await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -65,7 +65,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
     "service" should {
       "return a successful response" when {
         "a successful response is passed through" in new Test {
-          MockPensionChargesConnector
+          MockRetrievePensionChargesConnector
             .retrievePensions(request)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
@@ -76,7 +76,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockPensionChargesConnector
+            MockRetrievePensionChargesConnector
               .retrievePensions(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
