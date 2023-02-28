@@ -10,7 +10,7 @@
         {
           "description": "Minimum one field is required.",
           "type": "object",
-          "minProperties": 1,›
+          "minProperties": 1,
           "properties": {
             "pensionSchemeTaxReference": {
               "$ref": "#/definitions/pensionSchemeTaxReferenceType"
