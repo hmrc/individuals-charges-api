@@ -14,22 +14,29 @@
  * limitations under the License.
  */
 
-package anyVersion.models.response.retrievePensionCharges
+package v2.models.retrievePensionCharges
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.response.retrievePensionCharges.PensionContributions
+import v2.models.response.retrievePensionCharges.PensionContributions
 
 class PensionContributionsSpec extends UnitSpec {
 
   val responseModel: PensionContributions = PensionContributions(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
+    isAnnualAllowanceReduced = Some(true),
+    taperedAnnualAllowance = Some(true),
+    moneyPurchasedAllowance = Some(true),
     inExcessOfTheAnnualAllowance = 123.12,
-    annualAllowanceTaxPaid = 123.12)
+    annualAllowanceTaxPaid = 123.12
+  )
 
   val responseJson: JsValue = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |     "isAnnualAllowanceReduced": true,
+      |     "taperedAnnualAllowance": true,
+      |     "moneyPurchasedAllowance": true,
       |     "inExcessOfTheAnnualAllowance": 123.12,
       |     "annualAllowanceTaxPaid": 123.12
       |}

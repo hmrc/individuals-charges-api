@@ -21,7 +21,7 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
-import v1.connectors.RetrievePensionChargesConnector
+import v2.connectors.RetrievePensionChargesConnector
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

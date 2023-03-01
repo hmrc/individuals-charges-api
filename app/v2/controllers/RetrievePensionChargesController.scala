@@ -23,7 +23,7 @@ import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
+import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 import v2.services.RetrievePensionChargesService
 
 import javax.inject._

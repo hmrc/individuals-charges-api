@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.controllers
+package v2.controllers
 
 import anyVersion.mocks.requestParsers.MockRetrievePensionChargesParser
 import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
@@ -25,14 +25,14 @@ import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdI
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.hateoas.HateoasWrapper
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.mvc.Result
-import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
-import v1.mocks.services._
-import api.models.hateoas.HateoasWrapper
 import play.api.libs.json.{JsObject, JsValue}
-import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
+import play.api.mvc.Result
+import v2.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
+import v2.mocks.services._
+import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

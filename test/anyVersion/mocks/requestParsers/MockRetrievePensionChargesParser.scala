@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package anyVersion.mocks.requestParsers
 
 import anyVersion.controllers.requestParsers.RetrievePensionChargesParser
 import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}

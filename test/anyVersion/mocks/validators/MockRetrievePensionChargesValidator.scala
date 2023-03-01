@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package anyVersion.mocks.validators
 
 import anyVersion.controllers.requestParsers.validators.RetrievePensionChargesValidator
 import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRawData
