@@ -16,7 +16,21 @@
 
 package v1.endpoints
 
-import api.models.errors.{CountryCodeFormatError, MtdError, NinoFormatError, PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError, RuleCountryCodeError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, InternalError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  CountryCodeFormatError,
+  MtdError,
+  NinoFormatError,
+  PensionSchemeTaxRefFormatError,
+  ProviderAddressFormatError,
+  ProviderNameFormatError,
+  QOPSRefFormatError,
+  RuleCountryCodeError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  InternalError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import v1.data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
@@ -26,7 +40,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import api.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 

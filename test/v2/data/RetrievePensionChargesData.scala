@@ -52,7 +52,7 @@ object RetrievePensionChargesData {
     Seq("00123456RA", "00123456RA"),
     Some(true),
     Some(true),
-    Some(false),
+    Some(true),
     123.45,
     123.45
   )
@@ -120,7 +120,7 @@ object RetrievePensionChargesData {
       |		],
       |     "isAnnualAllowanceReduced": true,
       |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false,
+      |     "moneyPurchasedAllowance": true,
       |		"inExcessOfTheAnnualAllowance": 123.45,
       |		"annualAllowanceTaxPaid": 123.45
       |	},
@@ -156,10 +156,7 @@ object RetrievePensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -192,6 +189,9 @@ object RetrievePensionChargesData {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
       |		],
+      |     "isAnnualAllowanceReduced": true,
+      |     "taperedAnnualAllowance": true,
+      |     "moneyPurchasedAllowance": true,
       |		"inExcessOfTheAnnualAllowance": 123.45,
       |		"annualAllowanceTaxPaid": 123.45
       |	},
