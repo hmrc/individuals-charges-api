@@ -94,6 +94,14 @@
                   "type": "string",
                   "example": "Q123456"
                 }
+              },
+              "pensionSchemeTaxReference":{
+                "type":"array",
+                "items": {
+                  "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+                  "type": "string",
+                  "example": "00123456RA"
+                }
               }
             },
             "required": [
@@ -172,10 +180,7 @@
             "foreignTaxPaid"
           ]
         }
-      },
-      "required": [
-        "pensionSchemeTaxReference"
-      ]
+      }
     },
     "pensionContributions":{
       "type":"object",
@@ -200,7 +205,7 @@
           "example":"1999.99"
         },
         "isAnnualAllowanceReduced":{
-          "description":"A boolean indicating whether annual allowance has been reduced. The value must be true or false.",
+          "description":"A boolean indicating whether annual allowance has been reduced. The value must be true or false. If isAnnualAllowanceReduced is true then either taperedAnnualAllowance or moneyPurchasedAllowance must be true as well.",
           "type":"boolean",
           "example":"false"
         },
@@ -253,6 +258,14 @@
                   "description":"A list of one or more qualifying overseas pension scheme reference numbers for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
+                }
+              },
+              "pensionSchemeTaxReference":{
+                "type":"array",
+                "items": {
+                  "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+                  "type": "string",
+                  "example": "00123456RA"
                 }
               }
             },
