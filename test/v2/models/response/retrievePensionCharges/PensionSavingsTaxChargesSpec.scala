@@ -14,38 +14,40 @@
  * limitations under the License.
  */
 
-package anyVersion.models.response.retrievePensionCharges
+package v2.models.response.retrievePensionCharges
 
-import play.api.libs.json.Json
+import anyVersion.models.response.retrievePensionCharges.LifetimeAllowance
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
+class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel =
-    PensionSchemeUnauthorisedPayments(
-      Seq("00123456RA", "00123456RA"),
-      Some(Charge(123.12, 123.12)),
-      Some(Charge(123.12, 123.12))
-    )
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    Some(Seq("00123456RA")),
+    Some(LifetimeAllowance(123.12, 123.12)),
+    Some(LifetimeAllowance(123.12, 123.12))
+  )
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
-      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "surcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       },
-      |     "noSurcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       }
+      |      "pensionSchemeTaxReference": ["00123456RA"],
+      |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
+      |         {
+      |            "amount":123.12,
+      |            "taxPaid":123.12
+      |         },
+      |      "benefitInExcessOfLifetimeAllowance":
+      |         {
+      |            "amount":123.12,
+      |            "taxPaid":123.12
+      |         }
       |   }
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionSchemeUnauthorisedPayments]
+        responseModel shouldBe responseJson.as[PensionSavingsTaxCharges]
       }
     }
   }

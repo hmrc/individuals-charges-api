@@ -18,12 +18,12 @@ package v2.data
 
 import anyVersion.models.response.retrievePensionCharges._
 import play.api.libs.json.{JsValue, Json}
-import v2.models.response.retrievePensionCharges.{PensionContributions, PensionSavingsTaxCharges, RetrievePensionChargesResponse}
+import v2.models.response.retrievePensionCharges._
 
 object RetrievePensionChargesData {
 
   val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA", "00123456RA"),
+    Some(Seq("00123456RA", "00123456RA")),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34))
   )
@@ -43,7 +43,7 @@ object RetrievePensionChargesData {
   )
 
   val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
-    Seq("00123456RA", "00123456RA"),
+    Some(Seq("00123456RA", "00123456RA")),
     Some(Charge(123.45, 123.45)),
     Some(Charge(123.45, 123.45))
   )

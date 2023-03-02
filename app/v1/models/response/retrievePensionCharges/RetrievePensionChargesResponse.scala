@@ -16,11 +16,7 @@
 
 package v1.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges.{
-  OverseasPensionContributions,
-  PensionSchemeOverseasTransfers,
-  PensionSchemeUnauthorisedPayments
-}
+import anyVersion.models.response.retrievePensionCharges.{OverseasPensionContributions, PensionSchemeOverseasTransfers}
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig

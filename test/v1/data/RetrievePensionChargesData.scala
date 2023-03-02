@@ -16,16 +16,9 @@
 
 package v1.data
 
-import anyVersion.models.response.retrievePensionCharges.{
-  Charge,
-  LifetimeAllowance,
-  OverseasPensionContributions,
-  OverseasSchemeProvider,
-  PensionSchemeOverseasTransfers,
-  PensionSchemeUnauthorisedPayments
-}
+import anyVersion.models.response.retrievePensionCharges._
 import play.api.libs.json.{JsValue, Json}
-import v1.models.response.retrievePensionCharges.{PensionContributions, PensionSavingsTaxCharges, RetrievePensionChargesResponse}
+import v1.models.response.retrievePensionCharges._
 
 object RetrievePensionChargesData {
 

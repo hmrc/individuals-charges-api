@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.retrievePensionCharges
+package v2.models.response.retrievePensionCharges
 
 import anyVersion.models.response.retrievePensionCharges._
 import api.models.hateoas.Link
@@ -22,19 +22,13 @@ import api.models.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.models.response.retrievePensionCharges.{
-  PensionContributions,
-  PensionSavingsTaxCharges,
-  RetrievePensionChargesHateoasData,
-  RetrievePensionChargesResponse
-}
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseModel: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
     Some(
       PensionSavingsTaxCharges(
-        Seq("00123456RA"),
+        Some(Seq("00123456RA")),
         Some(LifetimeAllowance(123.12, 123.12)),
         Some(LifetimeAllowance(123.12, 123.12))
       )),
@@ -52,7 +46,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         123.12)),
     Some(
       PensionSchemeUnauthorisedPayments(
-        Seq("00123456RA", "00123456RA"),
+        Some(Seq("00123456RA", "00123456RA")),
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),

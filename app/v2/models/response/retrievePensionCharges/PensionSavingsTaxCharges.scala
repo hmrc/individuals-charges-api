@@ -20,7 +20,7 @@ import anyVersion.models.response.retrievePensionCharges.LifetimeAllowance
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
+case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Option[Seq[String]],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance])
 
@@ -29,7 +29,7 @@ object PensionSavingsTaxCharges {
   implicit val writes: Writes[PensionSavingsTaxCharges] = Json.writes[PensionSavingsTaxCharges]
 
   implicit val reads: Reads[PensionSavingsTaxCharges] = (
-    (__ \ "pensionSchemeTaxReference").read[Seq[String]] and
+    (__ \ "pensionSchemeTaxReference").readNullable[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance]
   )(PensionSavingsTaxCharges.apply _)

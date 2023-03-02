@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package anyVersion.models.response.retrievePensionCharges
+package v1.models.response.retrievePensionCharges
 
+import anyVersion.models.response.retrievePensionCharges.Charge
 import play.api.libs.json.{Json, OFormat}
 
 case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String], surcharge: Option[Charge], noSurcharge: Option[Charge])

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package v2.models.retrievePensionCharges
+package v2.models.response.retrievePensionCharges
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.models.response.retrievePensionCharges.PensionContributions
 
 class PensionContributionsSpec extends UnitSpec {
 
