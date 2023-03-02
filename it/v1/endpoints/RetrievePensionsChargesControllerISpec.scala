@@ -16,16 +16,15 @@
 
 package v1.endpoints
 
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError, InternalError, TaxYearFormatError}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import v1.data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas}
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status
+import play.api.http.Status._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
@@ -81,11 +80,11 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Status.OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJson)
         }
 
         val response: WSResponse = await(request().get())
-        response.status shouldBe Status.OK
+        response.status shouldBe OK
         response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
@@ -97,11 +96,11 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Status.OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJson)
         }
 
         val response: WSResponse = await(request().get())
-        response.status shouldBe Status.OK
+        response.status shouldBe OK
         response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
@@ -130,23 +129,23 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("Badnino", "2019-20", Status.BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "203100", Status.BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-22", Status.BAD_REQUEST, RuleTaxYearRangeInvalidError)
+          ("Badnino", "2019-20", BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2018-22", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new NonTysTest {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().get())
@@ -156,17 +155,17 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
-          (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
-          (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, InternalError),
-          (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, NotFoundError),
-          (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, InternalError),
-          (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, InternalError)
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors = Seq(
-          (Status.NOT_FOUND, "NOT_FOUND", Status.NOT_FOUND, NotFoundError),
-          (Status.UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", Status.BAD_REQUEST, RuleTaxYearNotSupportedError)
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
         (input ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }

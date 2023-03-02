@@ -16,10 +16,10 @@
 
 package v1.mocks.services
 
+import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRequest
 import v1.services.{RetrievePensionChargesOutcome, RetrievePensionChargesService}
 
 import scala.concurrent.{ExecutionContext, Future}

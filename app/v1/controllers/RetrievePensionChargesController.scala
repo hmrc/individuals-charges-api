@@ -16,15 +16,15 @@
 
 package v1.controllers
 
+import anyVersion.controllers.requestParsers.RetrievePensionChargesParser
+import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRawData
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v1.controllers.requestParsers.RetrievePensionChargesParser
-import v1.models.request.RetrievePensionCharges.RetrievePensionChargesRawData
-import v1.models.response.retrieve.RetrievePensionChargesHateoasData
-import v1.services._
+import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
+import v1.services.RetrievePensionChargesService
 
 import javax.inject._
 import scala.concurrent.ExecutionContext

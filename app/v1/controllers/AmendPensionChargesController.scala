@@ -24,9 +24,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
 import v1.models.request.AmendPensionCharges
-import v1.models.response.amend.AmendPensionChargesHateoasData
-import v1.models.response.amend.AmendPensionChargesResponse.AmendLinksFactory
-import v1.services._
+import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData
+import v1.models.response.amendPensionCharges.AmendPensionChargesResponse.AmendLinksFactory
+import v1.services.AmendPensionChargesService
 
 import javax.inject._
 import scala.concurrent.ExecutionContext

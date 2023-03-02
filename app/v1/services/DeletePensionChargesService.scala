@@ -20,14 +20,14 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits.toBifunctorOps
-import v1.connectors.PensionChargesConnector
+import v1.connectors.DeletePensionChargesConnector
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesService @Inject() (connector: PensionChargesConnector) extends BaseService {
+class DeletePensionChargesService @Inject() (connector: DeletePensionChargesConnector) extends BaseService {
 
   def deletePensionCharges(
       request: DeletePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeletePensionChargesOutcome] = {

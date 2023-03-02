@@ -16,6 +16,8 @@
 
 package v1.controllers
 
+import anyVersion.mocks.requestParsers.MockRetrievePensionChargesParser
+import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
@@ -27,12 +29,10 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.mvc.Result
 import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
-import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
 import api.models.hateoas.HateoasWrapper
 import play.api.libs.json.{JsObject, JsValue}
-import v1.models.request.RetrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
-import v1.models.response.retrieve.RetrievePensionChargesHateoasData
+import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

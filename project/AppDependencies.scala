@@ -19,11 +19,11 @@ import play.sbt.PlayImport._
 import sbt._
 
 object AppDependencies {
-  val bootstrapPlayVersion = "7.11.0"
+  val bootstrap_28_version = "7.11.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"                  %% "bootstrap-backend-play-28" % bootstrapPlayVersion,
+    "uk.gov.hmrc"                  %% "bootstrap-backend-play-28" % bootstrap_28_version,
     "org.typelevel"                %% "cats-core"                 % "2.8.0",
     "com.chuusai"                  %% "shapeless"                 % "2.4.0-M1",
     "org.json4s"                   %% "json4s-native"             % "3.6.12",
@@ -39,7 +39,7 @@ object AppDependencies {
     "org.scalamock"          %% "scalamock"              % "5.2.0"              % scope,
     "org.pegdown"             % "pegdown"                % "1.6.0"              % scope,
     "com.typesafe.play"      %% "play-test"              % PlayVersion.current  % scope,
-    "uk.gov.hmrc"            %% "bootstrap-test-play-28" % bootstrapPlayVersion % scope,
+    "uk.gov.hmrc"            %% "bootstrap-test-play-28" % bootstrap_28_version % scope,
     "org.scalatestplus.play" %% "scalatestplus-play"     % "5.1.0"              % scope,
     "com.github.tomakehurst"  % "wiremock-jre8"          % "2.33.2"             % scope,
     "com.github.fge"          % "json-schema-validator"  % "2.2.6"              % scope,

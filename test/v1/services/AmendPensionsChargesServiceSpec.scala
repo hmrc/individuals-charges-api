@@ -23,7 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.AmendPensionChargesData._
-import v1.mocks.connectors.MockPensionChargesConnector
+import v1.mocks.connectors.MockAmendPensionChargesConnector
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 
 import scala.concurrent.Future
@@ -35,17 +35,17 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
   private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
-  trait Test extends MockPensionChargesConnector {
+  trait Test extends MockAmendPensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service = new AmendPensionChargesService(connector)
+    val service = new AmendPensionChargesService(mockAmendPensionChargesConnector)
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
-        MockPensionChargesConnector
+        MockAmendPensionChargesConnector
           .amendPensionCharges(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
@@ -55,9 +55,9 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError   = MtdError("SOME_CODE", "some message", BAD_REQUEST)
+        val someError          = MtdError("SOME_CODE", "some message", BAD_REQUEST)
         val downstreamResponse = ResponseWrapper(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
+        MockAmendPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
         await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -69,7 +69,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-            MockPensionChargesConnector
+            MockAmendPensionChargesConnector
               .amendPensionCharges(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 

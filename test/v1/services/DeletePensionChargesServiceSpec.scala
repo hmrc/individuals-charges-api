@@ -22,7 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.connectors.MockPensionChargesConnector
+import v1.mocks.connectors.MockDeletePensionChargesConnector
 import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
 
 import scala.concurrent.Future
@@ -32,11 +32,11 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  trait Test extends MockPensionChargesConnector {
+  trait Test extends MockDeletePensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    lazy val service = new DeletePensionChargesService(connector)
+    lazy val service = new DeletePensionChargesService(mockDeletePensionChargesConnector)
   }
 
   lazy val request: DeletePensionChargesRequest = DeletePensionChargesRequest(nino, taxYear)
@@ -44,7 +44,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   "Delete Pension Charges" should {
     "return a Right" when {
       "the connector call is successful" in new Test {
-        MockPensionChargesConnector
+        MockDeletePensionChargesConnector
           .deletePensionCharges(request)
           .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
@@ -56,7 +56,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
       "the connector returns an outbound error" in new Test {
         val someError: MtdError                                = InternalError
         val downstreamResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
-        MockPensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
+        MockDeletePensionChargesConnector.deletePensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
         await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -65,7 +65,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
     "service" when {
       "a service call is successful" should {
         "return a mapped result" in new Test {
-          MockPensionChargesConnector
+          MockDeletePensionChargesConnector
             .deletePensionCharges(request)
             .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
@@ -76,7 +76,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
 
-            MockPensionChargesConnector
+            MockDeletePensionChargesConnector
               .deletePensionCharges(request)
               .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
