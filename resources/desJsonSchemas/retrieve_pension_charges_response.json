@@ -1,14 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "API# 1674 Get Pension Charges response schema",
+  "title": "API# 1674 & 1869 Get Pension Charges response schema",
   "description": "Data retreived for Pension Charges",
   "type": "object",
   "minProperties": 1,
   "properties": {
-    "submittedOn": {
-      "type": "string",
-      "format": "date-time"
-    },
     "pensionSavingsTaxCharges": {
       "oneOf": [
         {
@@ -426,9 +422,6 @@
       "additionalProperties": false
     }
   },
-  "required": [
-    "submittedOn"
-  ],
   "additionalProperties": false,
   "definitions": {
     "monetaryPos": {
