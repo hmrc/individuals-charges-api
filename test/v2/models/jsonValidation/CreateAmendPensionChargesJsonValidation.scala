@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.jsonValidation
+package v2.models.jsonValidation
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import support.UnitSpec
-import v1.models.request.AmendPensionCharges.PensionCharges
+import v2.models.request.createAmendPensionCharges.PensionCharges
 
 class CreateAmendPensionChargesJsonValidation extends UnitSpec with JsonValidation {
 
@@ -633,7 +633,7 @@ class CreateAmendPensionChargesJsonValidation extends UnitSpec with JsonValidati
   private case class JsonTest(name: String, json: JsValue, outcome: Boolean)
 
   "The json Schema file for Get Pension Charges Response" should {
-    val schemaJsonDoc = "/desJsonSchemas/create_amend_pension_charges_request_v1.json"
+    val schemaJsonDoc = "/desJsonSchemas/create_amend_pension_charges_request_v2.json"
 
     val jsonSchemaTests: List[JsonTest] = List(
       JsonTest("minimal payload example", minimalPayload, outcome = true),
@@ -644,7 +644,10 @@ class CreateAmendPensionChargesJsonValidation extends UnitSpec with JsonValidati
       JsonTest("pensionSavingsTaxCharges second booleans example", booleans2PensionSavingsTaxChargesJson, outcome = true),
       JsonTest("pensionSavingsTaxCharges lump sum example", lumpSumPensionSavingsTaxChargesJson, outcome = true),
       JsonTest("pensionSavingsTaxCharges benefit in excess example", benefitInExcessPensionSavingsTaxChargesJson, outcome = true),
-      JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers example", pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson, outcome = true),
+      JsonTest(
+        "pensionSavingsTaxCharges pensionSchemeOverseasTransfers example",
+        pensionSavingsTaxChargesPensionSchemeOverseasTransfersJson,
+        outcome = true),
       JsonTest("pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments example", partialJson1, outcome = true),
       JsonTest(
         "pensionSavingsTaxCharges pensionSchemeOverseasTransfers pensionSchemeUnauthorisedPayments pensionContributions example",
@@ -669,4 +672,5 @@ class CreateAmendPensionChargesJsonValidation extends UnitSpec with JsonValidati
       }
     }
   }
+
 }

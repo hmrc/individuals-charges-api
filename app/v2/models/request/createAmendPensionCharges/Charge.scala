@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package v2
+package v2.models.request.createAmendPensionCharges
 
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
-import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
+import play.api.libs.json.{Json, OFormat}
 
-package object services {
+case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
 
-  type RetrievePensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[RetrievePensionChargesResponse]]
-
-  type CreateAmendPensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[Unit]]
-
-
+object Charge {
+  implicit val format: OFormat[Charge] = Json.format[Charge]
 }

@@ -1,1 +1,3 @@
 GET       /pensions/:nino/:taxYear        v2.controllers.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
+
+PUT       /pensions/:nino/:taxYear        v2.controllers.CreateAmendPensionChargesController.createAmend(nino: String, taxYear: String)

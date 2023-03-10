@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package v2
+package v2.models.request.createAmendPensionCharges
 
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
-import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
+import play.api.libs.json.{Json, OFormat}
 
-package object services {
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]])
 
-  type RetrievePensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[RetrievePensionChargesResponse]]
-
-  type CreateAmendPensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[Unit]]
-
-
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
 }

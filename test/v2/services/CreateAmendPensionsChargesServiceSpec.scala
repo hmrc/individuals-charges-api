@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.services
+package v2.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
@@ -22,34 +22,34 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.data.AmendPensionChargesData._
-import v1.mocks.connectors.MockAmendPensionChargesConnector
-import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
+import v2.data.CreateAmendPensionChargesData._
+import v2.mocks.connectors.MockCreateAmendPensionChargesConnector
+import v2.models.request.createAmendPensionCharges.CreateAmendPensionChargesRequest
 
 import scala.concurrent.Future
 
-class AmendPensionsChargesServiceSpec extends ServiceSpec {
+class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
 
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
+  private val request = CreateAmendPensionChargesRequest(nino, taxYear, pensionCharges)
 
-  trait Test extends MockAmendPensionChargesConnector {
+  trait Test extends MockCreateAmendPensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service = new AmendPensionChargesService(mockAmendPensionChargesConnector)
+    val service = new CreateAmendPensionChargesService(mockCreateAmendPensionChargesConnector)
   }
 
-  "Amend Pension Charges" should {
+  "Create & Amend Pension Charges" should {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
         MockAmendPensionChargesConnector
           .amendPensionCharges(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.amendPensions(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
+        await(service.createAmendPensions(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 
@@ -59,7 +59,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
         val downstreamResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockAmendPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
-        await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
+        await(service.createAmendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
     }
 
@@ -73,7 +73,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
               .amendPensionCharges(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val errors = Seq(
