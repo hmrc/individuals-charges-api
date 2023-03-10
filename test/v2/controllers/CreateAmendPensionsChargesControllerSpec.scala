@@ -66,7 +66,7 @@ class CreateAmendPensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    override protected def callController(): Future[Result] = controller.amend(nino, taxYear)(fakePostRequest(fullJson))
+    override protected def callController(): Future[Result] = controller.createAmend(nino, taxYear)(fakePostRequest(fullJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
