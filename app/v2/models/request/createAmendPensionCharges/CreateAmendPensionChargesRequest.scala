@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package v2
+package v2.models.request.createAmendPensionCharges
 
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
-import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
+import api.models.domain.{Nino, TaxYear}
+import api.models.request.RawData
 
-package object services {
-
-  type RetrievePensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[RetrievePensionChargesResponse]]
-
-  type CreateAmendPensionChargesOutcome = Either[ErrorWrapper, ResponseWrapper[Unit]]
-
-
-}
+case class CreateAmendPensionChargesRequest(nino: Nino, taxYear: TaxYear, pensionCharges: PensionCharges) extends RawData
