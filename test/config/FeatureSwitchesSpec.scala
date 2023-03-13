@@ -53,6 +53,26 @@ class FeatureSwitchesSpec extends UnitSpec {
     }
   }
 
+  "isCL102Enabled feature switch" should {
+    "be true" when {
+
+      "absent from the config" in {
+        val configuration = Configuration.empty
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isCL102Enabled shouldBe true
+      }
+
+      "enabled" in {
+        val configuration = Configuration("cl102.enabled" -> true)
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isCL102Enabled shouldBe true
+
+      }
+    }
+  }
+
   "isVersionEnabled()" should {
     val configuration = Configuration(
       "version-1.enabled" -> true,
