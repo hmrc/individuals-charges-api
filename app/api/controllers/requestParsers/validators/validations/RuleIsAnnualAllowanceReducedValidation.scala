@@ -22,12 +22,10 @@ object RuleIsAnnualAllowanceReducedValidation {
 
   def validate(isAnnualAllowanceReduced: Boolean, taperedAnnualAllowance: Option[Boolean], moneyPurchasedAllowance: Option[Boolean]): List[MtdError] =
     (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
-      case (true, Some(true), Some(false)) => NoValidationErrors
-      case (true, Some(false), Some(true)) => NoValidationErrors
-      case (true, None, Some(true))        => NoValidationErrors
-      case (true, Some(true), None)        => NoValidationErrors
-      case (false, _, _)                   => NoValidationErrors
-      case _                               => List(RuleIsAnnualAllowanceReducedError)
+      case (false, _, _)         => NoValidationErrors
+      case (true, Some(true), _) => NoValidationErrors
+      case (true, _, Some(true)) => NoValidationErrors
+      case _                     => List(RuleIsAnnualAllowanceReducedError)
     }
 
 }
