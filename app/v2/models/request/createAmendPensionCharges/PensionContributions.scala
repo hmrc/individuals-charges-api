@@ -20,10 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class PensionContributions(pensionSchemeTaxReference: Seq[String],
                                 inExcessOfTheAnnualAllowance: BigDecimal,
-                                annualAllowanceTaxPaid: BigDecimal,
-                                isAnnualAllowanceReduced: Option[Boolean],
-                                taperedAnnualAllowance: Option[Boolean],
-                                moneyPurchasedAllowance: Option[Boolean])
+                                annualAllowanceTaxPaid: BigDecimal)
 
 object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]
