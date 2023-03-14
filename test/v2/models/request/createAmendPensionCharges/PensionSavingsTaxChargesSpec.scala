@@ -21,29 +21,24 @@ import support.UnitSpec
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)),
-    Some(LifetimeAllowance(123.12, 123.12)),
-    isAnnualAllowanceReduced = true,
-    Some(true),
-    Some(true))
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    pensionSchemeTaxReference = Seq("00123456RA"),
+    lumpSumBenefitTakenInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.12, 123.12)),
+    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.12, 123.12))
+  )
 
   val responseJson: JsValue = Json.parse("""
       |{
-      |      "pensionSchemeTaxReference": ["00123456RA"],
-      |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
-      |         {
-      |            "amount":123.12,
-      |            "taxPaid":123.12
-      |         },
-      |      "benefitInExcessOfLifetimeAllowance":
-      |         {
-      |            "amount":123.12,
-      |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
-      |   }
+      |    "pensionSchemeTaxReference": ["00123456RA"],
+      |    "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |        "amount":123.12,
+      |        "taxPaid":123.12
+      |    },
+      |    "benefitInExcessOfLifetimeAllowance": {
+      |        "amount":123.12,
+      |        "taxPaid":123.12
+      |    }
+      |}
       |""".stripMargin)
 
   "reads" when {
