@@ -13,7 +13,7 @@
       },
     "isAnnualAllowanceReduced": true,
     "taperedAnnualAllowance": true,
-    "moneyPurchasedAllowance": true
+    "moneyPurchasedAllowance": false
   },
   "pensionSchemeOverseasTransfers": {
     "overseasSchemeProvider": [

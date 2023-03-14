@@ -43,7 +43,7 @@
     "annualAllowanceTaxPaid": 100,
     "isAnnualAllowanceReduced": true,
     "taperedAnnualAllowance": true,
-    "moneyPurchasedAllowance": true
+    "moneyPurchasedAllowance": false
   },
   "overseasPensionContributions": {
     "overseasSchemeProvider": [
