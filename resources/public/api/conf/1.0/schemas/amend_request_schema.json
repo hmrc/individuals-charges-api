@@ -9,7 +9,7 @@
       "description":"Object holding the booleans for annual allowance.",
       "properties":{
         "isAnnualAllowanceReduced":{
-          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether annual allowance has been reduced.If this field is set to true then taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
+          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether annual allowance has been reduced. If this field is set to true then at least one of taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
           "type":"boolean",
           "example":"false"
         },
