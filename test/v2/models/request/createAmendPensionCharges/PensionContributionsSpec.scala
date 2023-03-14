@@ -21,23 +21,14 @@ import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val requestModel: PensionContributions = PensionContributions(
-    pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
-    inExcessOfTheAnnualAllowance = 123.12,
-    annualAllowanceTaxPaid = 123.12,
-    isAnnualAllowanceReduced = Some(true),
-    taperedAnnualAllowance = Some(true),
-    moneyPurchasedAllowance = Some(false)
-  )
+  val requestModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
+  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
 
   val requestJson: JsValue = Json.parse("""
       |{
       |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
       |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12,
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false
+      |     "annualAllowanceTaxPaid": 123.12
       |}""".stripMargin)
 
   "reads" when {
