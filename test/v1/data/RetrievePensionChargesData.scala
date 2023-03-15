@@ -54,7 +54,10 @@ object RetrievePensionChargesData {
   val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
-    123.45
+    123.45,
+    None,
+    None,
+    None
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(

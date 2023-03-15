@@ -26,7 +26,38 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
                                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                                           pensionContributions: Option[PensionContributions],
-                                          overseasPensionContributions: Option[OverseasPensionContributions]) {}
+                                          overseasPensionContributions: Option[OverseasPensionContributions]) {
+
+  def removeFieldsFromPensionSavingsTaxCharges: RetrievePensionChargesResponse = {
+
+    val updatedPensionSavingsTaxCharges = this.pensionSavingsTaxCharges
+      .map(_.copy(isAnnualAllowanceReduced = None, taperedAnnualAllowance = None, moneyPurchasedAllowance = None))
+      .filter(_.isDefined)
+    copy(pensionSavingsTaxCharges = updatedPensionSavingsTaxCharges)
+
+  }
+
+  def removeFieldsFromPensionContributions: RetrievePensionChargesResponse = {
+
+    val updatedPensionContributions = this.pensionContributions
+      .map(_.copy(isAnnualAllowanceReduced = None, taperedAnnualAllowance = None, moneyPurchasedAllowance = None))
+      .filter(_.isDefined)
+    copy(pensionContributions = updatedPensionContributions)
+
+  }
+
+  def addFieldsFromPensionContributionsToPensionSavingsTaxCharges: RetrievePensionChargesResponse = {
+    val updatedPensionSavingsTaxCharges = this.pensionSavingsTaxCharges
+      .map(
+        _.copy(
+          isAnnualAllowanceReduced = this.pensionContributions.flatMap(_.isAnnualAllowanceReduced),
+          taperedAnnualAllowance = this.pensionContributions.flatMap(_.taperedAnnualAllowance),
+          moneyPurchasedAllowance = this.pensionContributions.flatMap(_.moneyPurchasedAllowance)
+        ))
+    copy(pensionSavingsTaxCharges = updatedPensionSavingsTaxCharges)
+  }
+
+}
 
 object RetrievePensionChargesResponse extends HateoasLinks {
   implicit val format: OFormat[RetrievePensionChargesResponse] = Json.format[RetrievePensionChargesResponse]
