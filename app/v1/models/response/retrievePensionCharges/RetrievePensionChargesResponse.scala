@@ -28,15 +28,6 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
                                           pensionContributions: Option[PensionContributions],
                                           overseasPensionContributions: Option[OverseasPensionContributions]) {
 
-  def removeFieldsFromPensionSavingsTaxCharges: RetrievePensionChargesResponse = {
-
-    val updatedPensionSavingsTaxCharges = this.pensionSavingsTaxCharges
-      .map(_.copy(isAnnualAllowanceReduced = None, taperedAnnualAllowance = None, moneyPurchasedAllowance = None))
-      .filter(_.isDefined)
-    copy(pensionSavingsTaxCharges = updatedPensionSavingsTaxCharges)
-
-  }
-
   def removeFieldsFromPensionContributions: RetrievePensionChargesResponse = {
 
     val updatedPensionContributions = this.pensionContributions

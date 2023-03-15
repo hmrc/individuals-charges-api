@@ -47,7 +47,8 @@ class RetrievePensionChargesService @Inject() (connector: RetrievePensionCharges
         .addFieldsFromPensionContributionsToPensionSavingsTaxCharges
         .removeFieldsFromPensionContributions
     } else {
-      response.removeFieldsFromPensionSavingsTaxCharges
+      response
+        .removeFieldsFromPensionContributions
     }
   }
 

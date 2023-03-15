@@ -25,17 +25,7 @@ case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     isAnnualAllowanceReduced: Option[Boolean],
                                     taperedAnnualAllowance: Option[Boolean],
-                                    moneyPurchasedAllowance: Option[Boolean]) {
-
-  val isDefined: Boolean =
-    !(pensionSchemeTaxReference.isEmpty &&
-      lumpSumBenefitTakenInExcessOfLifetimeAllowance.isEmpty &&
-      benefitInExcessOfLifetimeAllowance.isEmpty &&
-      isAnnualAllowanceReduced.isEmpty &&
-      taperedAnnualAllowance.isEmpty &&
-      moneyPurchasedAllowance.isEmpty
-      )
-}
+                                    moneyPurchasedAllowance: Option[Boolean])
 
 object PensionSavingsTaxCharges {
 
