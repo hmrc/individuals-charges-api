@@ -21,6 +21,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import mocks.MockAppConfig
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.AmendPensionChargesData._
 import v1.mocks.connectors.MockAmendPensionChargesConnector
@@ -33,18 +35,26 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = AmendPensionChargesRequest(nino, taxYear, pensionCharges)
+  private val request = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInTaxCharges)
 
-  trait Test extends MockAmendPensionChargesConnector {
+  trait Test extends MockAmendPensionChargesConnector with MockAppConfig {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service = new AmendPensionChargesService(mockAmendPensionChargesConnector)
+    val service = new AmendPensionChargesService(mockAmendPensionChargesConnector, mockAppConfig)
+  }
+
+  trait Cl102Enabled extends Test {
+    MockAppConfig.featureSwitches.returns(Configuration("cl102.enabled" -> true)).anyNumberOfTimes()
+  }
+
+  trait Cl102Disabled extends Test {
+    MockAppConfig.featureSwitches.returns(Configuration("cl102.enabled" -> false)).anyNumberOfTimes()
   }
 
   "Amend Pension Charges" should {
     "return a valid response" when {
-      "a valid request is supplied" in new Test {
+      "a valid request is supplied" in new Cl102Disabled {
         MockAmendPensionChargesConnector
           .amendPensionCharges(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
@@ -54,7 +64,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
     }
 
     "return that wrapped error as-is" when {
-      "the connector returns an outbound error" in new Test {
+      "the connector returns an outbound error" in new Cl102Disabled {
         val someError          = MtdError("SOME_CODE", "some message", BAD_REQUEST)
         val downstreamResponse = ResponseWrapper(correlationId, OutboundError(someError))
         MockAmendPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
@@ -67,7 +77,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
       "map errors according to spec" when {
 
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-          s"a $downstreamErrorCode error is returned from the service" in new Test {
+          s"a $downstreamErrorCode error is returned from the service" in new Cl102Disabled {
 
             MockAmendPensionChargesConnector
               .amendPensionCharges(request)
@@ -94,6 +104,32 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      }
+
+      "cl102 field updates cannot be performed and switch is enabled" when {
+        "internal server error is returned from the service" in new Cl102Enabled {}
+      }
+    }
+
+    "cl102 is enabled" must {
+      "cl102 field updates cannot be performed" when {
+        "internal server error is returned from the service" in new Cl102Enabled {
+          val requestMissingPensionContributions = AmendPensionChargesRequest(nino, taxYear, pensionChargesPensionContributionsMissing)
+
+          await(service.amendPensions(requestMissingPensionContributions)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
+        }
+      }
+
+      "cl102 field updates are completed successfully" when {
+        "updated request passed onto connector" in new Cl102Enabled {
+          val modifiedRequest = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInPensionContributions)
+
+          MockAmendPensionChargesConnector
+            .amendPensionCharges(modifiedRequest)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+          await(service.amendPensions(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
+        }
       }
     }
   }

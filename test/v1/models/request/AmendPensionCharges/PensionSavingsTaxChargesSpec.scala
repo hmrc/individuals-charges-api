@@ -21,11 +21,14 @@ import support.UnitSpec
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)),
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    Seq("00123456RA"),
     Some(LifetimeAllowance(123.12, 123.12)),
-    isAnnualAllowanceReduced = true,
+    Some(LifetimeAllowance(123.12, 123.12)),
+    isAnnualAllowanceReduced = Some(true),
     Some(true),
-    Some(true))
+    Some(true)
+  )
 
   val responseJson: JsValue = Json.parse("""
       |{

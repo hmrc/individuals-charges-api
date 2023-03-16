@@ -16,123 +16,16 @@
 
 package v1.models.request.AmendPensionCharges
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
+import v1.data.AmendPensionChargesData._
 
 class PensionChargesSpec extends UnitSpec {
-
-  val responseModel: PensionCharges = PensionCharges(
-    Some(
-      PensionSavingsTaxCharges(
-        Seq("00123456RA"),
-        Some(LifetimeAllowance(123.12, 123.12)),
-        Some(LifetimeAllowance(123.12, 123.12)),
-        isAnnualAllowanceReduced = true,
-        Some(true),
-        Some(true))),
-    Some(
-      PensionSchemeOverseasTransfers(
-        Seq(
-          OverseasSchemeProvider(
-            "name",
-            "address",
-            "postcode",
-            Some(Seq("Q123456")),
-            None
-          )),
-        123.12,
-        123.12)),
-    Some(
-      PensionSchemeUnauthorisedPayments(
-        Seq("00123456RA", "00123456RA"),
-        Some(Charge(123.12, 123.12)),
-        Some(Charge(123.12, 123.12))
-      )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
-    Some(
-      OverseasPensionContributions(
-        Seq(
-          OverseasSchemeProvider(
-            "Overseas Pensions Plc",
-            "111 Main Street, George Town, Grand Cayman",
-            "CYM",
-            Some(Seq("Q123456")),
-            None
-          )),
-        123.12,
-        123.12
-      ))
-  )
-
-  val responseJson: JsValue = Json.parse("""
-      |{
-      |   "pensionSavingsTaxCharges": {
-      |      "pensionSchemeTaxReference": ["00123456RA"],
-      |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
-      |         {
-      |            "amount":123.12,
-      |            "taxPaid":123.12
-      |         },
-      |      "benefitInExcessOfLifetimeAllowance":
-      |         {
-      |            "amount":123.12,
-      |            "taxPaid":123.12
-      |         },
-      |      "isAnnualAllowanceReduced": true,
-      |      "taperedAnnualAllowance": true,
-      |      "moneyPurchasedAllowance": true
-      |   },
-      |   "pensionSchemeOverseasTransfers": {
-      |     "overseasSchemeProvider": [
-      |       {
-      |         "providerName": "name",
-      |         "providerAddress": "address",
-      |         "providerCountryCode": "postcode",
-      |         "qualifyingRecognisedOverseasPensionScheme": [
-      |              "Q123456"
-      |         ]
-      |       }
-      |     ],
-      |     "transferCharge": 123.12,
-      |     "transferChargeTaxPaid": 123.12
-      |   },
-      |   "pensionSchemeUnauthorisedPayments": {
-      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "surcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       },
-      |     "noSurcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       }
-      |   },
-      |   "pensionContributions": {
-      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
-      |   },
-      |   "overseasPensionContributions": {
-      |    "overseasSchemeProvider": [
-      |      {
-      |        "providerName": "Overseas Pensions Plc",
-      |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |        "providerCountryCode": "CYM",
-      |        "qualifyingRecognisedOverseasPensionScheme": [
-      |          "Q123456"
-      |        ]
-      |      }
-      |    ],
-      |    "shortServiceRefund": 123.12,
-      |    "shortServiceRefundTaxPaid": 123.12
-      |  }
-      |}
-      |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionCharges]
+        fullJson.as[PensionCharges] shouldBe pensionChargesCl102FieldsInTaxCharges
       }
     }
   }
@@ -140,7 +33,39 @@ class PensionChargesSpec extends UnitSpec {
   "writes" when {
     "passed valid model" should {
       "return valid JSON" in {
-        Json.toJson(responseModel) shouldBe responseJson
+        Json.toJson(pensionChargesCl102FieldsInTaxCharges) shouldBe fullJson
+      }
+    }
+  }
+
+  "withCl102Changes" when {
+    "fields are present in tax charges and contributions object exists" should {
+      "move fields successfully" in {
+        pensionChargesCl102FieldsInTaxCharges.withCl102Changes shouldBe Some(pensionChargesCl102FieldsInPensionContributions)
+      }
+    }
+
+    /** The pensionContributions object contains other mandatory fields. If it is not present, we cannot create it ourselves as we have no values for
+      * these mandatory fields. This means we cannot move the CL102 fields from tax charges. Instead, return None, this will translate to a 500
+      * Internal Server Error for vendors.
+      */
+    "tax charges object exists but contributions object does not exist" should {
+      "return None" in {
+        pensionChargesPensionContributionsMissing.withCl102Changes shouldBe None
+      }
+    }
+
+    "tax charges does not exist" should {
+      "return model as-is" in {
+        val requestModel: PensionCharges = PensionCharges(
+          None,
+          Some(pensionOverseasTransfer),
+          Some(pensionUnauthorisedPayments),
+          Some(pensionContributionsWithoutCl102Fields),
+          Some(overseasPensionContributions)
+        )
+
+        requestModel.withCl102Changes shouldBe Some(requestModel)
       }
     }
   }

@@ -17,15 +17,14 @@
 package v1.endpoints
 
 import api.models.errors._
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import v1.data.AmendPensionChargesData._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.IntegrationBaseSpec
 import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
+import v1.data.AmendPensionChargesData._
 
 class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
@@ -35,10 +34,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made with the original data structure" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
@@ -51,10 +47,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
       "a valid request is made for a Tax Year Specific tax year" in new TysIfsTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
@@ -67,10 +60,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made with different booleans" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
@@ -109,12 +99,6 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(requestNino)
-            }
 
             val response: WSResponse = await(mtdRequest.put(requestBody))
             response.status shouldBe expectedStatus
@@ -211,10 +195,7 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
+            override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
@@ -285,10 +266,14 @@ class AmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           """.stripMargin
     )
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = {}
 
     def mtdRequest: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+
       buildRequest(s"/pensions/$nino/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),

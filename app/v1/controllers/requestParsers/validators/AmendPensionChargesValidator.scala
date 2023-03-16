@@ -220,13 +220,15 @@ class AmendPensionChargesValidator @Inject() (appConfig: AppConfig) extends Vali
 
   private def validateRuleIsAnnualAllowanceReduced(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): List[MtdError] = {
     pensionSavingsTaxCharges
-      .map { pensionSavingsTaxCharges =>
-        List(
-          RuleIsAnnualAllowanceReducedValidation.validate(
-            pensionSavingsTaxCharges.isAnnualAllowanceReduced,
-            pensionSavingsTaxCharges.taperedAnnualAllowance,
-            pensionSavingsTaxCharges.moneyPurchasedAllowance)
-        ).flatten
+      .map { taxCharges =>
+        taxCharges.isAnnualAllowanceReduced
+          .map { isAnnualAllowanceReduced =>
+            List(
+              RuleIsAnnualAllowanceReducedValidation
+                .validate(isAnnualAllowanceReduced, taxCharges.taperedAnnualAllowance, taxCharges.moneyPurchasedAllowance)
+            ).flatten
+          }
+          .getOrElse(List(RuleIncorrectOrEmptyBodyError))
       }
       .getOrElse(NoValidationErrors)
   }

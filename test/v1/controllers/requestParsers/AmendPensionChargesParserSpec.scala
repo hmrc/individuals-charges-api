@@ -46,13 +46,13 @@ class AmendPensionChargesParserSpec extends UnitSpec {
         MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
+          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionChargesCl102FieldsInTaxCharges))
       }
       "valid updated request data is supplied" in new Test {
         MockValidator.validate(inputDataUpdated).returns(Nil)
 
         parser.parseRequest(inputDataUpdated) shouldBe
-          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionCharges))
+          Right(AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), AmendPensionChargesData.pensionChargesCl102FieldsInTaxCharges))
       }
     }
 
