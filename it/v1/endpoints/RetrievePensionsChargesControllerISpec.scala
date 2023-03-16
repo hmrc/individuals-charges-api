@@ -84,6 +84,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(request().get())
+
         response.status shouldBe OK
         response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
         response.header("X-CorrelationId").nonEmpty shouldBe true

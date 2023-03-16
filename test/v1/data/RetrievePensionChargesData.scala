@@ -84,7 +84,8 @@ object RetrievePensionChargesData {
     0
   )
 
-  def retrieveResponseCl102Fields(pensionSavingsCharge: PensionSavingsTaxCharges, pensionContributions: PensionContributions): RetrievePensionChargesResponse =
+  def retrieveResponseCl102Fields(pensionSavingsCharge: PensionSavingsTaxCharges,
+                                  pensionContributions: PensionContributions): RetrievePensionChargesResponse =
     RetrievePensionChargesResponse(
       Some(pensionSavingsCharge),
       Some(pensionOverseasTransfer),
@@ -160,7 +161,10 @@ object RetrievePensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |     "isAnnualAllowanceReduced": true,
+      |     "taperedAnnualAllowance": true,
+      |     "moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
