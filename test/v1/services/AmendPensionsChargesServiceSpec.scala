@@ -65,8 +65,8 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Cl102Disabled {
-        val someError          = MtdError("SOME_CODE", "some message", BAD_REQUEST)
-        val downstreamResponse = ResponseWrapper(correlationId, OutboundError(someError))
+        val someError: MtdError                                = MtdError("SOME_CODE", "some message", BAD_REQUEST)
+        val downstreamResponse: ResponseWrapper[OutboundError] = ResponseWrapper(correlationId, OutboundError(someError))
         MockAmendPensionChargesConnector.amendPensionCharges(request).returns(Future.successful(Left(downstreamResponse)))
 
         await(service.amendPensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
@@ -110,7 +110,8 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
     "cl102 is enabled" must {
       "cl102 field updates cannot be performed" when {
         "internal server error is returned from the service" in new Cl102Enabled {
-          val requestMissingPensionContributions = AmendPensionChargesRequest(nino, taxYear, pensionChargesPensionContributionsMissing)
+          val requestMissingPensionContributions: AmendPensionChargesRequest =
+            AmendPensionChargesRequest(nino, taxYear, pensionChargesPensionContributionsMissing)
 
           await(service.amendPensions(requestMissingPensionContributions)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
         }
@@ -118,7 +119,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
       "cl102 field updates are completed successfully" when {
         "updated request passed onto connector" in new Cl102Enabled {
-          val modifiedRequest = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInPensionContributions)
+          val modifiedRequest: AmendPensionChargesRequest = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInPensionContributions)
 
           MockAmendPensionChargesConnector
             .amendPensionCharges(modifiedRequest)
