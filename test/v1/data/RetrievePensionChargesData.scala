@@ -84,7 +84,7 @@ object RetrievePensionChargesData {
     0
   )
 
-  def retrieveResponse(pensionSavingsCharge: PensionSavingsTaxCharges, pensionContributions: PensionContributions): RetrievePensionChargesResponse =
+  def retrieveResponseCl102Fields(pensionSavingsCharge: PensionSavingsTaxCharges, pensionContributions: PensionContributions): RetrievePensionChargesResponse =
     RetrievePensionChargesResponse(
       Some(pensionSavingsCharge),
       Some(pensionOverseasTransfer),

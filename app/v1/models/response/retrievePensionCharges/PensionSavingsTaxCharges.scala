@@ -27,8 +27,7 @@ case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     taperedAnnualAllowance: Option[Boolean],
                                     moneyPurchasedAllowance: Option[Boolean]) {
 
-
-  lazy val isIsAnnualAllowanceReducedMissing: Boolean = isAnnualAllowanceReduced.isEmpty
+  val isIsAnnualAllowanceReducedMissing: Boolean = isAnnualAllowanceReduced.isEmpty
 }
 
 object PensionSavingsTaxCharges {

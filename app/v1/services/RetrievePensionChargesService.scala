@@ -42,8 +42,21 @@ class RetrievePensionChargesService @Inject() (connector: RetrievePensionCharges
       .value
   }
 
-  def cl102ResponseMap(responseWrapper: ResponseWrapper[RetrievePensionChargesResponse])(implicit ctx: RequestContext): RetrievePensionChargesOutcome = {
+  def cl102ResponseMap(responseWrapper: ResponseWrapper[RetrievePensionChargesResponse])(implicit
+      ctx: RequestContext): RetrievePensionChargesOutcome = {
     val response = responseWrapper.responseData
+
+//    // This field is mandatory from a vendors perspective, so we have to throw an error if it's missing
+//    if (response.isIsAnnualAllowanceReducedMissing) {
+//      Left(ErrorWrapper(ctx.correlationId, InternalError))
+//    } else if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
+//      val modifiedResponseWrapper =
+//        responseWrapper.copy(responseData = response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges.removeFieldsFromPensionContributions)
+//      Right(modifiedResponseWrapper)
+//    } else {
+//      val modifiedResponseWrapper = responseWrapper.copy(responseData = response.removeFieldsFromPensionContributions)
+//      Right(modifiedResponseWrapper)
+//    }
 
     val modifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
       response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges

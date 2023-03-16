@@ -172,17 +172,17 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
   "Cl102 Changes" when {
 
     "isIsAnnualAllowanceReducedMissing" when {
-      "missing from Pension Savings Tax Charges" should {
+      "missing from pensionSavingsTaxCharges" should {
         "return true" in {
-          retrieveResponse(
+          retrieveResponseCl102Fields(
             pensionSavingsChargeWithoutCl102Fields,
             pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe true
         }
       }
 
-      "present in Pension Savings Tax Charges" should {
+      "present in pensionSavingsTaxCharges" should {
         "return false" in {
-          retrieveResponse(
+          retrieveResponseCl102Fields(
             pensionSavingsChargeWithCl102Fields,
             pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe false
         }
@@ -191,15 +191,15 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
     "removeFieldsFromPensionContributions" should {
       "removes fields successfully" in {
-        retrieveResponseCl102FieldsInPensionContributions.removeFieldsFromPensionContributions shouldBe retrieveResponse(
+        retrieveResponseCl102FieldsInPensionContributions.removeFieldsFromPensionContributions shouldBe retrieveResponseCl102Fields(
           pensionSavingsChargeWithoutCl102Fields,
           pensionContributionsWithoutCl102Fields)
       }
     }
 
     "addFieldsFromPensionContributionsToPensionSavingsTaxCharges" should {
-      "successfully add cl102 fields to Pension Savings Tax Charges" in {
-        retrieveResponseCl102FieldsInPensionContributions.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe retrieveResponse(
+      "successfully add cl102 fields to pensionSavingsTaxCharges" in {
+        retrieveResponseCl102FieldsInPensionContributions.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe retrieveResponseCl102Fields(
           pensionSavingsChargeWithCl102Fields,
           pensionContributionsWithCl102Fields)
       }

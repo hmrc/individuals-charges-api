@@ -123,8 +123,8 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
       "isAnnualAllowanceReduced missing" when {
         "an internal server error is returned" in new Cl102Enabled {
-          val responseWithoutIsAnnualAllowanceReduced = retrieveResponseCl102FieldsInPensionContributions.copy(pensionContributions =
-            Some(pensionContributionsWithCl102Fields.copy(isAnnualAllowanceReduced = None)))
+          val responseWithoutIsAnnualAllowanceReduced =
+            retrieveResponseCl102Fields(pensionSavingsChargeWithoutCl102Fields, pensionContributionsWithoutCl102Fields)
 
           MockRetrievePensionChargesConnector
             .retrievePensions(request)

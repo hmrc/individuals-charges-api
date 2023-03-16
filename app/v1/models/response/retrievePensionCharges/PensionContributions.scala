@@ -25,6 +25,8 @@ case class PensionContributions(pensionSchemeTaxReference: Seq[String],
                                 taperedAnnualAllowance: Option[Boolean],
                                 moneyPurchasedAllowance: Option[Boolean]
                                ) {
+  val isIsAnnualAllowanceReducedMissing: Boolean = isAnnualAllowanceReduced.isEmpty
+
   val isDefined: Boolean =
     !(pensionSchemeTaxReference.isEmpty &&
       isAnnualAllowanceReduced.isEmpty &&
