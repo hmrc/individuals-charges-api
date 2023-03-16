@@ -22,6 +22,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import mocks.MockAppConfig
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
@@ -35,20 +37,28 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
   private val request = RetrievePensionChargesRequest(nino, taxYear)
 
-  trait Test extends MockRetrievePensionChargesConnector {
+  trait Test extends MockRetrievePensionChargesConnector with MockAppConfig {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    val service                                 = new RetrievePensionChargesService(mockRetrievePensionChargesConnector)
+    val service                                 = new RetrievePensionChargesService(mockRetrievePensionChargesConnector, mockAppConfig)
+  }
+
+  trait Cl102Enabled extends Test {
+    MockAppConfig.featureSwitches.returns(Configuration("cl102.enabled" -> true)).anyNumberOfTimes()
+  }
+
+  trait Cl102Disabled extends Test {
+    MockAppConfig.featureSwitches.returns(Configuration("cl102.enabled" -> false)).anyNumberOfTimes()
   }
 
   "Retrieve Pension Charges" should {
     "return a valid response" when {
-      "a valid request is supplied" in new Test {
+      "a valid request is supplied" in new Cl102Disabled {
         MockRetrievePensionChargesConnector
           .retrievePensions(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))))
 
-        await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
+        await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))
       }
     }
 
@@ -64,12 +74,12 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
     "service" should {
       "return a successful response" when {
-        "a successful response is passed through" in new Test {
+        "a successful response is passed through" in new Cl102Disabled {
           MockRetrievePensionChargesConnector
             .retrievePensions(request)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))))
 
-          await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponse))
+          await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))
         }
       }
       "map errors according to spec" when {
@@ -100,6 +110,31 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+    "cl102 is enabled" must {
+      "cl102 fields exist in pension contributions" when {
+        "a successful response is passed through with updated fields" in new Cl102Enabled {
+          MockRetrievePensionChargesConnector
+            .retrievePensions(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInPensionContributions))))
+
+          await(service.retrievePensions(request)) shouldBe Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))
+        }
+      }
+
+      "isAnnualAllowanceReduced missing" when {
+        "an internal server error is returned" in new Cl102Enabled {
+          val responseWithoutIsAnnualAllowanceReduced = retrieveResponseCl102FieldsInPensionContributions.copy(pensionContributions =
+            Some(pensionContributionsWithCl102Fields.copy(isAnnualAllowanceReduced = None)))
+
+          MockRetrievePensionChargesConnector
+            .retrievePensions(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithoutIsAnnualAllowanceReduced))))
+
+          await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
+        }
+      }
+    }
+
   }
 
 }

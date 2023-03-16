@@ -28,7 +28,7 @@ import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.mvc.Result
-import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
+import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponseCl102FieldsInTaxCharges}
 import v1.mocks.services._
 import api.models.hateoas.HateoasWrapper
 import play.api.libs.json.{JsObject, JsValue}
@@ -94,11 +94,11 @@ class RetrievePensionsChargesControllerSpec
 
         MockRetrievePensionsChargesService
           .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))))
 
         MockHateoasFactory
-          .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveResponse, links = hateoaslinks))
+          .wrap(retrieveResponseCl102FieldsInTaxCharges, RetrievePensionChargesHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveResponseCl102FieldsInTaxCharges, links = hateoaslinks))
 
         runOkTest(OK, Some(fullJson.as[JsObject] ++ hateoaslinksJson))
       }

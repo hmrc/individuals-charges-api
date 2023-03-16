@@ -26,7 +26,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
     Seq("00123456RA"),
     Some(LifetimeAllowance(123.12, 123.12)),
     Some(LifetimeAllowance(123.12, 123.12)),
-    isAnnualAllowanceReduced = true,
+    isAnnualAllowanceReduced = Some(true),
     taperedAnnualAllowance = Some(true),
     moneyPurchasedAllowance = Some(true)
   )

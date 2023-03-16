@@ -19,6 +19,7 @@ package v1.services
 import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
@@ -36,19 +37,26 @@ class RetrievePensionChargesService @Inject() (connector: RetrievePensionCharges
       request: RetrievePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
 
     EitherT(connector.retrievePensionCharges(request))
-      .map(_.map(cl102ResponseMap))
       .leftMap(mapDownstreamErrors(downstreamErrorMap))
+      .flatMap(response => EitherT.fromEither[Future](cl102ResponseMap(response)))
       .value
   }
 
-  def cl102ResponseMap(response: RetrievePensionChargesResponse): RetrievePensionChargesResponse = {
-    if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
-      response
-        .addFieldsFromPensionContributionsToPensionSavingsTaxCharges
-        .removeFieldsFromPensionContributions
+  def cl102ResponseMap(responseWrapper: ResponseWrapper[RetrievePensionChargesResponse])(implicit ctx: RequestContext): RetrievePensionChargesOutcome = {
+    val response = responseWrapper.responseData
+
+    val modifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
+      response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges
     } else {
       response
-        .removeFieldsFromPensionContributions
+    }
+
+    // This field is mandatory from a vendors perspective, so we have to throw an error if it's missing
+    if (modifiedResponse.isIsAnnualAllowanceReducedMissing) {
+      Left(ErrorWrapper(ctx.correlationId, InternalError))
+    } else {
+      val modifiedResponseWrapper = responseWrapper.copy(responseData = modifiedResponse.removeFieldsFromPensionContributions)
+      Right(modifiedResponseWrapper)
     }
   }
 

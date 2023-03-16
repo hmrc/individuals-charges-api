@@ -28,6 +28,8 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
                                           pensionContributions: Option[PensionContributions],
                                           overseasPensionContributions: Option[OverseasPensionContributions]) {
 
+  val isIsAnnualAllowanceReducedMissing: Boolean = this.pensionSavingsTaxCharges.exists(_.isIsAnnualAllowanceReducedMissing)
+
   def removeFieldsFromPensionContributions: RetrievePensionChargesResponse = {
 
     val updatedPensionContributions = this.pensionContributions

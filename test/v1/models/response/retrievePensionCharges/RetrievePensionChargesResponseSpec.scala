@@ -22,6 +22,7 @@ import api.models.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v1.data.RetrievePensionChargesData._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
@@ -31,9 +32,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
         Some(LifetimeAllowance(123.12, 123.12)),
-        isAnnualAllowanceReduced = true,
+        isAnnualAllowanceReduced = Some(true),
         Some(true),
-        Some(true))
+        Some(true)
+      )
     ),
     Some(
       PensionSchemeOverseasTransfers(
@@ -53,7 +55,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, None, None, None)),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -165,6 +167,45 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
           Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions")
         )
     }
+  }
+
+  "Cl102 Changes" when {
+
+    "isIsAnnualAllowanceReducedMissing" when {
+      "missing from Pension Savings Tax Charges" should {
+        "return true" in {
+          retrieveResponse(
+            pensionSavingsChargeWithoutCl102Fields,
+            pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe true
+        }
+      }
+
+      "present in Pension Savings Tax Charges" should {
+        "return false" in {
+          retrieveResponse(
+            pensionSavingsChargeWithCl102Fields,
+            pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe false
+        }
+      }
+    }
+
+    "removeFieldsFromPensionContributions" should {
+      "removes fields successfully" in {
+        retrieveResponseCl102FieldsInPensionContributions.removeFieldsFromPensionContributions shouldBe retrieveResponse(
+          pensionSavingsChargeWithoutCl102Fields,
+          pensionContributionsWithoutCl102Fields)
+      }
+    }
+
+    "addFieldsFromPensionContributionsToPensionSavingsTaxCharges" should {
+      "successfully add cl102 fields to Pension Savings Tax Charges" in {
+        retrieveResponseCl102FieldsInPensionContributions.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe retrieveResponse(
+          pensionSavingsChargeWithCl102Fields,
+          pensionContributionsWithCl102Fields)
+      }
+    }
+
+
   }
 
 }

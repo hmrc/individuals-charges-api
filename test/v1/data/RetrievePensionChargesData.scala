@@ -22,13 +22,22 @@ import v1.models.response.retrievePensionCharges._
 
 object RetrievePensionChargesData {
 
-  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+  val pensionSavingsChargeWithCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     Seq("00123456RA", "00123456RA"),
     Some(LifetimeAllowance(123.45, 12.45)),
     Some(LifetimeAllowance(123.45, 12.34)),
-    isAnnualAllowanceReduced = true,
+    Some(true),
     Some(true),
     Some(false)
+  )
+
+  val pensionSavingsChargeWithoutCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    Seq("00123456RA", "00123456RA"),
+    Some(LifetimeAllowance(123.45, 12.45)),
+    Some(LifetimeAllowance(123.45, 12.34)),
+    None,
+    None,
+    None
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -51,7 +60,7 @@ object RetrievePensionChargesData {
     Some(Charge(123.45, 123.45))
   )
 
-  val pensionContributions: PensionContributions = PensionContributions(
+  val pensionContributionsWithoutCl102Fields: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
     123.45,
     123.45,
@@ -60,17 +69,43 @@ object RetrievePensionChargesData {
     None
   )
 
+  val pensionContributionsWithCl102Fields: PensionContributions = PensionContributions(
+    Seq("00123456RA", "00123456RA"),
+    123.45,
+    123.45,
+    Some(true),
+    Some(true),
+    Some(false)
+  )
+
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
     Seq(overseasSchemeProvider),
     123.45,
     0
   )
 
-  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    Some(pensionSavingsCharge),
+  def retrieveResponse(pensionSavingsCharge: PensionSavingsTaxCharges, pensionContributions: PensionContributions): RetrievePensionChargesResponse =
+    RetrievePensionChargesResponse(
+      Some(pensionSavingsCharge),
+      Some(pensionOverseasTransfer),
+      Some(pensionUnauthorisedPayments),
+      Some(pensionContributions),
+      Some(overseasPensionContributions)
+    )
+
+  val retrieveResponseCl102FieldsInTaxCharges: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    Some(pensionSavingsChargeWithCl102Fields),
     Some(pensionOverseasTransfer),
     Some(pensionUnauthorisedPayments),
-    Some(pensionContributions),
+    Some(pensionContributionsWithoutCl102Fields),
+    Some(overseasPensionContributions)
+  )
+
+  val retrieveResponseCl102FieldsInPensionContributions: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    Some(pensionSavingsChargeWithoutCl102Fields),
+    Some(pensionOverseasTransfer),
+    Some(pensionUnauthorisedPayments),
+    Some(pensionContributionsWithCl102Fields),
     Some(overseasPensionContributions)
   )
 

@@ -24,7 +24,11 @@ class PensionContributionsSpec extends UnitSpec {
   val responseModel: PensionContributions = PensionContributions(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
     inExcessOfTheAnnualAllowance = 123.12,
-    annualAllowanceTaxPaid = 123.12)
+    annualAllowanceTaxPaid = 123.12,
+    isAnnualAllowanceReduced = None,
+    taperedAnnualAllowance = None,
+    moneyPurchasedAllowance = None
+  )
 
   val responseJson: JsValue = Json.parse("""
       |{
