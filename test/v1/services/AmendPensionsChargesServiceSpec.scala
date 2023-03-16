@@ -105,10 +105,6 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
-
-      "cl102 field updates cannot be performed and switch is enabled" when {
-        "internal server error is returned from the service" in new Cl102Enabled {}
-      }
     }
 
     "cl102 is enabled" must {
