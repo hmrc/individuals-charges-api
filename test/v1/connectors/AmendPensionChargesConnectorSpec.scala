@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v1.data.AmendPensionChargesData.pensionCharges
+import v1.data.AmendPensionChargesData.pensionChargesCl102FieldsInTaxCharges
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 
 import scala.concurrent.Future
@@ -37,7 +37,7 @@ class AmendPensionChargesConnectorSpec extends ConnectorSpec {
     protected val request: AmendPensionChargesRequest = AmendPensionChargesRequest(
       nino = Nino(nino),
       taxYear = taxYear,
-      pensionCharges = pensionCharges
+      pensionCharges = pensionChargesCl102FieldsInTaxCharges
     )
 
     val connector: AmendPensionChargesConnector =
@@ -56,7 +56,7 @@ class AmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = pensionChargesCl102FieldsInTaxCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -76,7 +76,7 @@ class AmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
-            body = pensionCharges,
+            body = pensionChargesCl102FieldsInTaxCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredTysIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -96,7 +96,7 @@ class AmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = pensionChargesCl102FieldsInTaxCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -116,7 +116,7 @@ class AmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = pensionChargesCl102FieldsInTaxCharges,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")

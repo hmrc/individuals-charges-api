@@ -52,7 +52,7 @@ class AmendPensionsChargesControllerSpec
 
   private val taxYear     = "2021-22"
   private val rawData     = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
-  private val requestData = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
+  private val requestData = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionChargesCl102FieldsInTaxCharges)
 
   class Test extends ControllerTest with AuditEventChecking {
 

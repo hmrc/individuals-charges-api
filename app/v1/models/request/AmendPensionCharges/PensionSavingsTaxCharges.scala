@@ -22,7 +22,7 @@ import play.api.libs.json._
 case class PensionSavingsTaxCharges(pensionSchemeTaxReference: Seq[String],
                                     lumpSumBenefitTakenInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
                                     benefitInExcessOfLifetimeAllowance: Option[LifetimeAllowance],
-                                    isAnnualAllowanceReduced: Boolean,
+                                    isAnnualAllowanceReduced: Option[Boolean],
                                     taperedAnnualAllowance: Option[Boolean],
                                     moneyPurchasedAllowance: Option[Boolean])
 
@@ -34,7 +34,7 @@ object PensionSavingsTaxCharges {
     (__ \ "pensionSchemeTaxReference").write[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
-      (__ \ "isAnnualAllowanceReduced").write[Boolean] and
+      (__ \ "isAnnualAllowanceReduced").writeNullable[Boolean] and
       (__ \ "taperedAnnualAllowance").writeNullable[Boolean] and
       (__ \ "moneyPurchasedAllowance").writeNullable[Boolean]
   )(unlift(PensionSavingsTaxCharges.unapply))

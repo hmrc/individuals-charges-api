@@ -21,28 +21,52 @@ import support.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 
-  val requestModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
-  val responseModel: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)
+  val modelWithoutCl102Fields: PensionContributions = PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, None, None, None)
 
-  val requestJson: JsValue = Json.parse("""
+  val modelWithCl102Fields: PensionContributions =
+    PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, Some(true), Some(true), Some(false))
+
+  val requestJsonWithCl102Fields: JsValue = Json.parse("""
       |{
-      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "inExcessOfTheAnnualAllowance": 123.12,
-      |     "annualAllowanceTaxPaid": 123.12
+      |    "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |    "inExcessOfTheAnnualAllowance": 123.12,
+      |    "annualAllowanceTaxPaid": 123.12,
+      |    "isAnnualAllowanceReduced": true,
+      |    "taperedAnnualAllowance": true,
+      |    "moneyPurchasedAllowance": false
+      |}""".stripMargin)
+
+  val requestJsonWithoutCl102Fields: JsValue = Json.parse("""
+      |{
+      |    "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |    "inExcessOfTheAnnualAllowance": 123.12,
+      |    "annualAllowanceTaxPaid": 123.12
       |}""".stripMargin)
 
   "reads" when {
-    "passed valid JSON" should {
+    "passed valid JSON without Cl102 fields" should {
       "return a valid model" in {
-        requestModel shouldBe requestJson.as[PensionContributions]
+        requestJsonWithoutCl102Fields.as[PensionContributions] shouldBe modelWithoutCl102Fields
+      }
+    }
+
+    "passed valid JSON with Cl102 fields" should {
+      "return a valid model ignoring Cl102 fields" in {
+        requestJsonWithCl102Fields.as[PensionContributions] shouldBe modelWithoutCl102Fields
       }
     }
   }
 
   "writes" when {
-    "passed valid model" should {
+    "passed valid model without Cl102 fields" should {
       "return valid JSON" in {
-        Json.toJson(requestModel) shouldBe requestJson
+        Json.toJson(modelWithoutCl102Fields) shouldBe requestJsonWithoutCl102Fields
+      }
+    }
+
+    "passed valid model with Cl102 fields" should {
+      "return valid JSON including Cl102 fields" in {
+        Json.toJson(modelWithCl102Fields) shouldBe requestJsonWithCl102Fields
       }
     }
   }

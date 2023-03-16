@@ -22,7 +22,32 @@ case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxChar
                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                           pensionContributions: Option[PensionContributions],
-                          overseasPensionContributions: Option[OverseasPensionContributions])
+                          overseasPensionContributions: Option[OverseasPensionContributions]) {
+
+  lazy val withCl102Changes: Option[PensionCharges] = (pensionSavingsTaxCharges, pensionContributions) match {
+    case (Some(tc), Some(pc)) => Some(moveCl102Fields(tc, pc))
+    case (None, _)            => Some(this)
+    case _                    => None
+  }
+
+  private def moveCl102Fields(tc: PensionSavingsTaxCharges, pc: PensionContributions): PensionCharges = copy(
+    pensionSavingsTaxCharges = Some(
+      tc.copy(
+        isAnnualAllowanceReduced = None,
+        taperedAnnualAllowance = None,
+        moneyPurchasedAllowance = None
+      )
+    ),
+    pensionContributions = Some(
+      pc.copy(
+        isAnnualAllowanceReduced = tc.isAnnualAllowanceReduced,
+        taperedAnnualAllowance = tc.taperedAnnualAllowance,
+        moneyPurchasedAllowance = tc.moneyPurchasedAllowance
+      )
+    )
+  )
+
+}
 
 object PensionCharges {
   implicit val format: OFormat[PensionCharges] = Json.format[PensionCharges]

@@ -20,6 +20,7 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import v1.connectors.AmendPensionChargesConnector
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
 
@@ -27,12 +28,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionChargesService @Inject() (connector: AmendPensionChargesConnector) extends BaseService {
+class AmendPensionChargesService @Inject() (connector: AmendPensionChargesConnector, appConfig: AppConfig) extends BaseService {
 
   def amendPensions(request: AmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendPensionChargesOutcome] = {
-    connector
-      .amendPensionCharges(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+    withCl102Changes(request) match {
+      case None    => Future.successful(Left(ErrorWrapper(ctx.correlationId, InternalError)))
+      case Some(r) => connector.amendPensionCharges(r).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    }
   }
 
   private val errorMap: Map[String, MtdError] = {
@@ -53,6 +55,14 @@ class AmendPensionChargesService @Inject() (connector: AmendPensionChargesConnec
     )
 
     errors ++ extraTysErrors
+  }
+
+  private def withCl102Changes(request: AmendPensionChargesRequest): Option[AmendPensionChargesRequest] = {
+    if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
+      request.pensionCharges.withCl102Changes.map(pc => request.copy(pensionCharges = pc))
+    } else {
+      Some(request)
+    }
   }
 
 }
