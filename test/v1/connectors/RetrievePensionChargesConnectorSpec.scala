@@ -21,7 +21,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v1.data.RetrievePensionChargesData.retrieveResponse
+import v1.data.RetrievePensionChargesData.retrieveResponseCl102FieldsInTaxCharges
 
 import scala.concurrent.Future
 
@@ -50,7 +50,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+        val expected = Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))
 
         MockedHttpClient
           .get(
@@ -69,7 +69,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+        val expected = Right(ResponseWrapper(correlationId, retrieveResponseCl102FieldsInTaxCharges))
 
         MockedHttpClient
           .get(

@@ -22,6 +22,7 @@ import api.models.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v1.data.RetrievePensionChargesData._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
@@ -31,9 +32,10 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Seq("00123456RA"),
         Some(LifetimeAllowance(123.12, 123.12)),
         Some(LifetimeAllowance(123.12, 123.12)),
-        isAnnualAllowanceReduced = true,
+        isAnnualAllowanceReduced = Some(true),
         Some(true),
-        Some(true))
+        Some(true)
+      )
     ),
     Some(
       PensionSchemeOverseasTransfers(
@@ -53,7 +55,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
         Some(Charge(123.12, 123.12)),
         Some(Charge(123.12, 123.12))
       )),
-    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12)),
+    Some(PensionContributions(Seq("00123456RA", "00123456RA"), 123.12, 123.12, None, None, None)),
     Some(
       OverseasPensionContributions(
         Seq(
@@ -165,6 +167,97 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
           Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions")
         )
     }
+  }
+
+  "Cl102 Changes" when {
+
+    "isIsAnnualAllowanceReducedMissing" when {
+      "missing from pensionSavingsTaxCharges" should {
+        "return true" in {
+          retrieveResponseCl102Fields(
+            pensionSavingsChargeWithoutCl102Fields,
+            pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe true
+        }
+      }
+
+      "present in pensionSavingsTaxCharges" should {
+        "return false" in {
+          retrieveResponseCl102Fields(
+            pensionSavingsChargeWithCl102Fields,
+            pensionContributionsWithoutCl102Fields).isIsAnnualAllowanceReducedMissing shouldBe false
+        }
+      }
+    }
+
+    "removeFieldsFromPensionContributions" should {
+      "removes fields successfully" in {
+        retrieveResponseCl102FieldsInPensionContributions.removeFieldsFromPensionContributions shouldBe retrieveResponseCl102Fields(
+          pensionSavingsChargeWithoutCl102Fields,
+          pensionContributionsWithoutCl102Fields)
+      }
+    }
+
+    "addFieldsFromPensionContributionsToPensionSavingsTaxCharges" when {
+      "CL102 fields exist in pensionContributions and pensionSavingsTaxCharges exist" should {
+        "successfully add cl102 fields to pensionSavingsTaxCharges" in {
+          retrieveResponseCl102FieldsInPensionContributions.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe Some(
+            retrieveResponseCl102Fields(pensionSavingsChargeWithCl102Fields, pensionContributionsWithCl102Fields))
+        }
+      }
+      "CL102 fields exist in pensionContributions but pensionSavingsTaxCharges does not exist" should {
+        "return None" in {
+          val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            None,
+            Some(pensionOverseasTransfer),
+            Some(pensionUnauthorisedPayments),
+            Some(pensionContributionsWithCl102Fields),
+            Some(overseasPensionContributions)
+          )
+          response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe None
+        }
+      }
+
+      "CL102 fields do not exist in pensionContributions and pensionSavingsTaxCharges does not exist" should {
+        "return response as is" in {
+          val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            None,
+            Some(pensionOverseasTransfer),
+            Some(pensionUnauthorisedPayments),
+            Some(pensionContributionsWithoutCl102Fields),
+            Some(overseasPensionContributions)
+          )
+          response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe Some(response)
+        }
+      }
+
+      "pensionContributions does not exist and pensionSavingsTaxCharges does exist" should {
+        "return response as is" in {
+          val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            Some(pensionSavingsChargeWithoutCl102Fields),
+            Some(pensionOverseasTransfer),
+            Some(pensionUnauthorisedPayments),
+            None,
+            Some(overseasPensionContributions)
+          )
+          response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe Some(response)
+        }
+      }
+
+      "pensionContributions and pensionSavingsTaxCharges does not exist" should {
+        "return response as is" in {
+          val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            None,
+            Some(pensionOverseasTransfer),
+            Some(pensionUnauthorisedPayments),
+            None,
+            Some(overseasPensionContributions)
+          )
+          response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges shouldBe Some(response)
+        }
+      }
+
+    }
+
   }
 
 }

@@ -24,7 +24,11 @@ class PensionContributionsSpec extends UnitSpec {
   val responseModel: PensionContributions = PensionContributions(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
     inExcessOfTheAnnualAllowance = 123.12,
-    annualAllowanceTaxPaid = 123.12)
+    annualAllowanceTaxPaid = 123.12,
+    isAnnualAllowanceReduced = None,
+    taperedAnnualAllowance = None,
+    moneyPurchasedAllowance = None
+  )
 
   val responseJson: JsValue = Json.parse("""
       |{
@@ -48,6 +52,69 @@ class PensionContributionsSpec extends UnitSpec {
         Json.toJson(responseModel) shouldBe responseJson
       }
     }
+  }
+
+  "hasACl102Field" when {
+    "all cl102 fields defined" should {
+      "return true" in {
+        responseModel
+          .copy(
+            isAnnualAllowanceReduced = Some(true),
+            taperedAnnualAllowance = Some(true),
+            moneyPurchasedAllowance = Some(true)
+          )
+          .hasACl102Field shouldBe true
+      }
+    }
+
+    "only isAnnualAllowanceReduced defined" should {
+      "return true" in {
+        responseModel
+          .copy(
+            isAnnualAllowanceReduced = Some(true),
+            taperedAnnualAllowance = None,
+            moneyPurchasedAllowance = None
+          )
+          .hasACl102Field shouldBe true
+      }
+    }
+
+    "only taperedAnnualAllowance defined" should {
+      "return true" in {
+        responseModel
+          .copy(
+            isAnnualAllowanceReduced = None,
+            taperedAnnualAllowance = Some(true),
+            moneyPurchasedAllowance = None
+          )
+          .hasACl102Field shouldBe true
+      }
+    }
+
+    "only moneyPurchasedAllowance defined" should {
+      "return true" in {
+        responseModel
+          .copy(
+            isAnnualAllowanceReduced = None,
+            taperedAnnualAllowance = None,
+            moneyPurchasedAllowance = Some(true)
+          )
+          .hasACl102Field shouldBe true
+      }
+    }
+
+    "no cl102 fields defined" should {
+      "return false" in {
+        responseModel
+          .copy(
+            isAnnualAllowanceReduced = None,
+            taperedAnnualAllowance = None,
+            moneyPurchasedAllowance = None
+          )
+          .hasACl102Field shouldBe false
+      }
+    }
+
   }
 
 }

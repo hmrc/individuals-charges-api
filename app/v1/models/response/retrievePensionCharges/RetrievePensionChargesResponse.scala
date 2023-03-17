@@ -26,7 +26,34 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
                                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                                           pensionContributions: Option[PensionContributions],
-                                          overseasPensionContributions: Option[OverseasPensionContributions]) {}
+                                          overseasPensionContributions: Option[OverseasPensionContributions]) {
+
+  val isIsAnnualAllowanceReducedMissing: Boolean = this.pensionSavingsTaxCharges.exists(_.isIsAnnualAllowanceReducedMissing)
+
+  def removeFieldsFromPensionContributions: RetrievePensionChargesResponse = {
+
+    val updatedPensionContributions = this.pensionContributions
+      .map(_.copy(isAnnualAllowanceReduced = None, taperedAnnualAllowance = None, moneyPurchasedAllowance = None))
+    copy(pensionContributions = updatedPensionContributions)
+
+  }
+
+  def addFieldsFromPensionContributionsToPensionSavingsTaxCharges: Option[RetrievePensionChargesResponse] =
+    (pensionSavingsTaxCharges, pensionContributions) match {
+      case (Some(tc), Some(pc))                                          => Some(moveCl02Fields(tc, pc))
+      case (None, Some(pc)) if pc.hasACl102Field                         => None
+      case _                                                             => Some(this)
+    }
+
+  private def moveCl02Fields(tc: PensionSavingsTaxCharges, pc: PensionContributions): RetrievePensionChargesResponse = copy(
+    pensionSavingsTaxCharges = Some(
+      tc.copy(
+        isAnnualAllowanceReduced = pc.isAnnualAllowanceReduced,
+        taperedAnnualAllowance = pc.taperedAnnualAllowance,
+        moneyPurchasedAllowance = pc.moneyPurchasedAllowance
+      )))
+
+}
 
 object RetrievePensionChargesResponse extends HateoasLinks {
   implicit val format: OFormat[RetrievePensionChargesResponse] = Json.format[RetrievePensionChargesResponse]

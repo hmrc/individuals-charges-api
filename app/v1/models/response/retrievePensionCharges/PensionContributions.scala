@@ -18,7 +18,16 @@ package v1.models.response.retrievePensionCharges
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionContributions(pensionSchemeTaxReference: Seq[String], inExcessOfTheAnnualAllowance: BigDecimal, annualAllowanceTaxPaid: BigDecimal)
+case class PensionContributions(pensionSchemeTaxReference: Seq[String],
+                                inExcessOfTheAnnualAllowance: BigDecimal,
+                                annualAllowanceTaxPaid: BigDecimal,
+                                isAnnualAllowanceReduced: Option[Boolean],
+                                taperedAnnualAllowance: Option[Boolean],
+                                moneyPurchasedAllowance: Option[Boolean]) {
+  val isIsAnnualAllowanceReducedMissing: Boolean = isAnnualAllowanceReduced.isEmpty
+
+  val hasACl102Field: Boolean = isAnnualAllowanceReduced.isDefined || taperedAnnualAllowance.isDefined || moneyPurchasedAllowance.isDefined
+}
 
 object PensionContributions {
   implicit val format: OFormat[PensionContributions] = Json.format[PensionContributions]

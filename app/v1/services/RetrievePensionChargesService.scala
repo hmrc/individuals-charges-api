@@ -19,21 +19,51 @@ package v1.services
 import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
+import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import v1.connectors.RetrievePensionChargesConnector
+import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionChargesService @Inject() (connector: RetrievePensionChargesConnector) extends BaseService {
+class RetrievePensionChargesService @Inject() (connector: RetrievePensionChargesConnector, appConfig: AppConfig) extends BaseService {
 
   def retrievePensions(
       request: RetrievePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
-    connector
-      .retrievePensionCharges(request)
-      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+
+    EitherT(connector.retrievePensionCharges(request))
+      .leftMap(mapDownstreamErrors(downstreamErrorMap))
+      .flatMap(response => EitherT.fromEither[Future](cl102ResponseMap(response)))
+      .value
+  }
+
+  def cl102ResponseMap(responseWrapper: ResponseWrapper[RetrievePensionChargesResponse])(implicit
+      ctx: RequestContext): RetrievePensionChargesOutcome = {
+    val response = responseWrapper.responseData
+
+    val maybeModifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
+      response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges
+    } else {
+      Some(response)
+    }
+
+    maybeModifiedResponse match {
+      case None =>
+        // Tax Charges object missing so unable to move fields
+        logger.error("pensionSavingsTaxCharges is missing so unable to move CL102 fields")
+        Left(ErrorWrapper(ctx.correlationId, InternalError))
+      case Some(modifiedResponse) if modifiedResponse.isIsAnnualAllowanceReducedMissing =>
+        // isAnnualAllowanceReduced is mandatory from a vendors perspective, so we have to throw an error if it's missing
+        logger.error("isAnnualAllowanceReduced is missing from downstream response")
+        Left(ErrorWrapper(ctx.correlationId, InternalError))
+      case Some(modifiedResponse) =>
+        Right(responseWrapper.copy(responseData = modifiedResponse.removeFieldsFromPensionContributions))
+    }
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {
