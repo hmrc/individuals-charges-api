@@ -18,7 +18,7 @@ package v1.endpoints
 
 import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import v1.data.RetrievePensionChargesData.{fullJson, fullJsonWithHateoas}
+import v1.data.RetrievePensionChargesData.{fullJsonCL102FieldsInBoth, fullJsonWithHateoas}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.ws.{WSRequest, WSResponse}
@@ -80,7 +80,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJsonCL102FieldsInBoth)
         }
 
         val response: WSResponse = await(request().get())
@@ -97,7 +97,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, fullJsonCL102FieldsInBoth)
         }
 
         val response: WSResponse = await(request().get())

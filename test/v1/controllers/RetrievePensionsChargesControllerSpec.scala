@@ -25,13 +25,13 @@ import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdI
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.hateoas.HateoasWrapper
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.mvc.Result
-import v1.data.RetrievePensionChargesData.{fullJson, retrieveResponseCl102FieldsInTaxCharges}
-import v1.mocks.services._
-import api.models.hateoas.HateoasWrapper
 import play.api.libs.json.{JsObject, JsValue}
+import play.api.mvc.Result
+import v1.data.RetrievePensionChargesData.{fullJsonCl102FieldsInTaxCharges, retrieveResponseCl102FieldsInTaxCharges}
+import v1.mocks.services._
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -100,7 +100,7 @@ class RetrievePensionsChargesControllerSpec
           .wrap(retrieveResponseCl102FieldsInTaxCharges, RetrievePensionChargesHateoasData(nino, taxYear))
           .returns(HateoasWrapper(retrieveResponseCl102FieldsInTaxCharges, links = hateoaslinks))
 
-        runOkTest(OK, Some(fullJson.as[JsObject] ++ hateoaslinksJson))
+        runOkTest(OK, Some(fullJsonCl102FieldsInTaxCharges.as[JsObject] ++ hateoaslinksJson))
       }
     }
 
