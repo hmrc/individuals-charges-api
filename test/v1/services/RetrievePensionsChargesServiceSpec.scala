@@ -27,6 +27,7 @@ import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
+import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import scala.concurrent.Future
 
@@ -129,6 +130,24 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
           MockRetrievePensionChargesConnector
             .retrievePensions(request)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithoutIsAnnualAllowanceReduced))))
+
+          await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
+        }
+      }
+
+      "cl102 fields exist but tax charges is missing" when {
+        "an internal server error is returned" in new Cl102Enabled {
+          val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            None,
+            Some(pensionOverseasTransfer),
+            Some(pensionUnauthorisedPayments),
+            Some(pensionContributionsWithCl102Fields),
+            Some(overseasPensionContributions)
+          )
+
+          MockRetrievePensionChargesConnector
+            .retrievePensions(request)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
           await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
         }

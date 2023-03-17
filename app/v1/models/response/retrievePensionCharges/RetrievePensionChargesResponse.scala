@@ -34,21 +34,24 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
 
     val updatedPensionContributions = this.pensionContributions
       .map(_.copy(isAnnualAllowanceReduced = None, taperedAnnualAllowance = None, moneyPurchasedAllowance = None))
-      .filter(_.isDefined)
     copy(pensionContributions = updatedPensionContributions)
 
   }
 
-  def addFieldsFromPensionContributionsToPensionSavingsTaxCharges: RetrievePensionChargesResponse = {
-    val updatedPensionSavingsTaxCharges = this.pensionSavingsTaxCharges
-      .map(
-        _.copy(
-          isAnnualAllowanceReduced = this.pensionContributions.flatMap(_.isAnnualAllowanceReduced),
-          taperedAnnualAllowance = this.pensionContributions.flatMap(_.taperedAnnualAllowance),
-          moneyPurchasedAllowance = this.pensionContributions.flatMap(_.moneyPurchasedAllowance)
-        ))
-    copy(pensionSavingsTaxCharges = updatedPensionSavingsTaxCharges)
-  }
+  def addFieldsFromPensionContributionsToPensionSavingsTaxCharges: Option[RetrievePensionChargesResponse] =
+    (pensionSavingsTaxCharges, pensionContributions) match {
+      case (Some(tc), Some(pc))                                          => Some(moveCl02Fields(tc, pc))
+      case (None, Some(pc)) if pc.hasACl102Field                         => None
+      case _                                                             => Some(this)
+    }
+
+  private def moveCl02Fields(tc: PensionSavingsTaxCharges, pc: PensionContributions): RetrievePensionChargesResponse = copy(
+    pensionSavingsTaxCharges = Some(
+      tc.copy(
+        isAnnualAllowanceReduced = pc.isAnnualAllowanceReduced,
+        taperedAnnualAllowance = pc.taperedAnnualAllowance,
+        moneyPurchasedAllowance = pc.moneyPurchasedAllowance
+      )))
 
 }
 

@@ -46,30 +46,23 @@ class RetrievePensionChargesService @Inject() (connector: RetrievePensionCharges
       ctx: RequestContext): RetrievePensionChargesOutcome = {
     val response = responseWrapper.responseData
 
-//    // This field is mandatory from a vendors perspective, so we have to throw an error if it's missing
-//    if (response.isIsAnnualAllowanceReducedMissing) {
-//      Left(ErrorWrapper(ctx.correlationId, InternalError))
-//    } else if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
-//      val modifiedResponseWrapper =
-//        responseWrapper.copy(responseData = response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges.removeFieldsFromPensionContributions)
-//      Right(modifiedResponseWrapper)
-//    } else {
-//      val modifiedResponseWrapper = responseWrapper.copy(responseData = response.removeFieldsFromPensionContributions)
-//      Right(modifiedResponseWrapper)
-//    }
-
-    val modifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
+    val maybeModifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {
       response.addFieldsFromPensionContributionsToPensionSavingsTaxCharges
     } else {
-      response
+      Some(response)
     }
 
-    // This field is mandatory from a vendors perspective, so we have to throw an error if it's missing
-    if (modifiedResponse.isIsAnnualAllowanceReducedMissing) {
-      Left(ErrorWrapper(ctx.correlationId, InternalError))
-    } else {
-      val modifiedResponseWrapper = responseWrapper.copy(responseData = modifiedResponse.removeFieldsFromPensionContributions)
-      Right(modifiedResponseWrapper)
+    maybeModifiedResponse match {
+      case None =>
+        // Tax Charges object missing so unable to move fields
+        logger.error("pensionSavingsTaxCharges is missing so unable to move CL102 fields")
+        Left(ErrorWrapper(ctx.correlationId, InternalError))
+      case Some(modifiedResponse) if modifiedResponse.isIsAnnualAllowanceReducedMissing =>
+        // isAnnualAllowanceReduced is mandatory from a vendors perspective, so we have to throw an error if it's missing
+        logger.error("isAnnualAllowanceReduced is missing from downstream response")
+        Left(ErrorWrapper(ctx.correlationId, InternalError))
+      case Some(modifiedResponse) =>
+        Right(responseWrapper.copy(responseData = modifiedResponse.removeFieldsFromPensionContributions))
     }
   }
 

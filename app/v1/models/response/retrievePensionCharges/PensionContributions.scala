@@ -23,16 +23,10 @@ case class PensionContributions(pensionSchemeTaxReference: Seq[String],
                                 annualAllowanceTaxPaid: BigDecimal,
                                 isAnnualAllowanceReduced: Option[Boolean],
                                 taperedAnnualAllowance: Option[Boolean],
-                                moneyPurchasedAllowance: Option[Boolean]
-                               ) {
+                                moneyPurchasedAllowance: Option[Boolean]) {
   val isIsAnnualAllowanceReducedMissing: Boolean = isAnnualAllowanceReduced.isEmpty
 
-  val isDefined: Boolean =
-    !(pensionSchemeTaxReference.isEmpty &&
-      isAnnualAllowanceReduced.isEmpty &&
-      taperedAnnualAllowance.isEmpty &&
-      moneyPurchasedAllowance.isEmpty
-      )
+  val hasACl102Field: Boolean = isAnnualAllowanceReduced.isDefined || taperedAnnualAllowance.isDefined || moneyPurchasedAllowance.isDefined
 }
 
 object PensionContributions {
