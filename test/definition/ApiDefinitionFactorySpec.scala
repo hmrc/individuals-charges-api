@@ -19,18 +19,74 @@ package definition
 import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.{MockAppConfig, MockHttpClient}
+import play.api.Configuration
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+
+import scala.collection.immutable.Seq
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
     MockAppConfig.apiGatewayContext returns "api.gateway.context"
+  }
 
-    def confidenceLevel: ConfidenceLevel =
-      if (mockAppConfig.confidenceLevelConfig.definitionEnabled) ConfidenceLevel.L200 else ConfidenceLevel.L50
+  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
+  "definition" when {
+    "called" should {
+      "return a valid Definition case class" in new Test {
+        MockAppConfig.featureSwitches returns Configuration.empty
+        MockAppConfig.apiStatus(Version1) returns "1.0"
+        MockAppConfig.apiStatus(Version2) returns "2.0"
+        MockAppConfig.endpointsEnabled(Version1) returns true
+        MockAppConfig.endpointsEnabled(Version2) returns true
+        MockAppConfig.confidenceLevelCheckEnabled
+          .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
+          .anyNumberOfTimes()
+
+        private val readScope = "read:self-assessment"
+        private val writeScope = "write:self-assessment"
+
+        apiDefinitionFactory.definition shouldBe
+          Definition(
+            scopes = Seq(
+              Scope(
+                key = readScope,
+                name = "View your Self Assessment information",
+                description = "Allow read access to self assessment data",
+                confidenceLevel
+              ),
+              Scope(
+                key = writeScope,
+                name = "Change your Self Assessment information",
+                description = "Allow write access to self assessment data",
+                confidenceLevel
+              )
+            ),
+            api = APIDefinition(
+              name = "Individuals Charges (MTD)",
+              description = "This is a draft spec for the Individuals Charges API",
+              context = "api.gateway.context",
+              categories = Seq("INCOME_TAX_MTD"),
+              versions = Seq(
+                APIVersion(
+                  version = Version1,
+                  status = APIStatus.ALPHA,
+                  endpointsEnabled = true
+                ),
+                APIVersion(
+                  version = Version2,
+                  status = APIStatus.ALPHA,
+                  endpointsEnabled = true
+                )
+              ),
+              requiresTrust = None
+            )
+          )
+      }
+    }
   }
 
   "buildAPIStatus" when {
@@ -58,13 +114,17 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   "confidenceLevel" when {
     Seq(
-      (true, ConfidenceLevel.L200),
-      (false, ConfidenceLevel.L50)
-    ).foreach { case (definitionEnabled, cl) =>
-      s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
-        s"return $cl" in new Test {
-          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
-          apiDefinitionFactory.confidenceLevel shouldBe cl
+      (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
+      (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
+      (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
+    ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
+      s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
+        s"return confidence level $expectedDefinitionCL" in new Test {
+          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+            confidenceLevel = configCL,
+            definitionEnabled = definitionEnabled,
+            authValidationEnabled = true)
+          apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
         }
       }
     }
