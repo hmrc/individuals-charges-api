@@ -1,7 +1,7 @@
 get:
   $ref: "./pension_charges_retrieve.yaml"
 
-  summary: Retrieve Pension Charges [test only]
+  summary: Retrieve Pension Charges
 
   security:
     - User-Restricted:
