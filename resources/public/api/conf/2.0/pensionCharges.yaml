@@ -8,7 +8,7 @@ get:
         - read:self-assessment
 
 put:
-  $ref: "./amendPensionCharges.yaml"
+  $ref: "./createAmendPensionCharges.yaml"
 
   summary: Create and Amend Pension Charges
 

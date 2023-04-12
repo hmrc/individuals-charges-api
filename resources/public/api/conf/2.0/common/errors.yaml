@@ -54,14 +54,14 @@ components:
 
     formatProviderName:
       description: |
-        The format of providers name is invalid.
+        The format of providerName is invalid. providerName must be between 1-105 characters.
       value:
         code: FORMAT_PROVIDER_NAME
         message: The provided name is invalid
 
     formatProvidersAddress:
       description: |
-        The format of providers address is invalid.
+        The format of providerAddress is invalid. providerAddress must be between 1-250 characters.
       value:
         code: FORMAT_PROVIDERS_ADDRESS
         message: The provided address is invalid
@@ -89,7 +89,7 @@ components:
 
     ruleIsAnnualAllowanceReduced:
       description: |
-        If annual allowance reduced is provided then tapered annual allowance or money purchased allowance must also be provided.
+        If isAnnualAllowanceReduced is true then at least one of taperedAnnualAllowance or moneyPurchasedAllowance must also be true.
       value:
         code: RULE_IS_ANNUAL_ALLOWANCE_REDUCED
         message: Tapered annual allowance or money purchased allowance has not been provided
