@@ -30,12 +30,12 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/amend_request_schema.json'
+        $ref: './schemas/create_amend_request_schema.json'
       examples:
         example-request:
           description: Full Expenses request
           value:
-            $ref: './examples/amend_request.json'
+            $ref: './examples/create_amend_request.json'
 
 responses:
   "204":

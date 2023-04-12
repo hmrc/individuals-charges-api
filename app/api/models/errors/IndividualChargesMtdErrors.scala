@@ -44,12 +44,6 @@ object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country c
 object RuleIsAnnualAllowanceReducedError
     extends MtdError("RULE_IS_ANNUAL_ALLOWANCE_REDUCED", "Tapered annual allowance or money purchased allowance has not been provided", BAD_REQUEST)
 
-object RuleBenefitExcessesError
-    extends MtdError(
-      "RULE_BENEFIT",
-      "You can only provide Lump sum benefit taken in excess of lifetime allowance or Benefit in excess of lifetime allowance not both",
-      BAD_REQUEST)
-
 object RulePensionReferenceError
     extends MtdError(
       "RULE_PENSION_REFERENCE",
