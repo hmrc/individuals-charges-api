@@ -75,6 +75,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatPensionSchemeTaxReference'
           RULE_IS_ANNUAL_ALLOWANCE_REDUCED:
             $ref: './common/errors.yaml#/components/examples/ruleIsAnnualAllowanceReduced'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
 
   "403":
