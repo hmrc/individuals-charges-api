@@ -20,5 +20,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 
 package object services {
+
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
 }

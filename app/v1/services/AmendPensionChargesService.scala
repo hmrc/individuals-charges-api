@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import config.{AppConfig, FeatureSwitches}
 import v1.connectors.AmendPensionChargesConnector
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendPensionChargesService @Inject() (connector: AmendPensionChargesConnector, appConfig: AppConfig) extends BaseService {
 
-  def amendPensions(request: AmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendPensionChargesOutcome] = {
+  def amendPensions(request: AmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
     withCl102Changes(request) match {
       case None    => Future.successful(Left(ErrorWrapper(ctx.correlationId, InternalError)))
       case Some(r) => connector.amendPensionCharges(r).map(_.leftMap(mapDownstreamErrors(errorMap)))
