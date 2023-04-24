@@ -27,15 +27,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendPensionChargesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAmendPensionCharges(request: CreateAmendPensionChargesRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    import request._
 
     val downstreamUri = if (request.taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")

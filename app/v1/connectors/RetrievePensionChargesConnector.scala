@@ -35,8 +35,7 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appCo
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    import request._
 
     val downstreamUri =
       if (request.taxYear.useTaxYearSpecificApi) {
