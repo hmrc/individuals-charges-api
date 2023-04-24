@@ -20,7 +20,7 @@ import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRe
 import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.data.EitherT
 import cats.implicits._
 import config.{AppConfig, FeatureSwitches}
@@ -33,8 +33,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrievePensionChargesService @Inject() (connector: RetrievePensionChargesConnector, appConfig: AppConfig) extends BaseService {
 
-  def retrievePensions(
-      request: RetrievePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrievePensionChargesOutcome] = {
+  def retrievePensions(request: RetrievePensionChargesRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrievePensionChargesResponse]] = {
 
     EitherT(connector.retrievePensionCharges(request))
       .leftMap(mapDownstreamErrors(downstreamErrorMap))
@@ -43,7 +44,7 @@ class RetrievePensionChargesService @Inject() (connector: RetrievePensionCharges
   }
 
   def cl102ResponseMap(responseWrapper: ResponseWrapper[RetrievePensionChargesResponse])(implicit
-      ctx: RequestContext): RetrievePensionChargesOutcome = {
+      ctx: RequestContext): ServiceOutcome[RetrievePensionChargesResponse] = {
     val response = responseWrapper.responseData
 
     val maybeModifiedResponse = if (FeatureSwitches(appConfig.featureSwitches).isCL102Enabled) {

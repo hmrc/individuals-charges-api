@@ -18,7 +18,7 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.CreateAmendPensionChargesConnector
 import v2.models.request.createAmendPensionCharges.CreateAmendPensionChargesRequest
@@ -27,9 +27,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendPensionChargesService @Inject()(connector: CreateAmendPensionChargesConnector) extends BaseService {
+class CreateAmendPensionChargesService @Inject() (connector: CreateAmendPensionChargesConnector) extends BaseService {
 
-  def createAmendPensions(request: CreateAmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[CreateAmendPensionChargesOutcome] = {
+  def createAmendPensions(
+      request: CreateAmendPensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
     connector
       .createAmendPensionCharges(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
