@@ -22,7 +22,7 @@ description: |
         </tbody>
         <tbody>
             <tr>
-                  <td>STATEFUL</p></td>
+                  <td><p>STATEFUL</p></td>
                   <td><p>Simulates a stateful success response.</p></td>
             </tr> 
         </tbody>
