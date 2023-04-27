@@ -20,6 +20,12 @@ description: |
               <td><p>Simulates a scenario where no data can be found.</p></td>
           </tr>
       </tbody>
+      <tbody>
+          <tr>
+              <td>STATEFUL</p></td>
+              <td><p>SSimulates a stateful success response.</p></td>
+           </tr> 
+      </tbody>
   </table>
 
 parameters:

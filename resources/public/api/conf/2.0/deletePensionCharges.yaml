@@ -20,6 +20,12 @@ description: |
                  <td><p>Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period.</p></td>
             </tr>                     
         </tbody>
+        <tbody>
+            <tr>
+                  <td>STATEFUL</p></td>
+                  <td><p>SSimulates a stateful success response.</p></td>
+            </tr> 
+        </tbody>
     </table>        
 
 parameters:
