@@ -23,14 +23,6 @@ import java.time.LocalDate
 
 class DateUtilsSpec extends UnitSpec {
 
-  "getDesTaxYear with tax year param" should {
-    "return a valid DesTaxYear" when {
-      "mtd formatted string tax year is supplied" in {
-        DateUtils.getDesTaxYear("2018-19") shouldBe TaxYear("2019")
-      }
-    }
-  }
-
   "getDesTaxYear with date param" should {
     "return a valid DesTaxYear" when {
       "no tax year is supplied when the date is 5th April of the current year" in {

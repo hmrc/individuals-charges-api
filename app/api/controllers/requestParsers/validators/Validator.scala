@@ -19,7 +19,6 @@ package api.controllers.requestParsers.validators
 import api.models.errors.MtdError
 import api.models.request.RawData
 
-
 trait Validator[A <: RawData] {
 
   type ValidationLevel[T] = T => List[MtdError]
@@ -32,8 +31,8 @@ trait Validator[A <: RawData] {
       case Nil => List()
       case thisLevel :: remainingLevels =>
         thisLevel(data).flatten match {
-          case x if x.isEmpty  => run(remainingLevels, data)
-          case x if x.nonEmpty => x
+          case x if x.isEmpty => run(remainingLevels, data)
+          case x              => x
         }
     }
   }
@@ -57,6 +56,7 @@ trait Validator[A <: RawData] {
           })
         }
         .toList
+        .sortBy(_.code)
     }
 
   }

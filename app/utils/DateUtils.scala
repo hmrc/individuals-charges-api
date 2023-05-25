@@ -22,16 +22,14 @@ import java.time.LocalDate
 
 object DateUtils {
 
-  def getDesTaxYear(dateProvided: Any): TaxYear = dateProvided match {
-    case taxYear: String => TaxYear.fromMtd(taxYear)
-    case current: LocalDate =>
-      val fiscalYearStartDate = LocalDate.parse(s"${current.getYear.toString}-04-05")
+  def getDesTaxYear(dateProvided: LocalDate): TaxYear = {
+    val fiscalYearStartDate = LocalDate.parse(s"${dateProvided.getYear.toString}-04-05")
 
-      if (current.isAfter(fiscalYearStartDate)) {
-        TaxYear((current.getYear + 1).toString)
-      } else {
-        TaxYear(current.getYear.toString)
-      }
+    if (dateProvided.isAfter(fiscalYearStartDate)) {
+      TaxYear((dateProvided.getYear + 1).toString)
+    } else {
+      TaxYear(dateProvided.getYear.toString)
+    }
   }
 
 }
