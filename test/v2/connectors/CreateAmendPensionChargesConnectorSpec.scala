@@ -51,7 +51,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, Unit))
+        val expected = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
@@ -71,7 +71,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, Unit))
+        val expected = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(

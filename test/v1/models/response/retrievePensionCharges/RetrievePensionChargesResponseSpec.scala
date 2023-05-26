@@ -157,7 +157,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       val nino    = "mynino"
       val taxYear = "2017-18"
 
-      MockAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes
+      MockAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes()
       RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(
         mockAppConfig,
         RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
