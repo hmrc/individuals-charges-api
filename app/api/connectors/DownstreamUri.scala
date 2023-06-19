@@ -16,7 +16,7 @@
 
 package api.connectors
 
-trait DownstreamUri[Resp] {
+sealed trait DownstreamUri[Resp] {
   val value: String
 }
 
