@@ -15,8 +15,6 @@ description: |
                 <td><p>N/A - DEFAULT</p></td>
                 <td><p>Simulates a success response.</p></td>
            </tr> 
-        </tbody>
-        <tbody>
            <tr>
                 <td><p>STATEFUL</p></td>
                 <td><p>Performs a stateful create or update.</p></td>
