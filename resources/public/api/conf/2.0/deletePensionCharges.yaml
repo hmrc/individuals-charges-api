@@ -19,6 +19,10 @@ description: |
                  <td><p>NOT_FOUND</p></td>
                  <td><p>Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period.</p></td>
             </tr>                     
+            <tr>
+                  <td><p>STATEFUL</p></td>
+                  <td><p>Performs a stateful delete.</p></td>
+            </tr> 
         </tbody>
     </table>        
 
