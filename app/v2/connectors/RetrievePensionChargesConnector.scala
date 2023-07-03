@@ -17,7 +17,7 @@
 package v2.connectors
 
 import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -41,7 +41,7 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appCo
       if (request.taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
       } else {
-        DesUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+        IfsUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
       }
     get(downstreamUri)
   }

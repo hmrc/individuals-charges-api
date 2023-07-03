@@ -47,7 +47,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
   "Retrieve pension charges" when {
 
     "a valid request is supplied" should {
-      "return a successful response with the correct correlationId" in new DesTest with Test {
+      "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
@@ -56,7 +56,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
             config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -85,7 +85,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
     }
 
     "a request returning a single error" should {
-      "return an unsuccessful response with the correct correlationId and a single error" in new DesTest with Test {
+      "return an unsuccessful response with the correct correlationId and a single error" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
@@ -94,7 +94,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
             config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -104,7 +104,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
     }
 
     "a request returning multiple errors" should {
-      "return an unsuccessful response with the correct correlationId and multiple errors" in new DesTest with Test {
+      "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
@@ -113,7 +113,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
             config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
