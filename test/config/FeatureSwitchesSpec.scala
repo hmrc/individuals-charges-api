@@ -16,7 +16,7 @@
 
 package config
 
-import definition.{Version, Version1, Version2}
+import definition.{Version, Version2}
 import play.api.Configuration
 import support.UnitSpec
 
@@ -24,71 +24,22 @@ class FeatureSwitchesSpec extends UnitSpec {
 
   val anyVersion: Version = Version2
 
-  "a feature switch" should {
+  "isCL102Enabled feature switch" should {
     "be true" when {
 
       "absent from the config" in {
         val configuration   = Configuration.empty
         val featureSwitches = FeatureSwitches(configuration)
 
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
-      }
-
-      "enabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> true)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
-
-      }
-    }
-
-    "be false" when {
-      "disabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> false)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
-      }
-    }
-  }
-
-  "isCL102Enabled feature switch" should {
-    "be true" when {
-
-      "absent from the config" in {
-        val configuration = Configuration.empty
-        val featureSwitches = FeatureSwitches(configuration)
-
         featureSwitches.isCL102Enabled shouldBe true
       }
 
       "enabled" in {
-        val configuration = Configuration("cl102.enabled" -> true)
+        val configuration   = Configuration("cl102.enabled" -> true)
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isCL102Enabled shouldBe true
 
-      }
-    }
-  }
-
-  "isVersionEnabled()" should {
-    val configuration = Configuration(
-      "version-1.enabled" -> true,
-      "version-2.enabled" -> false
-    )
-    val featureSwitches = FeatureSwitches(configuration)
-
-    "return false" when {
-      "the version is blank" in {
-        featureSwitches.isVersionEnabled(anyVersion) shouldBe false
-      }
-
-      "return true" when {
-        "the version is enabled in the config" in {
-          featureSwitches.isVersionEnabled(Version1) shouldBe true
-        }
       }
     }
   }
