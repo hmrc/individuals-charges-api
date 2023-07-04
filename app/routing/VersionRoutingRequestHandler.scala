@@ -17,7 +17,7 @@
 package routing
 
 import api.models.errors.{InvalidAcceptHeaderError, NotFoundError, UnsupportedVersionError}
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import definition.{InvalidHeader, Version, VersionNotFound, Versions}
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
 import play.api.libs.json.Json
@@ -43,8 +43,6 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
       filters = filters.filters
     ) {
 
-  private val featureSwitches = FeatureSwitches(config.featureSwitches)
-
   private val unsupportedVersionAction = action(Results.NotFound(UnsupportedVersionError.asJson))
 
   private val resourceNotFoundAction = action(Results.NotFound(Json.toJson(NotFoundError)))
@@ -67,21 +65,20 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
     documentHandler orElse apiHandler
   }
 
-  private def findRoute(request: RequestHeader, version: Version, versionEnabled: Boolean = true): Option[Handler] = {
-    def getRouting(): Option[Handler] = versionRoutingMap
-      .versionRouter(version)
-      .flatMap(router => routeWith(router, request))
-
+  /** If a route isn't found for this version, fall back to previous available.
+    */
+  private def findRoute(request: RequestHeader, version: Version): Option[Handler] = {
     val found =
-      versionEnabled match {
-        case true if featureSwitches.isVersionEnabled(version) => getRouting()
-        case false if (getRouting().nonEmpty)                  => getRouting()
-        case false                                             => Some(resourceNotFoundAction)
-        case _                                                 => Some(unsupportedVersionAction)
+      if (config.endpointsEnabled(version)) {
+        versionRoutingMap
+          .versionRouter(version)
+          .flatMap(router => routeWith(router, request))
+      } else {
+        Some(unsupportedVersionAction)
       }
 
     found
-      .orElse(version.maybePrevious.flatMap(previousVersion => findRoute(request, previousVersion, versionEnabled = false)))
+      .orElse(version.maybePrevious.flatMap(previousVersion => findRoute(request, previousVersion)))
   }
 
   private def routeWith(router: Router, request: RequestHeader): Option[Handler] =
