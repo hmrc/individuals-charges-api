@@ -27,7 +27,6 @@ lazy val microservice = Project(appName, file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
   .settings(majorVersion := 1)
-  .settings(publishingSettings: _*)
   .settings(CodeCoverageSettings.settings: _*)
   .settings(defaultSettings(): _*)
   .configs(ItTest)
