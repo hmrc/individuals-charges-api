@@ -22,7 +22,8 @@ import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json._
 
-case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
+case class RetrievePensionChargesResponse(submittedOn: String,
+                                          pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
                                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                                           pensionContributions: Option[PensionContributions],

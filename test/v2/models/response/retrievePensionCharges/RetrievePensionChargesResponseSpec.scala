@@ -26,6 +26,7 @@ import support.UnitSpec
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseModel: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    "2020-07-27T17:00:19Z",
     Some(
       PensionSavingsTaxCharges(
         Some(Seq("00123456RA")),
@@ -68,6 +69,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseJson: JsValue = Json.parse("""
       |{
+      |   "submittedOn": "2020-07-27T17:00:19Z",
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":

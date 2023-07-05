@@ -27,6 +27,7 @@ import v1.data.RetrievePensionChargesData._
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseModel: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    "2020-07-27T17:00:19Z",
     Some(
       PensionSavingsTaxCharges(
         Seq("00123456RA"),
@@ -73,6 +74,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   val responseJson: JsValue = Json.parse("""
       |{
+      |   "submittedOn": "2020-07-27T17:00:19Z",
       |   "pensionSavingsTaxCharges": {
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
@@ -207,6 +209,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       "CL102 fields exist in pensionContributions but pensionSavingsTaxCharges does not exist" should {
         "return None" in {
           val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            "2020-07-27T17:00:19Z",
             None,
             Some(pensionOverseasTransfer),
             Some(pensionUnauthorisedPayments),
@@ -220,6 +223,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       "CL102 fields do not exist in pensionContributions and pensionSavingsTaxCharges does not exist" should {
         "return response as is" in {
           val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            "2020-07-27T17:00:19Z",
             None,
             Some(pensionOverseasTransfer),
             Some(pensionUnauthorisedPayments),
@@ -233,6 +237,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       "pensionContributions does not exist and pensionSavingsTaxCharges does exist" should {
         "return response as is" in {
           val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            "2020-07-27T17:00:19Z",
             Some(pensionSavingsChargeWithoutCl102Fields),
             Some(pensionOverseasTransfer),
             Some(pensionUnauthorisedPayments),
@@ -246,6 +251,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       "pensionContributions and pensionSavingsTaxCharges does not exist" should {
         "return response as is" in {
           val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+            "2020-07-27T17:00:19Z",
             None,
             Some(pensionOverseasTransfer),
             Some(pensionUnauthorisedPayments),
