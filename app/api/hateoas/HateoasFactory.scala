@@ -16,11 +16,10 @@
 
 package api.hateoas
 
-import api.models.hateoas.{HateoasData, HateoasWrapper}
+import api.models.hateoas._
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
-import api.models.hateoas._
 
 import javax.inject.Inject
 

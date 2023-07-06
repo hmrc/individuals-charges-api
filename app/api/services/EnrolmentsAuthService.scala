@@ -21,20 +21,11 @@ import api.models.errors.{ClientNotAuthorisedError, InternalError}
 import api.models.outcomes.AuthOutcome
 import config.AppConfig
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
-import uk.gov.hmrc.auth.core.{
-  AffinityGroup,
-  AuthConnector,
-  AuthorisationException,
-  AuthorisedFunctions,
-  ConfidenceLevel,
-  Enrolment,
-  Enrolments,
-  MissingBearerToken
-}
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.auth.core.{AffinityGroup, AuthConnector, AuthorisationException, AuthorisedFunctions, ConfidenceLevel, Enrolment, Enrolments, MissingBearerToken}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 

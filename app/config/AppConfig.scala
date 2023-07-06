@@ -17,10 +17,10 @@
 package config
 
 import com.typesafe.config.Config
-import play.api.{ConfigLoader, Configuration}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import definition.Version
+import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 

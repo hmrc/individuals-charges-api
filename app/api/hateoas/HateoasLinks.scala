@@ -16,10 +16,10 @@
 
 package api.hateoas
 
-import config.AppConfig
 import api.models.hateoas.Link
 import api.models.hateoas.Method._
 import api.models.hateoas.RelType._
+import config.AppConfig
 
 trait HateoasLinks {
   // Individuals Charges API Domain URIs

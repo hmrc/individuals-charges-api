@@ -18,7 +18,6 @@ package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, PensionSchemeTaxRefFormatError}
 
-
 object PensionSchemeTaxReferenceValidation {
 
   private val regex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"

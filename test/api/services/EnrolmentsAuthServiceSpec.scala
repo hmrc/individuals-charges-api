@@ -273,6 +273,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
         )
       )
     }
+
   }
 
 }
