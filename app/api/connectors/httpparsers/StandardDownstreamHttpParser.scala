@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 object StandardDownstreamHttpParser extends HttpParser {
 
   case class SuccessCode(status: Int) extends AnyVal
-  
+
   override val logger = Logger(getClass)
 
   // Return Right[DownstreamOutcome[Unit]] as success response has no body - no need to assign it a value
@@ -36,7 +36,7 @@ object StandardDownstreamHttpParser extends HttpParser {
       doRead(url, response) { correlationId =>
         Right(ResponseWrapper(correlationId, ()))
       }
-  
+
   implicit def reads[A: Reads](implicit successCode: SuccessCode = SuccessCode(OK)): HttpReads[DownstreamOutcome[A]] =
     (_: String, url: String, response: HttpResponse) =>
       doRead(url, response) { correlationId =>
@@ -45,12 +45,12 @@ object StandardDownstreamHttpParser extends HttpParser {
           case None      => Left(ResponseWrapper(correlationId, OutboundError(InternalError)))
         }
       }
-  
+
   private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
-                                                                                                                    successCode: SuccessCode): DownstreamOutcome[A] = {
-    
+      successCode: SuccessCode): DownstreamOutcome[A] = {
+
     val correlationId = retrieveCorrelationId(response)
-    
+
     if (response.status != successCode.status) {
       logger.warn(
         "[StandardDownstreamHttpParser][read] - " +
@@ -65,8 +65,8 @@ object StandardDownstreamHttpParser extends HttpParser {
             s"Success response received from downstream with correlationId: $correlationId when calling $url")
         successOutcomeFactory(correlationId)
       case BAD_REQUEST | NOT_FOUND | FORBIDDEN | CONFLICT | UNPROCESSABLE_ENTITY => Left(ResponseWrapper(correlationId, parseErrors(response)))
-      case _ => Left(ResponseWrapper(correlationId, OutboundError(InternalError)))
+      case _                                                                     => Left(ResponseWrapper(correlationId, OutboundError(InternalError)))
     }
   }
-  
+
 }

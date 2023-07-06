@@ -46,7 +46,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
-        private val readScope = "read:self-assessment"
+        private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"
 
         apiDefinitionFactory.definition shouldBe

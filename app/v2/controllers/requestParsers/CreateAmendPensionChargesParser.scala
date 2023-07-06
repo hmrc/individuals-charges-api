@@ -24,7 +24,7 @@ import v2.models.request.createAmendPensionCharges.{CreateAmendPensionChargesRaw
 
 import javax.inject.Inject
 
-class CreateAmendPensionChargesParser @Inject()(val validator: CreateAmendPensionChargesValidator)
+class CreateAmendPensionChargesParser @Inject() (val validator: CreateAmendPensionChargesValidator)
     extends RequestParser[CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequest] {
 
   override protected def requestFor(data: CreateAmendPensionChargesRawData): CreateAmendPensionChargesRequest =

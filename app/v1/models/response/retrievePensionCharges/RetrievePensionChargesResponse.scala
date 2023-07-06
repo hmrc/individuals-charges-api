@@ -40,9 +40,9 @@ case class RetrievePensionChargesResponse(pensionSavingsTaxCharges: Option[Pensi
 
   def addFieldsFromPensionContributionsToPensionSavingsTaxCharges: Option[RetrievePensionChargesResponse] =
     (pensionSavingsTaxCharges, pensionContributions) match {
-      case (Some(tc), Some(pc))                                          => Some(moveCl02Fields(tc, pc))
-      case (None, Some(pc)) if pc.hasACl102Field                         => None
-      case _                                                             => Some(this)
+      case (Some(tc), Some(pc))                  => Some(moveCl02Fields(tc, pc))
+      case (None, Some(pc)) if pc.hasACl102Field => None
+      case _                                     => Some(this)
     }
 
   private def moveCl02Fields(tc: PensionSavingsTaxCharges, pc: PensionContributions): RetrievePensionChargesResponse = copy(

@@ -60,8 +60,7 @@ class PensionSavingsTaxChargesSpec extends UnitSpec {
       |   }
       |""".stripMargin)
 
-  val responseJsonWithoutCL102Fields: JsValue = Json.parse(
-    """
+  val responseJsonWithoutCL102Fields: JsValue = Json.parse("""
       |{
       |      "pensionSchemeTaxReference": ["00123456RA"],
       |      "lumpSumBenefitTakenInExcessOfLifetimeAllowance":

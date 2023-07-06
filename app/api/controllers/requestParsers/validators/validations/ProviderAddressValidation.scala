@@ -18,7 +18,6 @@ package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, ProviderAddressFormatError}
 
-
 object ProviderAddressValidation {
 
   private val addressMaxLength = 250

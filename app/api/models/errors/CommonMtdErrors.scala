@@ -91,4 +91,3 @@ object NoTransactionDetailsFoundError extends MtdError(code = "NO_DETAILS_FOUND"
 
 //Stub Errors
 object RuleIncorrectGovTestScenarioError extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The Gov-Test-Scenario was not found", BAD_REQUEST)
-
