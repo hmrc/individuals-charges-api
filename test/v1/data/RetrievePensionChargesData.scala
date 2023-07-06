@@ -87,7 +87,6 @@ object RetrievePensionChargesData {
   def retrieveResponseCl102Fields(pensionSavingsCharge: PensionSavingsTaxCharges,
                                   pensionContributions: PensionContributions): RetrievePensionChargesResponse =
     RetrievePensionChargesResponse(
-      "2020-07-27T17:00:19Z",
       Some(pensionSavingsCharge),
       Some(pensionOverseasTransfer),
       Some(pensionUnauthorisedPayments),
@@ -96,7 +95,6 @@ object RetrievePensionChargesData {
     )
 
   val retrieveResponseCl102FieldsInTaxCharges: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    submittedOn = "2020-07-27T17:00:19Z",
     Some(pensionSavingsChargeWithCl102Fields),
     Some(pensionOverseasTransfer),
     Some(pensionUnauthorisedPayments),
@@ -105,7 +103,6 @@ object RetrievePensionChargesData {
   )
 
   val retrieveResponseCl102FieldsInPensionContributions: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    "2020-07-27T17:00:19Z",
     Some(pensionSavingsChargeWithoutCl102Fields),
     Some(pensionOverseasTransfer),
     Some(pensionUnauthorisedPayments),
@@ -116,7 +113,6 @@ object RetrievePensionChargesData {
   val fullJsonCL102FieldsInBoth: JsValue = Json.parse(
     """
       |{
-      | "submittedOn": "2020-07-27T17:00:19Z", 
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
@@ -191,7 +187,6 @@ object RetrievePensionChargesData {
   val fullJsonCl102FieldsInTaxCharges: JsValue = Json.parse(
     """
       |{
-      | "submittedOn": "2020-07-27T17:00:19Z",
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
@@ -263,7 +258,6 @@ object RetrievePensionChargesData {
   def fullJsonWithHateoas(taxYear: String): JsValue = Json.parse(
     s"""
       |{
-      | "submittedOn": "2020-07-27T17:00:19Z",  
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"

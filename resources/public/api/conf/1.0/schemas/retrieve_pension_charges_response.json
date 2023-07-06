@@ -4,12 +4,6 @@
   "description":"Retrieve Pension Charges",
   "type":"object",
   "properties":{
-    "submittedOn":{
-      "type": "string",
-      "format": "YYYY-MM-DDThh:mm:ss.sssZ",
-      "description": "An ISO-8601 compliant date-time representing when pension charges were submitted.",
-      "example": "2021-04-04T01:01:01.000Z"
-    },
     "pensionSavingsTaxCharges":{
       "type":"object",
       "description":"Object holding the booleans for annual allowance.",
@@ -53,7 +47,6 @@
             }
           },
           "required": [
-            "submittedOn",
             "amount",
             "taxPaid"
           ]

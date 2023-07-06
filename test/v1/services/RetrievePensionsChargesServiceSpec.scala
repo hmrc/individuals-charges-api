@@ -138,7 +138,6 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
       "cl102 fields exist but tax charges is missing" when {
         "an internal server error is returned" in new Cl102Enabled {
           val response: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-            "2020-07-27T17:00:19Z",
             None,
             Some(pensionOverseasTransfer),
             Some(pensionUnauthorisedPayments),
