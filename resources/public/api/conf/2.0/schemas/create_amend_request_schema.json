@@ -219,7 +219,7 @@
           "example":"true"
         },
         "moneyPurchasedAllowance":{
-          "description":"A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
+          "description":"A boolean indicating whether the person has paid the maximum amount allowed for their reduced allowance, based on Money Purchase Annual Allowance (MPAA). The value must be true or false.\nFor example: false",
           "type":"boolean",
           "example":"false"
         }
