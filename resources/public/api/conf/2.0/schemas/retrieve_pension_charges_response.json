@@ -226,7 +226,6 @@
           "type":"boolean",
           "example":"false"
         },
-        //SHOULD IT BE UPDATED IN BOTH V1 AND V2??? //////////
       },
       "required": [
         "pensionSchemeTaxReference",
