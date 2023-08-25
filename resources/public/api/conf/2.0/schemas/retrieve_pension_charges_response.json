@@ -222,10 +222,11 @@
           "example":"true"
         },
         "moneyPurchasedAllowance":{
-          "description":"A boolean indicating whether the person has paid the maximum amount allowed for their reduced allowance, based on Money Purchase Annual Allowance (MPAA). The value must be true or false.\nFor example: false",
+          "description":"A boolean indicating whether the person has paid the maximum amount allowed for their reduced allowance, based on Money Purchase Annual Allowance (MPAA). The value must be true or false. For example: false",
           "type":"boolean",
           "example":"false"
-        }
+        },
+        //SHOULD IT BE UPDATED IN BOTH V1 AND V2??? //////////
       },
       "required": [
         "pensionSchemeTaxReference",
