@@ -1,7 +1,6 @@
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
 import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 val appName = "individuals-charges-api"
@@ -19,6 +18,7 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions ++= Seq(
       "-Xfatal-warnings",
       "-Wconf:src=routes/.*:silent",
+      "-Xlint:byname-implicit",
       "-feature",
       "-language:higherKinds"
     )

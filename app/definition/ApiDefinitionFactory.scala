@@ -18,6 +18,7 @@ package definition
 
 import config.AppConfig
 import play.api.Logger
+import routing.{Version, Version1, Version2}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 import javax.inject.{Inject, Singleton}

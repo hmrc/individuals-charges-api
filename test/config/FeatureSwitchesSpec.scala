@@ -16,8 +16,8 @@
 
 package config
 
-import definition.{Version, Version2}
 import play.api.Configuration
+import routing.{Version, Version2}
 import support.UnitSpec
 
 class FeatureSwitchesSpec extends UnitSpec {

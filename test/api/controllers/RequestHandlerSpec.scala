@@ -17,18 +17,15 @@
 package api.controllers
 
 import api.controllers.requestParsers.RequestParser
-import api.hateoas.HateoasLinksFactory
-import api.mocks.MockIdGenerator
-import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.MockAuditService
+import api.hateoas.{HateoasData, HateoasLinksFactory, HateoasWrapper, Link, MockHateoasFactory}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors.{ErrorWrapper, NinoFormatError}
-import api.models.hateoas.{HateoasData, HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
-import api.services.ServiceOutcome
+import api.services.{MockAuditService, ServiceOutcome}
 import config.AppConfig
+import mocks.MockIdGenerator
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsString, Json, OWrites}

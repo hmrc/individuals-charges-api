@@ -16,8 +16,7 @@
 
 package v2.models.response.createAmendPensionCharges
 
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
 import config.AppConfig
 
 object CreateAmendPensionChargesResponse extends HateoasLinks {
