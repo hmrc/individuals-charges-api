@@ -16,12 +16,12 @@
 
 package v2.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges._
 import api.hateoas
 import api.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v2.models.response.retrievePensionCharges._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 

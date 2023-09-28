@@ -23,7 +23,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.AmendPensionChargesParser
-import v1.models.request.AmendPensionCharges
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRawData
 import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData
 import v1.models.response.amendPensionCharges.AmendPensionChargesResponse.AmendLinksFactory
 import v1.services.AmendPensionChargesService
@@ -49,7 +49,7 @@ class AmendPensionChargesController @Inject() (val authService: EnrolmentsAuthSe
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = AmendPensionCharges.AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
+      val rawData = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
 
       val requestHandler =
         RequestHandler

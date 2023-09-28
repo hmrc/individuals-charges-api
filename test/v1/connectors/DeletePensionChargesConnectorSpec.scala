@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
 
 import scala.concurrent.Future
 

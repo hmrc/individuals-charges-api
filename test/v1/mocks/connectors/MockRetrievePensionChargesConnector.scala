@@ -16,12 +16,12 @@
 
 package v1.mocks.connectors
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.RetrievePensionChargesConnector
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import scala.concurrent.{ExecutionContext, Future}

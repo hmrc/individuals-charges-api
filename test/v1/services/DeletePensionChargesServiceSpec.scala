@@ -23,7 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockDeletePensionChargesConnector
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
 
 import scala.concurrent.Future
 

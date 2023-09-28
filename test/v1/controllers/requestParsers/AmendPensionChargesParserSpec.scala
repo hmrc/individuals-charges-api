@@ -22,7 +22,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.data.AmendPensionChargesData
 import v1.mocks.validators.MockAmendPensionChargesValidator
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.request.AmendPensionCharges._
 
 class AmendPensionChargesParserSpec extends UnitSpec {
   val nino                           = "AA123456B"

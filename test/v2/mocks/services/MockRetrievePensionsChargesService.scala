@@ -16,11 +16,11 @@
 
 package v2.mocks.services
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 import v2.services.RetrievePensionChargesService
 

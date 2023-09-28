@@ -16,8 +16,6 @@
 
 package v1.controllers
 
-import anyVersion.mocks.requestParsers.MockRetrievePensionChargesParser
-import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -29,7 +27,9 @@ import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
 import v1.data.RetrievePensionChargesData.{fullJsonCl102FieldsInTaxCharges, retrieveResponseCl102FieldsInTaxCharges}
+import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
+import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

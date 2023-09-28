@@ -16,7 +16,6 @@
 
 package v1.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges.Charge
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 

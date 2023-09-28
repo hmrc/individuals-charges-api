@@ -16,12 +16,12 @@
 
 package v1.connectors
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import javax.inject.{Inject, Singleton}

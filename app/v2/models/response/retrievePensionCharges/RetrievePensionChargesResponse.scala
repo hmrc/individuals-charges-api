@@ -16,7 +16,6 @@
 
 package v2.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges._
 import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.json._

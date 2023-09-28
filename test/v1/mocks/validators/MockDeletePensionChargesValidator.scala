@@ -20,7 +20,7 @@ import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.DeletePensionChargesValidator
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+import v1.models.request.deletePensionCharges.DeletePensionChargesRawData
 
 class MockDeletePensionChargesValidator extends MockFactory {
 

@@ -27,7 +27,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.MockDeletePensionChargesService
-import v1.models.request.DeletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
+import v1.models.request.deletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

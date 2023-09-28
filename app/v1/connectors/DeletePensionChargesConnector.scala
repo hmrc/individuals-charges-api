@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

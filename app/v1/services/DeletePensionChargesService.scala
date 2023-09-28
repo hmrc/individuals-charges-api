@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import v1.connectors.DeletePensionChargesConnector
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

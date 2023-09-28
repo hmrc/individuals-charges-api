@@ -16,7 +16,6 @@
 
 package v1.services
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
@@ -27,6 +26,7 @@ import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import scala.concurrent.Future

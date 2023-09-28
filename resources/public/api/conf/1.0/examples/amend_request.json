@@ -1,16 +1,17 @@
 {
   "pensionSavingsTaxCharges": {
-    "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-    "lumpSumBenefitTakenInExcessOfLifetimeAllowance":
-      {
-        "amount":100,
-        "taxPaid":100
-      },
-    "benefitInExcessOfLifetimeAllowance":
-      {
-        "amount":100,
-        "taxPaid":100
-      },
+    "pensionSchemeTaxReference": [
+      "00123456RA",
+      "00123456RA"
+    ],
+    "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      "amount": 100,
+      "taxPaid": 100
+    },
+    "benefitInExcessOfLifetimeAllowance": {
+      "amount": 100,
+      "taxPaid": 100
+    },
     "isAnnualAllowanceReduced": true,
     "taperedAnnualAllowance": true,
     "moneyPurchasedAllowance": false
@@ -30,7 +31,10 @@
     "transferChargeTaxPaid": 100
   },
   "pensionSchemeUnauthorisedPayments": {
-    "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+    "pensionSchemeTaxReference": [
+      "00123456RA",
+      "00123456RA"
+    ],
     "surcharge": {
       "amount": 100,
       "foreignTaxPaid": 100
@@ -41,7 +45,10 @@
     }
   },
   "pensionContributions": {
-    "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+    "pensionSchemeTaxReference": [
+      "00123456RA",
+      "00123456RA"
+    ],
     "inExcessOfTheAnnualAllowance": 100,
     "annualAllowanceTaxPaid": 100
   },

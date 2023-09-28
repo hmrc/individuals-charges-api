@@ -21,7 +21,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeletePensionChargesParser
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+import v1.models.request.deletePensionCharges.DeletePensionChargesRawData
 import v1.services.DeletePensionChargesService
 
 import javax.inject.Inject

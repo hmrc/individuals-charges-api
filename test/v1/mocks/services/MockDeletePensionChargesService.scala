@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
 import v1.services.DeletePensionChargesService
 
 import scala.concurrent.{ExecutionContext, Future}

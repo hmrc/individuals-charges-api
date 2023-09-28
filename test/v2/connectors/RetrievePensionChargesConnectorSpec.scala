@@ -16,11 +16,11 @@
 
 package v2.connectors
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
+import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v2.data.RetrievePensionChargesData.retrieveResponse
 
 import scala.concurrent.Future

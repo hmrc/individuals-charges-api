@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
+import v1.models.request.AmendPensionCharges._
 import v1.services.AmendPensionChargesService
 
 import scala.concurrent.{ExecutionContext, Future}

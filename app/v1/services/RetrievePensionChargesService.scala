@@ -16,7 +16,6 @@
 
 package v1.services
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -25,6 +24,7 @@ import cats.data.EitherT
 import cats.implicits._
 import config.{AppConfig, FeatureSwitches}
 import v1.connectors.RetrievePensionChargesConnector
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import javax.inject.{Inject, Singleton}

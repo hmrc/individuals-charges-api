@@ -20,7 +20,7 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations.{MinTaxYearValidation, NinoValidation, TaxYearValidation}
 import api.models.errors.{MtdError, TaxYearFormatError}
 import config.AppConfig
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+import v1.models.request.deletePensionCharges.DeletePensionChargesRawData
 
 import javax.inject.Inject
 

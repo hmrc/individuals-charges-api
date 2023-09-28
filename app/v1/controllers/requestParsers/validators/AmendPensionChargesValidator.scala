@@ -20,7 +20,7 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, TaxYearFormatError}
 import config.AppConfig
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, OverseasSchemeProvider, PensionCharges, PensionSavingsTaxCharges}
+import v1.models.request.AmendPensionCharges._
 
 import javax.inject.Inject
 

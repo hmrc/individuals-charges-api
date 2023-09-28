@@ -16,8 +16,6 @@
 
 package v2.controllers
 
-import anyVersion.mocks.requestParsers.MockRetrievePensionChargesParser
-import anyVersion.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -28,6 +26,8 @@ import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLooku
 import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
+import v2.mocks.requestParsers.MockRetrievePensionChargesParser
+import v2.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
 import v2.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
 import v2.mocks.services._
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData

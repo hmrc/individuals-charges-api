@@ -16,7 +16,6 @@
 
 package v1.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges._
 import api.hateoas
 import api.hateoas.Method._
 import mocks.MockAppConfig

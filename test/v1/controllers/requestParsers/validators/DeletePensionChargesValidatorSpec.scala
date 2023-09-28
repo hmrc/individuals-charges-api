@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators
 import api.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+import v1.models.request.deletePensionCharges.DeletePensionChargesRawData
 
 class DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
 

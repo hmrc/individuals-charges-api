@@ -19,23 +19,44 @@ package api.controllers.validators
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Valid
-import cats.implicits._
+import cats.implicits.toFoldableOps
 
 /** For complex additional validating that needs to take place after the initial validation and parsing of the JSON payload.
-  *
-  * If the additional validating is fairly minor, it could just go into a method in the Validator/ValidatorFactory; but if it's sizeable and is
-  * primarily about validating business rules, then it'll make sense to separate it into a separate RulesValidator class.
   */
 trait RulesValidator[PARSED] {
 
+  /** Represents a successful validation result with no errors. */
   protected val valid: Validated[Seq[MtdError], Unit] = Valid(())
 
+  /** Validates the business rules for the given parsed data.
+    *
+    * @param parsed
+    *   The parsed data to validate.
+    * @return
+    *   A validation result containing either the parsed data or a sequence of errors.
+    */
   def validateBusinessRules(parsed: PARSED): Validated[Seq[MtdError], PARSED]
 
+  /** Combines multiple validation results into a single result.
+    *
+    * @param results
+    *   The validation results to combine.
+    * @return
+    *   A combined validation result.
+    */
   protected def combine(results: Validated[Seq[MtdError], _]*): Validated[Seq[MtdError], Unit] =
     results.traverse_(identity)
 
-  implicit class ResultOps(result: Validated[Seq[MtdError], Unit]) {
+  /** Provides utility operations for working with validation results. */
+  implicit protected class ResultOps(result: Validated[Seq[MtdError], _]) {
+
+    /** Converts the validation result to a result containing the given parsed data.
+      *
+      * @param parsed
+      *   The parsed data to include in the result.
+      * @return
+      *   A validation result containing either the parsed data or a sequence of errors.
+      */
     def onSuccess(parsed: PARSED): Validated[Seq[MtdError], PARSED] = result.map(_ => parsed)
   }
 
