@@ -22,7 +22,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.data.CreateAmendPensionChargesData
 import v2.mocks.validators.MockCreateAmendPensionChargesValidator
-import v2.models.request.createAmendPensionCharges.{CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequest}
+import v2.models.request.createAmendPensionCharges.{CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequestData}
 
 class CreateAmendPensionChargesParserSpec extends UnitSpec {
   val nino                           = "AA123456B"
@@ -46,13 +46,13 @@ class CreateAmendPensionChargesParserSpec extends UnitSpec {
         MockValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(CreateAmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), CreateAmendPensionChargesData.pensionCharges))
+          Right(CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), CreateAmendPensionChargesData.pensionCharges))
       }
       "valid updated request data is supplied" in new Test {
         MockValidator.validate(inputDataUpdated).returns(Nil)
 
         parser.parseRequest(inputDataUpdated) shouldBe
-          Right(CreateAmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), CreateAmendPensionChargesData.pensionCharges))
+          Right(CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), CreateAmendPensionChargesData.pensionCharges))
       }
     }
 

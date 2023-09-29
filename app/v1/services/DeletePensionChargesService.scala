@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import v1.connectors.DeletePensionChargesConnector
-import v1.models.request.deletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeletePensionChargesService @Inject() (connector: DeletePensionChargesConnector) extends BaseService {
 
-  def deletePensionCharges(request: DeletePensionChargesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+  def deletePensionCharges(request: DeletePensionChargesRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
     connector
       .deletePensionCharges(request)
       .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))

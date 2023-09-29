@@ -19,14 +19,14 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrievePensionChargesValidator
-import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequestData}
 
 import javax.inject.Inject
 
 class RetrievePensionChargesParser @Inject() (val validator: RetrievePensionChargesValidator)
-    extends RequestParser[RetrievePensionChargesRawData, RetrievePensionChargesRequest] {
+    extends RequestParser[RetrievePensionChargesRawData, RetrievePensionChargesRequestData] {
 
-  override protected def requestFor(data: RetrievePensionChargesRawData): RetrievePensionChargesRequest =
-    RetrievePensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
+  override protected def requestFor(data: RetrievePensionChargesRawData): RetrievePensionChargesRequestData =
+    RetrievePensionChargesRequestData(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
 
 }

@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequest
+import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import javax.inject.{Inject, Singleton}
@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrievePensionCharges(request: RetrievePensionChargesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
+  def retrievePensionCharges(request: RetrievePensionChargesRequestData)(implicit
+                                                                         hc: HeaderCarrier,
+                                                                         ec: ExecutionContext,
+                                                                         correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
     import request._
 

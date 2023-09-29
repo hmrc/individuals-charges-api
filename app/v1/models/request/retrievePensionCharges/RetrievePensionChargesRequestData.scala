@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.deletePensionCharges
+package v1.models.request.retrievePensionCharges
 
 import api.models.domain.{Nino, TaxYear}
 
-case class DeletePensionChargesRequest(nino: Nino, taxYear: TaxYear)
+case class RetrievePensionChargesRequestData(nino: Nino, taxYear: TaxYear)

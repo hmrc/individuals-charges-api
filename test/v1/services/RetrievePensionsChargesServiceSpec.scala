@@ -26,7 +26,7 @@ import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.data.RetrievePensionChargesData._
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
-import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequest
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = RetrievePensionChargesRequest(nino, taxYear)
+  private val request = RetrievePensionChargesRequestData(nino, taxYear)
 
   trait Test extends MockRetrievePensionChargesConnector with MockAppConfig {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

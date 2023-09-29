@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequest
+import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesResponse
 import v2.services.RetrievePensionChargesService
 
@@ -33,9 +33,9 @@ trait MockRetrievePensionsChargesService extends MockFactory {
   object MockRetrievePensionsChargesService {
 
     def retrieve(
-        retrievePensionChargesRequest: RetrievePensionChargesRequest): CallHandler[Future[ServiceOutcome[RetrievePensionChargesResponse]]] = {
+        retrievePensionChargesRequest: RetrievePensionChargesRequestData): CallHandler[Future[ServiceOutcome[RetrievePensionChargesResponse]]] = {
       (mockRetrievePensionsChargesService
-        .retrievePensions(_: RetrievePensionChargesRequest)(_: RequestContext, _: ExecutionContext))
+        .retrievePensions(_: RetrievePensionChargesRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(retrievePensionChargesRequest, *, *)
     }
 

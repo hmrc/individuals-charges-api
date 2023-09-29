@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.RetrievePensionChargesParser
-import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequestData}
 
 trait MockRetrievePensionChargesParser extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockRetrievePensionChargesParser extends MockFactory {
 
   object MockRetrievePensionChargesParser {
 
-    def parseRequest(data: RetrievePensionChargesRawData): CallHandler[Either[ErrorWrapper, RetrievePensionChargesRequest]] = {
+    def parseRequest(data: RetrievePensionChargesRawData): CallHandler[Either[ErrorWrapper, RetrievePensionChargesRequestData]] = {
       (mockRetrievePensionChargesParser.parseRequest(_: RetrievePensionChargesRawData)(_: String)).expects(data, *)
     }
 

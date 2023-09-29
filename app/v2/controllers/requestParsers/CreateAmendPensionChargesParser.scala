@@ -20,14 +20,14 @@ import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import v2.controllers.requestParsers.validators.CreateAmendPensionChargesValidator
-import v2.models.request.createAmendPensionCharges.{CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequest, PensionCharges}
+import v2.models.request.createAmendPensionCharges.{CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequestData, PensionCharges}
 
 import javax.inject.Inject
 
 class CreateAmendPensionChargesParser @Inject() (val validator: CreateAmendPensionChargesValidator)
-    extends RequestParser[CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequest] {
+    extends RequestParser[CreateAmendPensionChargesRawData, CreateAmendPensionChargesRequestData] {
 
-  override protected def requestFor(data: CreateAmendPensionChargesRawData): CreateAmendPensionChargesRequest =
-    CreateAmendPensionChargesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[PensionCharges])
+  override protected def requestFor(data: CreateAmendPensionChargesRawData): CreateAmendPensionChargesRequestData =
+    CreateAmendPensionChargesRequestData(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[PensionCharges])
 
 }

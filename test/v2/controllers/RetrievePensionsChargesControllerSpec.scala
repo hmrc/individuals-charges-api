@@ -27,7 +27,7 @@ import mocks.{MockAppConfig, MockIdGenerator}
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
 import v2.mocks.requestParsers.MockRetrievePensionChargesParser
-import v2.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequest}
+import v2.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequestData}
 import v2.data.RetrievePensionChargesData.{fullJson, retrieveResponse}
 import v2.mocks.services._
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
@@ -50,7 +50,7 @@ class RetrievePensionsChargesControllerSpec
   private val taxYear = "2021-22"
 
   private val rawData     = RetrievePensionChargesRawData(nino, taxYear)
-  private val requestData = RetrievePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val requestData = RetrievePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
   class Test extends ControllerTest with AuditEventChecking {
 

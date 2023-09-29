@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrievePensionCharges
+package v2.models.request.retrievePensionCharges
 
 import api.models.domain.{Nino, TaxYear}
 
-case class RetrievePensionChargesRequest(nino: Nino, taxYear: TaxYear)
+case class RetrievePensionChargesRequestData(nino: Nino, taxYear: TaxYear)

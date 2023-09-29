@@ -27,7 +27,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockDeletePensionChargesParser
 import v1.mocks.services.MockDeletePensionChargesService
-import v1.models.request.deletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequest}
+import v1.models.request.deletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequestData}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,7 +45,7 @@ class DeletePensionChargesControllerSpec
   val taxYear = "2020-21"
 
   val rawData = DeletePensionChargesRawData(nino, taxYear)
-  val request = DeletePensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
+  val request = DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
   class Test extends ControllerTest with AuditEventChecking {
 

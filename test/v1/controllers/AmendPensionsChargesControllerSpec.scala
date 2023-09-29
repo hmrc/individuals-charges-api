@@ -29,7 +29,7 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import v1.data.AmendPensionChargesData._
 import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequest}
+import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequestData}
 import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,7 +49,7 @@ class AmendPensionsChargesControllerSpec
 
   private val taxYear     = "2021-22"
   private val rawData     = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
-  private val requestData = AmendPensionChargesRequest(Nino(nino), TaxYear.fromMtd(taxYear), pensionChargesCl102FieldsInTaxCharges)
+  private val requestData = AmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), pensionChargesCl102FieldsInTaxCharges)
 
   class Test extends ControllerTest with AuditEventChecking {
 
