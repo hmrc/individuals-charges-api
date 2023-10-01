@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class RetrievePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
 
-  private val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
 
   def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] =
     new Validator[RetrievePensionChargesRequestData] {

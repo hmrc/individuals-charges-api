@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DeletePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
 
-  private val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
 
   def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] =
     new Validator[DeletePensionChargesRequestData] {
