@@ -22,12 +22,11 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.MockIdGenerator
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v1.mocks.requestParsers.MockDeletePensionChargesParser
+import v1.controllers.validators.MockDeletePensionChargesValidatorFactory
 import v1.mocks.services.MockDeletePensionChargesService
-import v1.models.request.deletePensionCharges.{DeletePensionChargesRawData, DeletePensionChargesRequestData}
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,15 +36,44 @@ class DeletePensionChargesControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
+    with MockDeletePensionChargesValidatorFactory
     with MockDeletePensionChargesService
-    with MockDeletePensionChargesParser
-    with MockAuditService
-    with MockIdGenerator {
+    with MockAuditService {
 
-  val taxYear = "2020-21"
+  private val taxYear     = "2020-21"
+  private val requestData = DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
-  val rawData = DeletePensionChargesRawData(nino, taxYear)
-  val request = DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
+  "delete" should {
+    "return a successful response with header X-CorrelationId and body" when {
+      "the request received is valid" in new Test {
+        willUseValidator(returningSuccess(requestData))
+
+        MockDeletePensionChargesService
+          .delete(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+        runOkTestWithAudit(expectedStatus = NO_CONTENT)
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        willUseValidator(returning(NinoFormatError))
+
+        runErrorTestWithAudit(NinoFormatError)
+      }
+
+      "the service returns an error" in new Test {
+        willUseValidator(returningSuccess(requestData))
+
+        MockDeletePensionChargesService
+          .delete(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, TaxYearFormatError))))
+
+        runErrorTestWithAudit(TaxYearFormatError)
+      }
+    }
+  }
 
   class Test extends ControllerTest with AuditEventChecking {
 
@@ -53,7 +81,7 @@ class DeletePensionChargesControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       service = mockDeleteBFLossService,
-      parser = mockDeletePensionChargesParser,
+      validatorFactory = mockDeletePensionChargesValidatorFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -68,6 +96,7 @@ class DeletePensionChargesControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
+          versionNumber = "1.0",
           params = Map("nino" -> nino, "taxYear" -> taxYear),
           maybeRequestBody,
           correlationId,
@@ -75,43 +104,6 @@ class DeletePensionChargesControllerSpec
         )
       )
 
-  }
-
-  "delete" should {
-    "return a successful response with header X-CorrelationId and body" when {
-      "the request received is valid" in new Test {
-
-        MockDeletePensionChargesParser.parseRequest(rawData).returns(Right(request))
-
-        MockDeletePensionChargesService
-          .delete(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-        runOkTestWithAudit(expectedStatus = NO_CONTENT)
-      }
-    }
-
-    "return the error as per spec" when {
-      "the parser validation fails" in new Test {
-        MockDeletePensionChargesParser
-          .parseRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-
-        runErrorTestWithAudit(NinoFormatError)
-      }
-
-      "the service returns an error" in new Test {
-        MockDeletePensionChargesParser
-          .parseRequest(rawData)
-          .returns(Right(request))
-
-        MockDeletePensionChargesService
-          .delete(request)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, TaxYearFormatError))))
-
-        runErrorTestWithAudit(TaxYearFormatError)
-      }
-    }
   }
 
 }

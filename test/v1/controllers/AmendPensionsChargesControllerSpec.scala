@@ -23,13 +23,13 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.{MockAppConfig, MockIdGenerator}
+import mocks.MockAppConfig
 import play.api.libs.json.JsValue
-import play.api.mvc.{AnyContentAsJson, Result}
+import play.api.mvc.Result
+import v1.controllers.validators.MockAmendPensionChargesValidatorFactory
 import v1.data.AmendPensionChargesData._
-import v1.mocks.requestParsers.MockAmendPensionChargesParser
 import v1.mocks.services._
-import v1.models.request.AmendPensionCharges.{AmendPensionChargesRawData, AmendPensionChargesRequestData}
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRequestData
 import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,55 +40,19 @@ class AmendPensionsChargesControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockAmendPensionChargesParser
+    with MockAmendPensionChargesValidatorFactory
     with MockAmendPensionsChargesService
     with MockAppConfig
     with MockAuditService
-    with MockHateoasFactory
-    with MockIdGenerator {
+    with MockHateoasFactory {
 
   private val taxYear     = "2021-22"
-  private val rawData     = AmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(fullJson))
   private val requestData = AmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), pensionChargesCl102FieldsInTaxCharges)
-
-  class Test extends ControllerTest with AuditEventChecking {
-
-    val controller = new AmendPensionChargesController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockAmendPensionChargesParser,
-      service = mockAmendPensionsChargesService,
-      auditService = mockAuditService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    override protected def callController(): Future[Result] = controller.amend(nino, taxYear)(fakePostRequest(fullJson))
-
-    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-      AuditEvent(
-        auditType = "CreateAmendPensionsCharges",
-        transactionName = "create-amend-pensions-charges",
-        detail = GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
-          maybeRequestBody,
-          correlationId,
-          auditResponse
-        )
-      )
-
-  }
 
   "amend" should {
     "return a successful response with header X-CorrelationId and body" when {
       "the request received is valid" in new Test {
-
-        MockAmendPensionChargesParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockAmendPensionsChargesService
           .amend(requestData)
@@ -109,17 +73,13 @@ class AmendPensionsChargesControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockAmendPensionChargesParser
-          .parseRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(fullJson))
       }
 
       "the service returns an error" in new Test {
-        MockAmendPensionChargesParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockAmendPensionsChargesService
           .amend(requestData)
@@ -128,6 +88,38 @@ class AmendPensionsChargesControllerSpec
         runErrorTestWithAudit(RuleIncorrectOrEmptyBodyError, maybeAuditRequestBody = Some(fullJson))
       }
     }
+  }
+
+  class Test extends ControllerTest with AuditEventChecking {
+
+    val controller = new AmendPensionChargesController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      validatorFactory = mockAmendPensionChargesValidatorFactory,
+      service = mockAmendPensionsChargesService,
+      auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    override protected def callController(): Future[Result] = controller.amend(nino, taxYear)(fakePostRequest(fullJson))
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAmendPensionsCharges",
+        transactionName = "create-amend-pensions-charges",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          versionNumber = "1.0",
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          maybeRequestBody,
+          correlationId,
+          auditResponse
+        )
+      )
+
   }
 
 }

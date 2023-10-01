@@ -20,10 +20,10 @@ import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents}
+import routing.{Version, Version2}
 import utils.IdGenerator
-import v2.controllers.requestParsers.CreateAmendPensionChargesParser
-import v2.models.request.createAmendPensionCharges._
+import v2.controllers.validators.AmendPensionChargesValidatorFactory
 import v2.models.response.createAmendPensionCharges.CreateAmendPensionChargesHateoasData
 import v2.models.response.createAmendPensionCharges.CreateAmendPensionChargesResponse.CreateAmendLinksFactory
 import v2.services.CreateAmendPensionChargesService
@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext
 class CreateAmendPensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
                                                      service: CreateAmendPensionChargesService,
-                                                     parser: CreateAmendPensionChargesParser,
+                                                     validatorFactory: AmendPensionChargesValidatorFactory,
                                                      hateoasFactory: HateoasFactory,
                                                      auditService: AuditService,
                                                      cc: ControllerComponents,
@@ -49,23 +49,24 @@ class CreateAmendPensionChargesController @Inject() (val authService: Enrolments
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = CreateAmendPensionChargesRawData(nino, taxYear, AnyContentAsJson(request.body))
+      val validator = validatorFactory.validator(nino, taxYear, request.body)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.createAmendPensions)
           .withHateoasResult(hateoasFactory)(CreateAmendPensionChargesHateoasData(nino, taxYear))
           .withAuditing(AuditHandler(
             auditService,
             auditType = "CreateAmendPensionsCharges",
             transactionName = "create-amend-pensions-charges",
+            apiVersion = Version.from(request, orElse = Version2),
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             Some(request.body),
             includeResponse = true
           ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
   }
 

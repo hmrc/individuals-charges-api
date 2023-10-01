@@ -23,13 +23,13 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.{MockAppConfig, MockIdGenerator}
+import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
+import v1.controllers.validators.MockRetrievePensionChargesValidatorFactory
 import v1.data.RetrievePensionChargesData.{fullJsonCl102FieldsInTaxCharges, retrieveResponseCl102FieldsInTaxCharges}
-import v1.mocks.requestParsers.MockRetrievePensionChargesParser
 import v1.mocks.services._
-import v1.models.request.retrievePensionCharges.{RetrievePensionChargesRawData, RetrievePensionChargesRequestData}
+import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,55 +40,19 @@ class RetrievePensionsChargesControllerSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrievePensionChargesParser
+    with MockRetrievePensionChargesValidatorFactory
     with MockRetrievePensionsChargesService
     with MockHateoasFactory
     with MockAppConfig
-    with MockAuditService
-    with MockIdGenerator {
+    with MockAuditService {
 
   private val taxYear = "2021-22"
-
-  private val rawData     = RetrievePensionChargesRawData(nino, taxYear)
   private val requestData = RetrievePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
-
-  class Test extends ControllerTest with AuditEventChecking {
-
-    val controller = new RetrievePensionChargesController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockRetrievePensionChargesParser,
-      service = mockRetrievePensionsChargesService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeGetRequest)
-
-    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-      AuditEvent(
-        auditType = "RetrievePensionsCharges",
-        transactionName = "retrieve-pensions-charges",
-        detail = GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
-          `X-CorrelationId` = correlationId,
-          response = auditResponse
-        )
-      )
-
-  }
 
   "retrieve" should {
     "return a successful response with header X-CorrelationId and body" when {
       "the request received is valid" in new Test {
-
-        MockRetrievePensionChargesParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrievePensionsChargesService
           .retrieve(requestData)
@@ -104,17 +68,13 @@ class RetrievePensionsChargesControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrievePensionChargesParser
-          .parseRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrievePensionChargesParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrievePensionsChargesService
           .retrieve(requestData)
@@ -123,6 +83,37 @@ class RetrievePensionsChargesControllerSpec
         runErrorTest(TaxYearFormatError)
       }
     }
+
+  }
+
+  class Test extends ControllerTest with AuditEventChecking {
+
+    val controller = new RetrievePensionChargesController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      validatorFactory = mockRetrievePensionChargesValidatorFactory,
+      service = mockRetrievePensionsChargesService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeGetRequest)
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "RetrievePensionsCharges",
+        transactionName = "retrieve-pensions-charges",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          versionNumber = "1.0",
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          requestBody = None,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
 
   }
 
