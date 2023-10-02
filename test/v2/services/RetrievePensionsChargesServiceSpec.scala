@@ -23,7 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
-import v2.data.RetrievePensionChargesData._
+import v2.fixture.RetrievePensionChargesFixture._
 import v2.mocks.connectors.MockRetrievePensionChargesConnector
 
 import scala.concurrent.Future

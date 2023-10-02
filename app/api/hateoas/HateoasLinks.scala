@@ -16,7 +16,6 @@
 
 package api.hateoas
 
-import api.hateoas
 import api.hateoas.Method._
 import api.hateoas.RelType._
 import config.AppConfig
@@ -36,12 +35,12 @@ trait HateoasLinks {
   // Individual Charges API resource links
 
   def getRetrievePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    hateoas.Link(href = retrieveBaseUrl(appConfig, nino, taxYear), method = GET, rel = SELF)
+    Link(href = retrieveBaseUrl(appConfig, nino, taxYear), method = GET, rel = SELF)
 
   def getDeletePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    hateoas.Link(href = deleteBaseUrl(appConfig, nino, taxYear), method = DELETE, rel = DELETE_PENSION_CHARGES)
+    Link(href = deleteBaseUrl(appConfig, nino, taxYear), method = DELETE, rel = DELETE_PENSION_CHARGES)
 
   def getAmendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    hateoas.Link(href = amendBaseUrl(appConfig, nino, taxYear), method = PUT, rel = AMEND_PENSION_CHARGES)
+    Link(href = amendBaseUrl(appConfig, nino, taxYear), method = PUT, rel = AMEND_PENSION_CHARGES)
 
 }

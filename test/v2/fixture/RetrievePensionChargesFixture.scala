@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-package v1.data
+package v2.fixture
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.response.retrievePensionCharges._
+import v2.models.response.retrievePensionCharges._
 
-object RetrievePensionChargesData {
+object RetrievePensionChargesFixture {
 
-  val pensionSavingsChargeWithCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA", "00123456RA"),
+  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    Some(Seq("00123456RA", "00123456RA")),
     Some(LifetimeAllowance(123.45, 12.45)),
-    Some(LifetimeAllowance(123.45, 12.34)),
-    Some(true),
-    Some(true),
-    Some(false)
-  )
-
-  val pensionSavingsChargeWithoutCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    Seq("00123456RA", "00123456RA"),
-    Some(LifetimeAllowance(123.45, 12.45)),
-    Some(LifetimeAllowance(123.45, 12.34)),
-    None,
-    None,
-    None
+    Some(LifetimeAllowance(123.45, 12.34))
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -54,27 +42,18 @@ object RetrievePensionChargesData {
   )
 
   val pensionUnauthorisedPayments: PensionSchemeUnauthorisedPayments = PensionSchemeUnauthorisedPayments(
-    Seq("00123456RA", "00123456RA"),
+    Some(Seq("00123456RA", "00123456RA")),
     Some(Charge(123.45, 123.45)),
     Some(Charge(123.45, 123.45))
   )
 
-  val pensionContributionsWithoutCl102Fields: PensionContributions = PensionContributions(
+  val pensionContributions: PensionContributions = PensionContributions(
     Seq("00123456RA", "00123456RA"),
-    123.45,
-    123.45,
-    None,
-    None,
-    None
-  )
-
-  val pensionContributionsWithCl102Fields: PensionContributions = PensionContributions(
-    Seq("00123456RA", "00123456RA"),
-    123.45,
-    123.45,
     Some(true),
     Some(true),
-    Some(false)
+    Some(true),
+    123.45,
+    123.45
   )
 
   val overseasPensionContributions: OverseasPensionContributions = OverseasPensionContributions(
@@ -83,35 +62,19 @@ object RetrievePensionChargesData {
     0
   )
 
-  def retrieveResponseCl102Fields(pensionSavingsCharge: PensionSavingsTaxCharges,
-                                  pensionContributions: PensionContributions): RetrievePensionChargesResponse =
-    RetrievePensionChargesResponse(
-      Some(pensionSavingsCharge),
-      Some(pensionOverseasTransfer),
-      Some(pensionUnauthorisedPayments),
-      Some(pensionContributions),
-      Some(overseasPensionContributions)
-    )
-
-  val retrieveResponseCl102FieldsInTaxCharges: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    Some(pensionSavingsChargeWithCl102Fields),
+  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+    "2020-07-27T17:00:19Z",
+    Some(pensionSavingsCharge),
     Some(pensionOverseasTransfer),
     Some(pensionUnauthorisedPayments),
-    Some(pensionContributionsWithoutCl102Fields),
+    Some(pensionContributions),
     Some(overseasPensionContributions)
   )
 
-  val retrieveResponseCl102FieldsInPensionContributions: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
-    Some(pensionSavingsChargeWithoutCl102Fields),
-    Some(pensionOverseasTransfer),
-    Some(pensionUnauthorisedPayments),
-    Some(pensionContributionsWithCl102Fields),
-    Some(overseasPensionContributions)
-  )
-
-  val fullJsonCL102FieldsInBoth: JsValue = Json.parse(
+  val fullJson: JsValue = Json.parse(
     """
       |{
+      | "submittedOn": "2020-07-27T17:00:19Z",  
       |	"pensionSavingsTaxCharges": {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
@@ -123,10 +86,7 @@ object RetrievePensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -159,80 +119,9 @@ object RetrievePensionChargesData {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
       |		],
-      |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45,
       |     "isAnnualAllowanceReduced": true,
       |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false
-      |	},
-      |	"overseasPensionContributions": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"shortServiceRefund": 123.45,
-      |		"shortServiceRefundTaxPaid": 0
-      |	}
-      |}
-      |""".stripMargin
-  )
-
-  val fullJsonCl102FieldsInTaxCharges: JsValue = Json.parse(
-    """
-      |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.34
-      |		},
-      |     "isAnnualAllowanceReduced": true,
-      |     "taperedAnnualAllowance": true,
-      |     "moneyPurchasedAllowance": false
-      |	},
-      |	"pensionSchemeOverseasTransfers": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"transferCharge": 123.45,
-      |		"transferChargeTaxPaid": 0
-      |	},
-      |	"pensionSchemeUnauthorisedPayments": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"surcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		},
-      |		"noSurcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		}
-      |	},
-      |	"pensionContributions": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
+      |     "moneyPurchasedAllowance": true,
       |		"inExcessOfTheAnnualAllowance": 123.45,
       |		"annualAllowanceTaxPaid": 123.45
       |	},
@@ -257,6 +146,7 @@ object RetrievePensionChargesData {
   def fullJsonWithHateoas(taxYear: String): JsValue = Json.parse(
     s"""
        |{
+       | "submittedOn": "2020-07-27T17:00:19Z",
        |	"pensionSavingsTaxCharges": {
        |		"pensionSchemeTaxReference": [
        |			"00123456RA","00123456RA"
@@ -268,10 +158,7 @@ object RetrievePensionChargesData {
        |		"benefitInExcessOfLifetimeAllowance": {
        |			"amount": 123.45,
        |			"taxPaid": 12.34
-       |		},
-       |     "isAnnualAllowanceReduced": true,
-       |     "taperedAnnualAllowance": true,
-       |     "moneyPurchasedAllowance": false
+       |		}
        |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
@@ -304,6 +191,9 @@ object RetrievePensionChargesData {
        |		"pensionSchemeTaxReference": [
        |			"00123456RA","00123456RA"
        |		],
+       |     "isAnnualAllowanceReduced": true,
+       |     "taperedAnnualAllowance": true,
+       |     "moneyPurchasedAllowance": true,
        |		"inExcessOfTheAnnualAllowance": 123.45,
        |		"annualAllowanceTaxPaid": 123.45
        |	},

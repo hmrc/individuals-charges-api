@@ -18,7 +18,7 @@ package v1.models.response.retrievePensionCharges
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.data.RetrievePensionChargesData.{pensionSavingsChargeWithCl102Fields, pensionSavingsChargeWithoutCl102Fields}
+import v1.fixture.RetrievePensionChargesFixture.{pensionSavingsChargeWithCl102Fields, pensionSavingsChargeWithoutCl102Fields}
 
 class PensionSavingsTaxChargesSpec extends UnitSpec {
 

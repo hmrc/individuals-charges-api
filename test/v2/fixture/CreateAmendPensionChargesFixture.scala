@@ -14,29 +14,17 @@
  * limitations under the License.
  */
 
-package v1.data
+package v2.fixture
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.request.AmendPensionCharges._
+import v2.models.request.createAmendPensionCharges._
 
-object AmendPensionChargesData {
+object CreateAmendPensionChargesFixture {
 
-  val pensionSavingsChargeWithCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
     lumpSumBenefitTakenInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.45)),
-    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.34)),
-    isAnnualAllowanceReduced = Some(true),
-    taperedAnnualAllowance = Some(true),
-    moneyPurchasedAllowance = Some(false)
-  )
-
-  val pensionSavingsChargeWithoutCl102Fields: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
-    lumpSumBenefitTakenInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.45)),
-    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.34)),
-    isAnnualAllowanceReduced = None,
-    taperedAnnualAllowance = None,
-    moneyPurchasedAllowance = None
+    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.34))
   )
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
@@ -59,16 +47,7 @@ object AmendPensionChargesData {
     noSurcharge = Some(Charge(123.45, 123.45))
   )
 
-  val pensionContributionsWithoutCl102Fields: PensionContributions = PensionContributions(
-    pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
-    inExcessOfTheAnnualAllowance = 123.45,
-    annualAllowanceTaxPaid = 123.45,
-    isAnnualAllowanceReduced = None,
-    taperedAnnualAllowance = None,
-    moneyPurchasedAllowance = None
-  )
-
-  val pensionContributionsWithCl102Fields: PensionContributions = PensionContributions(
+  val pensionContributions: PensionContributions = PensionContributions(
     pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
     inExcessOfTheAnnualAllowance = 123.45,
     annualAllowanceTaxPaid = 123.45,
@@ -83,27 +62,11 @@ object AmendPensionChargesData {
     shortServiceRefundTaxPaid = 0
   )
 
-  val pensionChargesCl102FieldsInTaxCharges: PensionCharges = PensionCharges(
-    pensionSavingsTaxCharges = Some(pensionSavingsChargeWithCl102Fields),
+  val pensionCharges: PensionCharges = PensionCharges(
+    pensionSavingsTaxCharges = Some(pensionSavingsCharge),
     pensionSchemeOverseasTransfers = Some(pensionOverseasTransfer),
     pensionSchemeUnauthorisedPayments = Some(pensionUnauthorisedPayments),
-    pensionContributions = Some(pensionContributionsWithoutCl102Fields),
-    overseasPensionContributions = Some(overseasPensionContributions)
-  )
-
-  val pensionChargesCl102FieldsInPensionContributions: PensionCharges = PensionCharges(
-    pensionSavingsTaxCharges = Some(pensionSavingsChargeWithoutCl102Fields),
-    pensionSchemeOverseasTransfers = Some(pensionOverseasTransfer),
-    pensionSchemeUnauthorisedPayments = Some(pensionUnauthorisedPayments),
-    pensionContributions = Some(pensionContributionsWithCl102Fields),
-    overseasPensionContributions = Some(overseasPensionContributions)
-  )
-
-  val pensionChargesPensionContributionsMissing: PensionCharges = PensionCharges(
-    pensionSavingsTaxCharges = Some(pensionSavingsChargeWithCl102Fields),
-    pensionSchemeOverseasTransfers = Some(pensionOverseasTransfer),
-    pensionSchemeUnauthorisedPayments = Some(pensionUnauthorisedPayments),
-    pensionContributions = None,
+    pensionContributions = Some(pensionContributions),
     overseasPensionContributions = Some(overseasPensionContributions)
   )
 
@@ -122,9 +85,6 @@ object AmendPensionChargesData {
       |		"pensionSchemeTaxReference": [
       |			"00123456RA","00123456RA"
       |		],
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false,
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
@@ -166,7 +126,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -200,10 +163,7 @@ object AmendPensionChargesData {
       |		"benefitInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.34
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -237,7 +197,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -337,143 +300,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
-      |	},
-      |	"pensionSchemeOverseasTransfers": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"transferCharge": 123.45,
-      |		"transferChargeTaxPaid": 0
-      |	},
-      |	"pensionSchemeUnauthorisedPayments": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"surcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		},
-      |		"noSurcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
       |		}
-      |	},
-      |	"pensionContributions": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
-      |	},
-      |	"overseasPensionContributions": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"shortServiceRefund": 123.45,
-      |		"shortServiceRefundTaxPaid": 0
-      |	}
-      |}
-      |""".stripMargin
-  )
-
-  val missingIsAnnualAllowanceReducedJson: JsValue = Json.parse(
-    """
-      |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
-      |	},
-      |	"pensionSchemeOverseasTransfers": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"transferCharge": 123.45,
-      |		"transferChargeTaxPaid": 0
-      |	},
-      |	"pensionSchemeUnauthorisedPayments": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"surcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		},
-      |		"noSurcharge": {
-      |			"amount": 123.45,
-      |			"foreignTaxPaid": 123.45
-      |		}
-      |	},
-      |	"pensionContributions": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
-      |	},
-      |	"overseasPensionContributions": {
-      |		"overseasSchemeProvider": [
-      |			{
-      |				"providerName": "Overseas Pensions Plc",
-      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |				"providerCountryCode": "ESP",
-      |				"qualifyingRecognisedOverseasPensionScheme": [
-      |					"Q123456"
-      |				]
-      |			}
-      |		],
-      |		"shortServiceRefund": 123.45,
-      |		"shortServiceRefundTaxPaid": 0
-      |	}
-      |}
-      |""".stripMargin
-  )
-
-  val boolean1Json: JsValue = Json.parse(
-    """
-      |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -508,7 +335,76 @@ object AmendPensionChargesData {
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
       |		"annualAllowanceTaxPaid": 123.45,
-      |		"taperedAnnualAllowance": true
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  val boolean1Json: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"benefitInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		}
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "Overseas Pensions Plc",
+      |				"providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -538,10 +434,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -575,7 +468,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -605,10 +501,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -642,7 +535,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -673,10 +569,7 @@ object AmendPensionChargesData {
        |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
        |			"amount": 123.45,
        |			"taxPaid": 12.45
-       |		},
-       |		"isAnnualAllowanceReduced": true,
-       |		"taperedAnnualAllowance": true,
-       |		"moneyPurchasedAllowance": false
+       |		}
        |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
@@ -717,7 +610,10 @@ object AmendPensionChargesData {
        |			"00123456RA","00123456RA"
        |		],
        |		"inExcessOfTheAnnualAllowance": 123.45,
-       |		"annualAllowanceTaxPaid": 123.45
+       |		"annualAllowanceTaxPaid": 123.45,
+       |		"isAnnualAllowanceReduced": true,
+       |		"taperedAnnualAllowance": true,
+       |		"moneyPurchasedAllowance": false
        |	},
        |	"overseasPensionContributions": {
        |		"overseasSchemeProvider": [
@@ -754,10 +650,7 @@ object AmendPensionChargesData {
       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       |			"amount": 123.45,
       |			"taxPaid": 12.45
-      |		},
-      |		"isAnnualAllowanceReduced": true,
-      |		"taperedAnnualAllowance": true,
-      |		"moneyPurchasedAllowance": false
+      |		}
       |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
@@ -798,7 +691,10 @@ object AmendPensionChargesData {
       |			"00123456RA","00123456RA"
       |		],
       |		"inExcessOfTheAnnualAllowance": 123.45,
-      |		"annualAllowanceTaxPaid": 123.45
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
       |	},
       |	"overseasPensionContributions": {
       |		"overseasSchemeProvider": [
@@ -900,10 +796,7 @@ object AmendPensionChargesData {
        |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
        |			"amount": $bigDecimal,
        |			"taxPaid": $bigDecimal
-       |		},
-       |		"isAnnualAllowanceReduced": true,
-       |		"taperedAnnualAllowance": true,
-       |		"moneyPurchasedAllowance": false
+       |		}
        |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
@@ -937,7 +830,10 @@ object AmendPensionChargesData {
        |			"00123456RA","00123456RA"
        |		],
        |		"inExcessOfTheAnnualAllowance": $bigDecimal,
-       |		"annualAllowanceTaxPaid": $bigDecimal
+       |		"annualAllowanceTaxPaid": $bigDecimal,
+       |		"isAnnualAllowanceReduced": true,
+       |		"taperedAnnualAllowance": true,
+       |		"moneyPurchasedAllowance": false
        |	},
        |	"overseasPensionContributions": {
        |		"overseasSchemeProvider": [
@@ -955,12 +851,6 @@ object AmendPensionChargesData {
        |	}
        |}
        |""".stripMargin
-  )
-
-  val emptyJson: JsValue = Json.parse(
-    """
-      |{}
-      |""".stripMargin
   )
 
 }

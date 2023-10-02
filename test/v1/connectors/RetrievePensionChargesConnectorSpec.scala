@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v1.data.RetrievePensionChargesData.retrieveResponseCl102FieldsInTaxCharges
+import v1.fixture.RetrievePensionChargesFixture.retrieveResponseCl102FieldsInTaxCharges
 import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 
 import scala.concurrent.Future

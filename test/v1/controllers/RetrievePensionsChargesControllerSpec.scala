@@ -27,7 +27,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
 import v1.controllers.validators.MockRetrievePensionChargesValidatorFactory
-import v1.data.RetrievePensionChargesData.{fullJsonCl102FieldsInTaxCharges, retrieveResponseCl102FieldsInTaxCharges}
+import v1.fixture.RetrievePensionChargesFixture.{fullJsonCl102FieldsInTaxCharges, retrieveResponseCl102FieldsInTaxCharges}
 import v1.mocks.services._
 import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData

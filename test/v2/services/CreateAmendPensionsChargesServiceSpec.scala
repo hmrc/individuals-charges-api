@@ -22,7 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.data.CreateAmendPensionChargesData._
+import v2.fixture.CreateAmendPensionChargesFixture._
 import v2.mocks.connectors.MockCreateAmendPensionChargesConnector
 import v2.models.request.createAmendPensionCharges.CreateAmendPensionChargesRequestData
 

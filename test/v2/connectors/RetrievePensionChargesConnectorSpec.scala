@@ -21,7 +21,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
-import v2.data.RetrievePensionChargesData.retrieveResponse
+import v2.fixture.RetrievePensionChargesFixture.retrieveResponse
 
 import scala.concurrent.Future
 

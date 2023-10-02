@@ -25,8 +25,8 @@ import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestDat
 class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
-  private val validNino                      = "AA123456A"
-  private val validTaxYear                   = "2021-22"
+  private val validNino    = "AA123456A"
+  private val validTaxYear = "2021-22"
 
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
@@ -47,7 +47,6 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
       }
     }
 
-    // invalid nino
     "should return a single error" when {
       "an invalid nino is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
@@ -56,7 +55,6 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
-      // incorrect tax year format
       "an incorrectly formatted taxYear is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
@@ -64,7 +62,6 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
       }
 
-      // invalid tax year range
       "an invalid tax year range is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
@@ -72,7 +69,6 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
 
-      // invalid tax year - before minimum tax year value
       "an invalid tax year, before the minimum, is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-21").validateAndWrapResult()
@@ -81,7 +77,6 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
       }
     }
 
-    // multiple errors
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =

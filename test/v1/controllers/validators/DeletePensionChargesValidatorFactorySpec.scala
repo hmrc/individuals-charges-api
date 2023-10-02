@@ -47,7 +47,6 @@ class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConf
       }
     }
 
-    // invalid nino
     "return nino format error" when {
       "an invalid nino is supplied" in {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
@@ -56,7 +55,6 @@ class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConf
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
-      // incorrect tax year format
       "an incorrectly formatted taxYear is supplied" in {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
@@ -64,7 +62,6 @@ class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConf
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
       }
 
-      // invalid tax year range
       "an invalid tax year range is supplied" in {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
@@ -72,7 +69,6 @@ class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConf
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
 
-      // invalid tax year - before minimum tax year value
       "an invalid tax year, before the minimum, is supplied" in {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "2020-21").validateAndWrapResult()
@@ -81,7 +77,6 @@ class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConf
       }
     }
 
-    // multiple errors
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =

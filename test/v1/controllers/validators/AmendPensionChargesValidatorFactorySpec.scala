@@ -19,9 +19,9 @@ package v1.controllers.validators
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec
-import v1.data.AmendPensionChargesData._
+import v1.fixture.AmendPensionChargesFixture._
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequestData, PensionCharges}
 
 class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
@@ -33,10 +33,10 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val parsedValidFullRequestBody    = fullValidJson.as[PensionCharges]
-  private val parsedValidUpdatedRequestBody = fullValidJsonUpdated.as[PensionCharges]
+  private val parsedFullRequestBody    = fullValidJson.as[PensionCharges]
+  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[PensionCharges]
 
-  val validatorFactory                                                = new AmendPensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory                                        = new AmendPensionChargesValidatorFactory(mockAppConfig)
   private def validator(nino: String, taxYear: String, body: JsValue) = validatorFactory.validator(nino, taxYear, body)
 
   MockAppConfig.minTaxYearPensionCharge.returns("2022")
@@ -48,7 +48,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           validator(validNino, validTaxYear, fullValidJson).validateAndWrapResult()
 
         result shouldBe Right(
-          AmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedValidFullRequestBody)
+          AmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBody)
         )
       }
 
@@ -57,7 +57,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           validator(validNino, validTaxYear, fullValidJsonUpdated).validateAndWrapResult()
 
         result shouldBe Right(
-          AmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedValidUpdatedRequestBody)
+          AmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
         )
       }
     }
@@ -108,7 +108,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
     "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
       "an empty request body is supplied" in {
         val result: Either[ErrorWrapper, AmendPensionChargesRequestData] =
-          validator(validNino, validTaxYear, emptyJson).validateAndWrapResult()
+          validator(validNino, validTaxYear, JsObject.empty).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
@@ -134,18 +134,18 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
             correlationId,
             BadRequestError,
             Some(List(
-              RuleCountryCodeError.copy(paths = Some(
+              RuleCountryCodeError.withPaths(
                 List(
                   "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
                   "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
                 )
-              )),
-              CountryCodeFormatError.copy(paths = Some(
+              ),
+              CountryCodeFormatError.withPaths(
                 List(
                   "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
                   "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
                 )
-              ))
+              )
             ))
           )
         )
@@ -157,12 +157,12 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            CountryCodeFormatError.copy(paths = Some(
+            CountryCodeFormatError.withPaths(
               List(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
                 "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
               )
-            ))
+            )
           )
         )
       }
@@ -173,12 +173,12 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            RuleCountryCodeError.copy(paths = Some(
+            RuleCountryCodeError.withPaths(
               List(
                 "/pensionSchemeOverseasTransfers/overseasSchemeProvider/2/providerCountryCode",
                 "/overseasPensionContributions/overseasSchemeProvider/2/providerCountryCode"
               )
-            ))
+            )
           )
         )
       }
@@ -192,7 +192,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            ValueFormatError.copy(paths = Some(
+            ValueFormatError.withPaths(
               List(
                 "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
                 "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -207,7 +207,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
                 "/overseasPensionContributions/shortServiceRefund",
                 "/overseasPensionContributions/shortServiceRefundTaxPaid"
               )
-            ))
+            )
           )
         )
       }
@@ -218,7 +218,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
         result shouldBe Left(
           ErrorWrapper(
             correlationId,
-            ValueFormatError.copy(paths = Some(
+            ValueFormatError.withPaths(
               List(
                 "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
                 "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
@@ -233,7 +233,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
                 "/overseasPensionContributions/shortServiceRefund",
                 "/overseasPensionContributions/shortServiceRefundTaxPaid"
               )
-            ))
+            )
           )
         )
       }

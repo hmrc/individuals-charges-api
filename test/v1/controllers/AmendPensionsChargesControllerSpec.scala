@@ -27,7 +27,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.controllers.validators.MockAmendPensionChargesValidatorFactory
-import v1.data.AmendPensionChargesData._
+import v1.fixture.AmendPensionChargesFixture._
 import v1.mocks.services._
 import v1.models.request.AmendPensionCharges.AmendPensionChargesRequestData
 import v1.models.response.amendPensionCharges.AmendPensionChargesHateoasData

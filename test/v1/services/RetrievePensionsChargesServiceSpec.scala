@@ -24,7 +24,7 @@ import api.services.ServiceSpec
 import mocks.MockAppConfig
 import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.data.RetrievePensionChargesData._
+import v1.fixture.RetrievePensionChargesFixture._
 import v1.mocks.connectors.MockRetrievePensionChargesConnector
 import v1.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
 import v1.models.response.retrievePensionCharges.RetrievePensionChargesResponse

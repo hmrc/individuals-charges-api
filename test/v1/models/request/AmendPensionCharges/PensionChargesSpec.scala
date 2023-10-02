@@ -18,7 +18,7 @@ package v1.models.request.AmendPensionCharges
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.data.AmendPensionChargesData._
+import v1.fixture.AmendPensionChargesFixture._
 
 class PensionChargesSpec extends UnitSpec {
 

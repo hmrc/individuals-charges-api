@@ -26,12 +26,13 @@ import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequestData, Ov
 
 object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChargesRequestData] {
   private val resolveParsedNumber = ResolveParsedNumber()
+  private val qropsRefRegex       = "^[Q]{1}[0-9]{6}$"
 
   def validateBusinessRules(parsed: AmendPensionChargesRequestData): Validated[Seq[MtdError], AmendPensionChargesRequestData] = {
 
     import parsed._
 
-    List(
+    combine(
       validateRulePensionReference(pensionCharges),
       validateNames(pensionCharges),
       validateAddresses(pensionCharges),
@@ -40,32 +41,28 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
       validateRuleIsAnnualAllowanceReduced(pensionCharges.pensionSavingsTaxCharges),
       validateCharges(pensionCharges),
       validateCountryCodes(pensionCharges)
-    ).traverse(identity).map(_ => parsed)
+    ).onSuccess(parsed)
   }
 
   private def validateRulePensionReference(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
 
-    def rulePensionReferenceResolver(overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] =
-      overseasSchemeProviders.traverse_(schemeProvider =>
-        validateOverseasSchemeProvider(schemeProvider.qualifyingRecognisedOverseasPensionScheme, schemeProvider.pensionSchemeTaxReference))
+    def validatePensionReference(overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] =
+      overseasSchemeProviders.traverse_(schemeProvider => {
+        import schemeProvider._
+        (qualifyingRecognisedOverseasPensionScheme, pensionSchemeTaxReference) match {
+          case (Some(_), Some(_)) => Invalid(List(RulePensionReferenceError))
+          case _                  => valid
+        }
+      })
 
-    (
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers => rulePensionReferenceResolver(pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions => rulePensionReferenceResolver(overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _) => valid }
+    combine(
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers => validatePensionReference(pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions => validatePensionReference(overseasPensionContributions.overseasSchemeProvider))
+    )
   }
-
-  def validateOverseasSchemeProvider(qualifyingRecognisedOverseasPensionSchemeReferenceNumber: Option[Seq[String]],
-                                     pensionSchemeTaxReference: Option[Seq[String]]): Validated[Seq[MtdError], Unit] =
-    (qualifyingRecognisedOverseasPensionSchemeReferenceNumber, pensionSchemeTaxReference) match {
-      case (Some(_), Some(_)) => Invalid(List(RulePensionReferenceError))
-      case _                  => valid
-    }
 
   private def validateNames(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
     def namesResolver(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
@@ -88,7 +85,7 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
   def validateProviderName(providerName: String, path: String): Validated[Seq[MtdError], Unit] = {
     val nameMaxLength = 105
     if (providerName.length() <= nameMaxLength && providerName.nonEmpty) { valid }
-    else { Invalid(List(ProviderNameFormatError.copy(paths = Some(List(path))))) }
+    else { Invalid(List(ProviderNameFormatError.withPath(path))) }
   }
 
   private def validateAddresses(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
@@ -115,7 +112,7 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
     if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
       valid
     } else {
-      Invalid(List(ProviderAddressFormatError.copy(paths = Some(Seq(path)))))
+      Invalid(List(ProviderAddressFormatError.withPath(path)))
     }
   }
 
@@ -145,10 +142,10 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
   }
 
   def validateQropsRef(qropsRef: String, path: String): Validated[Seq[MtdError], Unit] = {
-    if (qropsRef.matches("^[Q]{1}[0-9]{6}$")) {
+    if (qropsRef.matches(qropsRefRegex)) {
       valid
     } else {
-      Invalid(List(QOPSRefFormatError.copy(paths = Some(Seq(path)))))
+      Invalid(List(QOPSRefFormatError.withPath(path)))
     }
   }
 
@@ -197,10 +194,7 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
     if (pensionSchemeTaxRef.matches(regex)) {
       valid
     } else {
-      Invalid(
-        List(
-          PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(path)))
-        ))
+      Invalid(List(PensionSchemeTaxRefFormatError.withPath(path)))
     }
   }
 
