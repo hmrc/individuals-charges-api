@@ -128,7 +128,7 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "20!0-22", fullValidJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "203100", fullValidJson, BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2021-22", invalidJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
+          ("AA123456A", "2021-22", emptyJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           (
             "AA123456A",
             "2021-22",
