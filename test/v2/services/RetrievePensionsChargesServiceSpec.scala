@@ -16,14 +16,14 @@
 
 package v2.services
 
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRequest
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.data.RetrievePensionChargesData._
+import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
+import v2.fixture.RetrievePensionChargesFixture._
 import v2.mocks.connectors.MockRetrievePensionChargesConnector
 
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = RetrievePensionChargesRequest(nino, taxYear)
+  private val request = RetrievePensionChargesRequestData(nino, taxYear)
 
   trait Test extends MockRetrievePensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

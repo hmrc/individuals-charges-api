@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRequest
+import v1.models.request.deletePensionCharges.DeletePensionChargesRequestData
 
 import scala.concurrent.Future
 
@@ -33,7 +33,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
 
     def taxYear: TaxYear
 
-    protected val request: DeletePensionChargesRequest = DeletePensionChargesRequest(
+    protected val request: DeletePensionChargesRequestData = DeletePensionChargesRequestData(
       nino = Nino(nino),
       taxYear = taxYear
     )

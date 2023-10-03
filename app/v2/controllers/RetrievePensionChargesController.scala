@@ -16,13 +16,12 @@
 
 package v2.controllers
 
-import anyVersion.controllers.requestParsers.RetrievePensionChargesParser
-import anyVersion.models.request.retrievePensionCharges.RetrievePensionChargesRawData
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
+import v2.controllers.validators.RetrievePensionChargesValidatorFactory
 import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 import v2.services.RetrievePensionChargesService
 
@@ -32,7 +31,7 @@ import scala.concurrent.ExecutionContext
 class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
                                                   service: RetrievePensionChargesService,
-                                                  parser: RetrievePensionChargesParser,
+                                                  validatorFactory: RetrievePensionChargesValidatorFactory,
                                                   hateoasFactory: HateoasFactory,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -45,15 +44,15 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = RetrievePensionChargesRawData(nino, taxYear)
+      val validator = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.retrievePensions)
           .withHateoasResult(hateoasFactory)(RetrievePensionChargesHateoasData(nino, taxYear))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
   }
 

@@ -29,8 +29,17 @@ object BusinessIdFormatError    extends MtdError("FORMAT_BUSINESS_ID", "The Busi
 object PaymentIdFormatError     extends MtdError(code = "FORMAT_PAYMENT_ID", message = "The payment ID format is invalid", BAD_REQUEST)
 object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID", message = "The transaction ID format is invalid", BAD_REQUEST)
 object IdFormatError            extends MtdError(code = "FORMAT_ID", message = "The format of the ID is invalid", BAD_REQUEST)
+object CalculationIdFormatError extends MtdError("FORMAT_CALCULATION_ID", "The provided calculation ID is invalid", BAD_REQUEST)
 
-object ValueFormatError extends MtdError("FORMAT_VALUE", "The field should be between 0 and 99999999999.99", BAD_REQUEST)
+object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be between 0 and 99999999999.99", BAD_REQUEST) {
+
+  def forPathAndRange(path: String, min: String, max: String): MtdError =
+    ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be between $min and $max")
+
+}
+
+object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided Start date is invalid", BAD_REQUEST)
+object EndDateFormatError   extends MtdError("FORMAT_END_DATE", "The provided End date is invalid", BAD_REQUEST)
 
 //Standard Errors
 object NotFoundError           extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found", NOT_FOUND)
@@ -83,6 +92,15 @@ object RangeToDateBeforeFromDateError
 
 object RuleDateRangeInvalidError extends MtdError(code = "RULE_DATE_RANGE_INVALID", message = "The specified date range is invalid", BAD_REQUEST)
 object RuleInvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid", BAD_REQUEST)
+
+object RuleEndBeforeStartDateError
+    extends MtdError("RULE_END_DATE_BEFORE_START_DATE", "The supplied accounting period end date is before the start date", BAD_REQUEST)
+
+object RuleTaxYearRangeInvalid
+    extends MtdError("RULE_TAX_YEAR_RANGE_INVALID", "Tax year range invalid. A tax year range of one year is required", BAD_REQUEST)
+
+object InvalidTaxYearParameterError
+    extends MtdError(code = "INVALID_TAX_YEAR_PARAMETER", message = "A tax year before 2023-24 was supplied", BAD_REQUEST)
 
 object RuleBusinessId
     extends MtdError("RULE_BUSINESS_ID", "A Business ID must be supplied for a self-employment or a foreign property business type.", BAD_REQUEST)

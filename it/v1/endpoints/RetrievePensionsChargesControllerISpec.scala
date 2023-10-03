@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v1.data.RetrievePensionChargesData.{fullJsonCL102FieldsInBoth, fullJsonWithHateoas}
+import v1.fixture.RetrievePensionChargesFixture.{fullJsonCL102FieldsInBoth, fullJsonWithHateoas}
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 

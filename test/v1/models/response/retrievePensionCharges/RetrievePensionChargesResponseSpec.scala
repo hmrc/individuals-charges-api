@@ -16,13 +16,12 @@
 
 package v1.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges._
-import api.models.hateoas.Link
-import api.models.hateoas.Method._
+import api.hateoas.Link
+import api.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.data.RetrievePensionChargesData._
+import v1.fixture.RetrievePensionChargesFixture._
 
 class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
@@ -161,7 +160,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
       RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(
         mockAppConfig,
         RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
-        Seq(
+        List(
           Link(s"/my/context/pensions/$nino/$taxYear", GET, "self"),
           Link(s"/my/context/pensions/$nino/$taxYear", PUT, "create-and-amend-charges-pensions"),
           Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions")

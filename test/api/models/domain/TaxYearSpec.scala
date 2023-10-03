@@ -16,9 +16,10 @@
 
 package api.models.domain
 
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-import java.time.LocalDate
+import java.time.{LocalDate, ZoneId}
 
 class TaxYearSpec extends UnitSpec {
 
@@ -40,6 +41,31 @@ class TaxYearSpec extends UnitSpec {
       }
     }
 
+    "constructed from an ISO date" should {
+      "be the expected year, taking into account the UK tax year start date" in {
+
+        def test(datesAndExpectedYears: Seq[(String, Int)]): Unit = {
+          datesAndExpectedYears.foreach { case (date, expectedYear) =>
+            withClue(s"Given $date:") {
+              val result = TaxYear.fromIso(date)
+              result.year shouldBe expectedYear
+            }
+          }
+        }
+
+        val input = List(
+          "2025-01-01" -> 2025,
+          "2025-04-01" -> 2025,
+          "2025-04-06" -> 2026,
+          "2023-06-01" -> 2024,
+          "2026-01-01" -> 2026,
+          "2021-12-31" -> 2022
+        )
+
+        test(input)
+      }
+    }
+
     "constructed from a downstream tax year" should {
       "return the downstream tax value" in {
         TaxYear.fromDownstream("2019").asDownstream shouldBe "2019"
@@ -47,6 +73,21 @@ class TaxYearSpec extends UnitSpec {
 
       "allow the MTD tax year to be extracted" in {
         TaxYear.fromDownstream("2019").asMtd shouldBe "2018-19"
+      }
+    }
+
+    "TaxYear.now()" should {
+      "return the current tax year" in {
+        val now  = LocalDate.now(ZoneId.of("UTC"))
+        val year = now.getYear
+
+        val expectedYear = {
+          val taxYearStartDate = LocalDate.of(year, 4, 6)
+          if (now.isBefore(taxYearStartDate)) year else year + 1
+        }
+
+        val result = TaxYear.now()
+        result.year shouldBe expectedYear
       }
     }
 
@@ -63,13 +104,32 @@ class TaxYearSpec extends UnitSpec {
         taxYear should not be TaxYear.fromDownstream("2021")
       }
     }
-    "generate the most recent tax year" when {
-      "the date is before XXXX-04-05" in {
-        TaxYear.mostRecentTaxYear(LocalDate.parse("2020-04-01")) shouldBe TaxYear("2019")
+
+    val requestJson: JsValue = Json.parse("""
+                                         "2018-19"
+                                          """.stripMargin)
+
+    val model: TaxYear = TaxYear.fromMtd("2018-19")
+
+    "written to JSON" should {
+      "return the expected JsValue" in {
+        Json.toJson(model) shouldBe requestJson
       }
-      "the date is after XXXX-04-05" in {
-        TaxYear.mostRecentTaxYear(LocalDate.parse("2020-04-13")) shouldBe TaxYear("2020")
+    }
+  }
+
+  "TaxYear.currentTaxYear()" should {
+    "return the current tax year" in {
+      val today = LocalDate.now(ZoneId.of("UTC"))
+      val year  = today.getYear
+
+      val expectedYear = {
+        val taxYearStartDate = LocalDate.of(year, 4, 6)
+        if (today.isBefore(taxYearStartDate)) year else year + 1
       }
+
+      val result = TaxYear.currentTaxYear()
+      result.year shouldBe expectedYear
     }
   }
 

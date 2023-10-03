@@ -24,9 +24,9 @@ import api.services.ServiceSpec
 import mocks.MockAppConfig
 import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.data.AmendPensionChargesData._
+import v1.fixture.AmendPensionChargesFixture._
 import v1.mocks.connectors.MockAmendPensionChargesConnector
-import v1.models.request.AmendPensionCharges.AmendPensionChargesRequest
+import v1.models.request.AmendPensionCharges.AmendPensionChargesRequestData
 
 import scala.concurrent.Future
 
@@ -35,7 +35,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInTaxCharges)
+  private val request = AmendPensionChargesRequestData(nino, taxYear, pensionChargesCl102FieldsInTaxCharges)
 
   trait Test extends MockAmendPensionChargesConnector with MockAppConfig {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
@@ -110,8 +110,8 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
     "cl102 is enabled" must {
       "cl102 field updates cannot be performed" when {
         "internal server error is returned from the service" in new Cl102Enabled {
-          val requestMissingPensionContributions: AmendPensionChargesRequest =
-            AmendPensionChargesRequest(nino, taxYear, pensionChargesPensionContributionsMissing)
+          val requestMissingPensionContributions: AmendPensionChargesRequestData =
+            AmendPensionChargesRequestData(nino, taxYear, pensionChargesPensionContributionsMissing)
 
           await(service.amendPensions(requestMissingPensionContributions)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
         }
@@ -119,7 +119,7 @@ class AmendPensionsChargesServiceSpec extends ServiceSpec {
 
       "cl102 field updates are completed successfully" when {
         "updated request passed onto connector" in new Cl102Enabled {
-          val modifiedRequest: AmendPensionChargesRequest = AmendPensionChargesRequest(nino, taxYear, pensionChargesCl102FieldsInPensionContributions)
+          val modifiedRequest: AmendPensionChargesRequestData = AmendPensionChargesRequestData(nino, taxYear, pensionChargesCl102FieldsInPensionContributions)
 
           MockAmendPensionChargesConnector
             .amendPensionCharges(modifiedRequest)

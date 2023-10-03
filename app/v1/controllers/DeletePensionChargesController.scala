@@ -19,9 +19,9 @@ package v1.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.{Version, Version1}
 import utils.IdGenerator
-import v1.controllers.requestParsers.DeletePensionChargesParser
-import v1.models.request.DeletePensionCharges.DeletePensionChargesRawData
+import v1.controllers.validators.DeletePensionChargesValidatorFactory
 import v1.services.DeletePensionChargesService
 
 import javax.inject.Inject
@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
                                                 service: DeletePensionChargesService,
-                                                parser: DeletePensionChargesParser,
+                                                validatorFactory: DeletePensionChargesValidatorFactory,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents,
                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -45,21 +45,22 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = DeletePensionChargesRawData(nino, taxYear)
+      val validator = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
         RequestHandler
-          .withParser(parser)
+          .withValidator(validator)
           .withService(service.deletePensionCharges)
           .withNoContentResult()
-          .withAuditing(
-            AuditHandler(
-              auditService,
-              auditType = "DeletePensionsCharges",
-              transactionName = "delete-pensions-charges",
-              params = Map("nino" -> nino, "taxYear" -> taxYear)))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "DeletePensionsCharges",
+            transactionName = "delete-pensions-charges",
+            apiVersion = Version.from(request, orElse = Version1),
+            params = Map("nino" -> nino, "taxYear" -> taxYear)
+          ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
   }
 

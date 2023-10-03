@@ -16,10 +16,10 @@
 
 package api.controllers
 
-import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors.MtdError
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import mocks.MockIdGenerator
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.JsValue
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}

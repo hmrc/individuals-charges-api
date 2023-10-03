@@ -1,49 +1,49 @@
 {
-  "$schema":"http://json-schema.org/draft-04/schema#",
-  "title":"Create and Amend Pension Charges",
-  "description":"Create and Amend Pension Charges",
-  "type":"object",
-  "properties":{
-    "pensionSavingsTaxCharges":{
-      "type":"object",
-      "description":"Object holding the booleans for annual allowance.",
-      "properties":{
-        "isAnnualAllowanceReduced":{
-          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether annual allowance has been reduced. If this field is set to true then at least one of taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
-          "type":"boolean",
-          "example":"false"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create and Amend Pension Charges",
+  "description": "Create and Amend Pension Charges",
+  "type": "object",
+  "properties": {
+    "pensionSavingsTaxCharges": {
+      "type": "object",
+      "description": "Object holding the booleans for annual allowance.",
+      "properties": {
+        "isAnnualAllowanceReduced": {
+          "description": "[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether annual allowance has been reduced. If this field is set to true then at least one of taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
+          "type": "boolean",
+          "example": "false"
         },
-        "taperedAnnualAllowance":{
-          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
-          "type":"boolean",
-          "example":"true"
+        "taperedAnnualAllowance": {
+          "description": "[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
+          "type": "boolean",
+          "example": "true"
         },
-        "moneyPurchasedAllowance":{
-          "description":"[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
-          "type":"boolean",
-          "example":"false"
+        "moneyPurchasedAllowance": {
+          "description": "[Deprecated: will be removed from the next version of the API. Please use the pensionsContributions instead.] A boolean indicating whether money purchased allowance has been paid. The value must be true or false.",
+          "type": "boolean",
+          "example": "false"
         },
-        "pensionSchemeTaxReference":{
-          "type":"array",
+        "pensionSchemeTaxReference": {
+          "type": "array",
           "items": {
-            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
         },
-        "lumpSumBenefitTakenInExcessOfLifetimeAllowance":{
-          "type":"object",
-          "description":"Object holding the amount and tax paid on lump sum benefit in excess of the lifetime allowance.",
-          "properties":{
-            "amount":{
-              "description":"The amount of the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+        "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+          "type": "object",
+          "description": "Object holding the amount and tax paid on lump sum benefit in excess of the lifetime allowance.",
+          "properties": {
+            "amount": {
+              "description": "The amount of the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             },
-            "taxPaid":{
-              "description":"The amount of tax to be paid on the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+            "taxPaid": {
+              "description": "The amount of tax to be paid on the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             }
           },
           "required": [
@@ -51,19 +51,19 @@
             "taxPaid"
           ]
         },
-        "benefitInExcessOfLifetimeAllowance":{
-          "type":"object",
-          "description":"The amount and tax paid on benefit in excess of the lifetime allowance.",
-          "properties":{
-            "amount":{
-              "description":"The amount of the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+        "benefitInExcessOfLifetimeAllowance": {
+          "type": "object",
+          "description": "The amount and tax paid on benefit in excess of the lifetime allowance.",
+          "properties": {
+            "amount": {
+              "description": "The amount of the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             },
-            "taxPaid":{
-              "description":"The tax to be paid on the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+            "taxPaid": {
+              "description": "The tax to be paid on the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             }
           },
           "required": [
@@ -72,14 +72,14 @@
           ]
         }
       },
-      "required":[
+      "required": [
         "pensionSchemeTaxReference",
         "isAnnualAllowanceReduced"
       ]
     },
-    "pensionSchemeOverseasTransfers":{
-      "type":"object",
-      "description":"Transfer of overseas pension to another pension scheme.",
+    "pensionSchemeOverseasTransfers": {
+      "type": "object",
+      "description": "Transfer of overseas pension to another pension scheme.",
       "properties": {
         "overseasSchemeProvider": {
           "description": "Details of overseas pension provider.",
@@ -103,19 +103,19 @@
                 "type": "string",
                 "example": "CYM"
               },
-              "qualifyingRecognisedOverseasPensionScheme":{
-                "type":"array",
+              "qualifyingRecognisedOverseasPensionScheme": {
+                "type": "array",
                 "Description": "Array of qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
-                  "description":"A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "description": "A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
                 }
               },
-              "pensionSchemeTaxReference":{
-                "type":"array",
+              "pensionSchemeTaxReference": {
+                "type": "array",
                 "items": {
-                  "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+                  "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
                   "type": "string",
                   "example": "00123456RA"
                 }
@@ -128,15 +128,15 @@
             ]
           }
         },
-        "transferCharge":{
-          "description":"The amount the pension provider charges to transfer the pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+        "transferCharge": {
+          "description": "The amount the pension provider charges to transfer the pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         },
         "transferChargeTaxPaid": {
-          "description":"The amount of tax paid on the transfer charge. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+          "description": "The amount of tax paid on the transfer charge. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         }
       },
       "required": [
@@ -145,31 +145,31 @@
         "transferChargeTaxPaid"
       ]
     },
-    "pensionSchemeUnauthorisedPayments":{
-      "type":"object",
-      "description":"Tax on unauthorised payment.",
-      "properties":{
-        "pensionSchemeTaxReference":{
-          "type":"array",
+    "pensionSchemeUnauthorisedPayments": {
+      "type": "object",
+      "description": "Tax on unauthorised payment.",
+      "properties": {
+        "pensionSchemeTaxReference": {
+          "type": "array",
           "items": {
-            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
         },
-        "surcharge":{
-          "type":"object",
-          "description":"Object holding the unauthorised payments surcharge.",
-          "properties":{
-            "amount":{
-              "description":"The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+        "surcharge": {
+          "type": "object",
+          "description": "Object holding the unauthorised payments surcharge.",
+          "properties": {
+            "amount": {
+              "description": "The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             },
-            "foreignTaxPaid":{
-              "description":"The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+            "foreignTaxPaid": {
+              "description": "The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             }
           },
           "required": [
@@ -177,19 +177,19 @@
             "foreignTaxPaid"
           ]
         },
-        "noSurcharge":{
-          "type":"object",
-          "description":"Object holding the unauthorised payments no surcharge.",
-          "properties":{
-            "amount":{
-              "description":"The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+        "noSurcharge": {
+          "type": "object",
+          "description": "Object holding the unauthorised payments no surcharge.",
+          "properties": {
+            "amount": {
+              "description": "The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             },
-            "foreignTaxPaid":{
-              "description":"The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type":"number",
-              "example":"1999.99"
+            "foreignTaxPaid": {
+              "description": "The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "example": "1999.99"
             }
           },
           "required": [
@@ -202,27 +202,27 @@
         "pensionSchemeTaxReference"
       ]
     },
-    "pensionContributions":{
-      "type":"object",
-      "description":" Payments paid into a pension.",
-      "properties":{
-        "pensionSchemeTaxReference":{
-          "type":"array",
+    "pensionContributions": {
+      "type": "object",
+      "description": " Payments paid into a pension.",
+      "properties": {
+        "pensionSchemeTaxReference": {
+          "type": "array",
           "items": {
-            "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+            "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
             "type": "string",
             "example": "00123456RA"
           }
         },
-        "inExcessOfTheAnnualAllowance":{
-          "description":"The amount of the in excess of the annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+        "inExcessOfTheAnnualAllowance": {
+          "description": "The amount of the in excess of the annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         },
-        "annualAllowanceTaxPaid":{
-          "description":"The amount of tax paid on annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+        "annualAllowanceTaxPaid": {
+          "description": "The amount of tax paid on annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         }
       },
       "required": [
@@ -231,11 +231,11 @@
         "annualAllowanceTaxPaid"
       ]
     },
-    "overseasPensionContributions":{
-      "type":"object",
-      "description":"Object holding contributions paid into overseas pension.",
-      "properties":{
-        "overseasSchemeProvider":{
+    "overseasPensionContributions": {
+      "type": "object",
+      "description": "Object holding contributions paid into overseas pension.",
+      "properties": {
+        "overseasSchemeProvider": {
           "description": "Details of overseas pension provider.",
           "type": "array",
           "items": {
@@ -257,19 +257,19 @@
                 "type": "string",
                 "example": "CYM"
               },
-              "qualifyingRecognisedOverseasPensionScheme":{
-                "type":"array",
+              "qualifyingRecognisedOverseasPensionScheme": {
+                "type": "array",
                 "Description": "A list of one or more qualifying recognised Overseas Pension Scheme reference number",
                 "items": {
-                  "description":"A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
+                  "description": "A list of one or more qualifying overseas pension scheme reference number for overseas pensions contributions.",
                   "type": "string",
                   "example": "Q123456"
                 }
               },
-              "pensionSchemeTaxReference":{
-                "type":"array",
+              "pensionSchemeTaxReference": {
+                "type": "array",
                 "items": {
-                  "description":"A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
+                  "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
                   "type": "string",
                   "example": "00123456RA"
                 }
@@ -282,15 +282,15 @@
             ]
           }
         },
-        "shortServiceRefund":{
-          "description":"The amount of short service refund for overseas pension contributions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+        "shortServiceRefund": {
+          "description": "The amount of short service refund for overseas pension contributions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         },
-        "shortServiceRefundTaxPaid":{
-          "description":"The amount of tax paid on short service refund. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "type":"number",
-          "example":"1999.99"
+        "shortServiceRefundTaxPaid": {
+          "description": "The amount of tax paid on short service refund. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "example": "1999.99"
         }
       },
       "required": [

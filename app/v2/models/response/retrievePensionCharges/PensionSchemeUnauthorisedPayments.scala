@@ -16,7 +16,6 @@
 
 package v2.models.response.retrievePensionCharges
 
-import anyVersion.models.response.retrievePensionCharges.Charge
 import play.api.libs.json.{Json, OFormat}
 
 case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Option[Seq[String]], surcharge: Option[Charge], noSurcharge: Option[Charge])

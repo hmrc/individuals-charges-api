@@ -17,10 +17,10 @@
 package mocks
 
 import config.{AppConfig, ConfidenceLevelConfig}
-import definition.Version
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
+import routing.Version
 
 trait MockAppConfig extends MockFactory {
 

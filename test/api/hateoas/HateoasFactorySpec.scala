@@ -16,8 +16,7 @@
 
 package api.hateoas
 
-import api.models.hateoas.Method.GET
-import api.models.hateoas.{HateoasData, HateoasWrapper, Link}
+import api.hateoas.Method._
 import cats.Functor
 import config.AppConfig
 import mocks.MockAppConfig
@@ -43,20 +42,20 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
 
     implicit object LinksFactory1 extends HateoasLinksFactory[Response, Data1] {
       override def links(appConfig: AppConfig, data: Data1): Seq[Link] =
-        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel1"))
+        List(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel1"))
     }
 
     implicit object LinksFactory2 extends HateoasLinksFactory[Response, Data2] {
       override def links(appConfig: AppConfig, data: Data2): Seq[Link] =
-        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel2"))
+        List(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel2"))
     }
 
     "use the response specific links" in new Test {
-      hateoasFactory.wrap(response, Data1("id")) shouldBe HateoasWrapper(response, Seq(Link("context/id", GET, "rel1")))
+      hateoasFactory.wrap(response, Data1("id")) shouldBe HateoasWrapper(response, List(Link("context/id", GET, "rel1")))
     }
 
     "use the endpoint HateoasData specific links" in new Test {
-      hateoasFactory.wrap(response, Data2("id")) shouldBe HateoasWrapper(response, Seq(Link("context/id", GET, "rel2")))
+      hateoasFactory.wrap(response, Data2("id")) shouldBe HateoasWrapper(response, List(Link("context/id", GET, "rel2")))
     }
   }
 
@@ -68,15 +67,17 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
 
     implicit object LinksFactory extends HateoasListLinksFactory[ListResponse, Response, Data1] {
       override def itemLinks(appConfig: AppConfig, data: Data1, item: Response): Seq[Link] =
-        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}/${item.foo}", GET, "item"))
+        List(Link(s"${appConfig.apiGatewayContext}/${data.id}/${item.foo}", GET, "item"))
 
       override def links(appConfig: AppConfig, data: Data1): Seq[Link] =
-        Seq(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
+        List(Link(s"${appConfig.apiGatewayContext}/${data.id}", GET, "rel"))
     }
 
     "work" in new Test {
       hateoasFactory.wrapList(ListResponse(Seq(response)), Data1("id")) shouldBe
-        HateoasWrapper(ListResponse(Seq(HateoasWrapper(response, Seq(Link("context/id/X", GET, "item"))))), Seq(Link("context/id", GET, "rel")))
+        HateoasWrapper(
+          ListResponse(List(HateoasWrapper(response, List(Link("context/id/X", GET, "item"))))),
+          List(Link("context/id", GET, "rel")))
     }
   }
 

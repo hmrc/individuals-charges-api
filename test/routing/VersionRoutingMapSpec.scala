@@ -16,7 +16,6 @@
 
 package routing
 
-import definition.{Version1, Version2}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.routing.Router
 import support.UnitSpec
