@@ -25,8 +25,9 @@ import cats.implicits._
 import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequestData, OverseasSchemeProvider, PensionCharges, PensionSavingsTaxCharges}
 
 object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChargesRequestData] {
-  private val resolveParsedNumber = ResolveParsedNumber()
-  private val qropsRefRegex       = "^[Q]{1}[0-9]{6}$"
+  private val resolveParsedNumber      = ResolveParsedNumber()
+  private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$"
+  private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
 
   def validateBusinessRules(parsed: AmendPensionChargesRequestData): Validated[Seq[MtdError], AmendPensionChargesRequestData] = {
 
@@ -65,192 +66,170 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
   }
 
   private def validateNames(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
-    def namesResolver(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
+
+    def validateProviderName(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        validateProviderName(schemeProviderWithIndex.providerName, s"/$startOfPath/overseasSchemeProvider/$index/providerName")
+        import schemeProviderWithIndex._
+        val nameMaxLength = 105
+        if (providerName.length() <= nameMaxLength && providerName.nonEmpty) {
+          valid
+        } else {
+          Invalid(List(ProviderNameFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerName")))
+        }
       }
     }
-    (
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers => namesResolver("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions => namesResolver("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _) => valid }
 
-  }
-
-  def validateProviderName(providerName: String, path: String): Validated[Seq[MtdError], Unit] = {
-    val nameMaxLength = 105
-    if (providerName.length() <= nameMaxLength && providerName.nonEmpty) { valid }
-    else { Invalid(List(ProviderNameFormatError.withPath(path))) }
+    combine(
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers =>
+          validateProviderName("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions =>
+          validateProviderName("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
+    )
   }
 
   private def validateAddresses(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
-    def addressesErrors(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
+
+    def validateProviderAddress(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        validateProviderAddress(schemeProviderWithIndex.providerAddress, s"/$startOfPath/overseasSchemeProvider/$index/providerAddress")
+        import schemeProviderWithIndex._
+        val addressMaxLength = 250
+        if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
+          valid
+        } else {
+          Invalid(List(ProviderAddressFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerAddress")))
+        }
       }
     }
-    (
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers =>
-          addressesErrors("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions => addressesErrors("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _) => valid }
 
-  }
-
-  def validateProviderAddress(providerAddress: String, path: String): Validated[Seq[MtdError], Unit] = {
-    val addressMaxLength = 250
-    if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
-      valid
-    } else {
-      Invalid(List(ProviderAddressFormatError.withPath(path)))
-    }
+    combine(
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers =>
+          validateProviderAddress("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions =>
+          validateProviderAddress("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
+    )
   }
 
   private def validateQROPsReferences(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
-    def qropsResolver(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
+
+    def validateQropsRef(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
         schemeProviderWithIndex.qualifyingRecognisedOverseasPensionScheme
-          .map { qualifyingRecognisedOverseasPensionScheme =>
+          .traverse { qualifyingRecognisedOverseasPensionScheme =>
             qualifyingRecognisedOverseasPensionScheme.zipWithIndex.traverse_ { case (qropsReference, qropsIndex) =>
-              validateQropsRef(qropsReference, s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex")
+              if (qropsReference.matches(qropsRefRegex)) {
+                valid
+              } else {
+                Invalid(List(
+                  QOPSRefFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex")))
+              }
             }
           }
-          .getOrElse(valid)
       }
     }
 
-    (
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers => qropsResolver("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions => qropsResolver("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _) => valid }
-
-  }
-
-  def validateQropsRef(qropsRef: String, path: String): Validated[Seq[MtdError], Unit] = {
-    if (qropsRef.matches(qropsRefRegex)) {
-      valid
-    } else {
-      Invalid(List(QOPSRefFormatError.withPath(path)))
-    }
+    combine(
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers =>
+          validateQropsRef("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions =>
+          validateQropsRef("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
+    )
   }
 
   private def validatePensionSchemeTaxReference(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
-    def pensionSchemeTaxReferenceResolver(startOfPath: String,
-                                          overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
+
+    def validatePensionSchemeTaxRef(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        schemeProviderWithIndex.pensionSchemeTaxReference
-          .map { references =>
+        import schemeProviderWithIndex._
+        pensionSchemeTaxReference
+          .traverse { references =>
             validateReferences(s"$startOfPath/overseasSchemeProvider/$index", references)
           }
-          .getOrElse(valid)
       }
     }
 
     def validateReferences(startOfPath: String, pensionSchemeTaxReference: Seq[String]): Validated[Seq[MtdError], Unit] = {
       pensionSchemeTaxReference.zipWithIndex.traverse_ { case (reference, referenceIndex) =>
-        validatePensionSchemeTaxRef(reference, s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex")
+        if (reference.matches(pensionSchemeTaxRefRegex)) {
+          valid
+        } else {
+          Invalid(List(PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex")))
+        }
       }
     }
-    (
-      pensionCharges.pensionContributions
-        .map(pensionContributions => validateReferences("pensionContributions", pensionContributions.pensionSchemeTaxReference))
-        .getOrElse(valid),
-      pensionCharges.pensionSavingsTaxCharges
-        .map(pensionSavingsTaxCharges => validateReferences("pensionSavingsTaxCharges", pensionSavingsTaxCharges.pensionSchemeTaxReference))
-        .getOrElse(valid),
-      pensionCharges.pensionSchemeUnauthorisedPayments
-        .map(pensionSchemeUnauthorisedPayments =>
-          validateReferences("pensionSchemeUnauthorisedPayments", pensionSchemeUnauthorisedPayments.pensionSchemeTaxReference))
-        .getOrElse(valid),
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers =>
-          pensionSchemeTaxReferenceResolver("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions =>
-          pensionSchemeTaxReferenceResolver("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _, _, _, _) => valid }
-  }
 
-  def validatePensionSchemeTaxRef(pensionSchemeTaxRef: String, path: String): Validated[Seq[MtdError], Unit] = {
-    val regex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
-    if (pensionSchemeTaxRef.matches(regex)) {
-      valid
-    } else {
-      Invalid(List(PensionSchemeTaxRefFormatError.withPath(path)))
-    }
+    combine(
+      pensionContributions
+        .traverse(pensionContributions => validateReferences("pensionContributions", pensionContributions.pensionSchemeTaxReference)),
+      pensionSavingsTaxCharges
+        .traverse(pensionSavingsTaxCharges => validateReferences("pensionSavingsTaxCharges", pensionSavingsTaxCharges.pensionSchemeTaxReference)),
+      pensionSchemeUnauthorisedPayments
+        .traverse(pensionSchemeUnauthorisedPayments =>
+          validateReferences("pensionSchemeUnauthorisedPayments", pensionSchemeUnauthorisedPayments.pensionSchemeTaxReference)),
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers =>
+          validatePensionSchemeTaxRef("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions =>
+          validatePensionSchemeTaxRef("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
+    )
   }
 
   private def validateRuleIsAnnualAllowanceReduced(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges]): Validated[Seq[MtdError], Unit] = {
     pensionSavingsTaxCharges
       .map { taxCharges =>
-        taxCharges.isAnnualAllowanceReduced
+        import taxCharges._
+        isAnnualAllowanceReduced
           .map { isAnnualAllowanceReduced =>
-            validateAllowance(isAnnualAllowanceReduced, taxCharges.taperedAnnualAllowance, taxCharges.moneyPurchasedAllowance)
+            (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
+              case (false, _, _)         => valid
+              case (true, Some(true), _) => valid
+              case (true, _, Some(true)) => valid
+              case _                     => Invalid(List(RuleIsAnnualAllowanceReducedError))
+            }
           }
           .getOrElse(Invalid(List(RuleIncorrectOrEmptyBodyError)))
       }
       .getOrElse(valid)
   }
 
-  def validateAllowance(isAnnualAllowanceReduced: Boolean,
-                        taperedAnnualAllowance: Option[Boolean],
-                        moneyPurchasedAllowance: Option[Boolean]): Validated[Seq[MtdError], Unit] =
-    (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
-      case (false, _, _)         => valid
-      case (true, Some(true), _) => valid
-      case (true, _, Some(true)) => valid
-      case _                     => Invalid(List(RuleIsAnnualAllowanceReducedError))
-    }
-
   private def validateCharges(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
 
     val fieldsWithPaths = List(
       (
-        pensionCharges.pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.amount)),
+        pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.amount)),
         s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount"),
       (
-        pensionCharges.pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.taxPaid)),
+        pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.taxPaid)),
         s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/taxPaid"),
       (
-        pensionCharges.pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.amount)),
+        pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.amount)),
         s"/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount"),
       (
-        pensionCharges.pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.taxPaid)),
+        pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.taxPaid)),
         s"/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid"),
-      (pensionCharges.pensionSchemeOverseasTransfers.map(_.transferChargeTaxPaid), s"/pensionSchemeOverseasTransfers/transferChargeTaxPaid"),
-      (pensionCharges.pensionSchemeOverseasTransfers.map(_.transferCharge), s"/pensionSchemeOverseasTransfers/transferCharge"),
-      (pensionCharges.pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.amount)), s"/pensionSchemeUnauthorisedPayments/surcharge/amount"),
+      (pensionSchemeOverseasTransfers.map(_.transferChargeTaxPaid), s"/pensionSchemeOverseasTransfers/transferChargeTaxPaid"),
+      (pensionSchemeOverseasTransfers.map(_.transferCharge), s"/pensionSchemeOverseasTransfers/transferCharge"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.amount)), s"/pensionSchemeUnauthorisedPayments/surcharge/amount"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.foreignTaxPaid)), s"/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.amount)), s"/pensionSchemeUnauthorisedPayments/noSurcharge/amount"),
       (
-        pensionCharges.pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.foreignTaxPaid)),
-        s"/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid"),
-      (
-        pensionCharges.pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.amount)),
-        s"/pensionSchemeUnauthorisedPayments/noSurcharge/amount"),
-      (
-        pensionCharges.pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.foreignTaxPaid)),
+        pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.foreignTaxPaid)),
         s"/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid"),
-      (pensionCharges.pensionContributions.map(_.annualAllowanceTaxPaid), s"/pensionContributions/annualAllowanceTaxPaid"),
-      (pensionCharges.pensionContributions.map(_.inExcessOfTheAnnualAllowance), s"/pensionContributions/inExcessOfTheAnnualAllowance"),
-      (pensionCharges.overseasPensionContributions.map(_.shortServiceRefund), s"/overseasPensionContributions/shortServiceRefund"),
-      (pensionCharges.overseasPensionContributions.map(_.shortServiceRefundTaxPaid), s"/overseasPensionContributions/shortServiceRefundTaxPaid")
+      (pensionContributions.map(_.annualAllowanceTaxPaid), s"/pensionContributions/annualAllowanceTaxPaid"),
+      (pensionContributions.map(_.inExcessOfTheAnnualAllowance), s"/pensionContributions/inExcessOfTheAnnualAllowance"),
+      (overseasPensionContributions.map(_.shortServiceRefund), s"/overseasPensionContributions/shortServiceRefund"),
+      (overseasPensionContributions.map(_.shortServiceRefundTaxPaid), s"/overseasPensionContributions/shortServiceRefundTaxPaid")
     )
 
     val validateNumberFields = fieldsWithPaths
@@ -263,22 +242,22 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
   }
 
   private def validateCountryCodes(pensionCharges: PensionCharges): Validated[Seq[MtdError], Unit] = {
-    def countryCodeResolver(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
+    import pensionCharges._
+
+    def validateCountryCode(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
         ResolveParsedCountryCode(schemeProviderWithIndex.providerCountryCode, s"/$startOfPath/overseasSchemeProvider/$index/providerCountryCode")
       }
     }
 
-    (
-      pensionCharges.pensionSchemeOverseasTransfers
-        .map(pensionSchemeOverseasTransfers =>
-          countryCodeResolver("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider))
-        .getOrElse(valid),
-      pensionCharges.overseasPensionContributions
-        .map(overseasPensionContributions => countryCodeResolver("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
-        .getOrElse(valid)
-    ).tupled
-      .andThen { case (_, _) => valid }
+    combine(
+      pensionSchemeOverseasTransfers
+        .traverse(pensionSchemeOverseasTransfers =>
+          validateCountryCode("pensionSchemeOverseasTransfers", pensionSchemeOverseasTransfers.overseasSchemeProvider)),
+      overseasPensionContributions
+        .traverse(overseasPensionContributions =>
+          validateCountryCode("overseasPensionContributions", overseasPensionContributions.overseasSchemeProvider))
+    )
 
   }
 
