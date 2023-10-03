@@ -26,8 +26,8 @@ import v1.models.request.AmendPensionCharges.{AmendPensionChargesRequestData, Ov
 
 object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChargesRequestData] {
   private val resolveParsedNumber      = ResolveParsedNumber()
-  private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$"
-  private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$"
+  private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$".r
+  private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$".r
 
   def validateBusinessRules(parsed: AmendPensionChargesRequestData): Validated[Seq[MtdError], AmendPensionChargesRequestData] = {
 
@@ -123,7 +123,7 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
         schemeProviderWithIndex.qualifyingRecognisedOverseasPensionScheme
           .traverse { qualifyingRecognisedOverseasPensionScheme =>
             qualifyingRecognisedOverseasPensionScheme.zipWithIndex.traverse_ { case (qropsReference, qropsIndex) =>
-              if (qropsReference.matches(qropsRefRegex)) {
+              if (qropsRefRegex.matches(qropsReference)) {
                 valid
               } else {
                 Invalid(List(
@@ -159,7 +159,7 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
 
     def validateReferences(startOfPath: String, pensionSchemeTaxReference: Seq[String]): Validated[Seq[MtdError], Unit] = {
       pensionSchemeTaxReference.zipWithIndex.traverse_ { case (reference, referenceIndex) =>
-        if (reference.matches(pensionSchemeTaxRefRegex)) {
+        if (pensionSchemeTaxRefRegex.matches(reference)) {
           valid
         } else {
           Invalid(List(PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex")))
@@ -208,28 +208,28 @@ object AmendPensionChargesRulesValidator extends RulesValidator[AmendPensionChar
     val fieldsWithPaths = List(
       (
         pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.amount)),
-        s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount"),
+        "/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/amount"),
       (
         pensionSavingsTaxCharges.flatMap(_.benefitInExcessOfLifetimeAllowance.map(_.taxPaid)),
-        s"/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/taxPaid"),
+        "/pensionSavingsTaxCharges/benefitInExcessOfLifetimeAllowance/taxPaid"),
       (
         pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.amount)),
-        s"/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount"),
+        "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount"),
       (
         pensionSavingsTaxCharges.flatMap(_.lumpSumBenefitTakenInExcessOfLifetimeAllowance.map(_.taxPaid)),
-        s"/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid"),
-      (pensionSchemeOverseasTransfers.map(_.transferChargeTaxPaid), s"/pensionSchemeOverseasTransfers/transferChargeTaxPaid"),
-      (pensionSchemeOverseasTransfers.map(_.transferCharge), s"/pensionSchemeOverseasTransfers/transferCharge"),
-      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.amount)), s"/pensionSchemeUnauthorisedPayments/surcharge/amount"),
-      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.foreignTaxPaid)), s"/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid"),
-      (pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.amount)), s"/pensionSchemeUnauthorisedPayments/noSurcharge/amount"),
+        "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid"),
+      (pensionSchemeOverseasTransfers.map(_.transferChargeTaxPaid), "/pensionSchemeOverseasTransfers/transferChargeTaxPaid"),
+      (pensionSchemeOverseasTransfers.map(_.transferCharge), "/pensionSchemeOverseasTransfers/transferCharge"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.amount)), "/pensionSchemeUnauthorisedPayments/surcharge/amount"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.surcharge.map(_.foreignTaxPaid)), "/pensionSchemeUnauthorisedPayments/surcharge/foreignTaxPaid"),
+      (pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.amount)), "/pensionSchemeUnauthorisedPayments/noSurcharge/amount"),
       (
         pensionSchemeUnauthorisedPayments.flatMap(_.noSurcharge.map(_.foreignTaxPaid)),
-        s"/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid"),
-      (pensionContributions.map(_.annualAllowanceTaxPaid), s"/pensionContributions/annualAllowanceTaxPaid"),
-      (pensionContributions.map(_.inExcessOfTheAnnualAllowance), s"/pensionContributions/inExcessOfTheAnnualAllowance"),
-      (overseasPensionContributions.map(_.shortServiceRefund), s"/overseasPensionContributions/shortServiceRefund"),
-      (overseasPensionContributions.map(_.shortServiceRefundTaxPaid), s"/overseasPensionContributions/shortServiceRefundTaxPaid")
+        "/pensionSchemeUnauthorisedPayments/noSurcharge/foreignTaxPaid"),
+      (pensionContributions.map(_.annualAllowanceTaxPaid), "/pensionContributions/annualAllowanceTaxPaid"),
+      (pensionContributions.map(_.inExcessOfTheAnnualAllowance), "/pensionContributions/inExcessOfTheAnnualAllowance"),
+      (overseasPensionContributions.map(_.shortServiceRefund), "/overseasPensionContributions/shortServiceRefund"),
+      (overseasPensionContributions.map(_.shortServiceRefundTaxPaid), "/overseasPensionContributions/shortServiceRefundTaxPaid")
     )
 
     val validateNumberFields = fieldsWithPaths
