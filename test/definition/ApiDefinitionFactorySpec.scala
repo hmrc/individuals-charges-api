@@ -20,7 +20,7 @@ import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.{MockAppConfig, MockHttpClient}
 import play.api.Configuration
-import routing.{Version1, Version2}
+import routing.Version2
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -39,9 +39,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "called" should {
       "return a valid Definition case class" in new Test {
         MockAppConfig.featureSwitches returns Configuration.empty
-        MockAppConfig.apiStatus(Version1) returns "1.0"
         MockAppConfig.apiStatus(Version2) returns "2.0"
-        MockAppConfig.endpointsEnabled(Version1) returns true
         MockAppConfig.endpointsEnabled(Version2) returns true
         MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
@@ -73,11 +71,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
                 APIVersion(
-                  version = Version1,
-                  status = APIStatus.ALPHA,
-                  endpointsEnabled = true
-                ),
-                APIVersion(
                   version = Version2,
                   status = APIStatus.ALPHA,
                   endpointsEnabled = true
@@ -93,7 +86,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       Seq(
-        (Version1, ALPHA),
         (Version2, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
@@ -104,7 +96,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      Seq(Version1, Version2).foreach { version =>
+      Seq(Version2).foreach { version =>
         s"default to alpha for $version " in new Test {
           MockAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
