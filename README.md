@@ -11,14 +11,14 @@ a developer can:
 
 - Scala 2.13.x
 - Java 11
-- sbt 1.7.x
+- sbt 1.9.7
 - [Service Manager V2](https://github.com/hmrc/sm2)
 
 ## Development Setup
 
 Run from the console using: `sbt run` (starts on port 9765 by default)
 
-Start the service manager profile: `sm --start MTDFB_CHARGES`
+Start the service manager profile: `sm2 --start MTDFB_CHARGES`
 
 ## Running tests
 
