@@ -6,7 +6,7 @@
   "properties": {
     "pensionSavingsTaxCharges": {
       "type": "object",
-      "description": "Object holding the booleans for annual allowance.\n\nNOTE: Since April 2024, HMRC customers can no longer submit their pension lifetime allowance.\n\nThe pensionSavingsTaxCharges fields (lumpSumBenefitTakenInExcessOfLifetimeAllowance and benefitInExcessOfLifetimeAllowance) are now obsolete and will be removed in a future update. Do not submit values for these fields",
+      "description": "Object holding the booleans for annual allowance.\n\n<b>NOTE:</b> Since April 2024, HMRC customers can no longer submit their pension lifetime allowance.\n\nThe <code>pensionSavingsTaxCharges</code> fields (<code>lumpSumBenefitTakenInExcessOfLifetimeAllowance</code> and <code>benefitInExcessOfLifetimeAllowance</code>) are now obsolete and will be removed in a future update. <b>Do not submit values for these fields</b>.",
       "properties": {
         "pensionSchemeTaxReference": {
           "type": "array",
