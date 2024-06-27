@@ -17,12 +17,10 @@
 package v2.controllers
 
 import api.controllers._
-import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v2.controllers.validators.RetrievePensionChargesValidatorFactory
-import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 import v2.services.RetrievePensionChargesService
 
 import javax.inject._
@@ -32,7 +30,6 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
                                                   val lookupService: MtdIdLookupService,
                                                   service: RetrievePensionChargesService,
                                                   validatorFactory: RetrievePensionChargesValidatorFactory,
-                                                  hateoasFactory: HateoasFactory,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
@@ -50,7 +47,7 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
         RequestHandler
           .withValidator(validator)
           .withService(service.retrievePensions)
-          .withHateoasResult(hateoasFactory)(RetrievePensionChargesHateoasData(nino, taxYear))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

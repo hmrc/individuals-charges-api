@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v2.fixture.RetrievePensionChargesFixture.{fullJson, fullJsonWithHateoas}
+import v2.fixture.RetrievePensionChargesFixture.fullJson
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
@@ -49,7 +49,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
     def downstreamUri: String
     def setupStubs(): StubMapping
 
-    def uri: String = s"/pensions/$nino/$mtdTaxYear"
+    private def uri: String = s"/pensions/$nino/$mtdTaxYear"
 
     def request(): WSRequest = {
       setupStubs()
@@ -84,7 +84,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(request().get())
-        response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
+        response.json shouldBe fullJson
         response.status shouldBe OK
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
@@ -101,7 +101,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request().get())
         response.status shouldBe OK
-        response.json shouldBe fullJsonWithHateoas(mtdTaxYear)
+        response.json shouldBe fullJson
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }

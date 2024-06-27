@@ -17,7 +17,6 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
@@ -30,7 +29,6 @@ import v2.controllers.validators.MockRetrievePensionChargesValidatorFactory
 import v2.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
 import v2.mocks.services._
 import v2.models.request.retrievePensionCharges.RetrievePensionChargesRequestData
-import v2.models.response.retrievePensionCharges.RetrievePensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,7 +40,6 @@ class RetrievePensionsChargesControllerSpec
     with MockMtdIdLookupService
     with MockRetrievePensionChargesValidatorFactory
     with MockRetrievePensionsChargesService
-    with MockHateoasFactory
     with MockAppConfig
     with MockAuditService {
 
@@ -58,11 +55,7 @@ class RetrievePensionsChargesControllerSpec
           .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveResponse))))
 
-        MockHateoasFactory
-          .wrap(retrieveResponse, RetrievePensionChargesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveResponse, links = hateoaslinks))
-
-        runOkTest(OK, Some(fullJson.as[JsObject] ++ hateoaslinksJson))
+        runOkTest(OK, Some(fullJson.as[JsObject]))
       }
     }
 
@@ -93,7 +86,6 @@ class RetrievePensionsChargesControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrievePensionChargesValidatorFactory,
       service = mockRetrievePensionsChargesService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

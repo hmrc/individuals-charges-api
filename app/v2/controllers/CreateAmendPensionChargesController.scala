@@ -17,17 +17,13 @@
 package v2.controllers
 
 import api.controllers._
-import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import routing.{Version, Version2}
+import routing._
 import utils.IdGenerator
 import v2.controllers.validators.AmendPensionChargesValidatorFactory
-import v2.models.response.createAmendPensionCharges.CreateAmendPensionChargesHateoasData
-import v2.models.response.createAmendPensionCharges.CreateAmendPensionChargesResponse.CreateAmendLinksFactory
 import v2.services.CreateAmendPensionChargesService
-
 import javax.inject._
 import scala.concurrent.ExecutionContext
 
@@ -36,7 +32,6 @@ class CreateAmendPensionChargesController @Inject() (val authService: Enrolments
                                                      val lookupService: MtdIdLookupService,
                                                      service: CreateAmendPensionChargesService,
                                                      validatorFactory: AmendPensionChargesValidatorFactory,
-                                                     hateoasFactory: HateoasFactory,
                                                      auditService: AuditService,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -55,7 +50,7 @@ class CreateAmendPensionChargesController @Inject() (val authService: Enrolments
         RequestHandler
           .withValidator(validator)
           .withService(service.createAmendPensions)
-          .withHateoasResult(hateoasFactory)(CreateAmendPensionChargesHateoasData(nino, taxYear))
+          .withNoContentResult(OK)
           .withAuditing(AuditHandler(
             auditService,
             auditType = "CreateAmendPensionsCharges",

@@ -17,7 +17,6 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
@@ -30,7 +29,6 @@ import v2.controllers.validators.MockAmendPensionChargesValidatorFactory
 import v2.fixture.CreateAmendPensionChargesFixture._
 import v2.mocks.services._
 import v2.models.request.createAmendPensionCharges.CreateAmendPensionChargesRequestData
-import v2.models.response.createAmendPensionCharges.CreateAmendPensionChargesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,8 +41,7 @@ class CreateAmendPensionsChargesControllerSpec
     with MockAmendPensionChargesValidatorFactory
     with MockCreateAmendPensionsChargesService
     with MockAppConfig
-    with MockAuditService
-    with MockHateoasFactory {
+    with MockAuditService {
 
   private val taxYear     = "2021-22"
   private val requestData = CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
@@ -58,15 +55,11 @@ class CreateAmendPensionsChargesControllerSpec
           .amend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockHateoasFactory
-          .wrap((), CreateAmendPensionChargesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper((), hateoaslinks))
-
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(hateoaslinksJson),
+          maybeExpectedResponseBody = None,
           maybeAuditRequestBody = Some(fullJson),
-          maybeAuditResponseBody = Some(hateoaslinksJson))
+          maybeAuditResponseBody = None)
 
       }
     }
@@ -98,7 +91,6 @@ class CreateAmendPensionsChargesControllerSpec
       validatorFactory = mockAmendPensionChargesValidatorFactory,
       service = mockCreateAmendPensionsChargesService,
       auditService = mockAuditService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

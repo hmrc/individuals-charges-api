@@ -16,8 +16,6 @@
 
 package v2.models.response.retrievePensionCharges
 
-import api.hateoas.Link
-import api.hateoas.Method._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
@@ -148,21 +146,5 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
     }
   }
 
-  "LinksFactory" should {
-    "return the correct links" in {
-      val nino    = "mynino"
-      val taxYear = "2017-18"
-
-      MockAppConfig.apiGatewayContext.returns("my/context").anyNumberOfTimes()
-      RetrievePensionChargesResponse.RetrievePensionChargesLinksFactory.links(
-        mockAppConfig,
-        RetrievePensionChargesHateoasData(nino, taxYear)) shouldBe
-        List(
-          Link(s"/my/context/pensions/$nino/$taxYear", GET, "self"),
-          Link(s"/my/context/pensions/$nino/$taxYear", PUT, "create-and-amend-charges-pensions"),
-          Link(s"/my/context/pensions/$nino/$taxYear", DELETE, "delete-charges-pensions")
-        )
-    }
-  }
 
 }
