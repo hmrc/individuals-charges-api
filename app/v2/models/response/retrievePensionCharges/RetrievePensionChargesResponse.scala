@@ -16,8 +16,6 @@
 
 package v2.models.response.retrievePensionCharges
 
-import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
-import config.AppConfig
 import play.api.libs.json._
 
 case class RetrievePensionChargesResponse(submittedOn: String,
@@ -25,24 +23,9 @@ case class RetrievePensionChargesResponse(submittedOn: String,
                                           pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
                                           pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
                                           pensionContributions: Option[PensionContributions],
-                                          overseasPensionContributions: Option[OverseasPensionContributions]) {}
+                                          overseasPensionContributions: Option[OverseasPensionContributions])
 
-object RetrievePensionChargesResponse extends HateoasLinks {
+object RetrievePensionChargesResponse {
   implicit val format: OFormat[RetrievePensionChargesResponse] = Json.format[RetrievePensionChargesResponse]
 
-  implicit object RetrievePensionChargesLinksFactory extends HateoasLinksFactory[RetrievePensionChargesResponse, RetrievePensionChargesHateoasData] {
-
-    override def links(appConfig: AppConfig, data: RetrievePensionChargesHateoasData): Seq[Link] = {
-      import data._
-      Seq(
-        getRetrievePensions(appConfig, nino, taxYear),
-        getAmendPensions(appConfig, nino, taxYear),
-        getDeletePensions(appConfig, nino, taxYear)
-      )
-    }
-
-  }
-
 }
-
-case class RetrievePensionChargesHateoasData(nino: String, taxYear: String) extends HateoasData

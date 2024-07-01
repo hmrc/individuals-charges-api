@@ -20,7 +20,7 @@ import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
@@ -44,9 +44,8 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
         response.status shouldBe OK
-        response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
 
       "a valid request is made for a Tax Year Specific tax year" in new TysIfsTest {
@@ -60,9 +59,8 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
         response.status shouldBe OK
-        response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
 
       "any valid request is made with different booleans" in new NonTysTest {
@@ -76,21 +74,18 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(mtdRequest.put(boolean1Json))
         response.status shouldBe OK
-        response.json shouldBe hateoasResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
 
         val response2: WSResponse = await(mtdRequest.put(boolean2Json))
         response2.status shouldBe OK
-        response2.json shouldBe hateoasResponse
         response2.header("X-CorrelationId").nonEmpty shouldBe true
-        response2.header("Content-Type") shouldBe Some("application/json")
+        response2.header("Content-Type") shouldBe None
 
         val response3: WSResponse = await(mtdRequest.put(booleans3Json))
         response3.status shouldBe OK
-        response3.json shouldBe hateoasResponse
         response3.header("X-CorrelationId").nonEmpty shouldBe true
-        response3.header("Content-Type") shouldBe Some("application/json")
+        response3.header("Content-Type") shouldBe None
 
       }
     }
@@ -265,30 +260,6 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
     def downstreamUri: String
 
     val nino: String = "AA123456A"
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"GET",
-         |         "rel":"self"
-         |      },
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"PUT",
-         |         "rel":"create-and-amend-charges-pensions"
-         |      },
-         |      {
-         |         "href":"/individuals/charges/pensions/$nino/$taxYear",
-         |         "method":"DELETE",
-         |         "rel":"delete-charges-pensions"
-         |      }
-         |   ]
-         |}
-          """.stripMargin
-    )
 
     def setupStubs(): StubMapping
 
