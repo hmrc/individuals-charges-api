@@ -67,7 +67,7 @@ final case class TaxYear private (private val value: String) {
 
   /** Use this for downstream API endpoints that are known to be TYS.
     */
-  def useTaxYearSpecificApi: Boolean = year >= 2024
+  def isTys: Boolean = year >= 2024
 
   override def toString: String = s"TaxYear($value)"
 }

@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v2.fixture.RetrievePensionChargesFixture.fullJson
+import v2.retrieve.fixture.RetrievePensionChargesFixture.fullJson
 
 class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
 

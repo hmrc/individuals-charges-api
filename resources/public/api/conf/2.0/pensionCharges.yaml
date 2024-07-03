@@ -1,5 +1,5 @@
 get:
-  $ref: "./retrievePensionCharges.yaml"
+  $ref: "./retrieve.yaml"
 
   summary: Retrieve Pension Charges
 
