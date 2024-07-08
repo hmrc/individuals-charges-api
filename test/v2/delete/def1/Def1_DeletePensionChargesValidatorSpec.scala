@@ -37,11 +37,13 @@ class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
-  MockAppConfig.minTaxYearPensionCharge.returns("2022")
+  class Test {
+    MockAppConfig.minTaxYearPensionCharge.returns("2022")
+  }
 
   "validator" should {
     "return the parsed domain object" when {
-      "passed a valid request" in {
+      "passed a valid request" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
@@ -50,36 +52,28 @@ class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig
     }
 
     "return nino format error" when {
-      "an invalid nino is supplied" in {
-        MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
+      "an invalid nino is supplied" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
-      "an incorrectly formatted taxYear is supplied" in {
-        MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
+      "an incorrectly formatted taxYear is supplied" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
       }
 
-      "an invalid tax year range is supplied" in {
-        MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
+      "an invalid tax year range is supplied" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
 
-      "an invalid tax year, before the minimum, is supplied" in {
-        MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
+      "an invalid tax year, before the minimum, is supplied" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator(validNino, "2020-21").validateAndWrapResult()
 
@@ -88,9 +82,7 @@ class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in {
-        MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
+      "request supplied has multiple errors" in new Test {
         val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
           validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
 
