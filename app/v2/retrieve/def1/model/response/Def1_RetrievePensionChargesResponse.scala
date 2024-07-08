@@ -29,24 +29,6 @@ case class Def1_RetrievePensionChargesResponse(submittedOn: String,
 
 object Def1_RetrievePensionChargesResponse {
 
-//  implicit val reads: Reads[Def1_RetrievePensionChargesResponse] = (
-//    JsPath.read[String] and
-//      JsPath.readNullable[PensionSavingsTaxCharges] and
-//      JsPath.readNullable[PensionSchemeOverseasTransfers] and
-//      JsPath.readNullable[PensionSchemeUnauthorisedPayments] and
-//      JsPath.readNullable[PensionContributions] and
-//      JsPath.readNullable[OverseasPensionContributions]
-//  )(Def1_RetrievePensionChargesResponse.apply _)
-
-//  implicit val reads: Reads[Def1_RetrievePensionChargesResponse] = (
-//    (JsPath \ "submittedOn").read[String] and
-//      ((JsPath \ "pensionSavingsTaxCharges").readNullable[PensionSavingsTaxCharges] and
-//      (JsPath \ "pensionSchemeOverseasTransfers").readNullable[PensionSchemeOverseasTransfers] and
-//      (JsPath \ "pensionSchemeUnauthorisedPayments").readNullable[PensionSchemeUnauthorisedPayments] and
-//      (JsPath \ "pensionContributions").readNullable[PensionContributions] and
-//      (JsPath \ "overseasPensionContributions").readNullable[OverseasPensionContributions]
-//    )(Def1_RetrievePensionChargesResponse.apply _)
-
   implicit val reads: Reads[Def1_RetrievePensionChargesResponse] = Json.reads[Def1_RetrievePensionChargesResponse]
 
   implicit val writes: OWrites[Def1_RetrievePensionChargesResponse] = Json.writes[Def1_RetrievePensionChargesResponse]

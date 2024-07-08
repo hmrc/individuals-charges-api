@@ -24,7 +24,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v2.delete.model.request.DeletePensionChargesRequestData
+import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class DeletePensionChargesControllerSpec
     with MockAuditService {
 
   private val taxYear     = "2020-21"
-  private val requestData = DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val requestData = Def1_DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
   "delete" should {
     "return a successful response with header X-CorrelationId and body" when {

@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package v2.delete
+package v2.delete.def1.request
 
-import api.controllers.validators.Validator
-import config.AppConfig
-import v2.delete.DeletePensionChargesSchema.Def1
-import v2.delete.def1.Def1_DeletePensionChargesValidator
+import api.models.domain.{Nino, TaxYear}
+import v2.delete.DeletePensionChargesSchema
 import v2.delete.model.request.DeletePensionChargesRequestData
 
-import javax.inject.{Inject, Singleton}
-
-@Singleton
-class DeletePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
-  
-  def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
-
-    val schema = DeletePensionChargesSchema.schema
-
-    schema match {
-      case Def1 => new Def1_DeletePensionChargesValidator(nino, taxYear)(appConfig)
-    }
-  }
-
+case class Def1_DeletePensionChargesRequestData(nino: Nino, taxYear: TaxYear) extends DeletePensionChargesRequestData {
+  val schema: DeletePensionChargesSchema = DeletePensionChargesSchema.Def1
 }

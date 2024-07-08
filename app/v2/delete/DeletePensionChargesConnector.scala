@@ -36,10 +36,11 @@ class DeletePensionChargesConnector @Inject() (val http: HttpClient, val appConf
 
     import request._
 
-    val downstreamUri = if (taxYear.isTys) {
-      TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
-    } else {
-      IfsUri[Unit](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+    val downstreamUri = taxYear match {
+      case ty if ty.isTys =>
+        TaxYearSpecificIfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+      case _ =>
+        IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
     }
 
     delete(downstreamUri)

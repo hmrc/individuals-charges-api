@@ -18,4 +18,7 @@ package v2.delete.model.request
 
 import api.models.domain.{Nino, TaxYear}
 
-case class DeletePensionChargesRequestData(nino: Nino, taxYear: TaxYear)
+trait DeletePensionChargesRequestData {
+  val nino: Nino
+  val taxYear: TaxYear
+}

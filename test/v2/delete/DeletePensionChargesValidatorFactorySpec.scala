@@ -16,75 +16,28 @@
 
 package v2.delete
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
+import api.controllers.validators.Validator
 import mocks.MockAppConfig
 import support.UnitSpec
+import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
-  private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
 
-  private val parsedNino    = Nino(validNino)
-  private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
-
   private val validatorFactory = new DeletePensionChargesValidatorFactory(mockAppConfig)
 
-  private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
-
-  MockAppConfig.minTaxYearPensionCharge.returns("2022")
-
   "validator" should {
-    "return the parsed domain object" when {
-      "passed a valid request" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator(validNino, validTaxYear).validateAndWrapResult()
+    "return the Def1 validator" when {
+      "given a valid request" in {
+        val result: Validator[DeletePensionChargesRequestData] = validatorFactory.validator(validNino, validTaxYear)
+        result shouldBe a[Def1_DeletePensionChargesValidator]
 
-        result shouldBe Right(DeletePensionChargesRequestData(parsedNino, parsedTaxYear))
       }
     }
 
-    "return nino format error" when {
-      "an invalid nino is supplied" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator("invalidNino", validTaxYear).validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
-      }
-
-      "an incorrectly formatted taxYear is supplied" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator(validNino, "202122").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
-      }
-
-      "an invalid tax year range is supplied" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator(validNino, "2020-22").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
-      }
-
-      "an invalid tax year, before the minimum, is supplied" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator(validNino, "2020-21").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
-      }
-    }
-
-    "return multiple errors" when {
-      "request supplied has multiple errors" in {
-        val result: Either[ErrorWrapper, DeletePensionChargesRequestData] =
-          validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
-      }
-    }
   }
 
 }

@@ -22,6 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
+import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import scala.concurrent.Future
@@ -38,7 +39,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
     lazy val service = new DeletePensionChargesService(mockDeletePensionChargesConnector)
   }
 
-  lazy val request: DeletePensionChargesRequestData = DeletePensionChargesRequestData(nino, taxYear)
+  lazy val request: DeletePensionChargesRequestData = Def1_DeletePensionChargesRequestData(nino, taxYear)
 
   "Delete Pension Charges" should {
     "return a Right" when {

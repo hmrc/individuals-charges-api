@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package v2.delete
+package v2.delete.def1
 
 import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits._
 import config.AppConfig
-import v2.delete.DeletePensionChargesSchema.Def1
-import v2.delete.def1.Def1_DeletePensionChargesValidator
+import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
-  
-  def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
+class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(appConfig: AppConfig)
+    extends Validator[DeletePensionChargesRequestData] {
 
-    val schema = DeletePensionChargesSchema.schema
+  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
 
-    schema match {
-      case Def1 => new Def1_DeletePensionChargesValidator(nino, taxYear)(appConfig)
-    }
-  }
+  def validate: Validated[Seq[MtdError], DeletePensionChargesRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTaxYear(minTaxYear, taxYear, None, None)
+    ).mapN(Def1_DeletePensionChargesRequestData)
 
 }
