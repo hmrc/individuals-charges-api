@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
+case class OverseasPensionContributions(overseasSchemeProvider: Seq[OverseasSchemeProvider],
+                                        shortServiceRefund: BigDecimal,
+                                        shortServiceRefundTaxPaid: BigDecimal)
 
-object Charge {
-  implicit val format: OFormat[Charge] = Json.format[Charge]
+object OverseasPensionContributions {
+  implicit val format: OFormat[OverseasPensionContributions] = Json.format[OverseasPensionContributions]
 }

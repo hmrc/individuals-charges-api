@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
-import api.models.domain.{Nino, TaxYear}
-import v2.createAmend.def1.model.request.PensionCharges
+import play.api.libs.json.{Json, OFormat}
 
-trait CreateAmendPensionChargesRequestData {
-  def nino: Nino
-  def taxYear: TaxYear
-  def pensionCharges: PensionCharges
+case class PensionSchemeOverseasTransfers(overseasSchemeProvider: Seq[OverseasSchemeProvider],
+                                          transferCharge: BigDecimal,
+                                          transferChargeTaxPaid: BigDecimal)
 
+object PensionSchemeOverseasTransfers {
+  implicit val format: OFormat[PensionSchemeOverseasTransfers] = Json.format[PensionSchemeOverseasTransfers]
 }

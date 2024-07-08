@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v2.createAmend.def1.model.request.PensionCharges
+import v2.createAmend.CreateAmendPensionChargesSchema
+import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-trait CreateAmendPensionChargesRequestData {
-  def nino: Nino
-  def taxYear: TaxYear
-  def pensionCharges: PensionCharges
-
+case class Def1_CreateAmendPensionChargesRequestData(nino: Nino, taxYear: TaxYear, pensionCharges: PensionCharges)
+    extends CreateAmendPensionChargesRequestData {
+  val schema: CreateAmendPensionChargesSchema = CreateAmendPensionChargesSchema.Def1
 }

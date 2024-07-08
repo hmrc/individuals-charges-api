@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-package v2.createAmend
+package v2.createAmend.def1.model
 
-import api.controllers.validators.RulesValidator
-import api.controllers.validators.resolvers.{ResolveParsedCountryCode, ResolveParsedNumber}
+import api.controllers.validators.resolvers._
+import api.controllers.validators.{RulesValidator, Validator}
 import api.models.errors._
 import cats.data.Validated
-import cats.data.Validated._
+import cats.data.Validated.Invalid
 import cats.implicits._
-import v2.createAmend.model.request.{CreateAmendPensionChargesRequestData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+import config.AppConfig
+import play.api.libs.json.JsValue
+import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator.validateBusinessRules
+import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestData, OverseasSchemeProvider, PensionCharges, PensionContributions}
+import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-object AmendPensionChargesRulesValidator extends RulesValidator[CreateAmendPensionChargesRequestData] {
+import javax.inject.Inject
+
+class Def1_CreateAmendPensionChargesValidator @Inject()(nino: String, taxYear: String, body: JsValue)(appConfig: AppConfig)
+    extends Validator[CreateAmendPensionChargesRequestData] {
+
+  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private val resolveJson     = new ResolveJsonObject[PensionCharges]()
+
+  def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTaxYear(minTaxYear, taxYear, None, None),
+      resolveJson(body)
+    ).mapN(Def1_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
+
+}
+
+object Def1_CreateAmendPensionChargesValidator extends RulesValidator[CreateAmendPensionChargesRequestData] {
   private val resolveParsedNumber      = ResolveParsedNumber()
   private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$".r
   private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$".r

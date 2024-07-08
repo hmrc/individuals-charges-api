@@ -14,46 +14,26 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class PensionSchemeOverseasTransfersSpec extends UnitSpec {
+class ChargeSpec extends UnitSpec {
 
-  val responseModel = PensionSchemeOverseasTransfers(
-    Seq(
-      OverseasSchemeProvider(
-        "name",
-        "address",
-        "postcode",
-        Some(Seq("Q123456")),
-        None
-      )),
-    123.12,
-    123.12)
+  val responseModel = Charge(123.12, 123.12)
 
   val responseJson = Json.parse("""
       |{
-      |     "overseasSchemeProvider": [
-      |       {
-      |         "providerName": "name",
-      |         "providerAddress": "address",
-      |         "providerCountryCode": "postcode",
-      |         "qualifyingRecognisedOverseasPensionScheme": [
-      |              "Q123456"
-      |         ]
-      |       }
-      |     ],
-      |     "transferCharge": 123.12,
-      |     "transferChargeTaxPaid": 123.12
-      |   }
+      | "amount": 123.12,
+      | "foreignTaxPaid": 123.12
+      |}
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionSchemeOverseasTransfers]
+        responseModel shouldBe responseJson.as[Charge]
       }
     }
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._

@@ -20,7 +20,8 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v2.createAmend.fixture.CreateAmendPensionChargesFixture.pensionCharges
+import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture.pensionCharges
+import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import scala.concurrent.Future
@@ -34,7 +35,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
     def taxYear: TaxYear
 
-    protected val request: CreateAmendPensionChargesRequestData = CreateAmendPensionChargesRequestData(
+    protected val request: CreateAmendPensionChargesRequestData = Def1_CreateAmendPensionChargesRequestData(
       nino = Nino(nino),
       taxYear = taxYear,
       pensionCharges = pensionCharges

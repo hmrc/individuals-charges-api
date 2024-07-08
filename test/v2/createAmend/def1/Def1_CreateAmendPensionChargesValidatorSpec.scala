@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package v2.createAmend
+package v2.createAmend.def1
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec
-import v2.createAmend.fixture.CreateAmendPensionChargesFixture._
-import v2.createAmend.model.request.{CreateAmendPensionChargesRequestData, PensionCharges}
+import v2.createAmend.CreateAmendPensionChargesValidatorFactory
+import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestData, PensionCharges}
+import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -36,34 +38,36 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
   private val parsedFullRequestBody    = fullValidJson.as[PensionCharges]
   private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[PensionCharges]
 
-  private val validatorFactory                                        = new AmendPensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory                                        = new CreateAmendPensionChargesValidatorFactory(mockAppConfig)
   private def validator(nino: String, taxYear: String, body: JsValue) = validatorFactory.validator(nino, taxYear, body)
 
-  MockAppConfig.minTaxYearPensionCharge.returns("2022")
+  class Test {
+    MockAppConfig.minTaxYearPensionCharge.returns("2022")
+  }
 
   "validator" should {
     "return the parsed domain object" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullValidJson).validateAndWrapResult()
 
         result shouldBe Right(
-          CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBody)
+          Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBody)
         )
       }
 
-      "a valid request is supplied with pensionContributions updated" in {
+      "a valid request is supplied with pensionContributions updated" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullValidJsonUpdated).validateAndWrapResult()
 
         result shouldBe Right(
-          CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
+          Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
         )
       }
     }
 
     "return path parameter error(s)" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator("badNino", validTaxYear, fullJson).validateAndWrapResult()
 
@@ -71,7 +75,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           ErrorWrapper(correlationId, NinoFormatError)
         )
       }
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, "2000", fullJson).validateAndWrapResult()
 
@@ -79,7 +83,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           ErrorWrapper(correlationId, TaxYearFormatError)
         )
       }
-      "the taxYear range is invalid" in {
+      "the taxYear range is invalid" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, "2021-24", fullJson).validateAndWrapResult()
 
@@ -87,7 +91,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError)
         )
       }
-      "an invalid tax year, before the minimum, is supplied" in {
+      "an invalid tax year, before the minimum, is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, "2020-21", fullJson).validateAndWrapResult()
 
@@ -95,7 +99,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           ErrorWrapper(correlationId, RuleTaxYearNotSupportedError)
         )
       }
-      "all path parameters are invalid" in {
+      "all path parameters are invalid" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator("badNino", "2000", fullJson).validateAndWrapResult()
 
@@ -106,7 +110,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
     }
 
     "return a RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED error" when {
-      "an empty request body is supplied" in {
+      "an empty request body is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, JsObject.empty).validateAndWrapResult()
 
@@ -117,7 +121,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
     }
 
     "return country errors" when {
-      "multiple country codes are invalid for multiple reasons" in {
+      "multiple country codes are invalid for multiple reasons" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullJsonWithInvalidCountries).validateAndWrapResult()
 
@@ -142,7 +146,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           )
         )
       }
-      "multiple country codes are invalid format" in {
+      "multiple country codes are invalid format" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullJsonWithInvalidCountryFormat("INVALID")).validateAndWrapResult()
 
@@ -158,7 +162,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           )
         )
       }
-      "multiple country codes are invalid rule" in {
+      "multiple country codes are invalid rule" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullJsonWithInvalidCountryFormat("BOB")).validateAndWrapResult()
 
@@ -177,7 +181,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
     }
 
     "return big decimal error" when {
-      "an too large number is supplied" in {
+      "an too large number is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullJson(999999999999.99)).validateAndWrapResult()
 
@@ -203,7 +207,7 @@ class AmendPensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfi
           )
         )
       }
-      "an too small number is supplied" in {
+      "an too small number is supplied" in new Test {
         val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
           validator(validNino, validTaxYear, fullJson(-69420.00)).validateAndWrapResult()
 

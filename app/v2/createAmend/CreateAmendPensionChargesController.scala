@@ -30,7 +30,7 @@ import scala.concurrent.ExecutionContext
 class CreateAmendPensionChargesController @Inject() (val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
                                                      service: CreateAmendPensionChargesService,
-                                                     validatorFactory: AmendPensionChargesValidatorFactory,
+                                                     validatorFactory: CreateAmendPensionChargesValidatorFactory,
                                                      auditService: AuditService,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)

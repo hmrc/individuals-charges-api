@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend
 
-import play.api.libs.json.{Json, OFormat}
+sealed trait CreateAmendPensionChargesSchema
 
-case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String], surcharge: Option[Charge], noSurcharge: Option[Charge])
+object CreateAmendPensionChargesSchema {
 
-object PensionSchemeUnauthorisedPayments {
-  implicit val format: OFormat[PensionSchemeUnauthorisedPayments] = Json.format[PensionSchemeUnauthorisedPayments]
+  case object Def1 extends CreateAmendPensionChargesSchema
+
+  val schema: CreateAmendPensionChargesSchema = Def1
+
 }

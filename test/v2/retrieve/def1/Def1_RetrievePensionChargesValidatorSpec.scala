@@ -24,7 +24,7 @@ import v2.retrieve.RetrievePensionChargesValidatorFactory
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"

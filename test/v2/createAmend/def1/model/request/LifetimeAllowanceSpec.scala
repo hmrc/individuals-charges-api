@@ -14,38 +14,26 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
+class LifetimeAllowanceSpec extends UnitSpec {
 
-  val responseModel =
-    PensionSchemeUnauthorisedPayments(
-      Seq("00123456RA", "00123456RA"),
-      Some(Charge(123.12, 123.12)),
-      Some(Charge(123.12, 123.12))
-    )
+  val responseModel = LifetimeAllowance(123.12, 123.12)
 
   val responseJson = Json.parse("""
       |{
-      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
-      |     "surcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       },
-      |     "noSurcharge": {
-      |         "amount": 123.12,
-      |         "foreignTaxPaid": 123.12
-      |       }
-      |   }
+      | "amount": 123.12,
+      | "taxPaid": 123.12
+      |}
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionSchemeUnauthorisedPayments]
+        responseModel shouldBe responseJson.as[LifetimeAllowance]
       }
     }
   }

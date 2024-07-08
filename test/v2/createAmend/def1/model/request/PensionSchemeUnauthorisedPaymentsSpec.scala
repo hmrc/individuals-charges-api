@@ -14,36 +14,38 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class OverseasSchemeProviderSpec extends UnitSpec {
+class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {
 
-  val responseModel = OverseasSchemeProvider(
-    "Overseas Pensions Plc",
-    "111 Main Street, George Town, Grand Cayman",
-    "CYM",
-    Some(Seq("Q123456")),
-    None
-  )
+  val responseModel =
+    PensionSchemeUnauthorisedPayments(
+      Seq("00123456RA", "00123456RA"),
+      Some(Charge(123.12, 123.12)),
+      Some(Charge(123.12, 123.12))
+    )
 
   val responseJson = Json.parse("""
       |{
-      |        "providerName": "Overseas Pensions Plc",
-      |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |        "providerCountryCode": "CYM",
-      |        "qualifyingRecognisedOverseasPensionScheme": [
-      |          "Q123456"
-      |        ]
-      |      }
+      |     "pensionSchemeTaxReference": ["00123456RA", "00123456RA"],
+      |     "surcharge": {
+      |         "amount": 123.12,
+      |         "foreignTaxPaid": 123.12
+      |       },
+      |     "noSurcharge": {
+      |         "amount": 123.12,
+      |         "foreignTaxPaid": 123.12
+      |       }
+      |   }
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[OverseasSchemeProvider]
+        responseModel shouldBe responseJson.as[PensionSchemeUnauthorisedPayments]
       }
     }
   }

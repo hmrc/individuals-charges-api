@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class OverseasPensionContributionsSpec extends UnitSpec {
+class OverseasSchemeProviderSpec extends UnitSpec {
 
-  val responseModel = OverseasPensionContributions(
-    Seq(
-      OverseasSchemeProvider(
-        "Overseas Pensions Plc",
-        "111 Main Street, George Town, Grand Cayman",
-        "CYM",
-        Some(Seq("Q123456")),
-        None
-      )),
-    123.12,
-    123.12
+  val responseModel = OverseasSchemeProvider(
+    "Overseas Pensions Plc",
+    "111 Main Street, George Town, Grand Cayman",
+    "CYM",
+    Some(Seq("Q123456")),
+    None
   )
 
   val responseJson = Json.parse("""
       |{
-      |    "overseasSchemeProvider": [
-      |      {
       |        "providerName": "Overseas Pensions Plc",
       |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
       |        "providerCountryCode": "CYM",
@@ -45,16 +38,12 @@ class OverseasPensionContributionsSpec extends UnitSpec {
       |          "Q123456"
       |        ]
       |      }
-      |    ],
-      |    "shortServiceRefund": 123.12,
-      |    "shortServiceRefundTaxPaid": 123.12
-      |  }
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[OverseasPensionContributions]
+        responseModel shouldBe responseJson.as[OverseasSchemeProvider]
       }
     }
   }

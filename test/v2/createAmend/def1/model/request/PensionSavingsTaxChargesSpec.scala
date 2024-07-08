@@ -14,26 +14,37 @@
  * limitations under the License.
  */
 
-package v2.createAmend.model.request
+package v2.createAmend.def1.model.request
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class LifetimeAllowanceSpec extends UnitSpec {
+class PensionSavingsTaxChargesSpec extends UnitSpec {
 
-  val responseModel = LifetimeAllowance(123.12, 123.12)
+  val responseModel: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
+    pensionSchemeTaxReference = Seq("00123456RA"),
+    lumpSumBenefitTakenInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.12, 123.12)),
+    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.12, 123.12))
+  )
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
-      | "amount": 123.12,
-      | "taxPaid": 123.12
+      |    "pensionSchemeTaxReference": ["00123456RA"],
+      |    "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |        "amount":123.12,
+      |        "taxPaid":123.12
+      |    },
+      |    "benefitInExcessOfLifetimeAllowance": {
+      |        "amount":123.12,
+      |        "taxPaid":123.12
+      |    }
       |}
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[LifetimeAllowance]
+        responseModel shouldBe responseJson.as[PensionSavingsTaxCharges]
       }
     }
   }

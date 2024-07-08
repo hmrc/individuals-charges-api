@@ -25,10 +25,10 @@ import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-trait MockAmendPensionChargesValidatorFactory extends MockFactory {
+trait MockCreateAmendPensionChargesValidatorFactory extends MockFactory {
 
-  val mockAmendPensionChargesValidatorFactory: AmendPensionChargesValidatorFactory =
-    mock[AmendPensionChargesValidatorFactory]
+  val mockAmendPensionChargesValidatorFactory: CreateAmendPensionChargesValidatorFactory =
+    mock[CreateAmendPensionChargesValidatorFactory]
 
   object MockedAmendPensionChargesValidatorFactory {
 
