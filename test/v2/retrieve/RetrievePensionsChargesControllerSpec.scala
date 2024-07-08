@@ -25,8 +25,8 @@ import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLooku
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
-import v2.retrieve.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
-import v2.retrieve.model.request.RetrievePensionChargesRequestData
+import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
+import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,7 +42,7 @@ class RetrievePensionsChargesControllerSpec
     with MockAuditService {
 
   private val taxYear     = "2021-22"
-  private val requestData = RetrievePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val requestData = Def1_RetrievePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
   "retrieve" should {
     "return a successful response with header X-CorrelationId and body" when {

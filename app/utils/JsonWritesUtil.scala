@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package utils
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json._
 
-case class PensionSchemeOverseasTransfers(overseasSchemeProvider: Seq[OverseasSchemeProvider],
-                                          transferCharge: BigDecimal,
-                                          transferChargeTaxPaid: BigDecimal)
+trait JsonWritesUtil {
 
-object PensionSchemeOverseasTransfers {
-  implicit val format: OFormat[PensionSchemeOverseasTransfers] = Json.format[PensionSchemeOverseasTransfers]
+  def filterNull(json: JsValue): JsObject = json match {
+    case JsObject(fields) =>
+      JsObject(fields.flatMap {
+        case (_, JsNull) => None
+        case other       => Some(other)
+      })
+    case other => other.as[JsObject]
+  }
+
+  def writesFrom[A](pf: PartialFunction[A, JsObject]): OWrites[A] = {
+    val f: A => JsObject = pf.orElse(a => throw new IllegalArgumentException(s"No writes defined for type ${a.getClass.getName}"))
+
+    OWrites.apply(f)
+  }
+
 }
+
+object JsonWritesUtil extends JsonWritesUtil

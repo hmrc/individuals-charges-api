@@ -14,26 +14,36 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class LifetimeAllowanceSpec extends UnitSpec {
+class OverseasSchemeProviderSpec extends UnitSpec {
 
-  private val responseModel = LifetimeAllowance(123.12, 123.12)
+  private val responseModel = OverseasSchemeProvider(
+    "Overseas Pensions Plc",
+    "111 Main Street, George Town, Grand Cayman",
+    "CYM",
+    Some(Seq("Q123456")),
+    None
+  )
 
   private val responseJson = Json.parse("""
       |{
-      | "amount": 123.12,
-      | "taxPaid": 123.12
-      |}
+      |        "providerName": "Overseas Pensions Plc",
+      |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
+      |        "providerCountryCode": "CYM",
+      |        "qualifyingRecognisedOverseasPensionScheme": [
+      |          "Q123456"
+      |        ]
+      |      }
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[LifetimeAllowance]
+        responseModel shouldBe responseJson.as[OverseasSchemeProvider]
       }
     }
   }

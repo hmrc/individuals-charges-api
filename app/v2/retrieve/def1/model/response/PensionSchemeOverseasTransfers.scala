@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package api.connectors
+package v2.retrieve.def1.model.response
 
-sealed trait DownstreamUri[+Resp] {
-  val value: String
-}
+import play.api.libs.json.{Json, OFormat}
 
-object DownstreamUri {
-  case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class IfsUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
+case class PensionSchemeOverseasTransfers(overseasSchemeProvider: Seq[OverseasSchemeProvider],
+                                          transferCharge: BigDecimal,
+                                          transferChargeTaxPaid: BigDecimal)
+
+object PensionSchemeOverseasTransfers {
+  implicit val format: OFormat[PensionSchemeOverseasTransfers] = Json.format[PensionSchemeOverseasTransfers]
 }

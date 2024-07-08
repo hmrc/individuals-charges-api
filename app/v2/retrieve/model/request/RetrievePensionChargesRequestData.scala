@@ -17,5 +17,10 @@
 package v2.retrieve.model.request
 
 import api.models.domain.{Nino, TaxYear}
+import v2.retrieve.RetrievePensionChargesSchema
 
-case class RetrievePensionChargesRequestData(nino: Nino, taxYear: TaxYear)
+trait RetrievePensionChargesRequestData {
+  def nino: Nino
+  def taxYear: TaxYear
+  val schema: RetrievePensionChargesSchema
+}

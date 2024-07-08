@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
+import v2.retrieve.model.response.RetrievePensionChargesResponse
 
-class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
 
-  val responseModel: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+  val responseModel: RetrievePensionChargesResponse = Def1_RetrievePensionChargesResponse(
     "2020-07-27T17:00:19Z",
     Some(
       PensionSavingsTaxCharges(
@@ -133,7 +134,7 @@ class RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[RetrievePensionChargesResponse]
+        responseModel shouldBe responseJson.as[Def1_RetrievePensionChargesResponse]
       }
     }
   }

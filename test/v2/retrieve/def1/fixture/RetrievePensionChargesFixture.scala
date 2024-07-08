@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package v2.retrieve.fixture
+package v2.retrieve.def1.fixture
 
 import play.api.libs.json.{JsValue, Json}
+import v2.retrieve.def1.model.response._
 import v2.retrieve.model.response._
 
 object RetrievePensionChargesFixture {
@@ -62,7 +63,7 @@ object RetrievePensionChargesFixture {
     0
   )
 
-  val retrieveResponse: RetrievePensionChargesResponse = RetrievePensionChargesResponse(
+  val retrieveResponse: RetrievePensionChargesResponse = Def1_RetrievePensionChargesResponse(
     "2020-07-27T17:00:19Z",
     Some(pensionSavingsCharge),
     Some(pensionOverseasTransfer),

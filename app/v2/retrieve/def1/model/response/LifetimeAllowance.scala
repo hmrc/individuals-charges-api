@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Charge(amount: BigDecimal, foreignTaxPaid: BigDecimal)
+case class LifetimeAllowance(amount: BigDecimal, taxPaid: BigDecimal)
 
-object Charge {
-  implicit val format: OFormat[Charge] = Json.format[Charge]
+object LifetimeAllowance {
+  implicit val format: OFormat[LifetimeAllowance] = Json.format[LifetimeAllowance]
 }

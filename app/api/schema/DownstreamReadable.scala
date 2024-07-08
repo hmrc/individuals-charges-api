@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package api.connectors
+package api.schema
 
-sealed trait DownstreamUri[+Resp] {
-  val value: String
-}
+import play.api.libs.json.Reads
 
-object DownstreamUri {
-  case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class IfsUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
+trait DownstreamReadable[Base] {
+
+  /** This is the type of response returned by the connector.
+   *
+   * It is not necessarily the same as the response type returned by the service to the controller.
+   */
+  type DownstreamResp <: Base
+
+  implicit def connectorReads: Reads[DownstreamResp]
 }

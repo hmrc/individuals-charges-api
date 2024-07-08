@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import play.api.libs.json.{Json, OFormat}
 
-case class LifetimeAllowance(amount: BigDecimal, taxPaid: BigDecimal)
+case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Option[Seq[String]], surcharge: Option[Charge], noSurcharge: Option[Charge])
 
-object LifetimeAllowance {
-  implicit val format: OFormat[LifetimeAllowance] = Json.format[LifetimeAllowance]
+object PensionSchemeUnauthorisedPayments {
+  implicit val format: OFormat[PensionSchemeUnauthorisedPayments] = Json.format[PensionSchemeUnauthorisedPayments]
 }

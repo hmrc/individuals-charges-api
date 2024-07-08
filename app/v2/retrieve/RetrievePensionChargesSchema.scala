@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve
 
-import play.api.libs.json._
-import utils.JsonWritesUtil
+import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
 import v2.retrieve.def1.model.response.Def1_RetrievePensionChargesResponse
+import v2.retrieve.model.response.RetrievePensionChargesResponse
 
-trait RetrievePensionChargesResponse
+sealed trait RetrievePensionChargesSchema extends DownstreamReadable[RetrievePensionChargesResponse]
 
-object RetrievePensionChargesResponse extends JsonWritesUtil {
+object RetrievePensionChargesSchema {
 
-  implicit val writes: OWrites[RetrievePensionChargesResponse] = writesFrom { case def1: Def1_RetrievePensionChargesResponse =>
-    implicitly[OWrites[Def1_RetrievePensionChargesResponse]].writes(def1)
+  case object Def1 extends RetrievePensionChargesSchema {
+    type DownstreamResp = Def1_RetrievePensionChargesResponse
+    val connectorReads: Reads[DownstreamResp] = Def1_RetrievePensionChargesResponse.reads
   }
+
+  val schema: RetrievePensionChargesSchema = Def1
 
 }

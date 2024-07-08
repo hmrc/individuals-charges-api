@@ -17,8 +17,8 @@
 package v2.retrieve
 
 import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
@@ -36,13 +36,14 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appCo
       correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
     import request._
+    import schema._
 
-    val downstreamUri =
-      if (request.taxYear.isTys) {
-        TaxYearSpecificIfsUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
-      } else {
-        IfsUri[RetrievePensionChargesResponse](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
-      }
+    val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
+      case ty if ty.isTys =>
+        TaxYearSpecificIfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+      case _ =>
+        IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+    }
     get(downstreamUri)
   }
 

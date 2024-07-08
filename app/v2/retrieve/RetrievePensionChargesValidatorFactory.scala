@@ -17,28 +17,23 @@
 package v2.retrieve
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.implicits._
 import config.AppConfig
+import v2.retrieve.RetrievePensionChargesSchema.Def1
+import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 import javax.inject.Inject
 
 class RetrievePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
 
-  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] = {
 
-  def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] =
-    new Validator[RetrievePensionChargesRequestData] {
+    val schema = RetrievePensionChargesSchema.schema
 
-      def validate: Validated[Seq[MtdError], RetrievePensionChargesRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveTaxYear(minTaxYear, taxYear, None, None)
-        ).mapN(RetrievePensionChargesRequestData)
-
+    schema match {
+      case Def1 => new Def1_RetrievePensionChargesValidator(nino, taxYear)(appConfig)
     }
+
+  }
 
 }

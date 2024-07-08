@@ -20,7 +20,8 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v2.retrieve.fixture.RetrievePensionChargesFixture.retrieveResponse
+import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
+import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 import scala.concurrent.Future
@@ -34,7 +35,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
     def taxYear: TaxYear
 
-    protected val request: RetrievePensionChargesRequestData = RetrievePensionChargesRequestData(
+    protected val request: RetrievePensionChargesRequestData = Def1_RetrievePensionChargesRequestData(
       nino = Nino(nino),
       taxYear = taxYear
     )

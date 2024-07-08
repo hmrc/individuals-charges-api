@@ -14,36 +14,46 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class OverseasSchemeProviderSpec extends UnitSpec {
+class PensionSchemeOverseasTransfersSpec extends UnitSpec {
 
-  private val responseModel = OverseasSchemeProvider(
-    "Overseas Pensions Plc",
-    "111 Main Street, George Town, Grand Cayman",
-    "CYM",
-    Some(Seq("Q123456")),
-    None
-  )
+  private val responseModel = PensionSchemeOverseasTransfers(
+    Seq(
+      OverseasSchemeProvider(
+        "name",
+        "address",
+        "postcode",
+        Some(Seq("Q123456")),
+        None
+      )),
+    123.12,
+    123.12)
 
   private val responseJson = Json.parse("""
       |{
-      |        "providerName": "Overseas Pensions Plc",
-      |        "providerAddress": "111 Main Street, George Town, Grand Cayman",
-      |        "providerCountryCode": "CYM",
-      |        "qualifyingRecognisedOverseasPensionScheme": [
-      |          "Q123456"
-      |        ]
-      |      }
+      |     "overseasSchemeProvider": [
+      |       {
+      |         "providerName": "name",
+      |         "providerAddress": "address",
+      |         "providerCountryCode": "postcode",
+      |         "qualifyingRecognisedOverseasPensionScheme": [
+      |              "Q123456"
+      |         ]
+      |       }
+      |     ],
+      |     "transferCharge": 123.12,
+      |     "transferChargeTaxPaid": 123.12
+      |   }
       |""".stripMargin)
 
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[OverseasSchemeProvider]
+        responseModel shouldBe responseJson.as[PensionSchemeOverseasTransfers]
       }
     }
   }

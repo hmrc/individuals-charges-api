@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.response
 
 import play.api.libs.json.Json
 import support.UnitSpec

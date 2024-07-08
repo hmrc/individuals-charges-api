@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package v2.retrieve.model.response
+package v2.retrieve.def1.model.request
 
-import play.api.libs.json.{Json, OFormat}
+import api.models.domain.{Nino, TaxYear}
+import v2.retrieve.RetrievePensionChargesSchema
+import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-case class OverseasPensionContributions(overseasSchemeProvider: Seq[OverseasSchemeProvider],
-                                        shortServiceRefund: BigDecimal,
-                                        shortServiceRefundTaxPaid: BigDecimal)
-
-object OverseasPensionContributions {
-  implicit val format: OFormat[OverseasPensionContributions] = Json.format[OverseasPensionContributions]
+case class Def1_RetrievePensionChargesRequestData(nino: Nino, taxYear: TaxYear) extends RetrievePensionChargesRequestData {
+  val schema: RetrievePensionChargesSchema = RetrievePensionChargesSchema.Def1
 }
