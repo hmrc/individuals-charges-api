@@ -17,7 +17,7 @@
 package api.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{ClientNotAuthorisedError, InternalError}
+import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import api.models.outcomes.AuthOutcome
 import config.AppConfig
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
@@ -25,16 +25,7 @@ import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.auth.core.{
-  AffinityGroup,
-  AuthConnector,
-  AuthorisationException,
-  AuthorisedFunctions,
-  ConfidenceLevel,
-  Enrolment,
-  Enrolments,
-  MissingBearerToken
-}
+import uk.gov.hmrc.auth.core.{AffinityGroup, AuthConnector, AuthorisationException, AuthorisedFunctions, ConfidenceLevel, Enrolment, Enrolments, MissingBearerToken}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 
@@ -80,11 +71,11 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
         }
       case unexpected =>
         logger.error(s"[EnrolmentsAuthService][authorised] Unexpected AuthorisedFunction: $unexpected")
-        Future.successful(Left(ClientNotAuthorisedError))
+        Future.successful(Left(ClientOrAgentNotAuthorisedError))
 
     } recoverWith {
-      case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthorisedError))
-      case _: AuthorisationException => Future.successful(Left(ClientNotAuthorisedError))
+      case _: MissingBearerToken     => Future.successful(Left(ClientOrAgentNotAuthorisedError))
+      case _: AuthorisationException => Future.successful(Left(ClientOrAgentNotAuthorisedError))
       case error =>
         logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
         Future.successful(Left(InternalError))
