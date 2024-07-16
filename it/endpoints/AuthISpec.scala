@@ -46,14 +46,6 @@ class AuthISpec extends IntegrationBaseSpec {
         )
     }
 
-    def errorBody(code: String): String =
-      s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "des message"
-         |      }
-    """.stripMargin
-
   }
 
   "Calling the sample endpoint" when {
