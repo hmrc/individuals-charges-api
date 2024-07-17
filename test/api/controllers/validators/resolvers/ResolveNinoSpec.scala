@@ -27,7 +27,7 @@ class ResolveNinoSpec extends UnitSpec {
     "return no errors" when {
       "passed a valid NINO" in {
         val validNino = "AA123456A"
-        val result    = ResolveNino(validNino, NinoFormatError)
+        val result    = ResolveNino(validNino)
         result shouldBe Valid(Nino(validNino))
       }
     }
@@ -35,7 +35,7 @@ class ResolveNinoSpec extends UnitSpec {
     "return an error" when {
       "passed an invalid NINO" in {
         val invalidNino = "AA123456ABCBBCBCBC"
-        val result      = ResolveNino(invalidNino, NinoFormatError)
+        val result      = ResolveNino(invalidNino)
         result shouldBe Invalid(List(NinoFormatError))
       }
     }
