@@ -20,4 +20,4 @@ what you submitted.
 
 The following groups are stateful in the sandbox:
 
-- Pension Charges V2.0
+- Pension Charges

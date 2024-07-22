@@ -20,7 +20,7 @@ import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.{MockAppConfig, MockHttpClient}
 import play.api.Configuration
-import routing.Version2
+import routing.{Version2, Version3}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -41,6 +41,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockAppConfig.featureSwitches returns Configuration.empty
         MockAppConfig.apiStatus(Version2) returns "2.0"
         MockAppConfig.endpointsEnabled(Version2) returns true
+        MockAppConfig.apiStatus(Version3) returns "3.0"
+        MockAppConfig.endpointsEnabled(Version3) returns true
         MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
@@ -72,6 +74,11 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               versions = Seq(
                 APIVersion(
                   version = Version2,
+                  status = APIStatus.ALPHA,
+                  endpointsEnabled = true
+                ),
+                APIVersion(
+                  version = Version3,
                   status = APIStatus.ALPHA,
                   endpointsEnabled = true
                 )

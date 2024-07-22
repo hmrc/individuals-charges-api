@@ -26,7 +26,12 @@ object Version {
     Versions.getFromRequest(request).getOrElse(orElse)
 
   object VersionWrites extends Writes[Version] {
-    def writes(version: Version): JsValue = version.asJson
+
+    def writes(version: Version): JsValue = version match {
+      case Version2 => Json.toJson(Version2.name)
+      case Version3 => Json.toJson(Version3.name)
+    }
+
   }
 
   object VersionReads extends Reads[Version] {
@@ -34,11 +39,11 @@ object Version {
     override def reads(version: JsValue): JsResult[Version] =
       version
         .validate[String]
-        .flatMap(name =>
-          Versions.getFrom(name) match {
-            case Left(_) => JsError("Version not recognised")
-            case Right(version) => JsSuccess(version)
-          })
+        .flatMap {
+          case Version2.name => JsSuccess(Version2)
+          case Version3.name => JsSuccess(Version3)
+          case _             => JsError("Unrecognised version")
+        }
 
   }
 
@@ -47,21 +52,26 @@ object Version {
 
 sealed trait Version {
   val name: String
-  lazy val asJson: JsValue = Json.toJson(name)
+  lazy val asJson: JsValue       = Json.toJson(name)
   val regexMatch: Option[String] = None
   override def toString: String  = name
 }
-
 
 case object Version2 extends Version {
   val name                                = "2.0"
   override val regexMatch: Option[String] = Some("^.*collection/tax-code/?$")
 }
 
+case object Version3 extends Version {
+  val name                                = "3.0"
+  override val regexMatch: Option[String] = Some("^.*collection/tax-code/?$")
+}
+
 object Versions {
 
   private val versionsByName: Map[String, Version] = Map(
-    Version2.name -> Version2
+    Version2.name -> Version2,
+    Version3.name -> Version3
   )
 
   private val versionRegex = """application/vnd.hmrc.(\d.\d)\+json""".r
