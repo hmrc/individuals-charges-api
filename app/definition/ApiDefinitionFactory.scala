@@ -18,7 +18,7 @@ package definition
 
 import config.AppConfig
 import play.api.Logger
-import routing.{Version, Version2}
+import routing.{Version, Version2, Version3}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 import javax.inject.{Inject, Singleton}
@@ -63,6 +63,11 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
             version = Version2,
             status = buildAPIStatus(Version2),
             endpointsEnabled = appConfig.endpointsEnabled(Version2)
+          ),
+          APIVersion(
+            version = Version3,
+            status = buildAPIStatus(Version3),
+            endpointsEnabled = appConfig.endpointsEnabled(Version3)
           )
         ),
         requiresTrust = None

@@ -34,6 +34,7 @@ To view documentation locally ensure the Charges API is running, and run api-doc
 
 Then go to http://localhost:9680/api-documentation/docs/openapi/preview and use the appropriate port and version:
 `http://localhost:9765/api/conf/2.0/application.yaml`
+`http://localhost:9765/api/conf/3.0/application.yaml`
 
 ## Changelog
 
