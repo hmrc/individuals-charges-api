@@ -38,7 +38,7 @@ class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
   class Test {
-    MockAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {

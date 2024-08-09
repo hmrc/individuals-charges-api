@@ -17,13 +17,13 @@
 package v2.endpoints
 
 import api.models.errors._
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json._
 import play.api.libs.ws._
 import play.api.test.Helpers.AUTHORIZATION
-import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 
 class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
@@ -42,6 +42,7 @@ class DeletePensionsChargesControllerISpec extends IntegrationBaseSpec {
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
+      AuthStub.resetAll()
       setupStubs()
       buildRequest(mtdUri)
         .withHttpHeaders(

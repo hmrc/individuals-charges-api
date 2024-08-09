@@ -22,6 +22,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
@@ -73,7 +75,7 @@ class DeletePensionChargesControllerSpec
     }
   }
 
-  class Test extends ControllerTest with AuditEventChecking {
+  class Test extends ControllerTest with AuditEventChecking with MockAppConfig {
 
     val controller = new DeletePensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -85,6 +87,11 @@ class DeletePensionChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitches.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     override protected def callController(): Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
