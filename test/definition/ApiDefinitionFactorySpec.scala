@@ -30,7 +30,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-    MockAppConfig.apiGatewayContext returns "api.gateway.context"
+    MockedAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
@@ -38,12 +38,12 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockAppConfig.featureSwitches returns Configuration.empty
-        MockAppConfig.apiStatus(Version2) returns "2.0"
-        MockAppConfig.endpointsEnabled(Version2) returns true
-        MockAppConfig.apiStatus(Version3) returns "3.0"
-        MockAppConfig.endpointsEnabled(Version3) returns true
-        MockAppConfig.confidenceLevelCheckEnabled
+        MockedAppConfig.featureSwitches returns Configuration.empty
+        MockedAppConfig.apiStatus(Version2) returns "2.0"
+        MockedAppConfig.endpointsEnabled(Version2) returns true
+        MockedAppConfig.apiStatus(Version3) returns "3.0"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -96,7 +96,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         (Version2, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
-          MockAppConfig.apiStatus(version) returns status.toString
+          MockedAppConfig.apiStatus(version) returns status.toString
           apiDefinitionFactory.buildAPIStatus(version) shouldBe status
         }
       }
@@ -105,7 +105,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "the 'apiStatus' parameter is present and invalid" should {
       Seq(Version2).foreach { version =>
         s"default to alpha for $version " in new Test {
-          MockAppConfig.apiStatus(version) returns "ALPHO"
+          MockedAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
         }
       }
@@ -120,7 +120,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)

@@ -20,9 +20,14 @@ import play.api.Configuration
 
 case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
-  val isCL102Enabled: Boolean = isEnabled("cl102.enabled")
+  val isCL102Enabled: Boolean = isEnabled("cl102")
+  val supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
 
-  private def isEnabled(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
+  def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
+
+  def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
+
+  private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
 }
 
 object FeatureSwitches {
