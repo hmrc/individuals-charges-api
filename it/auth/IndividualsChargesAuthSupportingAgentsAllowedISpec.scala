@@ -30,13 +30,12 @@ class IndividualsChargesAuthSupportingAgentsAllowedISpec extends AuthSupportingA
   val supportingAgentsAllowedEndpoint = "create-amend-pension-charges"
 
   private val taxYear    = TaxYear.fromMtd("2023-24")
-  val mtdUrl = (s"/pensions/$nino/${taxYear.asMtd}")
+  val mtdUrl = s"/pensions/$nino/${taxYear.asMtd}"
 
 
   def sendMtdRequest(request: WSRequest): WSResponse = await(request.put(fullValidJson))
 
   val downstreamUri: String = s"/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino"
-    //s"/income-tax/${taxYear.asTysDownstream}/income-sources/charges/pensions/23-24/$nino"
 
   override val downstreamSuccessStatus: Int = NO_CONTENT
 
