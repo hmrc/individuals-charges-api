@@ -42,7 +42,7 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
   private def validator(nino: String, taxYear: String, body: JsValue) = validatorFactory.validator(nino, taxYear, body)
 
   class Test {
-    MockAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {

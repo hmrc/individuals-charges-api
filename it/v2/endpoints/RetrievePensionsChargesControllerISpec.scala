@@ -22,7 +22,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.fullJson
 
@@ -52,6 +52,7 @@ class RetrievePensionsChargesControllerISpec extends IntegrationBaseSpec {
     private def uri: String = s"/pensions/$nino/$mtdTaxYear"
 
     def request(): WSRequest = {
+      AuthStub.resetAll()
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(

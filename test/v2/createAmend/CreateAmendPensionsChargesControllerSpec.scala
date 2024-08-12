@@ -23,6 +23,7 @@ import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBod
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture._
@@ -92,6 +93,12 @@ class CreateAmendPensionsChargesControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockedAppConfig.featureSwitches.anyNumberOfTimes() returns Configuration(
+      "supporting-agents-access-control.enabled" -> true
+    )
+
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     override protected def callController(): Future[Result] = controller.createAmend(nino, taxYear)(fakePostRequest(fullJson))
 
