@@ -102,8 +102,7 @@ object RequestHandler {
           val headers =
             responseHeaders ++
               List(
-                "X-CorrelationId"        -> correlationId,
-                "X-Content-Type-Options" -> "nosniff"
+                "X-CorrelationId" -> correlationId
               )
 
           result.copy(header = result.header.copy(headers = result.header.headers ++ headers))
