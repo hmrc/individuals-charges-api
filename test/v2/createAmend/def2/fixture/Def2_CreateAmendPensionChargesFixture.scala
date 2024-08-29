@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package v2.createAmend.def1.fixture
+package v2.createAmend.def2.fixture
 
 import play.api.libs.json.{JsValue, Json}
-import v2.createAmend.def1.model.request._
+import v2.createAmend.def2.model.request._
 
-object CreateAmendPensionChargesFixture {
-
-  val pensionSavingsCharge: PensionSavingsTaxCharges = PensionSavingsTaxCharges(
-    pensionSchemeTaxReference = Seq("00123456RA", "00123456RA"),
-    lumpSumBenefitTakenInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.45)),
-    benefitInExcessOfLifetimeAllowance = Some(LifetimeAllowance(123.45, 12.34))
-  )
+object Def2_CreateAmendPensionChargesFixture {
 
   val overseasSchemeProvider: OverseasSchemeProvider = OverseasSchemeProvider(
     providerName = "Overseas Pensions Plc",
@@ -62,8 +56,7 @@ object CreateAmendPensionChargesFixture {
     shortServiceRefundTaxPaid = 0
   )
 
-  val pensionCharges: PensionCharges = PensionCharges(
-    pensionSavingsTaxCharges = Some(pensionSavingsCharge),
+  val createAmendPensionChargesRequestBody: Def2_CreateAmendPensionChargesRequestBody = Def2_CreateAmendPensionChargesRequestBody(
     pensionSchemeOverseasTransfers = Some(pensionOverseasTransfer),
     pensionSchemeUnauthorisedPayments = Some(pensionUnauthorisedPayments),
     pensionContributions = Some(pensionContributions),
@@ -73,7 +66,7 @@ object CreateAmendPensionChargesFixture {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      | "pensionSavingsTaxCharges": {"sponge":"bob"}
+      | "pensionSchemeOverseasTransfers": {"sponge":"bob"}
       |}
       |""".stripMargin
   )
@@ -81,19 +74,6 @@ object CreateAmendPensionChargesFixture {
   val fullJson: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.34
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -152,19 +132,6 @@ object CreateAmendPensionChargesFixture {
   val fullValidJsonUpdated: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		},
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.34
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -293,15 +260,6 @@ object CreateAmendPensionChargesFixture {
   val fullValidJson: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -360,15 +318,6 @@ object CreateAmendPensionChargesFixture {
   val boolean1Json: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"benefitInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -427,15 +376,6 @@ object CreateAmendPensionChargesFixture {
   val boolean2Json: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -494,15 +434,6 @@ object CreateAmendPensionChargesFixture {
   val booleans3Json: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -562,15 +493,6 @@ object CreateAmendPensionChargesFixture {
   def fullReferencesJson(qrop: String, pensionRef: String): JsValue = Json.parse(
     s"""
        |{
-       |	"pensionSavingsTaxCharges": {
-       |		"pensionSchemeTaxReference": [
-       |			"00123456RA","00123456RA"
-       |		],
-       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-       |			"amount": 123.45,
-       |			"taxPaid": 12.45
-       |		}
-       |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
        |			{
@@ -643,15 +565,6 @@ object CreateAmendPensionChargesFixture {
   val fullJsonWithInvalidCountries: JsValue = Json.parse(
     """
       |{
-      |	"pensionSavingsTaxCharges": {
-      |		"pensionSchemeTaxReference": [
-      |			"00123456RA","00123456RA"
-      |		],
-      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-      |			"amount": 123.45,
-      |			"taxPaid": 12.45
-      |		}
-      |	},
       |	"pensionSchemeOverseasTransfers": {
       |		"overseasSchemeProvider": [
       |			{
@@ -789,15 +702,6 @@ object CreateAmendPensionChargesFixture {
   def fullJson(bigDecimal: BigDecimal): JsValue = Json.parse(
     s"""
        |{
-       |	"pensionSavingsTaxCharges": {
-       |		"pensionSchemeTaxReference": [
-       |			"00123456RA","00123456RA"
-       |		],
-       |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-       |			"amount": $bigDecimal,
-       |			"taxPaid": $bigDecimal
-       |		}
-       |	},
        |	"pensionSchemeOverseasTransfers": {
        |		"overseasSchemeProvider": [
        |			{

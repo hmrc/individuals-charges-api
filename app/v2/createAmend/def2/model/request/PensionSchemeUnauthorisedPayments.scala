@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package v2.createAmend.def1.model.request
+package v2.createAmend.def2.model.request
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PensionCharges(pensionSavingsTaxCharges: Option[PensionSavingsTaxCharges],
-                          pensionSchemeOverseasTransfers: Option[PensionSchemeOverseasTransfers],
-                          pensionSchemeUnauthorisedPayments: Option[PensionSchemeUnauthorisedPayments],
-                          pensionContributions: Option[PensionContributions],
-                          overseasPensionContributions: Option[OverseasPensionContributions])
+case class PensionSchemeUnauthorisedPayments(pensionSchemeTaxReference: Seq[String], surcharge: Option[Charge], noSurcharge: Option[Charge])
 
-object PensionCharges {
-  implicit val format: OFormat[PensionCharges] = Json.format[PensionCharges]
-
+object PensionSchemeUnauthorisedPayments {
+  implicit val format: OFormat[PensionSchemeUnauthorisedPayments] = Json.format[PensionSchemeUnauthorisedPayments]
 }

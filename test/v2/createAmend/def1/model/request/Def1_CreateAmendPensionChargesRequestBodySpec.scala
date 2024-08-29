@@ -19,9 +19,9 @@ package v2.createAmend.def1.model.request
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class PensionChargesSpec extends UnitSpec {
+class Def1_CreateAmendPensionChargesRequestBodySpec extends UnitSpec {
 
-  val responseModel: PensionCharges = PensionCharges(
+  val responseModel: Def1_CreateAmendPensionChargesRequestBody = Def1_CreateAmendPensionChargesRequestBody(
     Some(PensionSavingsTaxCharges(Seq("00123456RA"), Some(LifetimeAllowance(123.12, 123.12)), Some(LifetimeAllowance(123.12, 123.12)))),
     Some(
       PensionSchemeOverseasTransfers(
@@ -125,7 +125,7 @@ class PensionChargesSpec extends UnitSpec {
   "reads" when {
     "passed valid JSON" should {
       "return a valid model" in {
-        responseModel shouldBe responseJson.as[PensionCharges]
+        responseModel shouldBe responseJson.as[Def1_CreateAmendPensionChargesRequestBody]
       }
     }
   }

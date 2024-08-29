@@ -51,4 +51,4 @@ components:
 
 paths:
   /individuals/charges/pensions/{nino}/{taxYear}:
-    $ref: "./pensionCharges.yaml"
+    $ref: "./body.yaml"

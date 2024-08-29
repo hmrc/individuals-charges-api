@@ -16,12 +16,30 @@
 
 package v2.createAmend
 
+import api.controllers.validators.resolvers.ResolveTaxYear
+import api.models.domain.TaxYear
+import api.models.errors.MtdError
+import cats.data.Validated
+import cats.data.Validated.Valid
+
 sealed trait CreateAmendPensionChargesSchema
 
 object CreateAmendPensionChargesSchema {
 
   case object Def1 extends CreateAmendPensionChargesSchema
+  case object Def2 extends CreateAmendPensionChargesSchema
 
-  val schema: CreateAmendPensionChargesSchema = Def1
+  private val defaultSchema = Def1
+
+  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], CreateAmendPensionChargesSchema] =
+    maybeTaxYear match {
+      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
+      case None                => Valid(defaultSchema)
+    }
+
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], CreateAmendPensionChargesSchema] = {
+    if (taxYear.year >= TaxYear.starting(2024).year) Valid(Def2)
+    else Valid(Def1)
+  }
 
 }

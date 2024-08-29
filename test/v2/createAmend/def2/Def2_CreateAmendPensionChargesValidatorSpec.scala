@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v2.createAmend.def1
+package v2.createAmend.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec
-import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
-import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
-import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
+import v2.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture._
+import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
+import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -35,10 +35,11 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
-  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
+  private val parsedFullRequestBody    = fullValidJson.as[Def2_CreateAmendPensionChargesRequestBody]
+  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def2_CreateAmendPensionChargesRequestBody]
 
-  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(mockAppConfig)
+  private def validator(nino: String, taxYear: String, body: JsValue) = new Def2_CreateAmendPensionChargesValidator(nino, taxYear, body)(
+    mockAppConfig)
 
   class Test {
     MockedAppConfig.minTaxYearPensionCharge.returns("2022")
@@ -51,7 +52,7 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
           validator(validNino, validTaxYear, fullValidJson).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBody)
+          Def2_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBody)
         )
       }
 
@@ -60,7 +61,7 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
           validator(validNino, validTaxYear, fullValidJsonUpdated).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
+          Def2_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
         )
       }
     }
@@ -189,8 +190,6 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
             correlationId,
             ValueFormatError.withPaths(
               List(
-                "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
-                "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
                 "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
                 "/pensionSchemeOverseasTransfers/transferCharge",
                 "/pensionSchemeUnauthorisedPayments/surcharge/amount",
@@ -215,8 +214,6 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
             correlationId,
             ValueFormatError.withPaths(
               List(
-                "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
-                "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
                 "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
                 "/pensionSchemeOverseasTransfers/transferCharge",
                 "/pensionSchemeUnauthorisedPayments/surcharge/amount",

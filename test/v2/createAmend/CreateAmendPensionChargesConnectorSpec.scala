@@ -20,7 +20,7 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture.pensionCharges
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
@@ -38,7 +38,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
     protected val request: CreateAmendPensionChargesRequestData = Def1_CreateAmendPensionChargesRequestData(
       nino = Nino(nino),
       taxYear = taxYear,
-      pensionCharges = pensionCharges
+      body = createAmendPensionChargesRequestBody
     )
 
     val connector: CreateAmendPensionChargesConnector =
@@ -57,7 +57,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -77,7 +77,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
-            body = pensionCharges,
+            body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredTysIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -97,7 +97,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -117,7 +117,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = pensionCharges,
+            body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")

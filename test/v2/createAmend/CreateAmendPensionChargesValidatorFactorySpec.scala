@@ -16,11 +16,13 @@
 
 package v2.createAmend
 
+import api.controllers.validators.Validator
 import api.utils.JsonErrorValidators
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
+import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
 class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
 
@@ -39,12 +41,25 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
   private val validatorFactory = new CreateAmendPensionChargesValidatorFactory(mockAppConfig)
 
-  "running a validation" should {
-    "return the parsed domain object" when {
-      "given a valid request" in {
+  "validator" when {
+    "given a valid taxYear before 2024-25" should {
+      "return the Validator for schema definition 1" in {
         val result = validatorFactory.validator(validNino, validTaxYear, validRequestBody)
         result shouldBe a[Def1_CreateAmendPensionChargesValidator]
+      }
+    }
 
+    "given a valid taxYear 2024-25 or later" should {
+      "return the Validator for schema definition 2" in {
+        val result = validatorFactory.validator(validNino, "2024-25", validRequestBody)
+        result shouldBe a[Def2_CreateAmendPensionChargesValidator]
+      }
+    }
+
+    "given an invalid tax year" should {
+      "return no validator" in {
+        val result = validatorFactory.validator(validNino, "invalidTaxYear", validRequestBody)
+        result shouldBe a[Validator[_]]
       }
     }
 

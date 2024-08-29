@@ -16,14 +16,20 @@
 
 package v2.createAmend.model.request
 
-import api.models.domain.{Nino, TaxYear}
-import v2.createAmend.CreateAmendPensionChargesSchema
+import play.api.libs.json.{JsObject, Json, OWrites}
+import utils.JsonWritesUtil
+import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestBody
+import v2.createAmend.def2.model.request.Def2_CreateAmendPensionChargesRequestBody
 
-trait CreateAmendPensionChargesRequestData {
-  def nino: Nino
-  def taxYear: TaxYear
-  def body: CreateAmendPensionChargesRequestBody
+trait CreateAmendPensionChargesRequestBody
 
-  val schema: CreateAmendPensionChargesSchema
+object CreateAmendPensionChargesRequestBody extends JsonWritesUtil {
+
+  implicit val writes: OWrites[CreateAmendPensionChargesRequestBody] = writesFrom {
+    case def1: Def1_CreateAmendPensionChargesRequestBody =>
+      Json.toJson(def1).as[JsObject]
+    case def2: Def2_CreateAmendPensionChargesRequestBody =>
+      Json.toJson(def2).as[JsObject]
+  }
 
 }

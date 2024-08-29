@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package v2.createAmend.def1.model.request
+package v2.createAmend.def2.model.request
 
-import api.models.domain.{Nino, TaxYear}
-import v2.createAmend.CreateAmendPensionChargesSchema
-import v2.createAmend.CreateAmendPensionChargesSchema.Def1
-import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
+import play.api.libs.json.{Json, OFormat}
 
-case class Def1_CreateAmendPensionChargesRequestData(nino: Nino, taxYear: TaxYear, body: Def1_CreateAmendPensionChargesRequestBody)
-    extends CreateAmendPensionChargesRequestData {
-  val schema: CreateAmendPensionChargesSchema = Def1
+case class OverseasSchemeProvider(providerName: String,
+                                  providerAddress: String,
+                                  providerCountryCode: String,
+                                  qualifyingRecognisedOverseasPensionScheme: Option[Seq[String]],
+                                  pensionSchemeTaxReference: Option[Seq[String]])
+
+object OverseasSchemeProvider {
+  implicit val format: OFormat[OverseasSchemeProvider] = Json.format[OverseasSchemeProvider]
 }
