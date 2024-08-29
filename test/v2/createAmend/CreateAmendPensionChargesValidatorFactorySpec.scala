@@ -16,7 +16,6 @@
 
 package v2.createAmend
 
-import api.controllers.validators.Validator
 import api.utils.JsonErrorValidators
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -53,13 +52,6 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
       "return the Validator for schema definition 2" in {
         val result = validatorFactory.validator(validNino, "2024-25", validRequestBody)
         result shouldBe a[Def2_CreateAmendPensionChargesValidator]
-      }
-    }
-
-    "given an invalid tax year" should {
-      "return no validator" in {
-        val result = validatorFactory.validator(validNino, "invalidTaxYear", validRequestBody)
-        result shouldBe a[Validator[_]]
       }
     }
 

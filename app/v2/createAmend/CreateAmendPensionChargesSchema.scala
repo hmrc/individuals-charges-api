@@ -18,9 +18,6 @@ package v2.createAmend
 
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.Valid
 
 sealed trait CreateAmendPensionChargesSchema
 
@@ -31,15 +28,14 @@ object CreateAmendPensionChargesSchema {
 
   private val defaultSchema = Def1
 
-  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], CreateAmendPensionChargesSchema] =
-    maybeTaxYear match {
-      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
-      case None                => Valid(defaultSchema)
-    }
+  def schemaFor(taxYear: String): CreateAmendPensionChargesSchema =
+    ResolveTaxYear(taxYear)
+      .map(schemaFor)
+      .getOrElse(defaultSchema)
 
-  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], CreateAmendPensionChargesSchema] = {
-    if (taxYear.year >= TaxYear.starting(2024).year) Valid(Def2)
-    else Valid(Def1)
+  def schemaFor(taxYear: TaxYear): CreateAmendPensionChargesSchema = {
+    if (taxYear.year >= TaxYear.starting(2024).year) Def2
+    else Def1
   }
 
 }
