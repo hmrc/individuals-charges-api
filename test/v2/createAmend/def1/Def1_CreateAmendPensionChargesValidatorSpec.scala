@@ -117,6 +117,15 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
         )
       }
+
+      "extra field in the request body is supplied" in new Test {
+        val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
+          validator(validNino, validTaxYear, invalidJsonWithExtraField).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/pensionSavingsTaxChargesExtra"))
+        )
+      }
     }
 
     "return country errors" when {

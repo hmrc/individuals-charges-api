@@ -16,13 +16,26 @@
 
 package api.controllers.validators.resolvers
 
+import api.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
 import api.models.errors.MtdError
 import cats.data.Validated
 import play.api.libs.json._
+import utils.Logging
 
-class ResolveJsonObject[T](implicit val reads: Reads[T]) extends Resolver[JsValue, T] with JsonObjectResolving[T] {
+class ResolveJsonObject[T](implicit val reads: Reads[T]) extends ResolverSupport with Logging {
 
-  def apply(data: JsValue, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], T] =
-    validate(data).leftMap(errs => withErrors(error, errs, path))
+  val resolver: Resolver[JsValue, T] = ResolveJsonObject.resolver
+
+  def apply(data: JsValue): Validated[Seq[MtdError], T] = resolver(data)
+}
+
+object ResolveJsonObject extends ResolverSupport {
+
+  def resolver[A: Reads]: Resolver[JsValue, A] = ResolveJsonObjectInternal.resolver.map(_._2)
+
+  /** Gets a resolver that also validates for unexpected JSON fields
+    */
+  def strictResolver[A: Reads: SchemaStructureSource]: Resolver[JsValue, A] =
+    (ResolveJsonObjectInternal.resolver thenValidate UnexpectedJsonFieldsValidator.validator).map(_._2)
 
 }

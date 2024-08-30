@@ -25,7 +25,7 @@ import cats.implicits._
 import config.AppConfig
 import play.api.libs.json.JsValue
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesRulesValidator.validateBusinessRules
-import v2.createAmend.def2.model.request.Def2_CreateAmendPensionChargesRequestData
+import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
@@ -34,7 +34,7 @@ class Def2_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: 
     extends Validator[CreateAmendPensionChargesRequestData] {
 
   private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
-  private val resolveJson     = new ResolveJsonObject[request.Def2_CreateAmendPensionChargesRequestBody]()
+  private val resolveJson     = ResolveJsonObject.strictResolver[Def2_CreateAmendPensionChargesRequestBody]
 
   def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
     (
