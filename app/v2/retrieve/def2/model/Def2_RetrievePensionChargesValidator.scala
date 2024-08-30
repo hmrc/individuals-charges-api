@@ -27,7 +27,7 @@ import v2.retrieve.model.request.RetrievePensionChargesRequestData
 class Def2_RetrievePensionChargesValidator(nino: String, taxYear: String)
     extends Validator[RetrievePensionChargesRequestData] {
 
-  private lazy val minTaxYear = 24
+  private lazy val minTaxYear = 2024
 
   def validate: Validated[Seq[MtdError], RetrievePensionChargesRequestData] = {
     (

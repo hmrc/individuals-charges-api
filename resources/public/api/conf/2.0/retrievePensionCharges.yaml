@@ -32,7 +32,9 @@ responses:
           example-response:
             description: Example Response
             value:
-              $ref: './examples/retrieve_pension_charges_response.json'
+              oneOf:
+                - $ref: './examples/retrieve_pension_charges/def1/retrieve_pension_charges_response.json'
+                - $ref: './examples/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
   "400":
     description: Bad request
     content:
