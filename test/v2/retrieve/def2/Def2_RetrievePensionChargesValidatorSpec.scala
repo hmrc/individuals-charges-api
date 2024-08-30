@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package v2.retrieve.def1
+package v2.retrieve.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
-import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
-import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
+import v2.retrieve.RetrievePensionChargesValidatorFactory
+import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
-  private val validTaxYear = "2021-22"
+  private val validTaxYear = "2024-25"
 
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String) = new Def1_RetrievePensionChargesValidator(nino, taxYear)(mockAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
+
+  private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {
@@ -45,7 +46,7 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
-        result shouldBe Right(Def1_RetrievePensionChargesRequestData(parsedNino, parsedTaxYear))
+        result shouldBe Right(Def2_RetrievePensionChargesRequestData(parsedNino, parsedTaxYear))
       }
     }
 
@@ -70,23 +71,6 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
-
-      "an invalid tax year, before the minimum, is supplied" in new Test {
-        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
-          validator(validNino, "2020-21").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
-      }
-    }
-
-    "return multiple errors" when {
-      "request supplied has multiple errors" in new Test {
-        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
-          validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
-      }
     }
   }
-
 }

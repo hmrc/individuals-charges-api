@@ -21,7 +21,7 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import utils.Logging
 
-trait Validator[PARSED] extends Logging {
+trait Validator[+PARSED] extends Logging {
 
   def validate: Validated[Seq[MtdError], PARSED]
 
@@ -63,4 +63,12 @@ trait Validator[PARSED] extends Logging {
       .toList
   }
 
+}
+
+object Validator {
+  def returningErrors(errors: Seq[MtdError]): Validator[Nothing] = AlwaysErrorsValidator(errors)
+
+}
+case class AlwaysErrorsValidator(errors: Seq[MtdError]) extends Validator[Nothing] {
+  override def validate: Validated[Seq[MtdError], Nothing] = Invalid(errors)
 }
