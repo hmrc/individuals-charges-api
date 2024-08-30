@@ -31,13 +31,11 @@ responses:
            - $ref: './schemas/retrieve_pension_charges/def1/retrieve_pension_charges_response.json'
            - $ref: './schemas/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
         examples:
-          example-def1-response:
-            description: Example Response for 2023-24 and before
+          Example Response for 2023-24 and before:
             value:
               $ref: './examples/retrieve_pension_charges/def1/retrieve_pension_charges_response.json'
 
-          example-def2-response:
-            description: Example Response for 2024-25 and after
+          Example Response for 2024-25 and after:
             value:
               $ref: './examples/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
   "400":
