@@ -38,7 +38,7 @@ responses:
 
           example-response:
             description: Example Response for 2024-25 and after
-           value:
+            value:
               $ref: './examples/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
   "400":
     description: Bad request
