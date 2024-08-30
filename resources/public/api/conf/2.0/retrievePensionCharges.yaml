@@ -27,14 +27,14 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/retrieve_pension_charges_response.json'
+          oneOf:
+           - $ref: './schemas/retrieve_pension_charges/def1/retrieve_pension_charges_response.json'
+           - $ref: './schemas/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
         examples:
           example-response:
             description: Example Response
             value:
-              oneOf:
-                - $ref: './examples/retrieve_pension_charges/def1/retrieve_pension_charges_response.json'
-                - $ref: './examples/retrieve_pension_charges/def2/retrieve_pension_charges_response.json'
+              $ref: './examples/retrieve_pension_charges_response.json'
   "400":
     description: Bad request
     content:
