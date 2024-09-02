@@ -60,6 +60,7 @@ trait AppConfig {
   def apiGatewayContext: String
   def apiStatus(version: Version): String
   def featureSwitchConfig: Configuration
+  def endpointsEnabled(version: String): Boolean
   def endpointsEnabled(version: Version): Boolean
   def apiVersionReleasedInProduction(version: String): Boolean
   def endpointReleasedInProduction(version: String, name: String): Boolean
@@ -103,14 +104,15 @@ class AppConfigImpl @Inject() (config: ServicesConfig, protected[config] val con
   // API Config
   val apiGatewayContext: String                   = config.getString("api.gateway.context")
   def apiStatus(version: Version): String         = config.getString(s"api.$version.status")
-  def featureSwitchConfig: Configuration              = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
-  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+  def featureSwitchConfig: Configuration          = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def endpointsEnabled(version: String): Boolean  = config.getBoolean(s"api.$version.endpoints.enabled")
+  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.${version.name}.endpoints.enabled")
 
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)
-    val path = s"api.$version.endpoints.released-in-production.$name"
+    val path                  = s"api.$version.endpoints.released-in-production.$name"
 
     val conf = configuration.underlying
     if (versionReleasedInProd && conf.hasPath(path)) config.getBoolean(path) else versionReleasedInProd

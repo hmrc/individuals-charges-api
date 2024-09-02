@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package v3.endpoints
+package v2.createAmend.def1
 
 import api.models.errors._
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 
-class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
+class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
 
   "Calling the create & amend endpoint" should {
 
@@ -268,7 +268,7 @@ class CreateAmendPensionsChargesControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(s"/pensions/$nino/$taxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

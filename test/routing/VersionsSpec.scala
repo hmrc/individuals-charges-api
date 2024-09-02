@@ -62,6 +62,13 @@ class VersionsSpec extends UnitSpec {
       result shouldEqual JsSuccess(Version2)
     }
 
+    "successfully read Version3" in {
+      val versionJson: JsValue = JsString(Version3.name)
+      val result: JsResult[Version] = VersionReads.reads(versionJson)
+
+      result shouldEqual JsSuccess(Version3)
+    }
+
     "return error for unrecognised version" in {
       val versionJson: JsValue      = JsString("UnknownVersion")
       val result: JsResult[Version] = VersionReads.reads(versionJson)

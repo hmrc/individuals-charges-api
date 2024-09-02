@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Create and Amend Pension Charges",
+  "title": "Tax years before 2024-25",
   "description": "Create and Amend Pension Charges",
   "type": "object",
   "properties": {

@@ -19,7 +19,7 @@ package api.controllers
 import api.controllers.validators.Validator
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, ServiceOutcome}
 import cats.data.Validated
@@ -252,5 +252,38 @@ class RequestHandlerSpec
       }
     }
   }
+
+  "given an error handler that doesn't handle an error" should {
+    "return an InternalServerError" in {
+      service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
+
+      val errorHandler = ErrorHandling {
+        case _: ErrorWrapper if false =>
+          throw new Exception("Should not have been matched")
+      }
+      val requestHandler = RequestHandler
+        .withValidator(successValidatorForRequest)
+        .withService(mockService.service)
+        .withErrorHandling(errorHandler)
+
+      val result = requestHandler.handleRequest()
+      status(result) shouldBe InternalError.httpStatus
+      contentAsJson(result) shouldBe InternalError.asJson
+    }
+  }
+
+"withErrorHandling()" should {
+  "return a new RequestHandlerBuilder with the expected error handling" in {
+    class CustomErrorHandling extends ErrorHandling(null)
+
+    val requestHandler = RequestHandler
+      .withValidator(successValidatorForRequest)
+      .withService(mockService.service)
+      .withErrorHandling(new CustomErrorHandling)
+
+    val result = requestHandler
+    result.errorHandling shouldBe a[CustomErrorHandling]
+  }
+}
 
 }
