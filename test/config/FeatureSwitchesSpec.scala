@@ -44,4 +44,32 @@ class FeatureSwitchesSpec extends UnitSpec {
     }
   }
 
+  "removeLifetimePension feature switch" should {
+    "be true" when {
+
+      "absent from the config" in {
+        val configuration   = Configuration.empty
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isRemoveLifetimePensionEnabled shouldBe true
+      }
+
+      "enabled" in {
+        val configuration   = Configuration("removeLifetimePension.enabled" -> true)
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isRemoveLifetimePensionEnabled shouldBe true
+
+      }
+
+      "disabled" in {
+        val configuration   = Configuration("removeLifetimePension.enabled" -> false)
+        val featureSwitches = FeatureSwitches(configuration)
+
+        featureSwitches.isRemoveLifetimePensionEnabled shouldBe false
+
+      }
+    }
+  }
+
 }

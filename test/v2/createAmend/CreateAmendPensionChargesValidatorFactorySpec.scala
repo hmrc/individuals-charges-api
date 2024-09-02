@@ -18,6 +18,7 @@ package v2.createAmend
 
 import api.utils.JsonErrorValidators
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
@@ -38,11 +39,16 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
   private val validRequestBody = requestBodyJson()
 
-  private val validatorFactory = new CreateAmendPensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory = new CreateAmendPensionChargesValidatorFactory
+
+  private def setupMocks = MockedAppConfig.featureSwitches.anyNumberOfTimes() returns Configuration(
+    "removeLifetimePension.enabled" -> true
+  )
 
   "validator" when {
     "given a valid taxYear before 2024-25" should {
       "return the Validator for schema definition 1" in {
+        setupMocks
         val result = validatorFactory.validator(validNino, validTaxYear, validRequestBody)
         result shouldBe a[Def1_CreateAmendPensionChargesValidator]
       }
@@ -50,6 +56,7 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
     "given a valid taxYear 2024-25 or later" should {
       "return the Validator for schema definition 2" in {
+        setupMocks
         val result = validatorFactory.validator(validNino, "2024-25", validRequestBody)
         result shouldBe a[Def2_CreateAmendPensionChargesValidator]
       }

@@ -26,7 +26,7 @@ import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
 
-class CreateAmendPensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
+class CreateAmendPensionChargesValidatorFactory @Inject() (implicit appConfig: AppConfig) {
 
   def validator(nino: String, taxYear: String, body: JsValue): Validator[CreateAmendPensionChargesRequestData] = {
     val schema = CreateAmendPensionChargesSchema.schemaFor(taxYear)

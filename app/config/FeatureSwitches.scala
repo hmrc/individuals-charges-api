@@ -22,6 +22,7 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
   val isCL102Enabled: Boolean = isEnabled("cl102")
   val supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
+  val isRemoveLifetimePensionEnabled: Boolean = isEnabled("removeLifetimePension")
 
   def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
 
