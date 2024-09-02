@@ -27,12 +27,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/retrieve_pension_charges_response.json'
+          $ref: './schemas/response.json'
         examples:
           example-response:
             description: Example Response
             value:
-              $ref: './examples/retrieve_pension_charges_response.json'
+              $ref: './examples/response.json'
   "400":
     description: Bad request
     content:

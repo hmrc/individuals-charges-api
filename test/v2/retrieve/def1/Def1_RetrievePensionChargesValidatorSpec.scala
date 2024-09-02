@@ -77,6 +77,13 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
+
+      "an invalid tax year, after the maximum, is supplied" in new Test {
+        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
+          validator(validNino, "2027-28").validateAndWrapResult()
+
+        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
+      }
     }
 
     "return multiple errors" when {
