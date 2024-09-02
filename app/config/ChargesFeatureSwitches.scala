@@ -17,16 +17,16 @@
 package config
 
 import play.api.Configuration
-import shared.config.{AppConfig, FeatureSwitches}
 
 /** API-specific feature switches.
   */
-case class BsasFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+case class ChargesFeatureSwitches private(protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  def isIfsEnabled: Boolean      = isEnabled("ifs")
-  def isIfsInProduction: Boolean = isReleasedInProduction("ifs")
+  def isCL102Enabled: Boolean      = isEnabled("cl102")
+  def isRemoveLifetimePensionEnabled: Boolean = isEnabled("removeLifetimePension")
+  def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")
 }
 
-object BsasFeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): BsasFeatureSwitches = BsasFeatureSwitches(appConfig.featureSwitchConfig)
+object ChargesFeatureSwitches {
+  def apply()(implicit appConfig: AppConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
 }

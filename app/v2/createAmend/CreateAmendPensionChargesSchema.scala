@@ -18,7 +18,7 @@ package v2.createAmend
 
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
-import config.{AppConfig, FeatureSwitches}
+import config.{AppConfig, ChargesFeatureSwitches}
 
 sealed trait CreateAmendPensionChargesSchema
 
@@ -35,7 +35,7 @@ object CreateAmendPensionChargesSchema {
       .getOrElse(defaultSchema)
 
   private def schemaFor(taxYear: TaxYear)(implicit appConfig: AppConfig): CreateAmendPensionChargesSchema = {
-    val featureSwitches = FeatureSwitches()(appConfig)
+    val featureSwitches = ChargesFeatureSwitches()
     if (featureSwitches.isRemoveLifetimePensionEnabled && taxYear.year >= TaxYear.starting(2024).year) Def2
     else Def1
   }

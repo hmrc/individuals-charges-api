@@ -18,19 +18,24 @@ package config
 
 import play.api.Configuration
 
-case class FeatureSwitches(featureSwitchConfig: Configuration) {
+trait FeatureSwitches {
 
-  val isCL102Enabled: Boolean = isEnabled("cl102")
-  val supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
-  val isRemoveLifetimePensionEnabled: Boolean = isEnabled("removeLifetimePension")
+  protected val featureSwitchConfig: Configuration
 
   def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
 
   def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
 
   private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
+
+  def supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
 }
 
-object FeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+/** This is just here for non-typesafe usage such as Handlebars using OasFeatureRewriter. In most cases, should use the API-specific
+  * XyzFeatureSwitches class instead.
+  */
+case class ConfigFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches
+
+object ConfigFeatureSwitches {
+  def apply()(implicit appConfig: AppConfig): ConfigFeatureSwitches = ConfigFeatureSwitches(appConfig.featureSwitchConfig)
 }

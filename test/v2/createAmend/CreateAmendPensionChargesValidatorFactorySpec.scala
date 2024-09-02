@@ -41,7 +41,7 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
   private val validatorFactory = new CreateAmendPensionChargesValidatorFactory
 
-  private def setupMocks = MockedAppConfig.featureSwitches.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 

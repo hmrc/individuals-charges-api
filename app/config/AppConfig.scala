@@ -59,8 +59,10 @@ trait AppConfig {
   // API Config
   def apiGatewayContext: String
   def apiStatus(version: Version): String
-  def featureSwitches: Configuration
+  def featureSwitchConfig: Configuration
   def endpointsEnabled(version: Version): Boolean
+  def apiVersionReleasedInProduction(version: String): Boolean
+  def endpointReleasedInProduction(version: String, name: String): Boolean
   def safeEndpointsEnabled(version: String): Boolean
 
   def confidenceLevelConfig: ConfidenceLevelConfig
@@ -101,8 +103,18 @@ class AppConfigImpl @Inject() (config: ServicesConfig, protected[config] val con
   // API Config
   val apiGatewayContext: String                   = config.getString("api.gateway.context")
   def apiStatus(version: Version): String         = config.getString(s"api.$version.status")
-  def featureSwitches: Configuration              = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def featureSwitchConfig: Configuration              = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
   def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+
+  def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
+
+  def endpointReleasedInProduction(version: String, name: String): Boolean = {
+    val versionReleasedInProd = apiVersionReleasedInProduction(version)
+    val path = s"api.$version.endpoints.released-in-production.$name"
+
+    val conf = configuration.underlying
+    if (versionReleasedInProd && conf.hasPath(path)) config.getBoolean(path) else versionReleasedInProd
+  }
 
   val confidenceLevelConfig: ConfidenceLevelConfig =
     configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")

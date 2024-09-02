@@ -38,7 +38,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockedAppConfig.featureSwitches returns Configuration.empty
+        MockedAppConfig.featureSwitchConfig returns Configuration.empty
         MockedAppConfig.apiStatus(Version2) returns "2.0"
         MockedAppConfig.endpointsEnabled(Version2) returns true
         MockedAppConfig.apiStatus(Version3) returns "3.0"

@@ -17,22 +17,21 @@
 package config
 
 import play.api.Configuration
-import shared.config.FeatureSwitchesBehaviour
-import shared.utils.UnitSpec
+import support.UnitSpec
 
-class BsasFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[BsasFeatureSwitches] {
-  override def featureSwitches(configuration: Configuration): BsasFeatureSwitches = BsasFeatureSwitches(configuration)
+class ChargesFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[ChargesFeatureSwitches] {
+  override def featureSwitches(configuration: Configuration): ChargesFeatureSwitches = ChargesFeatureSwitches(configuration)
 
-  "isIfsEnabled" should {
-    behave like aFeatureSwitchWithKey("ifs.enabled", _.isIfsEnabled)
+  "isCL102Enabled" should {
+    behave like aFeatureSwitchWithKey("cl102.enabled", _.isCL102Enabled)
   }
 
-  "isIfsInProduction" should {
-    behave like aFeatureSwitchWithKey("ifs.released-in-production", _.isIfsInProduction)
+  "isRemoveLifetimePensionEnabled" should {
+    behave like aFeatureSwitchWithKey("removeLifetimePension.enabled", _.isRemoveLifetimePensionEnabled)
   }
 
-  "supportingAgentsAccessControlEnabled" should {
-    behave like aFeatureSwitchWithKey("supporting-agents-access-control.enabled", _.supportingAgentsAccessControlEnabled)
+  "isRemoveLifetimePensionInProduction" should {
+    behave like aFeatureSwitchWithKey("removeLifetimePension.released-in-production", _.isRemoveLifetimePensionInProduction)
   }
 
 }

@@ -17,59 +17,20 @@
 package config
 
 import play.api.Configuration
-import routing.{Version, Version2}
 import support.UnitSpec
 
-class FeatureSwitchesSpec extends UnitSpec {
+class FeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[FeatureSwitches] {
 
-  val anyVersion: Version = Version2
-
-  "isCL102Enabled feature switch" should {
-    "be true" when {
-
-      "absent from the config" in {
-        val configuration   = Configuration.empty
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isCL102Enabled shouldBe true
-      }
-
-      "enabled" in {
-        val configuration   = Configuration("cl102.enabled" -> true)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isCL102Enabled shouldBe true
-
-      }
-    }
+  override def featureSwitches(configuration: Configuration): FeatureSwitches = new FeatureSwitches {
+    override protected val featureSwitchConfig: Configuration = configuration
   }
 
-  "removeLifetimePension feature switch" should {
-    "be true" when {
+  "isEnabled" should {
+    behave like aFeatureSwitchWithKey("some-feature.enabled", _.isEnabled("some-feature"))
+  }
 
-      "absent from the config" in {
-        val configuration   = Configuration.empty
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isRemoveLifetimePensionEnabled shouldBe true
-      }
-
-      "enabled" in {
-        val configuration   = Configuration("removeLifetimePension.enabled" -> true)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isRemoveLifetimePensionEnabled shouldBe true
-
-      }
-
-      "disabled" in {
-        val configuration   = Configuration("removeLifetimePension.enabled" -> false)
-        val featureSwitches = FeatureSwitches(configuration)
-
-        featureSwitches.isRemoveLifetimePensionEnabled shouldBe false
-
-      }
-    }
+  "isReleasedInProduction" should {
+    behave like aFeatureSwitchWithKey("some-feature.released-in-production", _.isReleasedInProduction("some-feature"))
   }
 
 }

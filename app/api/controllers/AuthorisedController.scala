@@ -19,7 +19,7 @@ package api.controllers
 import api.models.auth.UserDetails
 import api.models.errors.MtdError
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.{AppConfig, FeatureSwitches}
+import config.{AppConfig, ConfigFeatureSwitches}
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -29,20 +29,20 @@ import scala.concurrent.{ExecutionContext, Future}
 case class UserRequest[A](userDetails: UserDetails, request: Request[A]) extends WrappedRequest[A](request)
 
 abstract class AuthorisedController(
-                                     cc: ControllerComponents
-                                   )(implicit appConfig: AppConfig, ec: ExecutionContext)
-  extends BackendController(cc) {
+    cc: ControllerComponents
+)(implicit appConfig: AppConfig, ec: ExecutionContext)
+    extends BackendController(cc) {
 
   val authService: EnrolmentsAuthService
   val lookupService: MtdIdLookupService
 
   val endpointName: String
 
-  lazy private val supportingAgentsAccessControlEnabled: Boolean = FeatureSwitches.apply().supportingAgentsAccessControlEnabled
+  lazy private val supportingAgentsAccessControlEnabled: Boolean = ConfigFeatureSwitches().supportingAgentsAccessControlEnabled
 
   lazy private val endpointAllowsSupportingAgents: Boolean = {
     supportingAgentsAccessControlEnabled &&
-      appConfig.endpointAllowsSupportingAgents(endpointName)
+    appConfig.endpointAllowsSupportingAgents(endpointName)
   }
 
   def authorisedAction(nino: String): ActionBuilder[UserRequest, AnyContent] = new ActionBuilder[UserRequest, AnyContent] {
@@ -52,10 +52,10 @@ abstract class AuthorisedController(
     override protected def executionContext: ExecutionContext = cc.executionContext
 
     def invokeBlockWithAuthCheck[A](
-                                     mtdId: String,
-                                     request: Request[A],
-                                     block: UserRequest[A] => Future[Result]
-                                   )(implicit headerCarrier: HeaderCarrier): Future[Result] = {
+        mtdId: String,
+        request: Request[A],
+        block: UserRequest[A] => Future[Result]
+    )(implicit headerCarrier: HeaderCarrier): Future[Result] = {
 
       authService.authorised(mtdId, endpointAllowsSupportingAgents).flatMap[Result] {
         case Right(userDetails) =>

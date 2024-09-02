@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package shared.config.rewriters
+package config.rewriters
 
 import com.github.jknack.handlebars.Options
-import shared.config.AppConfig
-import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
+import config.AppConfig
+import config.rewriters.DocumentationRewriters.CheckAndRewrite
 
 import javax.inject.{Inject, Singleton}
 

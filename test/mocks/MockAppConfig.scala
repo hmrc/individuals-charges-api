@@ -50,12 +50,18 @@ trait MockAppConfig extends MockFactory {
 
     def mtdIdBaseUrl: CallHandler[String] = (() => mockAppConfig.mtdIdBaseUrl).expects()
 
-    def featureSwitches: CallHandler[Configuration] = (() => mockAppConfig.featureSwitches).expects()
+    def featureSwitchConfig: CallHandler[Configuration] = (() => mockAppConfig.featureSwitchConfig).expects()
 
     def apiGatewayContext: CallHandler[String] = (() => mockAppConfig.apiGatewayContext).expects()
 
     def apiStatus(status: Version): CallHandler[String]          = (mockAppConfig.apiStatus: Version => String).expects(status)
     def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
+
+    def apiVersionReleasedInProduction(version: String): CallHandler[Boolean] =
+      (mockAppConfig.apiVersionReleasedInProduction: String => Boolean).expects(version)
+
+    def endpointReleasedInProduction(version: String, key: String): CallHandler[Boolean] =
+      (mockAppConfig.endpointReleasedInProduction: (String, String) => Boolean).expects(version, key)
 
     def minTaxYearPensionCharge: CallHandler[String] = (() => mockAppConfig.minTaxYearPensionCharge).expects()
 
@@ -67,6 +73,7 @@ trait MockAppConfig extends MockFactory {
 
     def endpointAllowsSupportingAgents(endpointName: String): CallHandler[Boolean] =
       (mockAppConfig.endpointAllowsSupportingAgents(_: String)).expects(endpointName)
+
   }
 
 }
