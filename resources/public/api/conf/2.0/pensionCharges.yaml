@@ -1,3 +1,4 @@
+# {{#if (enabled 'remove-lifetime-pension')}}
 get:
   $ref: "./retrievePensionCharges.yaml"
 
@@ -6,7 +7,7 @@ get:
   security:
     - User-Restricted:
         - read:self-assessment
-
+#{{/if}}
 put:
   $ref: "./createAmendPensionCharges.yaml"
 
