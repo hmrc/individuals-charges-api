@@ -1,13 +1,12 @@
-# {{#if (enabled 'remove-lifetime-pension')}}
 get:
   $ref: "./retrievePensionCharges.yaml"
 
-  summary: Retrieve Pension Charges
+  summary: Retrieve Pension Charges [Test Only]
 
   security:
     - User-Restricted:
         - read:self-assessment
-#{{/if}}
+
 put:
   $ref: "./createAmendPensionCharges.yaml"
 
