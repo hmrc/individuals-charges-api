@@ -50,6 +50,13 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
         result shouldBe a[Def2_RetrievePensionChargesValidator]
       }
     }
+
+    "given an valid request and featureSwitch is disabled" in {
+      MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+        "removeLifetimePension.enabled" -> false)
+      val result = validatorFactory.validator(validNino, validDef2TaxYear)
+      result shouldBe a[Def1_RetrievePensionChargesValidator]
+    }
   }
 
 }
