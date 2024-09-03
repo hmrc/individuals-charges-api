@@ -17,20 +17,13 @@
 package config
 
 import play.api.Configuration
-import support.UnitSpec
+case class ChargesFeatureSwitches private(protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-class FeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[FeatureSwitches] {
+  def isCL102Enabled: Boolean      = isEnabled("cl102")
+  def isRemoveLifetimePensionEnabled: Boolean = isEnabled("removeLifetimePension")
+  def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")
+}
 
-  override def featureSwitches(configuration: Configuration): FeatureSwitches = new FeatureSwitches {
-    override protected val featureSwitchConfig: Configuration = configuration
-  }
-
-  "isEnabled" should {
-    behave like aFeatureSwitchWithKey("some-feature.enabled", _.isEnabled("some-feature"))
-  }
-
-  "isReleasedInProduction" should {
-    behave like aFeatureSwitchWithKey("some-feature.released-in-production", _.isReleasedInProduction("some-feature"))
-  }
-
+object ChargesFeatureSwitches {
+  def apply()(implicit appConfig: AppConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
 }

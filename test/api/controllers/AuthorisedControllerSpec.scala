@@ -54,7 +54,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
 
     protected def endpointAllowsSupportingAgents: Boolean = true
 
-    MockedAppConfig.featureSwitches.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> supportingAgentsfeatureEnabled
     )
 

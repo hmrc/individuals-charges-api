@@ -19,6 +19,7 @@ package v2.retrieve.def2
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
 import v2.retrieve.RetrievePensionChargesValidatorFactory
 import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
@@ -37,12 +38,17 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
+  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    "removeLifetimePension.enabled" -> true
+  )
+
   class Test {
   }
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
@@ -52,6 +58,7 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
 
     "should return a single error" when {
       "an invalid nino is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
@@ -59,6 +66,7 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
       }
 
       "an incorrectly formatted taxYear is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
 
@@ -66,6 +74,7 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
       }
 
       "an invalid tax year range is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
 

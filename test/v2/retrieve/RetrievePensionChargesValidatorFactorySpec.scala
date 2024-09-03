@@ -17,6 +17,7 @@
 package v2.retrieve
 
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
@@ -29,9 +30,14 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
 
   private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
 
+  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    "removeLifetimePension.enabled" -> true
+  )
+
   "validator" should {
     "return the Def1 validator" when {
       "given any valid request" in {
+        setupMocks
         val result = validatorFactory.validator(validNino, validDef1TaxYear)
         result shouldBe a[Def1_RetrievePensionChargesValidator]
       }
@@ -39,6 +45,7 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
 
     "return the Def2 validator" when {
       "given any valid request" in {
+        setupMocks
         val result = validatorFactory.validator(validNino, validDef2TaxYear)
         result shouldBe a[Def2_RetrievePensionChargesValidator]
       }

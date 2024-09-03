@@ -19,7 +19,7 @@ package api.controllers
 import api.models.auth.UserDetails
 import api.models.errors.MtdError
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.{AppConfig, FeatureSwitches}
+import config.{AppConfig, ConfigFeatureSwitches}
 import play.api.mvc._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -38,7 +38,7 @@ abstract class AuthorisedController(
 
   val endpointName: String
 
-  lazy private val supportingAgentsAccessControlEnabled: Boolean = FeatureSwitches.apply().supportingAgentsAccessControlEnabled
+  lazy private val supportingAgentsAccessControlEnabled: Boolean = ConfigFeatureSwitches.apply().supportingAgentsAccessControlEnabled
 
   lazy private val endpointAllowsSupportingAgents: Boolean = {
     supportingAgentsAccessControlEnabled &&
