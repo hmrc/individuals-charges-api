@@ -21,7 +21,7 @@ import api.services.DownstreamStub
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture.fullValidJson
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
 
 class IndividualsChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 

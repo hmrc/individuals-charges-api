@@ -27,9 +27,17 @@ import java.time.{LocalDate, ZoneOffset}
   */
 final case class TaxYear private (private val value: String) {
 
-  /** The tax year as a number, e.g. for "2023-24" this will be 2024.
-    */
+  /** The year that the tax year ends as a number, e.g. for "2023-24" this will be 2024.
+   */
   val year: Int = value.toInt
+
+  /** The year that the tax year starts as a number, e.g. for "2023-24" this will be 2023.
+   */
+  val startYear: Int = year - 1
+
+  def startDate: LocalDate = TaxYear.startInYear(startYear)
+
+  def endDate: LocalDate = startDate.plusYears(1).minusDays(1)
 
   /** e.g. for tax year 2023-24, "2023-04-06"
     */
@@ -83,6 +91,9 @@ object TaxYear {
   private val taxYearMonthStart = 4
   private val taxYearDayStart   = 6
 
+  def starting(year: Int): TaxYear = TaxYear.ending(year + 1)
+  def ending(year: Int): TaxYear = new TaxYear(year.toString)
+
   /** @param taxYear
     *   tax year in MTD format (e.g. 2017-18)
     */
@@ -107,6 +118,9 @@ object TaxYear {
     val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)
     date.isBefore(taxYearStartDate)
   }
+
+  private def startInYear(year: Int): LocalDate =
+    LocalDate.of(year, taxYearMonthStart, taxYearDayStart)
 
   def fromDownstream(taxYear: String): TaxYear =
     new TaxYear(taxYear)

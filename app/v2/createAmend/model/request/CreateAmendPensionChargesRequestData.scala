@@ -17,11 +17,13 @@
 package v2.createAmend.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v2.createAmend.def1.model.request.PensionCharges
+import v2.createAmend.CreateAmendPensionChargesSchema
 
 trait CreateAmendPensionChargesRequestData {
   def nino: Nino
   def taxYear: TaxYear
-  def pensionCharges: PensionCharges
+  def body: CreateAmendPensionChargesRequestBody
+
+  val schema: CreateAmendPensionChargesSchema
 
 }

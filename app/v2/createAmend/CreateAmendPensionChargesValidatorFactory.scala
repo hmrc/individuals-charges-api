@@ -19,18 +19,20 @@ package v2.createAmend
 import api.controllers.validators.Validator
 import config.AppConfig
 import play.api.libs.json.JsValue
-import v2.createAmend.CreateAmendPensionChargesSchema.Def1
+import v2.createAmend.CreateAmendPensionChargesSchema.{Def1, Def2}
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
+import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
 
-class CreateAmendPensionChargesValidatorFactory @Inject()(appConfig: AppConfig) {
+class CreateAmendPensionChargesValidatorFactory @Inject() (implicit appConfig: AppConfig) {
 
   def validator(nino: String, taxYear: String, body: JsValue): Validator[CreateAmendPensionChargesRequestData] = {
-    val schema = CreateAmendPensionChargesSchema.schema
+    val schema = CreateAmendPensionChargesSchema.schemaFor(taxYear)
     schema match {
       case Def1 => new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(appConfig)
+      case Def2 => new Def2_CreateAmendPensionChargesValidator(nino, taxYear, body)(appConfig)
     }
   }
 

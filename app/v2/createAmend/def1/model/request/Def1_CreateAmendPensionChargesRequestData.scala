@@ -18,9 +18,10 @@ package v2.createAmend.def1.model.request
 
 import api.models.domain.{Nino, TaxYear}
 import v2.createAmend.CreateAmendPensionChargesSchema
+import v2.createAmend.CreateAmendPensionChargesSchema.Def1
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-case class Def1_CreateAmendPensionChargesRequestData(nino: Nino, taxYear: TaxYear, pensionCharges: PensionCharges)
+case class Def1_CreateAmendPensionChargesRequestData(nino: Nino, taxYear: TaxYear, body: Def1_CreateAmendPensionChargesRequestBody)
     extends CreateAmendPensionChargesRequestData {
-  val schema: CreateAmendPensionChargesSchema = CreateAmendPensionChargesSchema.Def1
+  val schema: CreateAmendPensionChargesSchema = Def1
 }

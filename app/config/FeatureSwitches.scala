@@ -31,6 +31,10 @@ trait FeatureSwitches {
   def supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
 }
 
+/** This is just here for non-typesafe usage such as Handlebars using OasFeatureRewriter. In most cases, should use the API-specific
+  * XyzFeatureSwitches class instead.
+  */
+
 case class ConfigFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches
 
 object ConfigFeatureSwitches {

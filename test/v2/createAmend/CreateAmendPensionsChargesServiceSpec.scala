@@ -22,7 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
 import scala.concurrent.Future
@@ -32,7 +32,7 @@ class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
   val nino: Nino       = Nino("AA123456A")
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
-  private val request = Def1_CreateAmendPensionChargesRequestData(nino, taxYear, pensionCharges)
+  private val request = Def1_CreateAmendPensionChargesRequestData(nino, taxYear, createAmendPensionChargesRequestBody)
 
   trait Test extends MockCreateAmendPensionChargesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()

@@ -21,9 +21,9 @@ import api.models.errors._
 import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec
-import v2.createAmend.CreateAmendPensionChargesValidatorFactory
-import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture._
-import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestData, PensionCharges}
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
+import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
@@ -35,11 +35,10 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val parsedFullRequestBody    = fullValidJson.as[PensionCharges]
-  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[PensionCharges]
+  private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
+  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
 
-  private val validatorFactory                                        = new CreateAmendPensionChargesValidatorFactory(mockAppConfig)
-  private def validator(nino: String, taxYear: String, body: JsValue) = validatorFactory.validator(nino, taxYear, body)
+  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(mockAppConfig)
 
   class Test {
     MockedAppConfig.minTaxYearPensionCharge.returns("2022")
@@ -116,6 +115,15 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
 
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError)
+        )
+      }
+
+      "extra field in the request body is supplied" in new Test {
+        val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
+          validator(validNino, validTaxYear, invalidJsonWithExtraField).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/pensionSavingsTaxChargesExtra"))
         )
       }
     }

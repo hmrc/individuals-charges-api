@@ -44,7 +44,7 @@ class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val ap
 
     put(
       uri = downstreamUri,
-      body = request.pensionCharges
+      body = request.body
     )
   }
 

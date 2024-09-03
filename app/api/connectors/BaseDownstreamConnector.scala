@@ -18,9 +18,9 @@ package api.connectors
 
 import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import config.{AppConfig, FeatureSwitches}
-import play.api.{Configuration, Logger}
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.Writes
+import play.api.{Configuration, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
 
 import scala.concurrent.{ExecutionContext, Future}

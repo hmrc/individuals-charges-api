@@ -28,8 +28,8 @@ responses:
       application/json:
         schema:
           oneOf:
-           - $ref: './schemas/retrievePensionCharges/def1/response.json'
-           - $ref: './schemas/retrievePensionCharges/def2/response.json'
+            - $ref: './schemas/retrievePensionCharges/def1/response.json'
+            - $ref: './schemas/retrievePensionCharges/def2/response.json'
         examples:
           Example Response for 2023-24 and before:
             value:

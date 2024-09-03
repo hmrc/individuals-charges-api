@@ -26,7 +26,7 @@ import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v2.createAmend.def1.fixture.CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +43,7 @@ class CreateAmendPensionsChargesControllerSpec
     with MockAuditService {
 
   private val taxYear     = "2021-22"
-  private val requestData = Def1_CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), pensionCharges)
+  private val requestData = Def1_CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), createAmendPensionChargesRequestBody)
 
   "amend" should {
     "return a successful response with header X-CorrelationId and body" when {
