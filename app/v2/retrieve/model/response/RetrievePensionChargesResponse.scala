@@ -19,13 +19,17 @@ package v2.retrieve.model.response
 import play.api.libs.json._
 import utils.JsonWritesUtil
 import v2.retrieve.def1.model.response.Def1_RetrievePensionChargesResponse
+import v2.retrieve.def2.model.response.Def2_RetrievePensionChargesResponse
 
 trait RetrievePensionChargesResponse
 
 object RetrievePensionChargesResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrievePensionChargesResponse] = writesFrom { case def1: Def1_RetrievePensionChargesResponse =>
-    implicitly[OWrites[Def1_RetrievePensionChargesResponse]].writes(def1)
+  implicit val writes: OWrites[RetrievePensionChargesResponse] = writesFrom{
+    case def1: Def1_RetrievePensionChargesResponse =>
+      implicitly[OWrites[Def1_RetrievePensionChargesResponse]].writes(def1)
+    case def2: Def2_RetrievePensionChargesResponse =>
+      implicitly[OWrites[Def2_RetrievePensionChargesResponse]].writes(def2)
   }
 
 }

@@ -27,12 +27,17 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/retrieve_pension_charges_response.json'
+          oneOf:
+           - $ref: './schemas/retrievePensionCharges/def1/response.json'
+           - $ref: './schemas/retrievePensionCharges/def2/response.json'
         examples:
-          example-response:
-            description: Example Response
+          Example Response for 2023-24 and before:
             value:
-              $ref: './examples/retrieve_pension_charges_response.json'
+              $ref: './examples/retrievePensionCharges/def1/response.json'
+
+          Example Response for 2024-25 and after:
+            value:
+              $ref: './examples/retrievePensionCharges/def2/response.json'
   "400":
     description: Bad request
     content:

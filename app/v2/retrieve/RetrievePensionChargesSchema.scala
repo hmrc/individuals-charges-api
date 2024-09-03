@@ -16,9 +16,15 @@
 
 package v2.retrieve
 
+import api.controllers.validators.resolvers.ResolveTaxYear
+import api.models.domain.TaxYear
+import api.models.errors.MtdError
 import api.schema.DownstreamReadable
+import cats.data.Validated
+import cats.data.Validated.Valid
 import play.api.libs.json.Reads
 import v2.retrieve.def1.model.response.Def1_RetrievePensionChargesResponse
+import v2.retrieve.def2.model.response.Def2_RetrievePensionChargesResponse
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
 sealed trait RetrievePensionChargesSchema extends DownstreamReadable[RetrievePensionChargesResponse]
@@ -30,6 +36,23 @@ object RetrievePensionChargesSchema {
     val connectorReads: Reads[DownstreamResp] = Def1_RetrievePensionChargesResponse.reads
   }
 
+  case object Def2 extends RetrievePensionChargesSchema {
+    type DownstreamResp = Def2_RetrievePensionChargesResponse
+    val connectorReads: Reads[DownstreamResp] = Def2_RetrievePensionChargesResponse.reads
+  }
+
   val schema: RetrievePensionChargesSchema = Def1
 
+  def schemaFor(maybeTaxYear: Option[String]): Validated[Seq[MtdError], RetrievePensionChargesSchema] =
+    maybeTaxYear match {
+      case Some(taxYearString) => ResolveTaxYear(taxYearString) andThen schemaFor
+      case None                => Valid(schema)
+    }
+
+  def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrievePensionChargesSchema] = {
+    taxYear.year match {
+      case x if x < 2025 => Valid(Def1)
+      case _ => Valid(Def2)
+    }
+  }
 }

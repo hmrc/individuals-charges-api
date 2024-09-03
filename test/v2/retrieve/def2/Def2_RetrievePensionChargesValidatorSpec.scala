@@ -14,43 +14,51 @@
  * limitations under the License.
  */
 
-package v2.retrieve.def1
+package v2.retrieve.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import mocks.MockAppConfig
+import play.api.Configuration
 import support.UnitSpec
-import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
-import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
+import v2.retrieve.RetrievePensionChargesValidatorFactory
+import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
-  private val validTaxYear = "2021-22"
+  private val validTaxYear = "2024-25"
 
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String) = new Def1_RetrievePensionChargesValidator(nino, taxYear)(mockAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
+
+  private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
+
+  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    "removeLifetimePension.enabled" -> true
+  )
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
-        result shouldBe Right(Def1_RetrievePensionChargesRequestData(parsedNino, parsedTaxYear))
+        result shouldBe Right(Def2_RetrievePensionChargesRequestData(parsedNino, parsedTaxYear))
       }
     }
 
     "should return a single error" when {
       "an invalid nino is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
@@ -58,6 +66,7 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
       }
 
       "an incorrectly formatted taxYear is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
 
@@ -65,35 +74,12 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
       }
 
       "an invalid tax year range is supplied" in new Test {
+        setupMocks
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
-
-      "an invalid tax year, before the minimum, is supplied" in new Test {
-        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
-          validator(validNino, "2020-21").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
-      }
-
-      "an invalid tax year, after the maximum, is supplied" in new Test {
-        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
-          validator(validNino, "2027-28").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
-      }
-    }
-
-    "return multiple errors" when {
-      "request supplied has multiple errors" in new Test {
-        val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
-          validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
-      }
     }
   }
-
 }
