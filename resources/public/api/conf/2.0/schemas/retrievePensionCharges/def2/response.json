@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Given any tax year 2023-24 and before",
+  "title": "Given any tax year 2024-25 and after",
   "description": "Retrieve Pension Charges",
   "type": "object",
   "properties": {
@@ -9,64 +9,6 @@
       "format": "YYYY-MM-DDThh:mm:ss.sssZ",
       "description": "An ISO-8601 compliant date-time representing when pension charges were submitted.",
       "example": "2021-04-04T01:01:01.000Z"
-    },
-    "pensionSavingsTaxCharges": {
-      "type": "object",
-      "description": "Object holding the booleans for annual allowance.",
-      "properties": {
-        "pensionSchemeTaxReference": {
-          "type": "array",
-          "items": {
-            "description": "A list of one or more unique references provided by HM Revenue and Customs (HMRC) when the scheme has been registered for tax relief and exemptions. It is 10 characters made up of 8 numbers followed by 2 letters.",
-            "type": "string",
-            "example": "00123456RA"
-          }
-        },
-        "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
-          "type": "object",
-          "description": "Object holding the amount and tax paid on lump sum benefit in excess of the lifetime allowance.",
-          "properties": {
-            "amount": {
-              "description": "The amount of the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "example": "1999.99"
-            },
-            "taxPaid": {
-              "description": "The amount of tax to be paid on the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "example": "1999.99"
-            }
-          },
-          "required": [
-            "submittedOn",
-            "amount",
-            "taxPaid"
-          ]
-        },
-        "benefitInExcessOfLifetimeAllowance": {
-          "type": "object",
-          "description": "Object holding the amount and tax paid on benefit in excess of the lifetime allowance.",
-          "properties": {
-            "amount": {
-              "description": "The amount of the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "example": "1999.99"
-            },
-            "taxPaid": {
-              "description": "The tax to be paid on the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-              "type": "number",
-              "example": "1999.99"
-            }
-          },
-          "required": [
-            "amount",
-            "taxPaid"
-          ]
-        }
-      },
-      "required": [
-        "pensionSchemeTaxReference"
-      ]
     },
     "pensionSchemeOverseasTransfers": {
       "type": "object",

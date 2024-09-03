@@ -20,10 +20,10 @@ import play.api.Configuration
 
 /** API-specific feature switches.
   */
-case class ChargesFeatureSwitches private(protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+case class ChargesFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  def isCL102Enabled: Boolean      = isEnabled("cl102")
-  def isRemoveLifetimePensionEnabled: Boolean = isEnabled("removeLifetimePension")
+  def isCL102Enabled: Boolean                      = isEnabled("cl102")
+  def isRemoveLifetimePensionEnabled: Boolean      = isEnabled("removeLifetimePension")
   def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")
 }
 

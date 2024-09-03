@@ -17,9 +17,11 @@
 package v2.retrieve
 
 import api.controllers.validators.Validator
-import config.AppConfig
-import v2.retrieve.RetrievePensionChargesSchema.Def1
+import cats.data.Validated.{Invalid, Valid}
+import config.{AppConfig, ChargesFeatureSwitches}
+import v2.retrieve.RetrievePensionChargesSchema.{Def1, Def2}
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
+import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 import javax.inject.Inject
@@ -28,10 +30,14 @@ class RetrievePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
 
   def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] = {
 
-    val schema = RetrievePensionChargesSchema.schema
+    val featureSwitches = ChargesFeatureSwitches()(appConfig)
+    val default = new Def1_RetrievePensionChargesValidator(nino, taxYear)(appConfig)
 
-    schema match {
-      case Def1 => new Def1_RetrievePensionChargesValidator(nino, taxYear)(appConfig)
+    RetrievePensionChargesSchema.schemaFor(Some(taxYear)) match {
+      case Valid(Def1) => new Def1_RetrievePensionChargesValidator(nino, taxYear)(appConfig)
+      case Valid(Def2) if featureSwitches.isRemoveLifetimePensionEnabled => new Def2_RetrievePensionChargesValidator(nino, taxYear)
+      case Invalid(errors) => Validator.returningErrors(errors)
+      case _ => default
     }
 
   }
