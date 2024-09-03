@@ -27,12 +27,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/retrieve_pension_charges_response.json'
+          $ref: './schemas/retrievePension/def1/retrieve_pension_charges_response.json'
         examples:
           example-response:
-            description: Example Response
+            description: Example Response given any tax year
             value:
-              $ref: './examples/retrieve_pension_charges_response.json'
+              $ref: './examples/retrievePension/def1/retrieve_pension_charges_response.json'
   "400":
     description: Bad request
     content:
