@@ -36,7 +36,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
   private val apiVersionName = s"$latestEnabledApiVersion.0"
 
-  protected val apiVersion: Version =
+  override val apiVersion: Version =
     Versions
       .getFrom(apiVersionName)
       .getOrElse(fail(s"Matching Version object not found for $apiVersionName"))
@@ -170,7 +170,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
     protected def featureEnabled: Boolean = true
 
     protected def requestAsset(filename: String, accept: String = "text/yaml"): Future[Result] =
-      controller.asset(apiVersionName, filename)(fakeGetRequest.withHeaders(ACCEPT -> accept))
+      controller.asset(apiVersionName, filename)(fakeRequest.withHeaders(ACCEPT -> accept))
 
     protected def numberOfTestOnlyOccurrences(str: String): Int = "\\[test only]".r.findAllIn(str).size
 

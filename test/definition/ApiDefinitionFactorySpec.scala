@@ -16,7 +16,9 @@
 
 package definition
 
+import cats.implicits.catsSyntaxValidatedId
 import config.ConfidenceLevelConfig
+import config.Deprecation.NotDeprecated
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.{MockAppConfig, MockHttpClient}
 import play.api.Configuration
@@ -46,6 +48,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
+        MockedAppConfig.deprecationFor(Version2).returns(NotDeprecated.valid).anyNumberOfTimes()
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
 
         private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"
@@ -96,6 +100,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         (Version2, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
+          MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
           MockedAppConfig.apiStatus(version) returns status.toString
           apiDefinitionFactory.buildAPIStatus(version) shouldBe status
         }
@@ -105,6 +110,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "the 'apiStatus' parameter is present and invalid" should {
       Seq(Version2).foreach { version =>
         s"default to alpha for $version " in new Test {
+          MockedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
           MockedAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
         }

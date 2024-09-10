@@ -20,7 +20,7 @@ import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.{Version, Version2}
+import routing.Version
 import utils.IdGenerator
 
 import javax.inject.Inject
@@ -57,7 +57,7 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
             auditService,
             auditType = "DeletePensionsCharges",
             transactionName = "delete-pensions-charges",
-            apiVersion = Version.from(request, orElse = Version2),
+            apiVersion = Version(request),
             params = Map("nino" -> nino, "taxYear" -> taxYear)
           ))
 

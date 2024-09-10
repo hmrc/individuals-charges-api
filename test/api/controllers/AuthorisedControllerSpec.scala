@@ -88,7 +88,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
 
         MockedEnrolmentsAuthService.authoriseUser()
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe OK
       }
     }
@@ -103,7 +103,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .authoriseAgent(mtdId)
           .returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe OK
       }
     }
@@ -116,7 +116,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .authoriseAgent(mtdId, supportingAgentAccessAllowed = true)
           .returns(Future.successful(Right(UserDetails("", "Agent", Some("arn")))))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe OK
       }
     }
@@ -129,7 +129,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .authoriseAgent(mtdId, supportingAgentAccessAllowed = true)
           .returns(Future.successful(Left(ClientOrAgentNotAuthorisedError)))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe FORBIDDEN
       }
     }
@@ -142,7 +142,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .authoriseAgent(mtdId, supportingAgentAccessAllowed = true)
           .returns(Future.successful(Left(BadRequestError)))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe BadRequestError.httpStatus
         contentAsJson(result) shouldBe BadRequestError.asJson
       }
@@ -152,7 +152,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
       "return that error with its status code" in new Test {
         MockedMtdIdLookupService.lookup(nino) returns Future.successful(Left(BadRequestError))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe BadRequestError.httpStatus
         contentAsJson(result) shouldBe BadRequestError.asJson
       }
@@ -164,7 +164,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .lookup(nino)
           .returns(Future.successful(Left(NinoFormatError)))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -175,7 +175,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
           .lookup(nino)
           .returns(Future.successful(Left(InvalidBearerTokenError)))
 
-        val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+        val result: Future[Result] = controller.action(nino)(fakeRequest)
         status(result) shouldBe UNAUTHORIZED
       }
     }
@@ -188,7 +188,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
         .lookup(nino)
         .returns(Future.successful(Left(ClientOrAgentNotAuthorisedError)))
 
-      val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+      val result: Future[Result] = controller.action(nino)(fakeRequest)
       status(result) shouldBe FORBIDDEN
     }
   }
@@ -199,7 +199,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec with MockAppConfig{
         .lookup(nino)
         .returns(Future.successful(Left(InternalError)))
 
-      val result: Future[Result] = controller.action(nino)(fakeGetRequest)
+      val result: Future[Result] = controller.action(nino)(fakeRequest)
       status(result) shouldBe INTERNAL_SERVER_ERROR
     }
   }

@@ -57,7 +57,7 @@ class CreateAmendPensionChargesController @Inject() (val authService: Enrolments
             auditService,
             auditType = "CreateAmendPensionsCharges",
             transactionName = "create-amend-pensions-charges",
-            apiVersion = Version.from(request, orElse = Version2),
+            apiVersion = Version(request),
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             Some(request.body),
             includeResponse = true

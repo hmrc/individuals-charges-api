@@ -94,7 +94,7 @@ class RetrievePensionsChargesControllerSpec
     )
 
     MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
-    override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeGetRequest)
+    override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
