@@ -27,25 +27,8 @@ import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
-  private val config          = app.injector.instanceOf[AppConfig]
-  private val confidenceLevel = config.confidenceLevelConfig.confidenceLevel
-
   val apiDefinitionJson: JsValue = Json.parse(s"""
       |{
-      |  "scopes":[
-      |    {
-      |      "key":"read:self-assessment",
-      |      "name":"View your Self Assessment information",
-      |      "description":"Allow read access to self assessment data",
-      |      "confidenceLevel": $confidenceLevel
-      |    },
-      |    {
-      |      "key":"write:self-assessment",
-      |      "name":"Change your Self Assessment information",
-      |      "description":"Allow write access to self assessment data",
-      |      "confidenceLevel": $confidenceLevel
-      |    }
-      |  ],
       |  "api":{
       |    "name":"Individuals Charges (MTD)",
       |    "description":"This is a draft spec for the Individuals Charges API",

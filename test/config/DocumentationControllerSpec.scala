@@ -179,7 +179,6 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
     private val apiFactory = new ApiDefinitionFactory(mockAppConfig) {
 
      lazy override val definition: Definition = Definition(
-        Nil,
         APIDefinition(
           "test API definition",
           "description",
