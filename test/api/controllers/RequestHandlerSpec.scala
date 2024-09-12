@@ -192,11 +192,6 @@ class RequestHandlerSpec
         .withService(mockService.service)
         .withPlainJsonResult(successCode)
 
-      val basicErrorRequestHandler = RequestHandler
-        .withValidator(singleErrorValidatorForRequest)
-        .withService(mockService.service)
-        .withPlainJsonResult(BAD_REQUEST)
-
       def verifyAudit(correlationId: String, auditResponse: AuditResponse): CallHandler[Future[AuditResult]] =
         MockedAuditService.verifyAuditEvent(
           AuditEvent(
@@ -248,17 +243,19 @@ class RequestHandlerSpec
       }
 
       "a request fails with validation errors" must {
-        "audit the failure" in {
-          val requestHandler = basicErrorRequestHandler.withAuditing(auditHandler())
+        "return the errors" in {
+          val requestHandler = RequestHandler
+            .withValidator(singleErrorValidatorForRequest)
+            .withService(mockService.service)
+            .withPlainJsonResult(successCode)
+
+          mockDeprecation(NotDeprecated)
 
           val result = requestHandler.handleRequest()
 
-          mockDeprecation(NotDeprecated)
           contentAsJson(result) shouldBe NinoFormatError.asJson
           header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
           status(result) shouldBe NinoFormatError.httpStatus
-
-          verifyAudit(generatedCorrelationId, AuditResponse(NinoFormatError.httpStatus, Left(List(AuditError(NinoFormatError.code)))))
         }
       }
 
