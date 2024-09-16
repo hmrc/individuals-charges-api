@@ -22,6 +22,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import cats.implicits.catsSyntaxValidatedId
+import config.Deprecation.NotDeprecated
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
@@ -48,6 +50,11 @@ class DeletePensionChargesControllerSpec
       "the request received is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
+        MockedAppConfig
+          .deprecationFor(apiVersion)
+          .returns(NotDeprecated.valid)
+          .anyNumberOfTimes()
+
         MockDeletePensionChargesService
           .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
@@ -58,6 +65,11 @@ class DeletePensionChargesControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
+        MockedAppConfig
+          .deprecationFor(apiVersion)
+          .returns(NotDeprecated.valid)
+          .anyNumberOfTimes()
+
         willUseValidator(returning(NinoFormatError))
 
         runErrorTestWithAudit(NinoFormatError)
@@ -65,6 +77,11 @@ class DeletePensionChargesControllerSpec
 
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
+
+        MockedAppConfig
+          .deprecationFor(apiVersion)
+          .returns(NotDeprecated.valid)
+          .anyNumberOfTimes()
 
         MockDeletePensionChargesService
           .delete(requestData)
