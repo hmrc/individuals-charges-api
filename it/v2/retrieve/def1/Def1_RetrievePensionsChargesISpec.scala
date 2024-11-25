@@ -34,7 +34,7 @@ class Def1_RetrievePensionsChargesISpec extends IntegrationBaseSpec {
     def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
   }
 
-  private trait TysIfsTest extends Test {
+  private trait IfsTest extends Test {
     def mtdTaxYear: String        = "2023-24"
     def downstreamTaxYear: String = "23-24"
     def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
@@ -91,7 +91,7 @@ class Def1_RetrievePensionsChargesISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request is made with a Tax Year Specific year" in new TysIfsTest {
+      "any valid request is made with a Tax Year Specific year" in new IfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

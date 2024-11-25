@@ -48,7 +48,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe None
       }
 
-      "a valid request is made for a Tax Year Specific tax year" in new TysIfsTest {
+      "a valid request is made for a Tax Year Specific tax year" in new IfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -281,7 +281,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
     def downstreamUri: String = s"/income-tax/charges/pensions/$nino/2021-22"
   }
 
-  private trait TysIfsTest extends Test {
+  private trait IfsTest extends Test {
 
     def taxYear: String       = "2023-24"
     def downstreamUri: String = s"/income-tax/charges/pensions/23-24/$nino"

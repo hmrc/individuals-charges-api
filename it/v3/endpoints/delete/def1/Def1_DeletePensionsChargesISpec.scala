@@ -70,7 +70,7 @@ class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {
     def downstreamUri: String     = s"/income-tax/charges/pensions/$nino/$downstreamTaxYear"
   }
 
-  private trait TysIfsTest extends Test {
+  private trait IfsTest extends Test {
     def taxYear: String           = "2023-24"
     def downstreamTaxYear: String = "23-24"
     def downstreamUri: String     = s"/income-tax/charges/pensions/$downstreamTaxYear/$nino"
@@ -92,7 +92,7 @@ class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
-      "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest with Test {
+      "any valid request with a Tax Year Specific (TYS) tax year is made" in new IfsTest with Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

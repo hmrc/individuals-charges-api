@@ -69,7 +69,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
     }
 
     "a valid request is supplied for a Tax Year Specific tax year" should {
-      "return a successful response with the correct correlationId" in new TysIfsTest with Test {
+      "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
         val expected = Right(ResponseWrapper(correlationId, ()))
@@ -79,7 +79,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
             url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
             body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredTysIfsHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
