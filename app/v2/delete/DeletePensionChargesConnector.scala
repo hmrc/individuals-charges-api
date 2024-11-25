@@ -16,7 +16,7 @@
 
 package v2.delete
 
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -38,7 +38,7 @@ class DeletePensionChargesConnector @Inject() (val http: HttpClient, val appConf
 
     val downstreamUri = taxYear match {
       case ty if ty.isTys =>
-        TaxYearSpecificIfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+        IfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
       case _ =>
         IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
     }

@@ -16,7 +16,7 @@
 
 package v2.retrieve
 
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import config.AppConfig
@@ -40,7 +40,7 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appCo
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case ty if ty.isTys =>
-        TaxYearSpecificIfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+        IfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
       case _ =>
         IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
     }

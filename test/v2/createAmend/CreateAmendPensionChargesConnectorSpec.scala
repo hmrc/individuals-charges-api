@@ -79,7 +79,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
             url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
             body = createAmendPensionChargesRequestBody,
             config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredTysIfsHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))

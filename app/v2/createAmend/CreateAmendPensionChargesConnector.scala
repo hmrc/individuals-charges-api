@@ -16,7 +16,7 @@
 
 package v2.createAmend
 
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -37,7 +37,7 @@ class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val ap
     import request._
 
     val downstreamUri = if (request.taxYear.isTys) {
-      TaxYearSpecificIfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
+      IfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
     } else {
       IfsUri[Unit](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")
     }

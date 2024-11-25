@@ -76,7 +76,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
             config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredTysIfsHeaders,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
