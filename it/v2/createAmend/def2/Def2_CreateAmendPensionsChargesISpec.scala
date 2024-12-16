@@ -110,7 +110,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             invalidNameJson,
             BAD_REQUEST,
             ProviderNameFormatError.copy(paths = Some(
@@ -120,7 +120,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
           ),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             invalidAddressJson,
             BAD_REQUEST,
             ProviderAddressFormatError.copy(paths = Some(
@@ -129,7 +129,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
                 "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress")))),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             fullReferencesJson("Q123456", "453"),
             BAD_REQUEST,
             PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(
@@ -138,7 +138,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             fullReferencesJson("234", "00123456RA"),
             BAD_REQUEST,
             QOPSRefFormatError.copy(paths = Some(Seq(
@@ -147,7 +147,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             fullJsonWithInvalidCountryFormat("1YM"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(Seq(
@@ -156,7 +156,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             fullJsonWithInvalidCountryFormat("INVALID"),
             BAD_REQUEST,
             CountryCodeFormatError.copy(paths = Some(Seq(
@@ -165,7 +165,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2021-22",
+            "2024-25",
             fullJson(999999999999.99),
             BAD_REQUEST,
             ValueFormatError.copy(paths = Some(Seq(
