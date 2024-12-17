@@ -21,8 +21,8 @@ import com.typesafe.config.ConfigFactory
 import config.rewriters.DocumentationRewriters.CheckAndRewrite
 import config.rewriters._
 import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAssets}
-import definition._
-import mocks.MockAppConfig
+import shared.definition._
+import mocks.MockIndividualsChargesConfig
 import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
 import play.api.mvc.Result
 import play.api.{Configuration, Environment}
@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig with RealAppConfig {
+class DocumentationControllerSpec extends ControllerBaseSpec with MockIndividualsChargesConfig with RealAppConfig {
 
   private val apiVersionName = s"$latestEnabledApiVersion.0"
 
@@ -52,8 +52,8 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
   "/file endpoint" should {
     "return a file" in new Test {
-      MockedAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
-      MockedAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+      MockedIndividualsChargesConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+      MockedIndividualsChargesConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
       val response: Future[Result] = requestAsset("application.yaml")
       status(response) shouldBe OK
@@ -62,7 +62,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     "return a 404" when {
       "the requested asset doesn't exist" in new Test {
-        MockedAppConfig.endpointReleasedInProduction(apiVersionName, "does-not-exist").anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.endpointReleasedInProduction(apiVersionName, "does-not-exist").anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("does-not-exist.yaml")
         status(response) shouldBe NOT_FOUND
@@ -74,7 +74,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
       }
 
       "the requested asset doesn't form a canonical path" in new Test {
-        MockedAppConfig.endpointReleasedInProduction(apiVersionName, "../does-not-exist").anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.endpointReleasedInProduction(apiVersionName, "../does-not-exist").anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("../does-not-exist.yaml")
         status(response) shouldBe NOT_FOUND
@@ -85,8 +85,8 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
     "return a 400 response" when {
       "the requested asseet's URI encoding is wrong" in new Test {
         val badlyEncodedAssetName = "applica\n\ntion"
-        MockedAppConfig.endpointReleasedInProduction(apiVersionName, badlyEncodedAssetName).anyNumberOfTimes() returns true
-        MockedAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.endpointReleasedInProduction(apiVersionName, badlyEncodedAssetName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset(s"$badlyEncodedAssetName.yaml")
         status(response) shouldBe BAD_REQUEST
@@ -97,8 +97,8 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
   "rewrite()" when {
     "the API version is enabled" should {
       "return the yaml with the API title unchanged" in new Test {
-        MockedAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
-        MockedAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("application.yaml", accept = "text/plain")
         status(response) shouldBe OK
@@ -117,8 +117,8 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     "the API version is disabled" should {
       "return the yaml with [test only] in the API title" in new Test {
-        MockedAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
-        MockedAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
+        MockedIndividualsChargesConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         val response: Future[Result] = requestAsset("application.yaml")
         status(response) shouldBe OK
@@ -150,8 +150,8 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
             override lazy val rewriteables: Seq[CheckAndRewrite] = Nil
           }
 
-        MockedAppConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
-        MockedAppConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
+        MockedIndividualsChargesConfig.apiVersionReleasedInProduction(apiVersionName).anyNumberOfTimes() returns false
+        MockedIndividualsChargesConfig.endpointsEnabled(apiVersionName).anyNumberOfTimes() returns true
 
         actualApplicationYaml should not be empty
 
@@ -174,7 +174,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     protected def numberOfTestOnlyOccurrences(str: String): Int = "\\[test only]".r.findAllIn(str).size
 
-    MockedAppConfig.featureSwitchConfig returns Configuration("openApiFeatureTest.enabled" -> featureEnabled)
+    MockedIndividualsChargesConfig.featureSwitchConfig returns Configuration("openApiFeatureTest.enabled" -> featureEnabled)
 
     private val apiFactory = new ApiDefinitionFactory(mockAppConfig) {
 

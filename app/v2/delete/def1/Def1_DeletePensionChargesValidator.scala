@@ -21,14 +21,14 @@ import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
-import config.AppConfig
+import config.IndividualsChargesConfig
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(appConfig: AppConfig)
+class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(appConfig: IndividualsChargesConfig)
     extends Validator[DeletePensionChargesRequestData] {
 
   private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt

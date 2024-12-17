@@ -16,10 +16,10 @@
 
 package config.rewriters
 
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import support.UnitSpec
 
-class ApiVersionTitleRewriterSpec extends UnitSpec with MockAppConfig {
+class ApiVersionTitleRewriterSpec extends UnitSpec with MockIndividualsChargesConfig {
 
   private val rewriter        = new ApiVersionTitleRewriter(mockAppConfig)
   private val checkAndRewrite = rewriter.rewriteApiVersionTitle
@@ -27,13 +27,13 @@ class ApiVersionTitleRewriterSpec extends UnitSpec with MockAppConfig {
   "ApiVersionTitleRewriter" when {
     "checking if rewrite is needed for a given version" should {
       "indicate rewrite needed when API endpoints are disabled in production" in {
-        MockedAppConfig.apiVersionReleasedInProduction("1.0") returns false
+        MockedIndividualsChargesConfig.apiVersionReleasedInProduction("1.0") returns false
         val result = checkAndRewrite.check("1.0", "application.yaml")
         result shouldBe true
       }
 
       "indicate rewrite not needed for any other combination" in {
-        MockedAppConfig.apiVersionReleasedInProduction("1.0") returns true
+        MockedIndividualsChargesConfig.apiVersionReleasedInProduction("1.0") returns true
         val result1 = checkAndRewrite.check("1.0", "application.yaml")
         val result2 = checkAndRewrite.check("1.0", "some_other_file.yaml")
         result1 shouldBe false

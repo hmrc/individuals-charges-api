@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import config.AppConfig
+import config.IndividualsChargesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
@@ -30,7 +30,7 @@ object MtdIdLookupConnector {
 }
 
 @Singleton
-class MtdIdLookupConnector @Inject() (http: HttpClient, appConfig: AppConfig) {
+class MtdIdLookupConnector @Inject() (http: HttpClient, appConfig: IndividualsChargesConfig) {
 
   def getMtdId(nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MtdIdLookupConnector.Outcome] = {
     import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads

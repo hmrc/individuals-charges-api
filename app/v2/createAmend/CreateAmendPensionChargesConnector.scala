@@ -19,7 +19,7 @@ package v2.createAmend
 import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import config.IndividualsChargesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val appConfig: IndividualsChargesConfig) extends BaseDownstreamConnector {
 
   def createAmendPensionCharges(request: CreateAmendPensionChargesRequestData)(implicit
       hc: HeaderCarrier,

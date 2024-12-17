@@ -18,7 +18,7 @@ package v2.retrieve
 
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import config.IndividualsChargesConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 
@@ -30,7 +30,7 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
                                                   service: RetrievePensionChargesService,
                                                   validatorFactory: RetrievePensionChargesValidatorFactory,
                                                   cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
+                                                  val idGenerator: IdGenerator)(implicit appConfig: IndividualsChargesConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   override val endpointName: String =  "retrieve-pension-charges"

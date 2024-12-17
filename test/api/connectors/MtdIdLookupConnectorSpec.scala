@@ -16,13 +16,13 @@
 
 package api.connectors
 
-import mocks.{MockAppConfig, MockHttpClient}
+import mocks.{MockIndividualsChargesConfig, MockHttpClient}
 
 import scala.concurrent.Future
 
 class MtdIdLookupConnectorSpec extends ConnectorSpec {
 
-  class Test extends MockHttpClient with MockAppConfig {
+  class Test extends MockHttpClient with MockIndividualsChargesConfig {
 
     val connector = new MtdIdLookupConnector(
       http = mockHttpClient,
@@ -31,7 +31,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
 
     val baseUrl = "http://test-id-lookup-baseUrl"
 
-    MockedAppConfig.mtdIdBaseUrl returns baseUrl
+    MockedIndividualsChargesConfig.mtdIdBaseUrl returns baseUrl
   }
 
   val nino  = "test-nino"

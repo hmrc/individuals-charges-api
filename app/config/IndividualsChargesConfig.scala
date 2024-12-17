@@ -30,7 +30,7 @@ import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
 import java.time.temporal.ChronoField
 import javax.inject.{Inject, Singleton}
 
-trait AppConfig {
+trait IndividualsChargesConfig {
 
   def appName: String
 
@@ -75,7 +75,7 @@ trait AppConfig {
 }
 
 @Singleton
-class AppConfigImpl @Inject() (config: ServicesConfig, protected[config] val configuration: Configuration) extends AppConfig {
+class IndividualsChargesConfigImpl @Inject()(config: ServicesConfig, protected[config] val configuration: Configuration) extends IndividualsChargesConfig {
 
   // MTD ID Lookup COnfig
   val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")

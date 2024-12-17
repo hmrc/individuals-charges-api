@@ -24,7 +24,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.NotDeprecated
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -50,7 +50,7 @@ class DeletePensionChargesControllerSpec
       "the request received is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedAppConfig
+        MockedIndividualsChargesConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -65,7 +65,7 @@ class DeletePensionChargesControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockedAppConfig
+        MockedIndividualsChargesConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -78,7 +78,7 @@ class DeletePensionChargesControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedAppConfig
+        MockedIndividualsChargesConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -92,7 +92,7 @@ class DeletePensionChargesControllerSpec
     }
   }
 
-  class Test extends ControllerTest with AuditEventChecking with MockAppConfig {
+  class Test extends ControllerTest with AuditEventChecking with MockIndividualsChargesConfig {
 
     val controller = new DeletePensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -104,11 +104,11 @@ class DeletePensionChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedIndividualsChargesConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     override protected def callController(): Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =

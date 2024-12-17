@@ -18,7 +18,7 @@ package v2.retrieve
 
 import api.controllers.validators.Validator
 import cats.data.Validated.{Invalid, Valid}
-import config.{AppConfig, ChargesFeatureSwitches}
+import config.{IndividualsChargesConfig, ChargesFeatureSwitches}
 import v2.retrieve.RetrievePensionChargesSchema.{Def1, Def2}
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
@@ -26,7 +26,7 @@ import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 import javax.inject.Inject
 
-class RetrievePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
+class RetrievePensionChargesValidatorFactory @Inject() (appConfig: IndividualsChargesConfig) {
 
   def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] = {
 

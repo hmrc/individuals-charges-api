@@ -17,7 +17,7 @@
 package api.connectors
 
 import api.connectors.DownstreamUri.{DesUri, IfsUri}
-import config.{AppConfig, FeatureSwitches}
+import config.{IndividualsChargesConfig, FeatureSwitches}
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.Writes
 import play.api.{Configuration, Logger}
@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait BaseDownstreamConnector {
   val http: HttpClient
-  val appConfig: AppConfig
+  val appConfig: IndividualsChargesConfig
 
   protected val logger: Logger = Logger(this.getClass)
 

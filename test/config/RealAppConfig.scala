@@ -31,7 +31,7 @@ trait RealAppConfig {
 
   protected lazy val emaEndpoints: Map[String, Boolean] =
     realAppConfig match {
-      case impl: AppConfigImpl =>
+      case impl: IndividualsChargesConfigImpl =>
         impl.configuration
           .getOptional[Map[String, Boolean]]("api.supporting-agent-endpoints")
           .getOrElse(Map.empty)
@@ -40,11 +40,11 @@ trait RealAppConfig {
         Map.empty
     }
 
-  protected lazy val realAppConfig: AppConfig = {
+  protected lazy val realAppConfig: IndividualsChargesConfig = {
     val conf           = ConfigFactory.load()
     val configuration  = Configuration(conf)
     val servicesConfig = new ServicesConfig(configuration)
-    new AppConfigImpl(servicesConfig, configuration)
+    new IndividualsChargesConfigImpl(servicesConfig, configuration)
   }
 
 }

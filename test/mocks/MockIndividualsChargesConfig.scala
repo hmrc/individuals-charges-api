@@ -17,17 +17,18 @@
 package mocks
 
 import cats.data.Validated
-import config.{AppConfig, ConfidenceLevelConfig, Deprecation}
+import config.{ConfidenceLevelConfig, Deprecation, IndividualsChargesConfig}
 import org.scalamock.handlers.{CallHandler, CallHandler0}
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
 import routing.Version
+import shared.config.MockSharedAppConfig
 
-trait MockAppConfig extends MockFactory {
+trait MockIndividualsChargesConfig extends MockFactory with MockSharedAppConfig {
 
-  implicit val mockAppConfig: AppConfig = mock[AppConfig]
+  implicit val mockAppConfig: IndividualsChargesConfig = mock[IndividualsChargesConfig]
 
-  object MockedAppConfig {
+  object MockedIndividualsChargesConfig {
 
     def desBaseUrl: CallHandler[String] = (() => mockAppConfig.desBaseUrl).expects()
 

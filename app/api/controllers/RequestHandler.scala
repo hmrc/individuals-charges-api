@@ -23,7 +23,7 @@ import api.services.ServiceOutcome
 import cats.data.EitherT
 import cats.data.Validated.Valid
 import cats.implicits._
-import config.AppConfig
+import config.IndividualsChargesConfig
 import config.Deprecation.Deprecated
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Writes}
@@ -41,7 +41,7 @@ trait RequestHandler {
       ctx: RequestContext,
       request: UserRequest[_],
       ec: ExecutionContext,
-      appConfig: AppConfig
+      appConfig: IndividualsChargesConfig
   ): Future[Result]
 
 }
@@ -70,7 +70,7 @@ object RequestHandler {
         ctx: RequestContext,
         request: UserRequest[_],
         ec: ExecutionContext,
-        appConfig: AppConfig
+        appConfig: IndividualsChargesConfig
     ): Future[Result] =
       Delegate.handleRequest()
 
@@ -102,7 +102,7 @@ object RequestHandler {
     // Scoped as a private delegate so as to keep the logic completely separate from the configuration
     private object Delegate extends RequestHandler with Logging with RequestContextImplicits {
 
-      implicit class Response(result: Result)(implicit appConfig: AppConfig, apiVersion: Version) {
+      implicit class Response(result: Result)(implicit appConfig: IndividualsChargesConfig, apiVersion: Version) {
 
         private def withDeprecationHeaders: List[(String, String)] = {
 
@@ -140,7 +140,7 @@ object RequestHandler {
           ctx: RequestContext,
           request: UserRequest[_],
           ec: ExecutionContext,
-          appConfig: AppConfig
+          appConfig: IndividualsChargesConfig
       ): Future[Result] = {
 
         logger.info(
@@ -168,7 +168,7 @@ object RequestHandler {
           ctx: RequestContext,
           request: UserRequest[_],
           ec: ExecutionContext,
-          appConfig: AppConfig): Result = {
+          appConfig: IndividualsChargesConfig): Result = {
 
         implicit val apiVersion: Version = Version(request)
 
@@ -185,7 +185,7 @@ object RequestHandler {
       }
 
       private def handleFailure(
-          errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Result = {
+          errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: IndividualsChargesConfig): Result = {
 
         implicit val apiVersion: Version = Version(request)
         logger.warn(

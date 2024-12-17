@@ -17,7 +17,7 @@
 package v2.delete
 
 import api.controllers.validators.Validator
-import config.AppConfig
+import config.IndividualsChargesConfig
 import v2.delete.DeletePensionChargesSchema.Def1
 import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
@@ -25,7 +25,7 @@ import v2.delete.model.request.DeletePensionChargesRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
+class DeletePensionChargesValidatorFactory @Inject() (appConfig: IndividualsChargesConfig) {
   
   def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
 

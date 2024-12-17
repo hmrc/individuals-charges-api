@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import mocks.{MockAppConfig, MockHttpClient}
+import mocks.{MockIndividualsChargesConfig, MockHttpClient}
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import support.UnitSpec
@@ -95,7 +95,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  protected trait ConnectorTest extends MockHttpClient with MockAppConfig {
+  protected trait ConnectorTest extends MockHttpClient with MockIndividualsChargesConfig {
     protected val baseUrl: String = "http://test-BaseUrl"
 
     implicit protected val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
@@ -150,20 +150,20 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredDesHeaders
 
-    MockedAppConfig.desBaseUrl returns this.baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedIndividualsChargesConfig.desBaseUrl returns this.baseUrl
+    MockedIndividualsChargesConfig.desToken returns "des-token"
+    MockedIndividualsChargesConfig.desEnvironment returns "des-environment"
+    MockedIndividualsChargesConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   protected trait IfsTest extends ConnectorTest {
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredIfsHeaders
 
-    MockedAppConfig.ifsBaseUrl returns this.baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedIndividualsChargesConfig.ifsBaseUrl returns this.baseUrl
+    MockedIndividualsChargesConfig.ifsToken returns "ifs-token"
+    MockedIndividualsChargesConfig.ifsEnvironment returns "ifs-environment"
+    MockedIndividualsChargesConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
 }

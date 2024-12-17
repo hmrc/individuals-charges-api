@@ -20,7 +20,7 @@ import api.models.auth.UserDetails
 import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError, MtdError}
 import api.models.outcomes.AuthOutcome
 import api.services.EnrolmentsAuthService._
-import config.AppConfig
+import config.IndividualsChargesConfig
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -33,7 +33,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) extends Logging {
+class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: IndividualsChargesConfig) extends Logging {
 
   private lazy val authorisationEnabled = appConfig.confidenceLevelConfig.authValidationEnabled
 

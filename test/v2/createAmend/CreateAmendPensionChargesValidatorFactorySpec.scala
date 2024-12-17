@@ -17,14 +17,14 @@
 package v2.createAmend
 
 import api.utils.JsonErrorValidators
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
-class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
+class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockIndividualsChargesConfig {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
@@ -41,7 +41,7 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
   private val validatorFactory = new CreateAmendPensionChargesValidatorFactory
 
-  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 

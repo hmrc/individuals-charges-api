@@ -28,5 +28,5 @@ case class ChargesFeatureSwitches private (protected val featureSwitchConfig: Co
 }
 
 object ChargesFeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
+  def apply()(implicit appConfig: IndividualsChargesConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
 }

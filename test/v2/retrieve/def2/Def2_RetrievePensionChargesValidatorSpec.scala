@@ -18,14 +18,14 @@ package v2.retrieve.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import support.UnitSpec
 import v2.retrieve.RetrievePensionChargesValidatorFactory
 import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -38,7 +38,7 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
-  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 

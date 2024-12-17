@@ -21,7 +21,7 @@ import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import api.models.outcomes.AuthOutcome
 import api.services.EnrolmentsAuthService.{authorisationDisabledPredicate, authorisationEnabledPredicate, mtdEnrolmentPredicate, supportingAgentAuthPredicate}
 import config.ConfidenceLevelConfig
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
+class EnrolmentsAuthServiceSpec extends ServiceSpec with MockIndividualsChargesConfig {
 
   private val mtdId = "123567890"
 
@@ -276,7 +276,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     }
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean): Unit = {
-      MockedAppConfig.confidenceLevelConfig
+      MockedIndividualsChargesConfig.confidenceLevelConfig
         .anyNumberOfTimes()
         .returns(
           ConfidenceLevelConfig(

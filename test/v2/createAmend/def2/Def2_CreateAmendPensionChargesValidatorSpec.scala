@@ -18,7 +18,7 @@ package v2.createAmend.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec
 import v2.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture._
@@ -26,7 +26,7 @@ import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -42,7 +42,7 @@ class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
     mockAppConfig)
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {

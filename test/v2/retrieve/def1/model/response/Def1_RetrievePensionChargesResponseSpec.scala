@@ -16,12 +16,12 @@
 
 package v2.retrieve.def1.model.response
 
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
-class Def1_RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrievePensionChargesResponseSpec extends UnitSpec with MockIndividualsChargesConfig {
 
   val responseModel: RetrievePensionChargesResponse = Def1_RetrievePensionChargesResponse(
     "2020-07-27T17:00:19Z",

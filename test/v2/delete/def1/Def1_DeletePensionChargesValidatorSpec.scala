@@ -18,13 +18,13 @@ package v2.delete.def1
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import support.UnitSpec
 import v2.delete.DeletePensionChargesValidatorFactory
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
-class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -38,7 +38,7 @@ class Def1_DeletePensionChargesValidatorSpec extends UnitSpec with MockAppConfig
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {

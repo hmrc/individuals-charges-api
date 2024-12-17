@@ -26,8 +26,8 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.{Deprecated, NotDeprecated}
-import config.{AppConfig, Deprecation}
-import mocks.{MockAppConfig, MockIdGenerator}
+import config.{IndividualsChargesConfig, Deprecation}
+import mocks.{MockIndividualsChargesConfig, MockIdGenerator}
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsString, Json, OWrites}
@@ -49,7 +49,7 @@ class RequestHandlerSpec
     with Status
     with HeaderNames
     with ResultExtractors
-    with MockAppConfig {
+    with MockIndividualsChargesConfig {
 
   private val successResponseJson = Json.obj("result" -> "SUCCESS!")
   private val successCode         = ACCEPTED
@@ -85,7 +85,7 @@ class RequestHandlerSpec
   }
 
   def mockDeprecation(deprecationStatus: Deprecation): CallHandler[Validated[String, Deprecation]] =
-    MockedAppConfig
+    MockedIndividualsChargesConfig
       .deprecationFor(Version(userRequest))
       .returns(deprecationStatus.valid)
       .anyNumberOfTimes()
@@ -98,7 +98,7 @@ class RequestHandlerSpec
     def validate: Validated[Seq[MtdError], Input.type] = Invalid(List(NinoFormatError))
   }
 
-  implicit val appConfig: AppConfig = mockAppConfig
+  implicit val appConfig: IndividualsChargesConfig = mockAppConfig
   implicit val apiVersion: Version  = Version(userRequest)
 
   "RequestHandler" when {
@@ -291,7 +291,7 @@ class RequestHandlerSpec
               )
             )
 
-            MockedAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+            MockedIndividualsChargesConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
 
             val result = requestHandler.handleRequest()
 
@@ -315,7 +315,7 @@ class RequestHandlerSpec
                 None
               )
             )
-            MockedAppConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
+            MockedIndividualsChargesConfig.apiDocumentationUrl().returns("http://someUrl").anyNumberOfTimes()
 
             val result = requestHandler.handleRequest()
 

@@ -18,7 +18,7 @@ package v2.delete
 
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import config.IndividualsChargesConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import routing.Version
 import utils.IdGenerator
@@ -32,7 +32,7 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
                                                 validatorFactory: DeletePensionChargesValidatorFactory,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
+                                                val idGenerator: IdGenerator)(implicit appConfig: IndividualsChargesConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "delete-pension-charges"

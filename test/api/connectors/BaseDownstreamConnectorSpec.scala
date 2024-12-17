@@ -18,8 +18,8 @@ package api.connectors
 
 import api.connectors.DownstreamUri.{DesUri, IfsUri}
 import api.models.outcomes.ResponseWrapper
-import config.AppConfig
-import mocks.{MockAppConfig, MockHttpClient}
+import config.IndividualsChargesConfig
+import mocks.{MockIndividualsChargesConfig, MockHttpClient}
 import uk.gov.hmrc.http.{HttpClient, HttpReads}
 
 import scala.concurrent.Future
@@ -36,11 +36,11 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
 
   implicit val httpReads: HttpReads[DownstreamOutcome[Result]] = mock[HttpReads[DownstreamOutcome[Result]]]
 
-  class Test extends MockHttpClient with MockAppConfig {
+  class Test extends MockHttpClient with MockIndividualsChargesConfig {
 
     val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
       val http: HttpClient     = mockHttpClient
-      val appConfig: AppConfig = mockAppConfig
+      val appConfig: IndividualsChargesConfig = mockAppConfig
     }
 
     val qps = Seq("param1" -> "value1")

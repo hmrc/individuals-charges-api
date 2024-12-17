@@ -18,13 +18,13 @@ package v2.retrieve.def1
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import support.UnitSpec
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -36,7 +36,7 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConf
   private def validator(nino: String, taxYear: String) = new Def1_RetrievePensionChargesValidator(nino, taxYear)(mockAppConfig)
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {

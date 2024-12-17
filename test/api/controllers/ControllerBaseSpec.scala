@@ -22,7 +22,7 @@ import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLooku
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.NotDeprecated
 import config.RealAppConfig
-import mocks.{MockAppConfig, MockIdGenerator}
+import mocks.{MockIndividualsChargesConfig, MockIdGenerator}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
@@ -41,7 +41,7 @@ abstract class ControllerBaseSpec
     with HeaderNames
     with ResultExtractors
     with MockAuditService
-    with MockAppConfig {
+    with MockIndividualsChargesConfig {
 
   lazy val cc: ControllerComponents = stubControllerComponents()
 
@@ -72,7 +72,7 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-    MockedAppConfig
+    MockedIndividualsChargesConfig
       .deprecationFor(apiVersion)
       .returns(NotDeprecated.valid)
       .anyNumberOfTimes()
