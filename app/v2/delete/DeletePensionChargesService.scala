@@ -20,6 +20,7 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
+import shared.models.errors.MtdError
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}

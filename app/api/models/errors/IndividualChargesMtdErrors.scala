@@ -17,6 +17,7 @@
 package api.models.errors
 
 import play.api.http.Status._
+import shared.models.errors.MtdError
 
 //scalastyle:off
 

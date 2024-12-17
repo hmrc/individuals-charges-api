@@ -18,7 +18,7 @@ package v2.retrieve.def2.model
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData

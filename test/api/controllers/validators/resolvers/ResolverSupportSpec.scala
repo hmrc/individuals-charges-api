@@ -16,7 +16,7 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.catsSyntaxOption
 import support.UnitSpec

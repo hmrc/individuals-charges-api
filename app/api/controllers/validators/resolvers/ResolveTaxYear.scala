@@ -20,6 +20,7 @@ import api.models.domain.TaxYear
 import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import shared.models.errors.MtdError
 
 trait ResolvingTaxYear extends Resolver[String, TaxYear] {
 
@@ -64,15 +65,20 @@ object ResolveTaxYear extends ResolvingTaxYear {
         }
       }
 
-  def apply(minimumTaxYear: Int, value: String, maximumTaxYear: Int, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], TaxYear] =
+  def apply(minimumTaxYear: Int,
+            value: String,
+            maximumTaxYear: Int,
+            error: Option[MtdError],
+            path: Option[String]): Validated[Seq[MtdError], TaxYear] =
     resolve(value, error, path)
       .andThen { taxYear =>
-        if ((taxYear.year < minimumTaxYear) || (taxYear.year > maximumTaxYear)){
+        if ((taxYear.year < minimumTaxYear) || (taxYear.year > maximumTaxYear)) {
           Invalid(List(RuleTaxYearNotSupportedError))
         } else {
           Valid(taxYear)
         }
       }
+
 }
 
 object ResolveTysTaxYear extends ResolvingTaxYear {

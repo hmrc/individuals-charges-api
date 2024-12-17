@@ -16,7 +16,7 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import cats.data.Validated
 import play.api.libs.json.JsValue
 

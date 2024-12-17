@@ -17,9 +17,10 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.Nino
-import api.models.errors.{MtdError, NinoFormatError}
+import api.models.errors.{NinoFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import shared.models.errors.MtdError
 
 object ResolveNino {
 

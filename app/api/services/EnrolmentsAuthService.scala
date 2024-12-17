@@ -17,10 +17,11 @@
 package api.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError, MtdError}
+import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import api.models.outcomes.AuthOutcome
 import api.services.EnrolmentsAuthService._
 import config.IndividualsChargesConfig
+import shared.models.errors.MtdError
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate

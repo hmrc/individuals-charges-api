@@ -18,6 +18,7 @@ package api.models.errors
 
 import api.models.audit.AuditError
 import play.api.libs.json.{JsObject, Json, Writes}
+import shared.models.errors.MtdError
 
 case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[Seq[MtdError]] = None) {
 

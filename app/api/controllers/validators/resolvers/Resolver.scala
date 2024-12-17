@@ -16,9 +16,10 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{InternalError, MtdError}
+import api.models.errors.{InternalError}
 import cats.data.Validated
 import cats.data.Validated.Valid
+import shared.models.errors.MtdError
 
 /** Parses a raw value (e.g. String or JsValue) to a target type, validating in the process.
   *

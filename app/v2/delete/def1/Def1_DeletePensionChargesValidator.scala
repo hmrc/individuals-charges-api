@@ -18,10 +18,10 @@ package v2.delete.def1
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
-import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import config.IndividualsChargesConfig
+import shared.models.errors.MtdError
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 

@@ -16,9 +16,10 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import api.models.errors.{RuleIncorrectOrEmptyBodyError}
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json._
+import shared.models.errors.MtdError
 import utils.Logging
 
 class ResolveJsonObjectInternal[A](implicit val reads: Reads[A]) extends ResolverSupport with Logging {

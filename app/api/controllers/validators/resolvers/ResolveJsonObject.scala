@@ -17,7 +17,7 @@
 package api.controllers.validators.resolvers
 
 import api.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import cats.data.Validated
 import play.api.libs.json._
 import utils.Logging

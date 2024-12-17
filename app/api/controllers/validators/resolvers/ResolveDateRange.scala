@@ -16,10 +16,11 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
+import shared.models.errors.MtdError
 
 import java.time.LocalDate
 

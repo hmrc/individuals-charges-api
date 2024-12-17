@@ -17,6 +17,7 @@
 package api.models.errors
 
 import play.api.libs.json.{Json, Reads}
+import shared.models.errors.MtdError
 
 case class DownstreamErrorCode(code: String) {
   def toMtd(httpStatus: Int): MtdError = MtdError(code = code, message = "", httpStatus = httpStatus)

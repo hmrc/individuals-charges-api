@@ -18,7 +18,7 @@ package v2.retrieve
 
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
-import api.models.errors.MtdError
+import shared.models.errors.MtdError
 import api.schema.DownstreamReadable
 import cats.data.Validated
 import cats.data.Validated.Valid

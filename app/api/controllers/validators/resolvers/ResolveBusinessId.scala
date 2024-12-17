@@ -17,9 +17,10 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.BusinessId
-import api.models.errors.{BusinessIdFormatError, MtdError}
+import api.models.errors.{BusinessIdFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import shared.models.errors.MtdError
 
 object ResolveBusinessId extends Resolver[String, BusinessId] {
 

@@ -22,6 +22,7 @@ import play.api.http.Status._
 import play.api.mvc.Results._
 import play.api.mvc.{RequestHeader, Result}
 import routing.Versions
+import shared.models.errors.MtdError
 import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector

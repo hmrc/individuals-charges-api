@@ -16,10 +16,11 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
+import api.models.errors.{CountryCodeFormatError, RuleCountryCodeError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import com.neovisionaries.i18n.CountryCode
+import shared.models.errors.MtdError
 
 object ResolveParsedCountryCode extends Resolver[String, String] {
 
