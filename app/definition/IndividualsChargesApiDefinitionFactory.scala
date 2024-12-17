@@ -16,24 +16,14 @@
 
 package definition
 
-import cats.data.Validated.Invalid
-import config.AppConfig
-import play.api.Logger
-import routing.{Version, Version2, Version3}
-import uk.gov.hmrc.auth.core.ConfidenceLevel
+import shared.config.SharedAppConfig
+import shared.definition._
+import shared.routing.{Version2, Version3}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
-
-  private val logger: Logger = Logger(this.getClass)
-
-  lazy val confidenceLevel: ConfidenceLevel = {
-    val clConfig = appConfig.confidenceLevelConfig
-
-    if (clConfig.definitionEnabled) clConfig.confidenceLevel else ConfidenceLevel.L50
-  }
+class IndividualsChargesApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
   lazy val definition: Definition =
     Definition(
@@ -58,18 +48,4 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) {
       )
     )
 
-  private[definition] def buildAPIStatus(version: Version): APIStatus = {
-    checkDeprecationConfigFor(version)
-    APIStatus.parser
-      .lift(appConfig.apiStatus(version))
-      .getOrElse {
-        logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
-        APIStatus.ALPHA
-      }
-  }
-
-  private def checkDeprecationConfigFor(version: Version): Unit = appConfig.deprecationFor(version) match {
-    case Invalid(error) => throw new Exception(error)
-    case _ => ()
-  }
 }
