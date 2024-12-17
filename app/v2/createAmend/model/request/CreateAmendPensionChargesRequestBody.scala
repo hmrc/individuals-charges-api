@@ -17,7 +17,7 @@
 package v2.createAmend.model.request
 
 import play.api.libs.json.{JsObject, Json, OWrites}
-import utils.JsonWritesUtil
+import shared.utils.JsonWritesUtil
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestBody
 import v2.createAmend.def2.model.request.Def2_CreateAmendPensionChargesRequestBody
 

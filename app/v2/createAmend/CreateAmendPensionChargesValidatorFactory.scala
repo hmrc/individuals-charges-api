@@ -16,7 +16,7 @@
 
 package v2.createAmend
 
-import api.controllers.validators.Validator
+import shared.controllers.validators.Validator
 import config.IndividualsChargesConfig
 import play.api.libs.json.JsValue
 import v2.createAmend.CreateAmendPensionChargesSchema.{Def1, Def2}

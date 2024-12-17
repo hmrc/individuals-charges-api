@@ -16,7 +16,7 @@
 
 package v2.createAmend.def2.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v2.createAmend.CreateAmendPensionChargesSchema
 import v2.createAmend.CreateAmendPensionChargesSchema.Def2
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData

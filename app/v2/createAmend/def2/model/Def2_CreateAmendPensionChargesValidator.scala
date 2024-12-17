@@ -16,14 +16,16 @@
 
 package v2.createAmend.def2.model
 
-import api.controllers.validators.resolvers._
-import api.controllers.validators.{RulesValidator, Validator}
 import api.models.errors._
+import shared.controllers.validators.resolvers._
+import shared.controllers.validators.{RulesValidator, Validator}
+import shared.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
 import config.IndividualsChargesConfig
 import play.api.libs.json.JsValue
+import shared.models.domain.TaxYear
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
@@ -33,13 +35,13 @@ import javax.inject.Inject
 class Def2_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)(appConfig: IndividualsChargesConfig)
     extends Validator[CreateAmendPensionChargesRequestData] {
 
-  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private lazy val minTaxYear = TaxYear(appConfig.minTaxYearPensionCharge)
   private val resolveJson     = ResolveJsonObject.strictResolver[Def2_CreateAmendPensionChargesRequestBody]
 
   def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
     (
       ResolveNino(nino),
-      ResolveTaxYear(minTaxYear, taxYear, None, None),
+      ResolveTaxYear(minTaxYear, taxYear),
       resolveJson(body)
     ).mapN(Def2_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
 
@@ -245,7 +247,7 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
     val validateNumberFields = fieldsWithPaths
       .map {
         case (None, _)            => valid
-        case (Some(number), path) => resolveParsedNumber(number, None, Some(path))
+        case (Some(number), path) => resolveParsedNumber(number, path)
       }
     validateNumberFields.sequence.andThen(_ => valid)
 
