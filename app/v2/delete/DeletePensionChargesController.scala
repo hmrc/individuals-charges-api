@@ -16,12 +16,12 @@
 
 package v2.delete
 
-import api.controllers._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.IndividualsChargesConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.Version
-import utils.IdGenerator
+import shared.routing.Version
+import shared.config.SharedAppConfig
+import shared.controllers._
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -32,7 +32,7 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
                                                 validatorFactory: DeletePensionChargesValidatorFactory,
                                                 auditService: AuditService,
                                                 cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit appConfig: IndividualsChargesConfig, ec: ExecutionContext)
+                                                val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "delete-pension-charges"

@@ -16,10 +16,10 @@
 
 package v2.delete
 
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.IndividualsChargesConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.delete.model.request.DeletePensionChargesRequestData
 
@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionChargesConnector @Inject() (val http: HttpClient, val appConfig: IndividualsChargesConfig) extends BaseDownstreamConnector {
+class DeletePensionChargesConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def deletePensionCharges(request: DeletePensionChargesRequestData)(implicit
       hc: HeaderCarrier,
@@ -37,7 +37,7 @@ class DeletePensionChargesConnector @Inject() (val http: HttpClient, val appConf
     import request._
 
     val downstreamUri = taxYear match {
-      case ty if ty.isTys =>
+      case ty if ty.useTaxYearSpecificApi =>
         IfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
       case _ =>
         IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")

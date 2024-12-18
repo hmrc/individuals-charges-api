@@ -16,7 +16,7 @@
 
 package v2.delete
 
-import api.controllers.validators.Validator
+import shared.controllers.validators.Validator
 import config.IndividualsChargesConfig
 import v2.delete.DeletePensionChargesSchema.Def1
 import v2.delete.def1.Def1_DeletePensionChargesValidator

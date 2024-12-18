@@ -16,9 +16,9 @@
 
 package v2.delete
 
-import api.controllers.RequestContext
-import api.models.errors._
-import api.services.{BaseService, ServiceOutcome}
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import shared.models.errors.MtdError
 import v2.delete.model.request.DeletePensionChargesRequestData

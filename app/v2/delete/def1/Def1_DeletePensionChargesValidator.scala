@@ -16,11 +16,12 @@
 
 package v2.delete.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
 import cats.data.Validated
 import cats.implicits._
 import config.IndividualsChargesConfig
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
@@ -31,12 +32,12 @@ import javax.inject.{Inject, Singleton}
 class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(appConfig: IndividualsChargesConfig)
     extends Validator[DeletePensionChargesRequestData] {
 
-  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private lazy val minTaxYear = TaxYear(appConfig.minTaxYearPensionCharge)
 
   def validate: Validated[Seq[MtdError], DeletePensionChargesRequestData] =
     (
       ResolveNino(nino),
-      ResolveTaxYear(minTaxYear, taxYear, None, None)
+      ResolveTaxYear(minTaxYear, taxYear)
     ).mapN(Def1_DeletePensionChargesRequestData)
 
 }
