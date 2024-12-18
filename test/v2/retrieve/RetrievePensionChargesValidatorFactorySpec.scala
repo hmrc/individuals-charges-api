@@ -16,13 +16,13 @@
 
 package v2.retrieve
 
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import support.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 
-class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockIndividualsChargesConfig {
 
   private val validNino        = "AA123456A"
   private val validDef1TaxYear = "2021-22"
@@ -30,7 +30,7 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
 
   private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
 
-  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 
@@ -43,7 +43,7 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
       }
 
       "given an valid request and featureSwitch is disabled" in {
-        MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+        MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
           "removeLifetimePension.enabled" -> false)
         val result = validatorFactory.validator(validNino, validDef2TaxYear)
         result shouldBe a[Def1_RetrievePensionChargesValidator]

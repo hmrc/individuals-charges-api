@@ -16,8 +16,8 @@
 
 package v2.delete
 
-import api.controllers.validators.Validator
-import config.AppConfig
+import shared.controllers.validators.Validator
+import config.IndividualsChargesConfig
 import v2.delete.DeletePensionChargesSchema.Def1
 import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
@@ -25,14 +25,14 @@ import v2.delete.model.request.DeletePensionChargesRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionChargesValidatorFactory @Inject() (appConfig: AppConfig) {
+class DeletePensionChargesValidatorFactory @Inject() (individualsChargesConfig: IndividualsChargesConfig) {
   
   def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
 
     val schema = DeletePensionChargesSchema.schema
 
     schema match {
-      case Def1 => new Def1_DeletePensionChargesValidator(nino, taxYear)(appConfig)
+      case Def1 => new Def1_DeletePensionChargesValidator(nino, taxYear)(individualsChargesConfig)
     }
   }
 

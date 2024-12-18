@@ -16,30 +16,32 @@
 
 package v2.createAmend.def1.model
 
-import api.controllers.validators.resolvers._
-import api.controllers.validators.{RulesValidator, Validator}
-import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
-import config.AppConfig
+import common.errors._
+import config.IndividualsChargesConfig
 import play.api.libs.json.JsValue
+import shared.controllers.validators.resolvers._
+import shared.controllers.validators.{RulesValidator, Validator}
+import shared.models.domain.TaxYear
+import shared.models.errors._
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData, OverseasSchemeProvider, PensionContributions}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
 
-class Def1_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)(appConfig: AppConfig)
+class Def1_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)(individualsChargesConfig: IndividualsChargesConfig)
     extends Validator[CreateAmendPensionChargesRequestData] {
 
-  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private lazy val minTaxYear = TaxYear(individualsChargesConfig.minTaxYearPensionCharge)
   private val resolveJson     = ResolveJsonObject.strictResolver[Def1_CreateAmendPensionChargesRequestBody]
 
   def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
     (
       ResolveNino(nino),
-      ResolveTaxYear(minTaxYear, taxYear, None, None),
+      ResolveTaxYear(minTaxYear, taxYear),
       resolveJson(body)
     ).mapN(Def1_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
 
@@ -257,7 +259,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
     val validateNumberFields = fieldsWithPaths
       .map {
         case (None, _)            => valid
-        case (Some(number), path) => resolveParsedNumber(number, None, Some(path))
+        case (Some(number), path) => resolveParsedNumber(number, path)
       }
     validateNumberFields.sequence.andThen(_ => valid)
 

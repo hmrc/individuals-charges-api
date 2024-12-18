@@ -16,13 +16,13 @@
 
 package v2.createAmend
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
-import api.models.outcomes.ResponseWrapper
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.MockAppConfig
+import common.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import common.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import common.models.domain.{Nino, TaxYear}
+import common.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
+import common.models.outcomes.ResponseWrapper
+import common.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -39,7 +39,7 @@ class CreateAmendPensionsChargesControllerSpec
     with MockMtdIdLookupService
     with MockCreateAmendPensionChargesValidatorFactory
     with MockCreateAmendPensionsChargesService
-    with MockAppConfig
+    with MockIndividualsChargesConfig
     with MockAuditService {
 
   private val taxYear     = "2021-22"
@@ -94,11 +94,11 @@ class CreateAmendPensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedIndividualsChargesConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     override protected def callController(): Future[Result] = controller.createAmend(nino, taxYear)(fakePostRequest(fullJson))
 

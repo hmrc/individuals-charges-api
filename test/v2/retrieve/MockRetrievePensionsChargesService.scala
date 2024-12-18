@@ -16,8 +16,8 @@
 
 package v2.retrieve
 
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
+import common.controllers.RequestContext
+import common.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.retrieve.model.request.RetrievePensionChargesRequestData

@@ -16,7 +16,7 @@
 
 package v2.retrieve.def1.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v2.retrieve.RetrievePensionChargesSchema
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
