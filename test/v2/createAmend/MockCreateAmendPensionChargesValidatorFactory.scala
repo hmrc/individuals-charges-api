@@ -16,7 +16,7 @@
 
 package v2.createAmend
 
-import api.controllers.validators.Validator
+import common.controllers.validators.Validator
 import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}

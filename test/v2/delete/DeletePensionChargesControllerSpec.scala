@@ -16,12 +16,12 @@
 
 package v2.delete
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import common.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import common.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import common.models.domain.{Nino, TaxYear}
+import common.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import common.models.outcomes.ResponseWrapper
+import common.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.NotDeprecated
 import mocks.MockIndividualsChargesConfig

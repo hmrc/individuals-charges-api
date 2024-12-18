@@ -16,7 +16,7 @@
 
 package config
 
-import api.controllers.ControllerBaseSpec
+import common.controllers.ControllerBaseSpec
 import com.typesafe.config.ConfigFactory
 import config.rewriters.DocumentationRewriters.CheckAndRewrite
 import config.rewriters._

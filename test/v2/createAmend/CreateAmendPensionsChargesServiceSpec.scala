@@ -16,11 +16,11 @@
 
 package v2.createAmend
 
-import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.ServiceSpec
+import common.controllers.EndpointLogContext
+import common.models.domain.{Nino, TaxYear}
+import common.errors._
+import common.models.outcomes.ResponseWrapper
+import common.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData

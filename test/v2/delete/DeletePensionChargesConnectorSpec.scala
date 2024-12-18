@@ -16,10 +16,10 @@
 
 package v2.delete
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{InternalError, NinoFormatError}
-import api.models.outcomes.ResponseWrapper
+import common.connectors.ConnectorSpec
+import common.models.domain.{Nino, TaxYear}
+import common.errors.{InternalError, NinoFormatError}
+import common.models.outcomes.ResponseWrapper
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 

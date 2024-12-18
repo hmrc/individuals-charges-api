@@ -16,10 +16,10 @@
 
 package v2.createAmend
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
+import common.connectors.ConnectorSpec
+import common.models.domain.{Nino, TaxYear}
+import common.errors.{InternalError, NinoFormatError, TaxYearFormatError}
+import common.models.outcomes.ResponseWrapper
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData

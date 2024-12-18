@@ -16,8 +16,8 @@
 
 package v2.retrieve.def2
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
+import common.models.domain.{Nino, TaxYear}
+import common.errors._
 import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import support.UnitSpec

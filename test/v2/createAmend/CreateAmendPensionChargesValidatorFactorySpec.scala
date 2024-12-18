@@ -16,7 +16,7 @@
 
 package v2.createAmend
 
-import api.utils.JsonErrorValidators
+import common.utils.JsonErrorValidators
 import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}

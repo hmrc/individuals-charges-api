@@ -16,11 +16,11 @@
 
 package v2.delete
 
-import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.ServiceSpec
+import common.controllers.EndpointLogContext
+import common.models.domain.{Nino, TaxYear}
+import common.errors._
+import common.models.outcomes.ResponseWrapper
+import common.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData

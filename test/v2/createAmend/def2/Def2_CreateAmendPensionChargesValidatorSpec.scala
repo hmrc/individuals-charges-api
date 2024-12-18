@@ -16,8 +16,9 @@
 
 package v2.createAmend.def2
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
+import common.errors.{CountryCodeFormatError, RuleCountryCodeError}
+import common.models.domain.{Nino, TaxYear}
+import common.errors._
 import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
 import support.UnitSpec

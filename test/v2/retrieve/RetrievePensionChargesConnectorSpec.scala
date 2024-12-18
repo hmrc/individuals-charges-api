@@ -16,10 +16,10 @@
 
 package v2.retrieve
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
+import common.connectors.ConnectorSpec
+import common.models.domain.{Nino, TaxYear}
+import common.errors.{InternalError, NinoFormatError, TaxYearFormatError}
+import common.models.outcomes.ResponseWrapper
 import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData

@@ -16,8 +16,8 @@
 
 package auth
 
-import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import common.errors.{ClientOrAgentNotAuthorisedError, InternalError}
+import common.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.{FORBIDDEN, INTERNAL_SERVER_ERROR, OK}

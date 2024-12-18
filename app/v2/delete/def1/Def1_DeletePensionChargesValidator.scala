@@ -29,10 +29,10 @@ import v2.delete.model.request.DeletePensionChargesRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(appConfig: IndividualsChargesConfig)
+class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(individualsChargesConfig: IndividualsChargesConfig)
     extends Validator[DeletePensionChargesRequestData] {
 
-  private lazy val minTaxYear = TaxYear(appConfig.minTaxYearPensionCharge)
+  private lazy val minTaxYear = TaxYear(individualsChargesConfig.minTaxYearPensionCharge)
 
   def validate: Validated[Seq[MtdError], DeletePensionChargesRequestData] =
     (

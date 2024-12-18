@@ -26,10 +26,10 @@ import shared.models.errors.MtdError
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidator(nino: String, taxYear: String)(appConfig: IndividualsChargesConfig)
+class Def1_RetrievePensionChargesValidator(nino: String, taxYear: String)(individualsChargesConfig: IndividualsChargesConfig)
     extends Validator[RetrievePensionChargesRequestData] {
 
-  private lazy val minTaxYear = TaxYear(appConfig.minTaxYearPensionCharge)
+  private lazy val minTaxYear = TaxYear(individualsChargesConfig.minTaxYearPensionCharge)
   private lazy val maxTaxYear = TaxYear("2024")
 
   def validate: Validated[Seq[MtdError], RetrievePensionChargesRequestData] = {

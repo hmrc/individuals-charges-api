@@ -16,7 +16,7 @@
 
 package utils
 
-import api.models.errors._
+import common.errors._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.Status

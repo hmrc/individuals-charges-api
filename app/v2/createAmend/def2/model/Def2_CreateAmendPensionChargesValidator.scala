@@ -16,16 +16,16 @@
 
 package v2.createAmend.def2.model
 
-import api.models.errors._
-import shared.controllers.validators.resolvers._
-import shared.controllers.validators.{RulesValidator, Validator}
-import shared.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
+import common.errors._
 import config.IndividualsChargesConfig
 import play.api.libs.json.JsValue
+import shared.controllers.validators.resolvers._
+import shared.controllers.validators.{RulesValidator, Validator}
 import shared.models.domain.TaxYear
+import shared.models.errors._
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData

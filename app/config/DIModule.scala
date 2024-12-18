@@ -21,7 +21,7 @@ import com.google.inject.AbstractModule
 class DIModule extends AbstractModule {
 
   override def configure(): Unit = {
-    bind(classOf[IndividualsChargesConfig]).to(classOf[IndividualsChargesConfigImpl]).asEagerSingleton()
+    bind(classOf[IndividualsChargesConfig]).to(classOf[IndividualsChargesConfig]).asEagerSingleton()
   }
 
 }
