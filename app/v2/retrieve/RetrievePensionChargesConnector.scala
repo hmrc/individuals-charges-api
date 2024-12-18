@@ -16,10 +16,10 @@
 
 package v2.retrieve
 
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import config.IndividualsChargesConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 import v2.retrieve.model.response.RetrievePensionChargesResponse
@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appConfig: IndividualsChargesConfig) extends BaseDownstreamConnector {
+class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrievePensionCharges(request: RetrievePensionChargesRequestData)(implicit
       hc: HeaderCarrier,
@@ -39,7 +39,7 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClient, val appCo
     import schema._
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
-      case ty if ty.isTys =>
+      case ty if ty.useTaxYearSpecificApi =>
         IfsUri(s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
       case _ =>
         IfsUri(s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")

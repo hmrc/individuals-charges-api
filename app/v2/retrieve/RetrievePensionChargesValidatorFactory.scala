@@ -16,7 +16,7 @@
 
 package v2.retrieve
 
-import api.controllers.validators.Validator
+import shared.controllers.validators.Validator
 import cats.data.Validated.{Invalid, Valid}
 import config.{IndividualsChargesConfig, ChargesFeatureSwitches}
 import v2.retrieve.RetrievePensionChargesSchema.{Def1, Def2}
