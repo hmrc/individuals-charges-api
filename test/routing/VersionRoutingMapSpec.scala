@@ -28,7 +28,7 @@ class VersionRoutingMapSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   "map" when {
     "routing to v2 and v3" should {
-      val versionRoutingMap: IndividualsChargesRoutingMap = IndividualsChargesRoutingMap(
+      val versionRoutingMap: IndividualsChargesVersionRoutingMap = IndividualsChargesVersionRoutingMap(
         defaultRouter = defaultRouter,
         v2Router = v2Routes,
         v3Router = v3Routes
