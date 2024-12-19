@@ -16,17 +16,17 @@
 
 package v2.createAmend.def1
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import mocks.MockAppConfig
+import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -38,10 +38,11 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
   private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
   private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
 
-  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(mockAppConfig)
+  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(
+    mockAppConfig)
 
   class Test {
-    MockedAppConfig.minTaxYearPensionCharge.returns("2022")
+    MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")
   }
 
   "validator" should {
@@ -138,16 +139,16 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockAppC
             correlationId,
             BadRequestError,
             Some(List(
-              RuleCountryCodeError.withPaths(
-                List(
-                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
-                  "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
-                )
-              ),
               CountryCodeFormatError.withPaths(
                 List(
                   "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
                   "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
+                )
+              ),
+              RuleCountryCodeError.withPaths(
+                List(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
+                  "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
                 )
               )
             ))

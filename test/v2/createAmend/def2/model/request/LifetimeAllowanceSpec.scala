@@ -17,7 +17,7 @@
 package v2.createAmend.def2.model.request
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 
 class LifetimeAllowanceSpec extends UnitSpec {
 

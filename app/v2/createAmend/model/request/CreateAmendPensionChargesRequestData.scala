@@ -16,7 +16,7 @@
 
 package v2.createAmend.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v2.createAmend.CreateAmendPensionChargesSchema
 
 trait CreateAmendPensionChargesRequestData {

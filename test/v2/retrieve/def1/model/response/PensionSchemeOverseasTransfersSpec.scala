@@ -17,7 +17,7 @@
 package v2.retrieve.def1.model.response
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 
 class PensionSchemeOverseasTransfersSpec extends UnitSpec {
 

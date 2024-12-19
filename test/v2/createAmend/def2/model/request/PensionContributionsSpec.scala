@@ -17,7 +17,7 @@
 package v2.createAmend.def2.model.request
 
 import play.api.libs.json.{JsValue, Json}
-import support.UnitSpec
+import shared.utils.UnitSpec
 
 class PensionContributionsSpec extends UnitSpec {
 

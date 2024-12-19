@@ -16,13 +16,13 @@
 
 package v2.delete
 
-import api.controllers.validators.Validator
-import mocks.MockAppConfig
-import support.UnitSpec
+import mocks.MockIndividualsChargesConfig
+import shared.controllers.validators.Validator
+import shared.utils.UnitSpec
 import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
 
-class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockIndividualsChargesConfig {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
