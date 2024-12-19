@@ -16,7 +16,6 @@
 
 package v2.createAmend.def2
 
-import common.errors.{CountryCodeFormatError, RuleCountryCodeError}
 import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
 import shared.models.domain.{Nino, TaxYear}
@@ -140,16 +139,16 @@ class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockIndi
             correlationId,
             BadRequestError,
             Some(List(
-              RuleCountryCodeError.withPaths(
-                List(
-                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
-                  "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
-                )
-              ),
               CountryCodeFormatError.withPaths(
                 List(
                   "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerCountryCode",
                   "/overseasPensionContributions/overseasSchemeProvider/1/providerCountryCode"
+                )
+              ),
+              RuleCountryCodeError.withPaths(
+                List(
+                  "/pensionSchemeOverseasTransfers/overseasSchemeProvider/1/providerCountryCode",
+                  "/overseasPensionContributions/overseasSchemeProvider/0/providerCountryCode"
                 )
               )
             ))

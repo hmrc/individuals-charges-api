@@ -109,7 +109,7 @@ class CreateAmendPensionsChargesControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          versionNumber = "2.0",
+          versionNumber = "9.0",
           params = Map("nino" -> validNino, "taxYear" -> taxYear),
           maybeRequestBody,
           correlationId,
