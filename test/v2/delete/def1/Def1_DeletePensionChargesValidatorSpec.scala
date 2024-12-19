@@ -16,10 +16,10 @@
 
 package v2.delete.def1
 
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
 import mocks.MockIndividualsChargesConfig
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.delete.DeletePensionChargesValidatorFactory
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData

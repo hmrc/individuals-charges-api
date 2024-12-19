@@ -16,11 +16,11 @@
 
 package v2.delete
 
-import common.controllers.EndpointLogContext
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
-import common.models.outcomes.ResponseWrapper
-import common.services.ServiceSpec
+import shared.controllers.EndpointLogContext
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, OutboundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData

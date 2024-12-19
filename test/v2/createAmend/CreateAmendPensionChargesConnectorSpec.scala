@@ -16,10 +16,10 @@
 
 package v2.createAmend
 
-import common.connectors.ConnectorSpec
-import common.models.domain.{Nino, TaxYear}
-import common.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import common.models.outcomes.ResponseWrapper
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{NinoFormatError, TaxYearFormatError, InternalError}
+import shared.models.outcomes.ResponseWrapper
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
@@ -42,7 +42,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: CreateAmendPensionChargesConnector =
-      new CreateAmendPensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new CreateAmendPensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
   }
 
@@ -58,8 +58,8 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
             body = createAmendPensionChargesRequestBody,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(expected))
@@ -74,14 +74,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
-            body = createAmendPensionChargesRequestBody,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willPut(s"$baseUrl/income-tax/charges/pensions/23-24/$nino", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected
@@ -94,14 +87,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = createAmendPensionChargesRequestBody,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willPut(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected
@@ -114,14 +100,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = createAmendPensionChargesRequestBody,
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willPut(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected

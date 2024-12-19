@@ -16,12 +16,12 @@
 
 package v2.retrieve.def1
 
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
 import mocks.MockIndividualsChargesConfig
-import support.UnitSpec
-import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
+import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {

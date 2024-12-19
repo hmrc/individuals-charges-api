@@ -16,10 +16,10 @@
 
 package v2.retrieve
 
-import common.controllers.RequestContext
-import common.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.services.ServiceOutcome
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 

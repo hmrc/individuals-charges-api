@@ -16,12 +16,12 @@
 
 package v2.delete
 
-import common.controllers.validators.Validator
-import shared.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.validators.Validator
+import shared.models.errors.MtdError
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 trait MockDeletePensionChargesValidatorFactory extends MockFactory {

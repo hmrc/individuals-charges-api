@@ -18,7 +18,7 @@ package v2.retrieve.def1.model.response
 
 import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsValue, Json}
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
 class Def1_RetrievePensionChargesResponseSpec extends UnitSpec with MockIndividualsChargesConfig {

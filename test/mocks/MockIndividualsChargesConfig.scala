@@ -16,12 +16,9 @@
 
 package mocks
 
-import cats.data.Validated
-import config.{ConfidenceLevelConfig, Deprecation, IndividualsChargesConfig}
-import org.scalamock.handlers.{CallHandler, CallHandler0}
+import config.IndividualsChargesConfig
+import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.Configuration
-import routing.Version
 import shared.config.MockSharedAppConfig
 
 trait MockIndividualsChargesConfig extends MockFactory with MockSharedAppConfig {
@@ -30,50 +27,7 @@ trait MockIndividualsChargesConfig extends MockFactory with MockSharedAppConfig 
 
   object MockedIndividualsChargesConfig {
 
-    def desBaseUrl: CallHandler[String] = (() => mockAppConfig.desBaseUrl).expects()
-
-    def desToken: CallHandler[String] = (() => mockAppConfig.desToken).expects()
-
-    def desEnvironment: CallHandler[String] = (() => mockAppConfig.desEnv).expects()
-
-    def desEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (() => mockAppConfig.desEnvironmentHeaders).expects()
-
-    // IFS config
-    def ifsBaseUrl: CallHandler[String]                         = (() => mockAppConfig.ifsBaseUrl).expects()
-    def ifsToken: CallHandler[String]                           = (() => mockAppConfig.ifsToken).expects()
-    def ifsEnvironment: CallHandler[String]                     = (() => mockAppConfig.ifsEnv).expects()
-    def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (() => mockAppConfig.ifsEnvironmentHeaders).expects()
-
-    def mtdIdBaseUrl: CallHandler[String] = (() => mockAppConfig.mtdIdBaseUrl).expects()
-
-    def featureSwitchConfig: CallHandler[Configuration] = (() => mockAppConfig.featureSwitchConfig).expects()
-
-    def apiGatewayContext: CallHandler[String] = (() => mockAppConfig.apiGatewayContext).expects()
-
-    def apiStatus(status: Version): CallHandler[String]          = (mockAppConfig.apiStatus: Version => String).expects(status)
-    def endpointsEnabled(version: String): CallHandler[Boolean]  = (mockAppConfig.endpointsEnabled(_: String)).expects(version)
-    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled(_: Version)).expects(version)
-
-    def apiVersionReleasedInProduction(version: String): CallHandler[Boolean] =
-      (mockAppConfig.apiVersionReleasedInProduction: String => Boolean).expects(version)
-
-    def endpointReleasedInProduction(version: String, key: String): CallHandler[Boolean] =
-      (mockAppConfig.endpointReleasedInProduction: (String, String) => Boolean).expects(version, key)
-
     def minTaxYearPensionCharge: CallHandler[String] = (() => mockAppConfig.minTaxYearPensionCharge).expects()
-
-    def confidenceLevelConfig: CallHandler0[ConfidenceLevelConfig] =
-      (() => mockAppConfig.confidenceLevelConfig).expects()
-
-    def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =
-      (() => mockAppConfig.confidenceLevelConfig).expects()
-
-    def endpointAllowsSupportingAgents(endpointName: String): CallHandler[Boolean] =
-      (mockAppConfig.endpointAllowsSupportingAgents(_: String)).expects(endpointName)
-
-    def deprecationFor(version: Version): CallHandler[Validated[String, Deprecation]] = (mockAppConfig.deprecationFor(_: Version)).expects(version)
-
-    def apiDocumentationUrl(): CallHandler[String] = (() => mockAppConfig.apiDocumentationUrl: String).expects()
 
   }
 

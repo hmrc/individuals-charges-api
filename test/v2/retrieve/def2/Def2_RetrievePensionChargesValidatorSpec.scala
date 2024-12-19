@@ -16,16 +16,17 @@
 
 package v2.retrieve.def2
 
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
 import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
-import support.UnitSpec
+import shared.config.MockSharedAppConfig
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.utils.UnitSpec
 import v2.retrieve.RetrievePensionChargesValidatorFactory
 import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig with MockSharedAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -34,16 +35,15 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig, mockSharedAppConfig)
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
-  private def setupMocks = MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 
-  class Test {
-  }
+  class Test {}
 
   "validator" should {
     "return the parsed domain object" when {
@@ -82,4 +82,5 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
       }
     }
   }
+
 }

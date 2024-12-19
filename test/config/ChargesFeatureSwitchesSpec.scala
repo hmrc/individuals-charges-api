@@ -17,7 +17,8 @@
 package config
 
 import play.api.Configuration
-import support.UnitSpec
+import shared.config.FeatureSwitchesBehaviour
+import shared.utils.UnitSpec
 
 class ChargesFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[ChargesFeatureSwitches] {
   override def featureSwitches(configuration: Configuration): ChargesFeatureSwitches = ChargesFeatureSwitches(configuration)

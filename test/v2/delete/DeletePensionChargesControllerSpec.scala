@@ -16,18 +16,18 @@
 
 package v2.delete
 
-import common.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import common.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import common.models.domain.{Nino, TaxYear}
-import common.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import common.models.outcomes.ResponseWrapper
-import common.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import cats.implicits.catsSyntaxValidatedId
-import config.Deprecation.NotDeprecated
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import shared.config.Deprecation.NotDeprecated
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import cats.implicits.catsSyntaxValidatedId
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,14 +43,14 @@ class DeletePensionChargesControllerSpec
     with MockAuditService {
 
   private val taxYear     = "2020-21"
-  private val requestData = Def1_DeletePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val requestData = Def1_DeletePensionChargesRequestData(Nino(validNino), TaxYear.fromMtd(taxYear))
 
   "delete" should {
     "return a successful response with header X-CorrelationId and body" when {
       "the request received is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedIndividualsChargesConfig
+        MockedSharedAppConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -65,7 +65,7 @@ class DeletePensionChargesControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockedIndividualsChargesConfig
+        MockedSharedAppConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -78,7 +78,7 @@ class DeletePensionChargesControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedIndividualsChargesConfig
+        MockedSharedAppConfig
           .deprecationFor(apiVersion)
           .returns(NotDeprecated.valid)
           .anyNumberOfTimes()
@@ -92,7 +92,7 @@ class DeletePensionChargesControllerSpec
     }
   }
 
-  class Test extends ControllerTest with AuditEventChecking with MockIndividualsChargesConfig {
+  class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] with MockSharedAppConfig {
 
     val controller = new DeletePensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -104,12 +104,12 @@ class DeletePensionChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedIndividualsChargesConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedIndividualsChargesConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
-    override protected def callController(): Future[Result] = controller.delete(nino, taxYear)(fakeRequest)
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    override protected def callController(): Future[Result] = controller.delete(validNino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -119,7 +119,7 @@ class DeletePensionChargesControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "2.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           maybeRequestBody,
           correlationId,
           auditResponse

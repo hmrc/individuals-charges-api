@@ -17,11 +17,11 @@
 package v2.createAmend.def2
 
 import common.errors.{CountryCodeFormatError, RuleCountryCodeError}
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
 import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture._
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}

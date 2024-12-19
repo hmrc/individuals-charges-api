@@ -16,10 +16,10 @@
 
 package v2.delete
 
-import common.connectors.ConnectorSpec
-import common.models.domain.{Nino, TaxYear}
-import common.errors.{InternalError, NinoFormatError}
-import common.models.outcomes.ResponseWrapper
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{NinoFormatError, InternalError}
+import shared.models.outcomes.ResponseWrapper
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
@@ -40,7 +40,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: DeletePensionChargesConnector =
-      new DeletePensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new DeletePensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
   }
 

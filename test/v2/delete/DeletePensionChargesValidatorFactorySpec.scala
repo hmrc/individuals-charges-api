@@ -16,9 +16,9 @@
 
 package v2.delete
 
-import common.controllers.validators.Validator
 import mocks.MockIndividualsChargesConfig
-import support.UnitSpec
+import shared.controllers.validators.Validator
+import shared.utils.UnitSpec
 import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
 

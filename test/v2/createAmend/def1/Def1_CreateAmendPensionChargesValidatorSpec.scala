@@ -17,11 +17,11 @@
 package v2.createAmend.def1
 
 import common.errors.{CountryCodeFormatError, RuleCountryCodeError}
-import common.models.domain.{Nino, TaxYear}
-import common.errors._
 import mocks.MockIndividualsChargesConfig
 import play.api.libs.json.{JsObject, JsValue}
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
@@ -39,7 +39,8 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec with MockIndi
   private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
   private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
 
-  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(mockAppConfig)
+  private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(
+    mockAppConfig)
 
   class Test {
     MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")

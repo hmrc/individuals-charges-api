@@ -16,10 +16,10 @@
 
 package v2.retrieve
 
-import common.connectors.ConnectorSpec
-import common.models.domain.{Nino, TaxYear}
-import common.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import common.models.outcomes.ResponseWrapper
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
+import shared.models.outcomes.ResponseWrapper
 import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
@@ -41,7 +41,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: RetrievePensionChargesConnector =
-      new RetrievePensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrievePensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
   }
 
@@ -53,13 +53,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -72,13 +66,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/charges/pensions/23-24/$nino",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willGet(s"$baseUrl/income-tax/charges/pensions/23-24/$nino")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -91,13 +79,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -110,13 +92,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
