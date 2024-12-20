@@ -20,8 +20,8 @@ import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
-import routing.{Version2, Version3}
-import support.IntegrationBaseSpec
+import shared.routing.{Version2, Version3}
+import shared.support.IntegrationBaseSpec
 
 import scala.util.Try
 

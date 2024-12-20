@@ -16,11 +16,12 @@
 
 package auth
 
-import common.models.domain.TaxYear
-import common.services.DownstreamStub
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
+import shared.auth.AuthSupportingAgentsAllowedISpec
+import shared.models.domain.TaxYear
+import shared.services.DownstreamStub
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
 
 class IndividualsChargesAuthSupportingAgentsAllowedISpec extends AuthSupportingAgentsAllowedISpec {
@@ -29,9 +30,8 @@ class IndividualsChargesAuthSupportingAgentsAllowedISpec extends AuthSupportingA
 
   val supportingAgentsAllowedEndpoint = "create-amend-pension-charges"
 
-  private val taxYear    = TaxYear.fromMtd("2023-24")
-  val mtdUrl = s"/pensions/$nino/${taxYear.asMtd}"
-
+  private val taxYear = TaxYear.fromMtd("2023-24")
+  val mtdUrl          = s"/pensions/$nino/${taxYear.asMtd}"
 
   def sendMtdRequest(request: WSRequest): WSResponse = await(request.put(fullValidJson))
 
