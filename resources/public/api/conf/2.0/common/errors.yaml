@@ -43,7 +43,7 @@ components:
         The format of the supplied country code is not valid.
       value:
         code: FORMAT_COUNTRY_CODE
-        message: The format of the country code is invalid
+        message: The provided Country code is invalid
 
     ruleCountryCode:
       description: |
