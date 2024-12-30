@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
@@ -27,10 +26,10 @@ import shared.routing.{Version2, Version3}
 import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
-class IndividualsChargesApiDefinitionFactorySpec extends UnitSpec {
+class ChargesApiDefinitionFactorySpec extends UnitSpec {
 
-  class Test extends MockHttpClient with MockSharedAppConfig with MockIndividualsChargesConfig {
-    val apiDefinitionFactory = new IndividualsChargesApiDefinitionFactory(mockSharedAppConfig)
+  class Test extends MockHttpClient with MockSharedAppConfig {
+    val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockSharedAppConfig)
     MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 

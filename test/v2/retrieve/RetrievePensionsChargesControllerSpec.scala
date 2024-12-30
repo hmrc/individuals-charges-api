@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package v2.retrieve
 
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
@@ -39,7 +38,6 @@ class RetrievePensionsChargesControllerSpec
     with MockMtdIdLookupService
     with MockRetrievePensionChargesValidatorFactory
     with MockRetrievePensionsChargesService
-    with MockIndividualsChargesConfig
     with MockAuditService {
 
   private val taxYear     = "2021-22"

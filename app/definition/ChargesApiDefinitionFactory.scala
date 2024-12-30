@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import shared.routing.{Version2, Version3}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class IndividualsChargesApiDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
+class ChargesApiDefinitionFactory @Inject()(protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
   lazy val definition: Definition =
     Definition(
@@ -31,7 +31,7 @@ class IndividualsChargesApiDefinitionFactory @Inject() (protected val appConfig:
         name = "Individuals Charges (MTD)",
         description = "This is a draft spec for the Individuals Charges API",
         context = appConfig.apiGatewayContext,
-        categories = Seq("INCOME_TAX_MTD"),
+        categories = Seq(mtdCategory),
         versions = Seq(
           APIVersion(
             version = Version2,

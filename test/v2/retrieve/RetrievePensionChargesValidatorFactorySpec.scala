@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,19 @@
 
 package v2.retrieve
 
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 
-class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockSharedAppConfig with MockIndividualsChargesConfig {
+class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockSharedAppConfig {
 
   private val validNino        = "AA123456A"
   private val validDef1TaxYear = "2021-22"
   private val validDef2TaxYear = "2024-25"
 
-  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig, mockSharedAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockSharedAppConfig)
 
   private def setupMocks = MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true

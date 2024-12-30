@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package v2.retrieve.def1
 
-import mocks.MockIndividualsChargesConfig
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
 import shared.utils.UnitSpec
@@ -24,7 +23,7 @@ import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig {
+class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -33,15 +32,11 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String) = new Def1_RetrievePensionChargesValidator(nino, taxYear)(mockAppConfig)
-
-  class Test {
-    MockedIndividualsChargesConfig.minTaxYearPensionCharge.returns("2022")
-  }
+  private def validator(nino: String, taxYear: String) = new Def1_RetrievePensionChargesValidator(nino, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
-      "passed a valid request" in new Test {
+      "passed a valid request" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
@@ -50,35 +45,35 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
     }
 
     "should return a single error" when {
-      "an invalid nino is supplied" in new Test {
+      "an invalid nino is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
-      "an incorrectly formatted taxYear is supplied" in new Test {
+      "an incorrectly formatted taxYear is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
       }
 
-      "an invalid tax year range is supplied" in new Test {
+      "an invalid tax year range is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
 
-      "an invalid tax year, before the minimum, is supplied" in new Test {
+      "an invalid tax year, before the minimum, is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-21").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
 
-      "an invalid tax year, after the maximum, is supplied" in new Test {
+      "an invalid tax year, after the maximum, is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2027-28").validateAndWrapResult()
 
@@ -87,7 +82,7 @@ class Def1_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in new Test {
+      "request supplied has multiple errors" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package v2.delete.def1
 
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
 import cats.data.Validated
 import cats.implicits._
-import config.IndividualsChargesConfig
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
@@ -29,15 +28,15 @@ import v2.delete.model.request.DeletePensionChargesRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)(individualsChargesConfig: IndividualsChargesConfig)
+class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)
     extends Validator[DeletePensionChargesRequestData] {
 
-  private lazy val minTaxYear = TaxYear(individualsChargesConfig.minTaxYearPensionCharge)
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
 
   def validate: Validated[Seq[MtdError], DeletePensionChargesRequestData] =
     (
       ResolveNino(nino),
-      ResolveTaxYear(minTaxYear, taxYear)
+      resolveTaxYear(taxYear)
     ).mapN(Def1_DeletePensionChargesRequestData)
 
 }

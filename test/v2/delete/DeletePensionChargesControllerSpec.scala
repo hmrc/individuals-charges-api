@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package v2.delete
 
+import cats.implicits.catsSyntaxValidatedId
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -27,7 +28,6 @@ import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import cats.implicits.catsSyntaxValidatedId
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -118,7 +118,7 @@ class DeletePensionChargesControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          versionNumber = "9.0",
+          versionNumber = apiVersion.name,
           params = Map("nino" -> validNino, "taxYear" -> taxYear),
           maybeRequestBody,
           correlationId,

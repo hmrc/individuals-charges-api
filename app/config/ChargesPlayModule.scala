@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,17 @@
 
 package config
 
-import play.api.Configuration
-import shared.config.AppConfigBase
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import com.google.inject.AbstractModule
+import definition.ChargesApiDefinitionFactory
+import routing.ChargesVersionRoutingMap
+import shared.definition.ApiDefinitionFactory
+import shared.routing.VersionRoutingMap
 
-import javax.inject.{Inject, Singleton}
+class ChargesPlayModule extends AbstractModule {
 
-@Singleton
-class IndividualsChargesConfig @Inject() (val config: ServicesConfig, protected[config] val configuration: Configuration) extends AppConfigBase {
-
-  def minTaxYearPensionCharge: String = configuration.getOptional[String]("minTaxYearPensionCharge").getOrElse("2022")
+  override def configure(): Unit = {
+    bind(classOf[ApiDefinitionFactory]).to(classOf[ChargesApiDefinitionFactory]).asEagerSingleton()
+    bind(classOf[VersionRoutingMap]).to(classOf[ChargesVersionRoutingMap]).asEagerSingleton()
+  }
 
 }

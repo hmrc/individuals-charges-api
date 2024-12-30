@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package v2.retrieve.def2
 
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import shared.config.MockSharedAppConfig
 import shared.models.domain.{Nino, TaxYear}
@@ -26,7 +25,7 @@ import v2.retrieve.RetrievePensionChargesValidatorFactory
 import v2.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndividualsChargesConfig with MockSharedAppConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockSharedAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -35,7 +34,7 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockIndivid
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig, mockSharedAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockSharedAppConfig)
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 

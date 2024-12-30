@@ -23,10 +23,6 @@ import shared.utils.UnitSpec
 class ChargesFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[ChargesFeatureSwitches] {
   override def featureSwitches(configuration: Configuration): ChargesFeatureSwitches = ChargesFeatureSwitches(configuration)
 
-  "isCL102Enabled" should {
-    behave like aFeatureSwitchWithKey("cl102.enabled", _.isCL102Enabled)
-  }
-
   "isRemoveLifetimePensionEnabled" should {
     behave like aFeatureSwitchWithKey("removeLifetimePension.enabled", _.isRemoveLifetimePensionEnabled)
   }

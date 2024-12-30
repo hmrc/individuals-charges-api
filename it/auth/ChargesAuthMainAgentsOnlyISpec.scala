@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import shared.models.domain.TaxYear
 import shared.services.DownstreamStub
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
 
-class IndividualsChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
+class ChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
   val callingApiVersion = "3.0"
 

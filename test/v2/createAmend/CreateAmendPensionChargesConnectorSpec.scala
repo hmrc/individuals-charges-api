@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package v2.createAmend
 
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{NinoFormatError, TaxYearFormatError, InternalError}
+import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData

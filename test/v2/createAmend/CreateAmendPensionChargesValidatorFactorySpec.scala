@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package v2.createAmend
 
-import mocks.MockIndividualsChargesConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import shared.config.MockSharedAppConfig
@@ -25,7 +24,7 @@ import shared.utils.UnitSpec
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
-class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig with MockIndividualsChargesConfig{
+class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"

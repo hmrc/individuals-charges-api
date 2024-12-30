@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import shared.config.{FeatureSwitches, SharedAppConfig}
   */
 case class ChargesFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  def isCL102Enabled: Boolean                      = isEnabled("cl102")
   def isRemoveLifetimePensionEnabled: Boolean      = isEnabled("removeLifetimePension")
   def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")
 }

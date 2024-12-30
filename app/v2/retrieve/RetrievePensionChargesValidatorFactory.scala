@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package v2.retrieve
 
-import shared.controllers.validators.Validator
 import cats.data.Validated.{Invalid, Valid}
-import config.{ChargesFeatureSwitches, IndividualsChargesConfig}
+import config.ChargesFeatureSwitches
 import shared.config.SharedAppConfig
+import shared.controllers.validators.Validator
 import v2.retrieve.RetrievePensionChargesSchema.{Def1, Def2}
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
@@ -27,15 +27,15 @@ import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
 import javax.inject.Inject
 
-class RetrievePensionChargesValidatorFactory @Inject() (individualsChargesConfig: IndividualsChargesConfig, appConfig: SharedAppConfig) {
+class RetrievePensionChargesValidatorFactory @Inject() (appConfig: SharedAppConfig) {
 
   def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] = {
 
     val featureSwitches = ChargesFeatureSwitches()(appConfig)
-    val default = new Def1_RetrievePensionChargesValidator(nino, taxYear)(individualsChargesConfig)
+    val default = new Def1_RetrievePensionChargesValidator(nino, taxYear)
 
     RetrievePensionChargesSchema.schemaFor(Some(taxYear)) match {
-      case Valid(Def1) => new Def1_RetrievePensionChargesValidator(nino, taxYear)(individualsChargesConfig)
+      case Valid(Def1) => new Def1_RetrievePensionChargesValidator(nino, taxYear)
       case Valid(Def2) if featureSwitches.isRemoveLifetimePensionEnabled => new Def2_RetrievePensionChargesValidator(nino, taxYear)
       case Invalid(errors) => Validator.returningErrors(errors)
       case _ => default
