@@ -16,10 +16,10 @@
 
 package v2.delete
 
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.services.ServiceOutcome
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import scala.concurrent.{ExecutionContext, Future}

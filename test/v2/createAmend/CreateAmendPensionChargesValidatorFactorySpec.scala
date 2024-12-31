@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package v2.createAmend
 
-import api.utils.JsonErrorValidators
-import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
-import support.UnitSpec
+import shared.config.MockSharedAppConfig
+import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
-class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
+class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
@@ -41,7 +41,7 @@ class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonEr
 
   private val validatorFactory = new CreateAmendPensionChargesValidatorFactory
 
-  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 

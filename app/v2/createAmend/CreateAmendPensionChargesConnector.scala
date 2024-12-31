@@ -16,10 +16,10 @@
 
 package v2.createAmend
 
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def createAmendPensionCharges(request: CreateAmendPensionChargesRequestData)(implicit
       hc: HeaderCarrier,
@@ -36,7 +36,7 @@ class CreateAmendPensionChargesConnector @Inject() (val http: HttpClient, val ap
 
     import request._
 
-    val downstreamUri = if (request.taxYear.isTys) {
+    val downstreamUri = if (request.taxYear.useTaxYearSpecificApi) {
       IfsUri[Unit](s"income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino")
     } else {
       IfsUri[Unit](s"income-tax/charges/pensions/$nino/${taxYear.asMtd}")

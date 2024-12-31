@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 
 package v2.retrieve
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
-import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
+import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,11 +38,10 @@ class RetrievePensionsChargesControllerSpec
     with MockMtdIdLookupService
     with MockRetrievePensionChargesValidatorFactory
     with MockRetrievePensionsChargesService
-    with MockAppConfig
     with MockAuditService {
 
   private val taxYear     = "2021-22"
-  private val requestData = Def1_RetrievePensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val requestData = Def1_RetrievePensionChargesRequestData(Nino(validNino), TaxYear.fromMtd(taxYear))
 
   "retrieve" should {
     "return a successful response with header X-CorrelationId and body" when {
@@ -78,7 +76,7 @@ class RetrievePensionsChargesControllerSpec
 
   }
 
-  class Test extends ControllerTest with AuditEventChecking {
+  class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new RetrievePensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -89,12 +87,12 @@ class RetrievePensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
-    override protected def callController(): Future[Result] = controller.retrieve(nino, taxYear)(fakeRequest)
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    override protected def callController(): Future[Result] = controller.retrieve(validNino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -104,7 +102,7 @@ class RetrievePensionsChargesControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "2.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = None,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

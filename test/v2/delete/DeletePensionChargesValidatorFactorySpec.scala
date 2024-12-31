@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,17 @@
 
 package v2.delete
 
-import api.controllers.validators.Validator
-import mocks.MockAppConfig
-import support.UnitSpec
+import shared.controllers.validators.Validator
+import shared.utils.UnitSpec
 import v2.delete.def1.Def1_DeletePensionChargesValidator
 import v2.delete.model.request.DeletePensionChargesRequestData
 
-class DeletePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class DeletePensionChargesValidatorFactorySpec extends UnitSpec {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
 
-  private val validatorFactory = new DeletePensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory = new DeletePensionChargesValidatorFactory
 
   "validator" should {
     "return the Def1 validator" when {

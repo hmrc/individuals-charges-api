@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@
 
 package v2.retrieve
 
-import mocks.MockAppConfig
 import play.api.Configuration
-import support.UnitSpec
+import shared.config.MockSharedAppConfig
+import shared.utils.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 
-class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockSharedAppConfig {
 
   private val validNino        = "AA123456A"
   private val validDef1TaxYear = "2021-22"
   private val validDef2TaxYear = "2024-25"
 
-  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockSharedAppConfig)
 
-  private def setupMocks = MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+  private def setupMocks = MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
     "removeLifetimePension.enabled" -> true
   )
 
@@ -43,8 +43,7 @@ class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppCo
       }
 
       "given an valid request and featureSwitch is disabled" in {
-        MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
-          "removeLifetimePension.enabled" -> false)
+        MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration("removeLifetimePension.enabled" -> false)
         val result = validatorFactory.validator(validNino, validDef2TaxYear)
         result shouldBe a[Def1_RetrievePensionChargesValidator]
       }

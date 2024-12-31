@@ -17,7 +17,7 @@
 package v2.retrieve.def2.response
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v2.createAmend.def1.model.request.OverseasSchemeProvider
 
 class OverseasSchemeProviderSpec extends UnitSpec {

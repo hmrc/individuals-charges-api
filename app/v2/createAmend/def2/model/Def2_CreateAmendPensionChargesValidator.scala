@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,31 @@
 
 package v2.createAmend.def2.model
 
-import api.controllers.validators.resolvers._
-import api.controllers.validators.{RulesValidator, Validator}
-import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits._
-import config.AppConfig
+import common.errors._
 import play.api.libs.json.JsValue
+import shared.controllers.validators.resolvers._
+import shared.controllers.validators.{RulesValidator, Validator}
+import shared.models.domain.TaxYear
+import shared.models.errors._
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v2.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
 
-class Def2_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)(appConfig: AppConfig)
+class Def2_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)
     extends Validator[CreateAmendPensionChargesRequestData] {
 
-  private lazy val minTaxYear = appConfig.minTaxYearPensionCharge.toInt
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
   private val resolveJson     = ResolveJsonObject.strictResolver[Def2_CreateAmendPensionChargesRequestBody]
 
   def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
     (
       ResolveNino(nino),
-      ResolveTaxYear(minTaxYear, taxYear, None, None),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def2_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
 
@@ -245,7 +246,7 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
     val validateNumberFields = fieldsWithPaths
       .map {
         case (None, _)            => valid
-        case (Some(number), path) => resolveParsedNumber(number, None, Some(path))
+        case (Some(number), path) => resolveParsedNumber(number, path)
       }
     validateNumberFields.sequence.andThen(_ => valid)
 

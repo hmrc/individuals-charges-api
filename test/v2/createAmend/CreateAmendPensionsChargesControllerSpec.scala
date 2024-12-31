@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package v2.createAmend
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
-import api.models.outcomes.ResponseWrapper
-import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
@@ -39,11 +39,11 @@ class CreateAmendPensionsChargesControllerSpec
     with MockMtdIdLookupService
     with MockCreateAmendPensionChargesValidatorFactory
     with MockCreateAmendPensionsChargesService
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockAuditService {
 
   private val taxYear     = "2021-22"
-  private val requestData = Def1_CreateAmendPensionChargesRequestData(Nino(nino), TaxYear.fromMtd(taxYear), createAmendPensionChargesRequestBody)
+  private val requestData = Def1_CreateAmendPensionChargesRequestData(Nino(validNino), TaxYear.fromMtd(taxYear), createAmendPensionChargesRequestBody)
 
   "amend" should {
     "return a successful response with header X-CorrelationId and body" when {
@@ -82,7 +82,7 @@ class CreateAmendPensionsChargesControllerSpec
     }
   }
 
-  class Test extends ControllerTest with AuditEventChecking {
+  class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateAmendPensionChargesController(
       authService = mockEnrolmentsAuthService,
@@ -94,13 +94,13 @@ class CreateAmendPensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    override protected def callController(): Future[Result] = controller.createAmend(nino, taxYear)(fakePostRequest(fullJson))
+    override protected def callController(): Future[Result] = controller.createAmend(validNino, taxYear)(fakePostRequest(fullJson))
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -109,8 +109,8 @@ class CreateAmendPensionsChargesControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          versionNumber = "2.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          versionNumber = apiVersion.name,
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           maybeRequestBody,
           correlationId,
           auditResponse

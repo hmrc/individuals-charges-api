@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,16 @@
 package config
 
 import play.api.Configuration
+import shared.config.{FeatureSwitches, SharedAppConfig}
 
 /** API-specific feature switches.
   */
 case class ChargesFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  def isCL102Enabled: Boolean                      = isEnabled("cl102")
   def isRemoveLifetimePensionEnabled: Boolean      = isEnabled("removeLifetimePension")
   def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")
 }
 
 object ChargesFeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
+  def apply()(implicit appConfig: SharedAppConfig): ChargesFeatureSwitches = ChargesFeatureSwitches(appConfig.featureSwitchConfig)
 }

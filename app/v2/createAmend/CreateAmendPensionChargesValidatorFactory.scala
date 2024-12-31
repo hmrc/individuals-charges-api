@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package v2.createAmend
 
-import api.controllers.validators.Validator
-import config.AppConfig
 import play.api.libs.json.JsValue
+import shared.config.SharedAppConfig
+import shared.controllers.validators.Validator
 import v2.createAmend.CreateAmendPensionChargesSchema.{Def1, Def2}
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
@@ -26,13 +26,13 @@ import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
 
-class CreateAmendPensionChargesValidatorFactory @Inject() (implicit appConfig: AppConfig) {
+class CreateAmendPensionChargesValidatorFactory @Inject() (implicit appConfig: SharedAppConfig) {
 
   def validator(nino: String, taxYear: String, body: JsValue): Validator[CreateAmendPensionChargesRequestData] = {
     val schema = CreateAmendPensionChargesSchema.schemaFor(taxYear)
     schema match {
-      case Def1 => new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)(appConfig)
-      case Def2 => new Def2_CreateAmendPensionChargesValidator(nino, taxYear, body)(appConfig)
+      case Def1 => new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)
+      case Def2 => new Def2_CreateAmendPensionChargesValidator(nino, taxYear, body)
     }
   }
 

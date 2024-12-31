@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package v2.retrieve.def1.model.response
 
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
-class Def1_RetrievePensionChargesResponseSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrievePensionChargesResponseSpec extends UnitSpec {
 
   val responseModel: RetrievePensionChargesResponse = Def1_RetrievePensionChargesResponse(
     "2020-07-27T17:00:19Z",
