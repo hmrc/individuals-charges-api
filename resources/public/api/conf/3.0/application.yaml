@@ -4,6 +4,12 @@ info:
   version: "3.0"
   title: Individuals Charges (MTD)
   description: |
+    The following endpoints are stateful in the Sandbox:
+    
+    * Retrieve Pension Charges
+    * Create and Amend Pension Charges
+    * Delete Pension Charges
+    
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
 
