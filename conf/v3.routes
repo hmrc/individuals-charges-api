@@ -1,5 +1,5 @@
-DELETE     /pensions/:nino/:taxYear       v2.delete.DeletePensionChargesController.delete(nino: String, taxYear: String)
+DELETE     /pensions/:nino/:taxYear       v3.delete.DeletePensionChargesController.delete(nino: String, taxYear: String)
 
-GET       /pensions/:nino/:taxYear        v2.retrieve.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
+GET       /pensions/:nino/:taxYear        v3.retrieve.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
 
-PUT       /pensions/:nino/:taxYear        v2.createAmend.CreateAmendPensionChargesController.createAmend(nino: String, taxYear: String)
+PUT       /pensions/:nino/:taxYear        v3.createAmend.CreateAmendPensionChargesController.createAmend(nino: String, taxYear: String)
