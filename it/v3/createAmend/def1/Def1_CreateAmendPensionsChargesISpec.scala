@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.endpoints.createAmend.def2
+package v3.endpoints.createAmend.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.{PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError}
@@ -26,15 +26,15 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v2.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture._
+import v3.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
 
-class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
+class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
 
   "Calling the create & amend endpoint" should {
 
     "return a 200 status code" when {
 
-      "any valid request is made with the original data structure" in new Test {
+      "any valid request is made with the original data structure" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -49,7 +49,22 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe None
       }
 
-      "any valid request is made with different booleans" in new Test {
+      "a valid request is made for a Tax Year Specific tax year" in new IfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(mtdRequest.put(fullValidJson))
+        response.status shouldBe OK
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+        response.header("Content-Type") shouldBe None
+      }
+
+      "any valid request is made with different booleans" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -86,7 +101,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError): Unit = {
 
           s"validation fails with ${expectedBody.code} error ${if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
-            else ""}" in new Test {
+            else ""}" in new NonTysTest {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
@@ -111,7 +126,13 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", fullValidJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
+            invalidJson,
+            BAD_REQUEST,
+            RuleIncorrectOrEmptyBodyError.withPath("/pensionSavingsTaxCharges/pensionSchemeTaxReference")),
+          (
+            "AA123456A",
+            "2021-22",
             invalidNameJson,
             BAD_REQUEST,
             ProviderNameFormatError.copy(paths = Some(
@@ -121,7 +142,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
           ),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             invalidAddressJson,
             BAD_REQUEST,
             ProviderAddressFormatError.copy(paths = Some(
@@ -130,7 +151,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
                 "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress")))),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             fullReferencesJson("Q123456", "453"),
             BAD_REQUEST,
             PensionSchemeTaxRefFormatError.copy(paths = Some(Seq(
@@ -139,7 +160,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             fullReferencesJson("234", "00123456RA"),
             BAD_REQUEST,
             QOPSRefFormatError.copy(paths = Some(Seq(
@@ -148,7 +169,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             fullJsonWithInvalidCountryFormat("1YM"),
             BAD_REQUEST,
             RuleCountryCodeError.copy(paths = Some(Seq(
@@ -157,7 +178,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             fullJsonWithInvalidCountryFormat("INVALID"),
             BAD_REQUEST,
             CountryCodeFormatError.copy(paths = Some(Seq(
@@ -166,10 +187,12 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
             )))),
           (
             "AA123456A",
-            "2024-25",
+            "2021-22",
             fullJson(999999999999.99),
             BAD_REQUEST,
             ValueFormatError.copy(paths = Some(Seq(
+              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/amount",
+              "/pensionSavingsTaxCharges/lumpSumBenefitTakenInExcessOfLifetimeAllowance/taxPaid",
               "/pensionSchemeOverseasTransfers/transferChargeTaxPaid",
               "/pensionSchemeOverseasTransfers/transferCharge",
               "/pensionSchemeUnauthorisedPayments/surcharge/amount",
@@ -187,7 +210,7 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -234,8 +257,8 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    def taxYear: String       = "2024-25"
-    def downstreamUri: String = s"/income-tax/charges/pensions/24-25/$nino"
+    def taxYear: String
+    def downstreamUri: String
 
     val nino: String = "AA123456A"
 
@@ -251,6 +274,18 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         )
     }
 
+  }
+
+  private trait NonTysTest extends Test {
+
+    def taxYear: String       = "2021-22"
+    def downstreamUri: String = s"/income-tax/charges/pensions/$nino/2021-22"
+  }
+
+  private trait IfsTest extends Test {
+
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/charges/pensions/23-24/$nino"
   }
 
 }
