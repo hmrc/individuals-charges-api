@@ -22,12 +22,18 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/create_amend_request_schema.json'
+        oneOf:
+        - $ref: "./schemas/createAmendPension/def1/create_amend_request_schema.json"
+        - $ref: "./schemas/createAmendPension/def2/create_amend_request_schema.json"
       examples:
-        example-request:
+        "For tax years before 2024-25":
           description: Full Expenses request
           value:
-            $ref: './examples/create_amend_request.json'
+            $ref: './examples/createAmendPension/def1/create_amend_request.json'
+        "For tax years 2024-25 onwards":
+          description: Full Expenses request
+          value:
+            $ref: './examples/createAmendPension/def2/create_amend_request.json'
 
 responses:
   "204":
