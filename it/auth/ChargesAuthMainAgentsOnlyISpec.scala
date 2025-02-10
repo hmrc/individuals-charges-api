@@ -22,7 +22,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthMainAgentsOnlyISpec
 import shared.models.domain.TaxYear
 import shared.services.DownstreamStub
-import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
+import v3.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
 
 class ChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
@@ -37,6 +37,8 @@ class ChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
   def sendMtdRequest(request: WSRequest): WSResponse = await(request.put(fullValidJson))
 
   val downstreamUri: String = s"/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino"
+
+  override val expectedMtdSuccessStatus: Int = NO_CONTENT
 
   override val downstreamSuccessStatus: Int = NO_CONTENT
 
