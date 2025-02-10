@@ -20,6 +20,7 @@ import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
+import common.errors.RuleOutsideAmendmentWindow
 import shared.models.errors.MtdError
 import v3.delete.model.request.DeletePensionChargesRequestData
 
@@ -43,7 +44,8 @@ class DeletePensionChargesService @Inject() (connector: DeletePensionChargesConn
       "NO_DATA_FOUND"             -> NotFoundError,
       "INVALID_CORRELATIONID"     -> InternalError,
       "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "SERVICE_UNAVAILABLE"       -> InternalError,
+      "OUTSIDE_AMENDMENT_WINDOW"        -> RuleOutsideAmendmentWindow
     )
 
     val extraTysErrors = Map(

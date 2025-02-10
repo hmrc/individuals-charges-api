@@ -9,7 +9,7 @@ description: |
   | N/A - DEFAULT                    | Simulates a success response.                                                                                |
   | NOT_FOUND                        | Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period. |
   | STATEFUL                         | Performs a stateful delete.                                                                                  |
-
+  | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window.              |
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -48,6 +48,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_OUTSIDE_AMENDMENT_WINDOW:
+            $ref: './common/errors.yaml#/components/examples/ruleOutsideAmendmentWindow'
 
   "403":
     description: Forbidden

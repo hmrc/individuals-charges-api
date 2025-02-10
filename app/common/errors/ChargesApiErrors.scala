@@ -39,3 +39,5 @@ object RulePensionReferenceError
       "RULE_PENSION_REFERENCE",
       "You can only provide qualifying recognised Overseas Pension Scheme reference or pension scheme tax reference not both",
       BAD_REQUEST)
+
+object RuleOutsideAmendmentWindow extends MtdError("RULE_OUTSIDE_AMENDMENT_WINDOW", "You are outside the amendment window", BAD_REQUEST)

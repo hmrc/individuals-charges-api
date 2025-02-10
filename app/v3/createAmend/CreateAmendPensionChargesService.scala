@@ -20,6 +20,7 @@ import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits._
+import common.errors.RuleOutsideAmendmentWindow
 import v3.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -44,7 +45,8 @@ class CreateAmendPensionChargesService @Inject() (connector: CreateAmendPensionC
       "REDUCTION_TYPE_NOT_SPECIFIED" -> InternalError,
       "REDUCTION_NOT_SPECIFIED"      -> InternalError,
       "SERVER_ERROR"                 -> InternalError,
-      "SERVICE_UNAVAILABLE"          -> InternalError
+      "SERVICE_UNAVAILABLE"          -> InternalError,
+      "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindow
     )
     val extraTysErrors = Map(
       "MISSING_ANNUAL_ALLOWANCE_REDUCTION" -> InternalError,
