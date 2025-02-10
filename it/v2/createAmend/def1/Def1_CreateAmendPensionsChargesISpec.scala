@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
 
   "Calling the create & amend endpoint" should {
 
-    "return a 200 status code" when {
+    "return a 204 status code" when {
 
       "any valid request is made with the original data structure" in new NonTysTest {
 
@@ -44,7 +44,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
-        response.status shouldBe OK
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe None
       }
@@ -59,7 +59,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(mtdRequest.put(fullValidJson))
-        response.status shouldBe OK
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe None
       }
@@ -74,17 +74,17 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(mtdRequest.put(boolean1Json))
-        response.status shouldBe OK
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe None
 
         val response2: WSResponse = await(mtdRequest.put(boolean2Json))
-        response2.status shouldBe OK
+        response2.status shouldBe NO_CONTENT
         response2.header("X-CorrelationId").nonEmpty shouldBe true
         response2.header("Content-Type") shouldBe None
 
         val response3: WSResponse = await(mtdRequest.put(booleans3Json))
-        response3.status shouldBe OK
+        response3.status shouldBe NO_CONTENT
         response3.header("X-CorrelationId").nonEmpty shouldBe true
         response3.header("Content-Type") shouldBe None
 
