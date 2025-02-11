@@ -16,20 +16,10 @@
 
 package v3.delete
 
+import common.errors.RuleOutsideAmendmentWindow
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  InternalError,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  OutboundError,
-  RuleTaxYearNotSupportedError,
-  TaxYearFormatError
-}
+import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
@@ -101,7 +91,8 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "INVALID_CORRELATIONID"     -> InternalError,
           "SERVER_ERROR"              -> InternalError,
           "SERVICE_UNAVAILABLE"       -> InternalError,
-          "UNEXPECTED_ERROR"          -> InternalError
+          "UNEXPECTED_ERROR"          -> InternalError,
+          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindow
         )
 
         val extraTysErrors = Map(
