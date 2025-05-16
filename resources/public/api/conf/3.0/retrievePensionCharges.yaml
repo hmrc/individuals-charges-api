@@ -11,10 +11,12 @@ description: |
   | NOT_FOUND                        | Simulates a scenario where no data can be found. |
   | STATEFUL                         | Performs a stateful retrieve.                    |
 
+tags:
+  - Pension Charges
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
-  - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
+  - $ref: './common/pathParameters.yaml#/components/parameters/minimumTaxYear2021'
   - $ref: './common/headers.yaml#/components/parameters/acceptJson'
   - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
