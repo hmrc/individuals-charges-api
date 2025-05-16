@@ -19,6 +19,9 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
+tags:
+  - Pension Charges
+
 requestBody:
   content:
     application/json:
