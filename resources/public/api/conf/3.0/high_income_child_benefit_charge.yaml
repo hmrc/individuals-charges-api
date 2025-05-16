@@ -4,3 +4,10 @@ get:
   security:
     - User-Restricted:
         - read:self-assessment
+
+delete:
+  $ref: "./high_income_child_benefit_charge_delete.yaml"
+  summary: Delete High Income Child Benefit Charge Submission{{#maybeTestOnly "3.0 high-income-child-benefit-charge-delete"}}{{/maybeTestOnly}}
+  security:
+    - User-Restricted:
+        - write:self-assessment
