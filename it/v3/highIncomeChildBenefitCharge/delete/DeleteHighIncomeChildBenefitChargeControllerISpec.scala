@@ -121,7 +121,7 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
 
     def downstreamUri: String = s"/itsa/income-tax/v1/$downstreamTaxYear/high-income-child-benefit/charges/$nino"
 
-    def mtdUri: String = s"/individuals/charges/high-income-child-benefit/$nino/$taxYear"
+    def mtdUri: String = s"/high-income-child-benefit/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
