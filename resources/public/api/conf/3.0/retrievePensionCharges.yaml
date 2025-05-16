@@ -19,6 +19,9 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
+tags:
+  - Pension Charges
+
 responses:
   "200":
     description: Success

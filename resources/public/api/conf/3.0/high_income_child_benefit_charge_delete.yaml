@@ -1,16 +1,18 @@
-summary: Delete Pension Charges
+summary: Delete High Income Child Benefit Charge Submission
 description: |
-  This endpoint enables you to delete charges relating to pensions. A National Insurance number and tax year must be provided.
+  This endpoint allows a customer to delete the information used to calculate a charge from High Income Child Benefit earners. A National Insurance number and tax year must be provided.
   
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.  
   
-  | Header Value (Gov-Test-Scenario) | Scenario                                                                                                     |
-  |----------------------------------|--------------------------------------------------------------------------------------------------------------|
-  | N/A - DEFAULT                    | Simulates a success response.                                                                                |
-  | NOT_FOUND                        | Simulates a scenario where the remote endpoint has indicated that no data can be found for the given period. |
-  | STATEFUL                         | Performs a stateful delete.                                                                                  |
-  | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window.              |
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                     |
+  |----------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates a success response.                                                                                                |
+  | NOT_FOUND                        | Simulates the scenario where no data is found.                                                                               |
+  | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window.                              |
+  | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                                                                  |
+  | REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
+  | STATEFUL                         | Performs a stateful delete.                                                                                                  |
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -20,7 +22,7 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
 tags:
-  - Pension Charges
+  - High Income Child Benefit Charge Submission
 
 responses:
   "204":
@@ -28,24 +30,12 @@ responses:
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
-      Deprecation:
-        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
-      Sunset:
-        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
-      Link:
-        $ref: './common/headers.yaml#/components/parameters/linkHeader'
 
   "400":
     description: Bad request
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
-      Deprecation:
-        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
-      Sunset:
-        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
-      Link:
-        $ref: './common/headers.yaml#/components/parameters/linkHeader'
     content:
       application/json:
         schema:
@@ -69,12 +59,6 @@ responses:
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
-      Deprecation:
-        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
-      Sunset:
-        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
-      Link:
-        $ref: './common/headers.yaml#/components/parameters/linkHeader'
     content:
       application/json:
         schema:
@@ -88,12 +72,6 @@ responses:
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
-      Deprecation:
-        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
-      Sunset:
-        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
-      Link:
-        $ref: './common/headers.yaml#/components/parameters/linkHeader'
     content:
       application/json:
         schema:
@@ -101,4 +79,17 @@ responses:
         examples:
           MATCHING_RESOURCE_NOT_FOUND:
             $ref: './common/errors.yaml#/components/examples/notFound'
+
+  "422":
+    description: Unprocessable Entity
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          RULE_REQUEST_CANNOT_BE_FULFILLED:
+            $ref: './common/errors.yaml#/components/examples/ruleRequestCannotBeFulfiled'
 
