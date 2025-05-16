@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteHighIncomeChildBenefitChargeService @Inject()(connector: DeleteHighIncomeChildBenefitChargeConnector) extends BaseService {
+class DeleteHighIncomeChildBenefitChargeService @Inject() (connector: DeleteHighIncomeChildBenefitChargeConnector) extends BaseService {
 
   def deleteHighIncomeChildBenefit(
       request: DeleteHighIncomeChildBenefitChargeRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
@@ -37,17 +37,16 @@ class DeleteHighIncomeChildBenefitChargeService @Inject()(connector: DeleteHighI
       .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-
-
   private def downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
-      "NOT_FOUND"             -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "OUTSIDE_AMENDMENT_WINDOW"        -> RuleOutsideAmendmentWindow,
+      "NOT_FOUND"                 -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindow,
       "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
+
 }
