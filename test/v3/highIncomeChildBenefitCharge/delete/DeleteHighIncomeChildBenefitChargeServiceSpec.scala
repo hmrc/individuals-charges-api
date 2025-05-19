@@ -16,7 +16,7 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
-import common.errors.RuleOutsideAmendmentWindow
+import common.errors.RuleOutsideAmendmentWindowError
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -63,7 +63,7 @@ class DeleteHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", InternalError),
           ("NOT_FOUND", NotFoundError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
-          ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindow),
+          ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindowError),
           ("SERVER_ERROR", InternalError),
           ("SERVICE_UNAVAILABLE", InternalError)
         )

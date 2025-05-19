@@ -17,7 +17,6 @@
 package v3.highIncomeChildBenefitCharge.retrieve
 
 import cats.implicits._
-import common.errors.RuleOutsideAmendmentWindow
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
@@ -40,7 +39,6 @@ class RetrieveHighIncomeChildBenefitChargeService @Inject()(connector: RetrieveH
     "INVALID_CORRELATION_ID"    -> InternalError,
     "NOT_FOUND"                 -> NotFoundError,
     "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-    "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindow,
     "SERVER_ERROR"              -> InternalError,
     "SERVICE_UNAVAILABLE"       -> InternalError
   )

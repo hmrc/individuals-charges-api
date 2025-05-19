@@ -16,7 +16,7 @@
 
 package v3.createAmend
 
-import common.errors.RuleOutsideAmendmentWindow
+import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
@@ -85,7 +85,7 @@ class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
           "REDUCTION_NOT_SPECIFIED"      -> InternalError,
           "SERVER_ERROR"                 -> InternalError,
           "SERVICE_UNAVAILABLE"          -> InternalError,
-          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindow
+          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindowError
         )
 
         val extraTysErrors = Seq(

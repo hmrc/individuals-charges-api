@@ -16,7 +16,6 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import common.errors.RuleOutsideAmendmentWindow
 import shared.models.domain._
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -63,7 +62,6 @@ class RetrieveHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATION_ID", InternalError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("NOT_FOUND", NotFoundError),
-          ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindow),
           ("SERVER_ERROR", InternalError),
           ("SERVICE_UNAVAILABLE", InternalError)
         )

@@ -17,7 +17,6 @@
 package v3.highIncomeChildBenefitCharge
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors.RuleOutsideAmendmentWindow
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers._
@@ -119,7 +118,6 @@ class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindow),
         )
 
         errors.foreach(args => (serviceErrorTest _).tupled(args))

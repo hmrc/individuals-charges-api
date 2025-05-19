@@ -16,7 +16,7 @@
 
 package v3.delete
 
-import common.errors.RuleOutsideAmendmentWindow
+import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
@@ -92,7 +92,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "SERVER_ERROR"              -> InternalError,
           "SERVICE_UNAVAILABLE"       -> InternalError,
           "UNEXPECTED_ERROR"          -> InternalError,
-          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindow
+          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindowError
         )
 
         val extraTysErrors = Map(
