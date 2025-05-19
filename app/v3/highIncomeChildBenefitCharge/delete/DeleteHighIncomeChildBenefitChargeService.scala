@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteHighIncomeChildBenefitChargeService @Inject() (connector: DeleteHighIncomeChildBenefitChargeConnector) extends BaseService {
 
-  def deleteHighIncomeChildBenefit(
+  def delete(
       request: DeleteHighIncomeChildBenefitChargeRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
     connector
-      .deleteHighIncomeChildBenefit(request)
+      .delete(request)
       .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 

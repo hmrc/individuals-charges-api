@@ -39,7 +39,7 @@ class DeleteHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
           .delete(request)
           .returns(Future.successful(outcome))
 
-        val result: ServiceOutcome[Unit] = await(service.deleteHighIncomeChildBenefit(request))
+        val result: ServiceOutcome[Unit] = await(service.delete(request))
 
         result shouldBe outcome
       }
@@ -52,7 +52,7 @@ class DeleteHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
               .delete(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            val result: ServiceOutcome[Unit] = await(service.deleteHighIncomeChildBenefit(request))
+            val result: ServiceOutcome[Unit] = await(service.delete(request))
 
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }

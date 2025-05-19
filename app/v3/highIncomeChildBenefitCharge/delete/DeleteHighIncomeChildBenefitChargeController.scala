@@ -51,8 +51,7 @@ class DeleteHighIncomeChildBenefitChargeController @Inject()(val authService: En
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService(service.deleteHighIncomeChildBenefit)
-          .withNoContentResult()
+          .withService(service.delete)
           .withAuditing(AuditHandler(
             auditService,
             auditType = "DeleteHighIncomeChildBenefitCharge",

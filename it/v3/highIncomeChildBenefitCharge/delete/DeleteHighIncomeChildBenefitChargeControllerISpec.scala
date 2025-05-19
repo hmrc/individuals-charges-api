@@ -23,6 +23,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.services._
 import shared.support.IntegrationBaseSpec
@@ -117,9 +118,8 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
     val nino = "AA123456A"
 
     def taxYear: String           = "2025-26"
-    def downstreamTaxYear: String = "25-26"
 
-    def downstreamUri: String = s"/itsa/income-tax/v1/$downstreamTaxYear/high-income-child-benefit/charges/$nino"
+    def downstreamUri: String = s"/itsa/income-tax/v1/${TaxYear.fromMtd(taxYear).asTysDownstream}/high-income-child-benefit/charges/$nino"
 
     def mtdUri: String = s"/high-income-child-benefit/$nino/$taxYear"
 
@@ -135,16 +135,20 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
         )
     }
 
-    def errorBody(code: String): String =
-      s"""{
-         |  "failures": [
-         |    {
-         |      "code": "$code",
-         |      "reason": "Downstream message."
+    def errorBody(`type`: String): String =
+      s"""
+         |{
+         |    "origin": "HIP",
+         |    "response": {
+         |        "failures": [
+         |            {
+         |                "type": "${`type`}",
+         |                "reason": "downstream message"
+         |            }
+         |        ]
          |    }
-         |  ]
          |}
-    """.stripMargin
+       """.stripMargin
 
   }
 

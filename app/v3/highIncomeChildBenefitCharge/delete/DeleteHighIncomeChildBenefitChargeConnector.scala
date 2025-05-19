@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteHighIncomeChildBenefitChargeConnector @Inject()(val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
-  def deleteHighIncomeChildBenefit(request: DeleteHighIncomeChildBenefitChargeRequestData)(implicit
+  def delete(request: DeleteHighIncomeChildBenefitChargeRequestData)(implicit
                                                                                            hc: HeaderCarrier,
                                                                                            ec: ExecutionContext,
                                                                                            correlationId: String): Future[DownstreamOutcome[Unit]] = {

@@ -33,7 +33,7 @@ trait MockDeleteHighIncomeChildBenefitChargeService extends MockFactory {
     def delete(requestData: DeleteHighIncomeChildBenefitChargeRequestData): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (
         mockDeleteHighIncomeChildBenefitChargeService
-          .deleteHighIncomeChildBenefit(_: DeleteHighIncomeChildBenefitChargeRequestData)(
+          .delete(_: DeleteHighIncomeChildBenefitChargeRequestData)(
             _: RequestContext,
             _: ExecutionContext
           )

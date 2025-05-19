@@ -38,7 +38,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(outcome))
 
 
-        val result: DownstreamOutcome[Unit] = await(connector.deleteHighIncomeChildBenefit(request))
+        val result: DownstreamOutcome[Unit] = await(connector.delete(request))
 
         result shouldBe outcome
       }
@@ -53,7 +53,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
         willDelete(s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
           .returns(Future.successful(errorOutcome))
 
-        val result: DownstreamOutcome[Unit] = await(connector.deleteHighIncomeChildBenefit(request))
+        val result: DownstreamOutcome[Unit] = await(connector.delete(request))
 
         result shouldBe errorOutcome
       }
