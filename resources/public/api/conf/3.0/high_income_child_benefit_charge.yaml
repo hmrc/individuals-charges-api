@@ -1,0 +1,6 @@
+get:
+  $ref: "./high_income_child_benefit_charge_retrieve.yaml"
+  summary: Retrieve High Income Child Benefit Charge Submission{{#maybeTestOnly "3.0 high-income-child-benefit-charge-retrieve"}}{{/maybeTestOnly}}
+  security:
+    - User-Restricted:
+        - read:self-assessment
