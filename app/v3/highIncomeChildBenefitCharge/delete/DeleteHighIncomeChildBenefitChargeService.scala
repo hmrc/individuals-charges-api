@@ -20,7 +20,7 @@ import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
-import common.errors.RuleOutsideAmendmentWindow
+import common.errors.RuleOutsideAmendmentWindowError
 import shared.models.errors.MtdError
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
@@ -44,7 +44,7 @@ class DeleteHighIncomeChildBenefitChargeService @Inject() (connector: DeleteHigh
       "INVALID_CORRELATIONID"     -> InternalError,
       "NOT_FOUND"                 -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindow,
+      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,24 +116,6 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
     }
   }
 
-  val multipleFailureErrorTypesJson: JsValue = Json.parse("""
-      |{
-      |    "origin": "HIP",
-      |    "response": {
-      |        "failures": [
-      |            {
-      |                "type": "INVALID_TAXABLE_ENTITY_ID",
-      |                "reason": "Submission has not passed validation. Invalid parameter taxableEntityId."
-      |            },
-      |            {
-      |                "type": "INVALID_TAX_YEAR",
-      |                "reason": "Submission has not passed validation. Invalid parameter taxYear."
-      |            }
-      |        ]
-      |    }
-      |}
-    """.stripMargin)
-
   val singleErrorJson: JsValue = Json.parse(
     """
       |{
@@ -231,24 +213,6 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
       }
     }
 
-  private def handleHipErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
-    "receiving a response with multiple HIP errors containing error codes in failure array" should {
-      "return a Left ResponseWrapper containing the extracted error codes" in {
-        val httpResponse = HttpResponse(
-          BAD_REQUEST,
-          multipleFailureErrorTypesJson,
-          Map("CorrelationId" -> List(correlationId))
-        )
-
-        httpReads.read(method, url, httpResponse) shouldBe Left(
-          ResponseWrapper(
-            correlationId,
-            DownstreamErrors(List(DownstreamErrorCode("INVALID_TAXABLE_ENTITY_ID"), DownstreamErrorCode("INVALID_TAX_YEAR"))))
-        )
-      }
-    }
-  }
-
   private def handleBvrsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
 
     val singleBvrJson = Json.parse("""
@@ -283,6 +247,43 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
                 )))
           )
         )
+      }
+    }
+  }
+
+  val multipleFailureErrorTypesJson: JsValue = Json.parse(
+    """
+      |{
+      |    "origin": "HIP",
+      |    "response": {
+      |        "failures": [
+      |            {
+      |                "type": "INVALID_TAXABLE_ENTITY_ID",
+      |                "reason": "Submission has not passed validation. Invalid parameter taxableEntityId."
+      |            },
+      |            {
+      |                "type": "INVALID_TAX_YEAR",
+      |                "reason": "Submission has not passed validation. Invalid parameter taxYear."
+      |            }
+      |        ]
+      |    }
+      |}
+    """.stripMargin)
+
+  private def handleHipErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
+    List(BAD_REQUEST, NOT_FOUND, UNPROCESSABLE_ENTITY).foreach { responseCode =>
+      s"receiving a $responseCode response with multiple HIP errors containing types in failures array" should {
+        "return a Left ResponseWrapper containing the extracted error types" in {
+          val httpResponse = HttpResponse(
+            BAD_REQUEST, multipleFailureErrorTypesJson, Map("CorrelationId" -> List(correlationId))
+          )
+
+          httpReads.read(method, url, httpResponse) shouldBe Left(
+            ResponseWrapper(correlationId, DownstreamErrors(
+              List(DownstreamErrorCode("INVALID_TAXABLE_ENTITY_ID"), DownstreamErrorCode("INVALID_TAX_YEAR")))
+            )
+          )
+        }
       }
     }
   }

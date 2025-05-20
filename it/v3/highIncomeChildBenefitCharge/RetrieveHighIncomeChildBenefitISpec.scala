@@ -14,36 +14,35 @@
  * limitations under the License.
  */
 
-package v3.highIncomeChildBenefitCharge.delete
+package v3.highIncomeChildBenefitCharge
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors.RuleOutsideAmendmentWindowError
-import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers.AUTHORIZATION
+import play.api.test.Helpers._
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.services._
 import shared.support.IntegrationBaseSpec
-class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseSpec {
+import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.responseJson
 
-  "Calling the 'delete high income child benefit charge' endpoint" should {
-    "return a 204 status code" when {
-      "any valid request is made" in new Test  {
+class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {
+
+  "Calling the 'Retrieve High Income Child Benefit Charge Submission' endpoint" should {
+    "return a 200 status code" when {
+      "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
-          }
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, responseJson)
+        }
 
-        val response: WSResponse = await(request().delete())
-        response.status shouldBe NO_CONTENT
-        response.body shouldBe ""
-
+        val response: WSResponse = await(request().get())
+        response.status shouldBe OK
+        response.json shouldBe responseJson
+        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -62,7 +61,7 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request().delete())
+            val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -71,84 +70,81 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
 
         val input = Seq(
           ("AA1123A", "2025-26", BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20477",  BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2025-27",  BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2024-25",  BAD_REQUEST, RuleTaxYearNotSupportedError)
+          ("AA123456A", "20177", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "2015-16", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
+
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+          s"downstream returns a code $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().delete())
+            val response: WSResponse = await(request().get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
           }
         }
 
+        def errorBody(`type`: String): String =
+          s"""
+             |{
+             |    "origin": "HIP",
+             |    "response": {
+             |        "failures": [
+             |            {
+             |                "type": "${`type`}",
+             |                "reason": "downstream message"
+             |            }
+             |        ]
+             |    }
+             |}
+      """.stripMargin
+
+
         val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         errors.foreach(args => (serviceErrorTest _).tupled(args))
       }
-
     }
   }
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino: String = "AA123456A"
 
-    def taxYear: String           = "2025-26"
+    def taxYear: String = "2025-26"
 
     def downstreamUri: String = s"/itsa/income-tax/v1/${TaxYear.fromMtd(taxYear).asTysDownstream}/high-income-child-benefit/charges/$nino"
 
-    def mtdUri: String = s"/high-income-child-benefit/$nino/$taxYear"
+    private def uri: String = s"/high-income-child-benefit/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
-      AuthStub.resetAll()
       setupStubs()
-      buildRequest(mtdUri)
+      buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, s"application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (AUTHORIZATION, "Bearer 123")
         )
     }
-
-    def errorBody(`type`: String): String =
-      s"""
-         |{
-         |    "origin": "HIP",
-         |    "response": {
-         |        "failures": [
-         |            {
-         |                "type": "${`type`}",
-         |                "reason": "downstream message"
-         |            }
-         |        ]
-         |    }
-         |}
-       """.stripMargin
 
   }
 
