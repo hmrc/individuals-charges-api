@@ -31,6 +31,20 @@ components:
         code: RULE_TAX_YEAR_NOT_SUPPORTED
         message: The tax year specified does not lie within the supported range
 
+    formatDateCeased:
+      description: |
+        The format of the supplied ceased date field is not valid.
+      value:
+        code: FORMAT_DATE_CEASED
+        message: The ceased date format is invalid
+
+    ruleDateCeased:
+      description: |
+        The ceased date must be within the tax year.
+      value:
+        code: RULE_DATE_CEASED
+        message: The ceased date must be within the tax year
+
     formatValue:
       description: |
         One or more values have been added with the incorrect format.
