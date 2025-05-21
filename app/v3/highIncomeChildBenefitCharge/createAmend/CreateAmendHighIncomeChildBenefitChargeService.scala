@@ -38,7 +38,6 @@ class CreateAmendHighIncomeChildBenefitChargeService @Inject()(connector: Create
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
-      "NOT_FOUND"                 -> NotFoundError,
       "INVALID_PAYLOAD"           -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
       "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,

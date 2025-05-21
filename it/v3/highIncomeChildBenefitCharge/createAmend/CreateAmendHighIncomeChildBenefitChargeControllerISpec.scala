@@ -19,7 +19,7 @@ package v3.highIncomeChildBenefitCharge.createAmend
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers._
@@ -153,7 +153,6 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (UNPROCESSABLE_ENTITY, "OUTSIDE_AMENDMENT_WINDOW", BAD_REQUEST, RuleOutsideAmendmentWindowError),
           (UNPROCESSABLE_ENTITY, "INVALID_RANGE_OF_NO_OF_CHILDREN", INTERNAL_SERVER_ERROR, InternalError),

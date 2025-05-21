@@ -62,7 +62,7 @@ class CreateAmendHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
-          ("NOT_FOUND", NotFoundError),
+          //("NOT_FOUND", NotFoundError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("OUTSIDE_AMENDMENT_WINDOW", RuleOutsideAmendmentWindowError),
           ("INVALID_RANGE_OF_NO_OF_CHILDREN", InternalError),
