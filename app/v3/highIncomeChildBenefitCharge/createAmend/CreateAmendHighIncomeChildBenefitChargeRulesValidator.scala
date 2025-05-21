@@ -19,15 +19,13 @@ package v3.highIncomeChildBenefitCharge.createAmend
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.{ResolveIsoDate, ResolveParsedNumber}
+import shared.controllers.validators.resolvers.{ResolveInteger, ResolveIsoDate, ResolveParsedNumber}
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 
 object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValidator[CreateAmendHighIncomeChildBenefitChargeRequest] {
-
-  private def resolveParsedNumber(min: BigDecimal, max: BigDecimal): ResolveParsedNumber = ResolveParsedNumber(min, max)
 
   override def validateBusinessRules(parsed: CreateAmendHighIncomeChildBenefitChargeRequest): Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
     import parsed.body._
@@ -37,12 +35,16 @@ object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValida
     ).onSuccess(parsed)
   }
 
-  private def validateNumericFields(numberOfChildren: BigDecimal,
-                                    amountOfChildBenefitReceived: BigDecimal): Validated[Seq[MtdError], Unit] =
+  private def validateNumericFields(numberOfChildren: Int,
+                                    amountOfChildBenefitReceived: BigDecimal): Validated[Seq[MtdError], Unit] = {
+
+    val integerValueFormatError = ValueFormatError.forIntegerPathAndRange("/numberOfChildren", "1", "99")
+
     combine(
-      resolveParsedNumber(min = 1, max = 99)(numberOfChildren, "/numberOfChildren"),
-      resolveParsedNumber(min = 0, max = 99999999999.99)(amountOfChildBenefitReceived, "/amountOfChildBenefitReceived")
+      ResolveInteger(1, 99)(numberOfChildren, integerValueFormatError),
+      ResolveParsedNumber()(amountOfChildBenefitReceived, "/amountOfChildBenefitReceived")
     )
+  }
 
   private def validateDateCeased(taxYear: TaxYear, dateCeased: Option[String]): Validated[Seq[MtdError], Unit] =
     dateCeased.fold(valid) { date =>

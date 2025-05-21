@@ -121,17 +121,34 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec with
     }
 
     "return ValueFormatError error" when {
-      List(("numberOfChildren", "1", "99"), ("amountOfChildBenefitReceived", "0", "99999999999.99")).foreach { case (field, minRange, maxRange) =>
-        s"passed a body with an incorrectly formatted field $field" in {
-          val invalidJson: JsValue = validFullRequestBodyJson.update(s"/$field", JsNumber(18.999))
+
+      val testCases = Seq(
+        (
+          "amount of child Benefit received is incorrectly formatted",
+          __ \ "amountOfChildBenefitReceived",
+          JsNumber(18.999),
+          ValueFormatError.forPathAndRange("/amountOfChildBenefitReceived", "0", "99999999999.99")
+        ),
+        (
+          "number of children is incorrectly formatted",
+          __ \ "numberOfChildren",
+          JsNumber(121),
+          ValueFormatError.forIntegerPathAndRange("/numberOfChildren", "1", "99")
+        )
+      )
+
+      testCases.foreach { case (description, path, invalidValue, expectedError) =>
+        s"passed a body where $description" in {
+          val invalidJson: JsValue = validFullRequestBodyJson.transform(__.json.update(path.json.put(invalidValue))).get
 
           val result: Either[ErrorWrapper, CreateAmendHighIncomeChildBenefitChargeRequest] =
             validator(validNino, validTaxYear, invalidJson).validateAndWrapResult()
 
-          result shouldBe Left(ErrorWrapper(correlationId, ValueFormatError.forPathAndRange(s"/$field", minRange, maxRange)))
+          result shouldBe Left(ErrorWrapper(correlationId, expectedError))
         }
       }
     }
+
 
     "return DateCeasedFormatError error" when {
       "passed a body with an incorrectly formatted date ceased" in {

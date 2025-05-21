@@ -19,7 +19,7 @@ package v3.highIncomeChildBenefitCharge.createAmend.models.request
 import play.api.libs.json.{Json, OFormat}
 
 case class CreateAmendHighIncomeChildBenefitChargeRequestBody(amountOfChildBenefitReceived: BigDecimal,
-                                                               numberOfChildren: BigDecimal,
+                                                               numberOfChildren: Int,
                                                                dateCeased: Option[String]
                                                                 )
 

@@ -119,7 +119,7 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
                   List(
                     DateCeasedFormatError,
                     ValueFormatError.forPathAndRange("/amountOfChildBenefitReceived", "0", "99999999999.99"),
-                    ValueFormatError.forPathAndRange("/numberOfChildren", "1", "99")
+                    ValueFormatError.forIntegerPathAndRange("/numberOfChildren", "1", "99")
                   )
                 )
               )
