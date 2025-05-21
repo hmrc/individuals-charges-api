@@ -4,3 +4,4 @@ PUT        /pensions/:nino/:taxYear       v3.createAmend.CreateAmendPensionCharg
 
 GET        /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitChargeController.retrieve(nino: String, taxYear: String)
 DELETE     /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBenefitCharge.delete.DeleteHighIncomeChildBenefitChargeController.delete(nino: String, taxYear: String)
+PUT     /high-income-child-benefit/:nino/:taxYear          v3.highIncomeChildBenefitCharge.createAmend.CreateAmendHighIncomeChildBenefitChargeController.createAmend(nino: String, taxYear: String)
