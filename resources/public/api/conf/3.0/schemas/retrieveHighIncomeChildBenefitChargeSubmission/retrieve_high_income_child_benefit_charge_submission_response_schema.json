@@ -20,7 +20,7 @@
     },
     "numberOfChildren": {
       "type": "integer",
-      "description": "Number of children you received child benefit for. The value must be an integer greater than or equal to 1.",
+      "description": "Number of children for which you received child benefit. The value must be an integer between 1 and 99.",
       "example": 2,
       "minimum": 1,
       "maximum": 99

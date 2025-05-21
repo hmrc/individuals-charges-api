@@ -25,6 +25,17 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request_schema.json'
+      example:
+        description:
+          Full High Income Child Benefit Charge Submission Amendment
+        value:
+          $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request.json'
+
 responses:
   "204":
     description: No Content
@@ -37,12 +48,6 @@ responses:
         $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
       Link:
         $ref: './common/headers.yaml#/components/parameters/linkHeader'
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request_schema.json'
-        example:
-          $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request.json'
 
   "400":
     description: Bad request
