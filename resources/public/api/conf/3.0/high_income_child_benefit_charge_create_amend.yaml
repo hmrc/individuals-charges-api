@@ -1,6 +1,6 @@
-summary: Retrieve High Income Child Benefit Charge Submission
+summary: Create or Amend High Income Child Benefit Charge Submission
 description: |
-  This endpoint allows a customer to retrieve the information used to calculate a charge from High Income Child Benefit earners.
+  This endpoint provides the ability to create or update the relevant information used to calculate a charge from High Income Child Benefit earners.
   A National Insurance number and tax year must be provided.
   
   ###  Test data
@@ -9,10 +9,10 @@ description: |
     | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                      |
     |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
     | N/A - DEFAULT                    | Simulates success response.                                                                                                   |
-    | NOT_FOUND                        | Simulates the scenario where no data is found.                                                                                |
     | TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported.                                                                   |
+    | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window.                               |
     | REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors. |
-    | STATEFUL                         | Performs a stateful retrieve.                                                                                                 |
+    | STATEFUL                         | Performs a stateful create or update.                                                                                         |
 
 tags:
   - High Income Child Benefit Charge Submission
@@ -21,16 +21,31 @@ parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/minimumTaxYear2025'
   - $ref: './common/headers.yaml#/components/parameters/acceptJson'
-  - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
-security:
-  - User-Restricted:
-      - read:self-assessment
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request_schema.json'
+      examples:
+        full_amendment:
+          description:
+            Full High Income Child Benefit Charge Submission Amendment
+          value:
+            $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_full_request.json'
+        minimal_amendment:
+          description:
+            Minimal High Income Child Benefit Charge Submission Amendment
+          value:
+            $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_minimal_request.json'
+
 
 responses:
-  "200":
-    description: Success
+  "204":
+    description: No Content
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
@@ -40,12 +55,6 @@ responses:
         $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
       Link:
         $ref: './common/headers.yaml#/components/parameters/linkHeader'
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/retrieveHighIncomeChildBenefitChargeSubmission/retrieve_high_income_child_benefit_charge_submission_response_schema.json'
-        example:
-          $ref: './examples/retrieveHighIncomeChildBenefitChargeSubmission/retrieve_high_income_child_benefit_charge_submission_response.json'
 
   "400":
     description: Bad request
@@ -67,12 +76,22 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatNino'
           FORMAT_TAX_YEAR:
             $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_DATE_CEASED:
+            $ref: './common/errors.yaml#/components/examples/formatDateCeased'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
           RULE_TAX_YEAR_NOT_SUPPORTED:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          RULE_DATE_CEASED:
+            $ref: './common/errors.yaml#/components/examples/ruleDateCeased'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_OUTSIDE_AMENDMENT_WINDOW:
+            $ref: './common/errors.yaml#/components/examples/ruleOutsideAmendmentWindow'
 
   "403":
     description: Forbidden

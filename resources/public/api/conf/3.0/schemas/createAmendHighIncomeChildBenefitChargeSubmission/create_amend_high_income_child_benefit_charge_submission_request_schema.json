@@ -1,19 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve High Income Child Benefit Charge Submission",
-  "description": "Retrieve High Income Child Benefit Charge Submission",
+  "title": "Create or Amend High Income Child Benefit Charge Submission",
+  "description": "Create or Amend High Income Child Benefit Charge Submission",
   "type": "object",
   "properties": {
-    "submittedOn": {
-      "type": "string",
-      "description": "The date and time of the submission. Must conform to the format YYYY-MM-DDThh:mm:ss.SSSZ",
-      "format": "YYYY-MM-DDThh:mm:ss.SSSZ",
-      "example": "2025-05-09T12:20:19.978Z"
-    },
     "amountOfChildBenefitReceived": {
       "type": "number",
       "description": "Total amount of child benefit received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-      "format": "(2dp) >= 0.00",
       "example": 1111.22,
       "multipleOf": 0.01,
       "minimum": 0,
@@ -21,9 +14,10 @@
     },
     "numberOfChildren": {
       "type": "integer",
-      "description": "Number of children you received child benefit for. The value must be an integer greater than or equal to 1.",
+      "description": "Number of children for which you received child benefit. The value must be an integer between 1 and 99.",
       "example": 2,
-      "minimum": 1
+      "minimum": 1,
+      "maximum": 99
     },
     "dateCeased": {
       "type": "string",
@@ -34,7 +28,6 @@
   },
   "additionalProperties": false,
   "required": [
-    "submittedOn",
     "amountOfChildBenefitReceived",
     "numberOfChildren"
   ]
