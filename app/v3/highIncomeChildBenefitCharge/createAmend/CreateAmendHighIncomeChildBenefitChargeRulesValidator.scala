@@ -26,8 +26,11 @@ import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHig
 
 
 object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValidator[CreateAmendHighIncomeChildBenefitChargeRequest] {
+  private val minNumberOfChildren: Int = 1
+  private val maxNumberOfChildren: Int = 99
 
-  override def validateBusinessRules(parsed: CreateAmendHighIncomeChildBenefitChargeRequest): Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
+  override def validateBusinessRules(parsed: CreateAmendHighIncomeChildBenefitChargeRequest):
+  Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
     import parsed.body._
     combine(
       validateNumericFields(numberOfChildren, amountOfChildBenefitReceived),
@@ -38,10 +41,11 @@ object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValida
   private def validateNumericFields(numberOfChildren: Int,
                                     amountOfChildBenefitReceived: BigDecimal): Validated[Seq[MtdError], Unit] = {
 
-    val integerValueFormatError = ValueFormatError.forIntegerPathAndRange("/numberOfChildren", "1", "99")
-
+    val integerValueFormatError: MtdError = ValueFormatError.forIntegerPathAndRange("/numberOfChildren",
+                                                                                    minNumberOfChildren.toString,
+                                                                                    maxNumberOfChildren.toString)
     combine(
-      ResolveInteger(1, 99)(numberOfChildren, integerValueFormatError),
+      ResolveInteger(minNumberOfChildren, maxNumberOfChildren)(numberOfChildren, integerValueFormatError),
       ResolveParsedNumber()(amountOfChildBenefitReceived, "/amountOfChildBenefitReceived")
     )
   }
