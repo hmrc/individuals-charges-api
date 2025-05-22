@@ -14,6 +14,9 @@ description: |
   | REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors.|
   | STATEFUL                         | Performs a stateful delete.                                                                                                  |
 
+tags:
+  - High Income Child Benefit Charge Submission
+
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/minimumTaxYear2025'
@@ -21,8 +24,9 @@ parameters:
   - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
-tags:
-  - High Income Child Benefit Charge Submission
+security:
+  - User-Restricted:
+      - write:self-assessment
 
 responses:
   "204":
