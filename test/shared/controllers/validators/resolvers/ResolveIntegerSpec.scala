@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,6 +53,14 @@ class ResolveIntegerSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks {
           val result = resolve(None, path)
           result shouldBe Valid(None)
         }
+      }
+
+      "validate integer range" in forAll { numberOfChildren: Int =>
+        val error   = ValueFormatError.forIntegerPathAndRange(path, "-1", "99")
+        val resolve = ResolveInteger(-1, 99)
+        val expected = if (-1 <= numberOfChildren && numberOfChildren <= 99) Valid(numberOfChildren) else Invalid(List(error))
+        val result = resolve(numberOfChildren, error)
+        result shouldBe expected
       }
     }
   }

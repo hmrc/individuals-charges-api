@@ -36,6 +36,9 @@ case class ResolveInteger(min: Int, max: Int) extends ResolverSupport {
   def apply(value: Int, path: String): Validated[Seq[MtdError], Int] =
     resolver(errorFor(path))(value)
 
+  def apply(value: Int, mtdError: MtdError): Validated[Seq[MtdError], Int] =
+    resolver(mtdError)(value)
+
   private def errorFor(path: String) = ValueFormatError.forPathAndRange(path, min.toString, max.toString)
 
 }

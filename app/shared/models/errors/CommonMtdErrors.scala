@@ -43,12 +43,18 @@ object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID",
 
 object IdFormatError extends MtdError(code = "FORMAT_ID", message = "The ID format is invalid", BAD_REQUEST)
 
+object DateCeasedFormatError extends MtdError("FORMAT_DATE_CEASED", "The ceased date format is invalid", BAD_REQUEST)
+
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided Country code is invalid", BAD_REQUEST)
 
 object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be between 0 and 99999999999.99", BAD_REQUEST) {
 
   def forPathAndRange(path: String, min: String, max: String): MtdError =
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be between $min and $max")
+
+  def forIntegerPathAndRange(path: String, min: String, max: String): MtdError =
+    ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be an integer between $min and $max")
+
 
   def forPathAndMin(path: String, min: String): MtdError =
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be $min or more")
@@ -125,6 +131,8 @@ object RuleDateRangeInvalidError extends MtdError(code = "RULE_DATE_RANGE_INVALI
 object RuleInvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid", BAD_REQUEST)
 
 object NoTransactionDetailsFoundError extends MtdError(code = "NO_DETAILS_FOUND", message = "No transaction details found", BAD_REQUEST)
+
+object RuleDateCeasedError extends MtdError("RULE_DATE_CEASED", "The ceased date must be within the tax year", BAD_REQUEST)
 
 object RuleEndBeforeStartDateError
     extends MtdError("RULE_END_DATE_BEFORE_START_DATE", "The supplied accounting period end date is before the start date", BAD_REQUEST)
