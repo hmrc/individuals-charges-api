@@ -22,7 +22,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthMainAgentsOnlyISpec
 import shared.models.domain.TaxYear
 import shared.services.DownstreamStub
-import v3.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
+import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.fullValidJson
 
 class ChargesAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
