@@ -1,7 +1,7 @@
-DELETE     /pensions/:nino/:taxYear       v3.delete.DeletePensionChargesController.delete(nino: String, taxYear: String)
-GET        /pensions/:nino/:taxYear       v3.retrieve.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
-PUT        /pensions/:nino/:taxYear       v3.createAmend.CreateAmendPensionChargesController.createAmend(nino: String, taxYear: String)
+GET        /pensions/:nino/:taxYear       v3.pensionCharges.retrieve.RetrievePensionChargesController.retrieve(nino: String, taxYear: String)
+PUT        /pensions/:nino/:taxYear       v3.pensionCharges.createAmend.CreateAmendPensionChargesController.createAmend(nino: String, taxYear: String)
+DELETE     /pensions/:nino/:taxYear       v3.pensionCharges.delete.DeletePensionChargesController.delete(nino: String, taxYear: String)
 
 GET        /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitChargeController.retrieve(nino: String, taxYear: String)
+PUT        /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBenefitCharge.createAmend.CreateAmendHighIncomeChildBenefitChargeController.createAmend(nino: String, taxYear: String)
 DELETE     /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBenefitCharge.delete.DeleteHighIncomeChildBenefitChargeController.delete(nino: String, taxYear: String)
-PUT     /high-income-child-benefit/:nino/:taxYear          v3.highIncomeChildBenefitCharge.createAmend.CreateAmendHighIncomeChildBenefitChargeController.createAmend(nino: String, taxYear: String)

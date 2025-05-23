@@ -1,11 +1,18 @@
 Individuals Charges API
 ========================
-This API allows software packages to show and provide a taxpayers' financial data for their charges. For pension charges
-a developer can:
+This API allows software packages to show and provide a taxpayers' financial data for their charges.
 
-* retrieve pension charges
-* create and amend pension charges
-* delete pension charges
+For pension charges a developer can:
+
+* Retrieve Pension Charges
+* Create and Amend Pension Charges
+* Delete Pension Charges
+
+For high income child benefit charges a developer can:
+
+* Retrieve High Income Child Benefit Charge
+* Create or Amend High Income Child Benefit Charge
+* Delete High Income Child Benefit Charge
 
 ## Requirements
 
