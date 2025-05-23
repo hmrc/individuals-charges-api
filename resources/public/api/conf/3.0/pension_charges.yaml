@@ -1,5 +1,5 @@
 get:
-  $ref: "./retrievePensionCharges.yaml"
+  $ref: "./pension_charges_retrieve.yaml"
 
   summary: Retrieve Pension Charges
 
@@ -8,7 +8,7 @@ get:
         - read:self-assessment
 
 put:
-  $ref: "./createAmendPensionCharges.yaml"
+  $ref: "./pension_charges_create_amend.yaml"
 
   summary: Create and Amend Pension Charges
 
@@ -17,7 +17,7 @@ put:
         - write:self-assessment
 
 delete:
-  $ref: "./deletePensionCharges.yaml"
+  $ref: "./pension_charges_delete.yaml"
 
   summary: Delete Pension Charges
 

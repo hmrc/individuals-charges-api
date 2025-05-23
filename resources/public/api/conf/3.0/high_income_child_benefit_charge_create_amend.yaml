@@ -33,18 +33,18 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_request_schema.json'
+        $ref: './schemas/highIncomeChildBenefitCharge/createAmend/create_amend_request_schema.json'
       examples:
         full_amendment:
           description:
             Full High Income Child Benefit Charge Submission Amendment
           value:
-            $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_full_request.json'
+            $ref: './examples/highIncomeChildBenefitCharge/createAmend/full_request.json'
         minimal_amendment:
           description:
             Minimal High Income Child Benefit Charge Submission Amendment
           value:
-            $ref: './examples/createAmendHighIncomeChildBenefitChargeSubmission/create_amend_high_income_child_benefit_charge_submission_minimal_request.json'
+            $ref: './examples/highIncomeChildBenefitCharge/createAmend/minimal_request.json'
 
 
 responses:

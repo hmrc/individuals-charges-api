@@ -65,7 +65,7 @@ tags:
 
 paths:
   /individuals/charges/pensions/{nino}/{taxYear}:
-    $ref: "./pensionCharges.yaml"
+    $ref: "./pension_charges.yaml"
 # {{#if (enabled 'high-income-child-benefit-charge')}}
   /individuals/charges/high-income-child-benefit/{nino}/{taxYear}:
     $ref: "./high_income_child_benefit_charge.yaml"

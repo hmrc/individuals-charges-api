@@ -27,17 +27,17 @@ requestBody:
     application/json:
       schema:
         oneOf:
-        - $ref: "./schemas/createAmendPension/def1/create_amend_request_schema.json"
-        - $ref: "./schemas/createAmendPension/def2/create_amend_request_schema.json"
+        - $ref: "./schemas/pensionCharges/createAmend/def1/create_amend_request_schema.json"
+        - $ref: "./schemas/pensionCharges/createAmend/def2/create_amend_request_schema.json"
       examples:
         "For tax years before 2024-25":
           description: Full Expenses request
           value:
-            $ref: './examples/createAmendPension/def1/create_amend_request.json'
+            $ref: './examples/pensionCharges/createAmend/def1/create_amend_request.json'
         "For tax years 2024-25 onwards":
           description: Full Expenses request
           value:
-            $ref: './examples/createAmendPension/def2/create_amend_request.json'
+            $ref: './examples/pensionCharges/createAmend/def2/create_amend_request.json'
 
 responses:
   "204":

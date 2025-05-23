@@ -43,9 +43,9 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/retrieveHighIncomeChildBenefitChargeSubmission/retrieve_high_income_child_benefit_charge_submission_response_schema.json'
+          $ref: './schemas/highIncomeChildBenefitCharge/retrieve/retrieve_response_schema.json'
         example:
-          $ref: './examples/retrieveHighIncomeChildBenefitChargeSubmission/retrieve_high_income_child_benefit_charge_submission_response.json'
+          $ref: './examples/highIncomeChildBenefitCharge/retrieve/retrieve_response.json'
 
   "400":
     description: Bad request
