@@ -9,6 +9,9 @@ info:
     * Retrieve Pension Charges
     * Create and Amend Pension Charges
     * Delete Pension Charges
+    * Retrieve High Income Child Benefit Charge Submission
+    * Create or Amend High Income Child Benefit Charge Submission
+    * Delete High Income Child Benefit Charge Submission
     
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
