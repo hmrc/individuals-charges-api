@@ -27,8 +27,8 @@ import scala.concurrent.Future
 
 class DeleteHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
 
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   "DeleteHighIncomeChildBenefitChargeService" when {
     "delete" should {

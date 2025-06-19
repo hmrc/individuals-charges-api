@@ -28,9 +28,9 @@ import scala.concurrent.Future
 
 class CreateAmendHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
 
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
-  
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
+
   "CreateAmendHighIncomeChildBenefitChargeService" when {
     "createAmend" should {
       "return correct result for a success" in new Test {

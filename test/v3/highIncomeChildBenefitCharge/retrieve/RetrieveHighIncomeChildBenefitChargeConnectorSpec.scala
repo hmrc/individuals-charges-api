@@ -27,8 +27,8 @@ import v3.highIncomeChildBenefitCharge.retrieve.model.{RetrieveHighIncomeChildBe
 import scala.concurrent.Future
 
 class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   "RetrieveHighIncomeChildBenefitChargeConnector" should {
     "return a valid response" when {
@@ -73,6 +73,7 @@ class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
       nino = nino,
       taxYear = taxYear
     )
+
   }
 
 }

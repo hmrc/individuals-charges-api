@@ -25,11 +25,11 @@ class DeleteHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
 
-  private val validNino: String         = "AA123456A"
-  private val validTaxYear: String      = "2025-26"
+  private val validNino: String    = "AA123456A"
+  private val validTaxYear: String = "2025-26"
 
-  private val parsedNino: Nino                 = Nino(validNino)
-  private val parsedTaxYear: TaxYear           = TaxYear.fromMtd(validTaxYear)
+  private val parsedNino: Nino       = Nino(validNino)
+  private val parsedTaxYear: TaxYear = TaxYear.fromMtd(validTaxYear)
 
   private def validator(nino: String, taxYear: String): DeleteHighIncomeChildBenefitChargeValidator =
     new DeleteHighIncomeChildBenefitChargeValidator(nino, taxYear)
@@ -74,7 +74,6 @@ class DeleteHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec {
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
     }
-
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {

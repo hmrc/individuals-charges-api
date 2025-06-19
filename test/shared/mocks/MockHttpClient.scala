@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockHttpClient extends TestSuite with MockFactory {
 
-  val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+  val mockHttpClient: HttpClientV2       = mock[HttpClientV2]
   val mockRequestBuilder: RequestBuilder = mock[RequestBuilder]
 
   object MockedHttpClient extends Matchers {
@@ -44,17 +44,16 @@ trait MockHttpClient extends TestSuite with MockFactory {
                excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .get(_: URL)(_: HeaderCarrier))
-        .expects(assertArgs {
-          (actualUrl: URL,
-          hc: HeaderCarrier) =>
+        .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
           {
             val expectedURL = UrlUtils.appendQueryParams(url.toString, parameters)
             actualUrl.toString shouldBe expectedURL
             val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
             assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
           }
-        }).returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*,*)
+        })
+        .returns(mockRequestBuilder)
+      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
     def post[T](url: URL,
@@ -65,19 +64,22 @@ trait MockHttpClient extends TestSuite with MockFactory {
       (mockHttpClient
         .post(_: URL)(_: HeaderCarrier))
         .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
-        {
-          actualUrl shouldBe url
+          {
+            actualUrl shouldBe url
 
-          val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
-          assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
-        }
-        }).returns(mockRequestBuilder)
+            val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
+            assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
+          }
+        })
+        .returns(mockRequestBuilder)
 
-      (mockRequestBuilder.withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+      (mockRequestBuilder
+        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
         .expects(body, *, *, *)
         .returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext))
-        .expects(*,*)
+      (mockRequestBuilder
+        .execute(_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
     def put[T](url: URL,
@@ -88,19 +90,22 @@ trait MockHttpClient extends TestSuite with MockFactory {
       (mockHttpClient
         .put(_: URL)(_: HeaderCarrier))
         .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
-        {
-          actualUrl shouldBe url
+          {
+            actualUrl shouldBe url
 
-          val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
-          assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
-        }
-        }).returns(mockRequestBuilder)
+            val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
+            assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
+          }
+        })
+        .returns(mockRequestBuilder)
 
-      (mockRequestBuilder.withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
+      (mockRequestBuilder
+        .withBody(_: JsValue)(_: BodyWritable[JsValue], _: Tag[JsValue], _: ExecutionContext))
         .expects(body, *, *, *)
         .returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext))
-        .expects(*,*)
+      (mockRequestBuilder
+        .execute(_: HttpReads[T], _: ExecutionContext))
+        .expects(*, *)
     }
 
     def delete[T](url: URL,
@@ -109,16 +114,16 @@ trait MockHttpClient extends TestSuite with MockFactory {
                   excludedHeaders: Seq[(String, String)] = Seq.empty): CallHandler[Future[T]] = {
       (mockHttpClient
         .delete(_: URL)(_: HeaderCarrier))
-        .expects(assertArgs {
-          (actualUrl: URL, hc: HeaderCarrier) =>
+        .expects(assertArgs { (actualUrl: URL, hc: HeaderCarrier) =>
           {
             actualUrl shouldBe url
 
             val headersForUrl = hc.headersForUrl(config)(actualUrl.toString)
             assertHeaders(headersForUrl, requiredHeaders, excludedHeaders)
           }
-        }).returns(mockRequestBuilder)
-      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*,*)
+        })
+        .returns(mockRequestBuilder)
+      (mockRequestBuilder.execute(_: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
     private def assertHeaders[T, I](actualHeaders: Seq[(String, String)],

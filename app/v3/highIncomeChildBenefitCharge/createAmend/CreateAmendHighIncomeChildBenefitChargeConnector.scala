@@ -32,9 +32,9 @@ class CreateAmendHighIncomeChildBenefitChargeConnector @Inject() (val http: Http
     extends BaseDownstreamConnector {
 
   def createAmend(request: CreateAmendHighIncomeChildBenefitChargeRequest)(implicit
-                                                                           hc: HeaderCarrier,
-                                                                           ec: ExecutionContext,
-                                                                           correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 

@@ -31,7 +31,8 @@ trait MockRetrieveHighIncomeChildBenefitChargeService extends TestSuite with Moc
 
   object MockRetrieveHighIncomeChildBenefitService {
 
-    def retrieve(request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[ServiceOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] = {
+    def retrieve(
+        request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[ServiceOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] = {
       (
         mockRetrieveHighIncomeChildBenefitChargeService
           .retrieve(_: RetrieveHighIncomeChildBenefitChargeRequest)(
@@ -41,5 +42,7 @@ trait MockRetrieveHighIncomeChildBenefitChargeService extends TestSuite with Moc
         )
         .expects(request, *, *)
     }
+
   }
+
 }

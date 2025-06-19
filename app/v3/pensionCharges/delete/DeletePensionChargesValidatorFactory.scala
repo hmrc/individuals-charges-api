@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class DeletePensionChargesValidatorFactory @Inject() {
-  
+
   def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
 
     val schema = DeletePensionChargesSchema.schema

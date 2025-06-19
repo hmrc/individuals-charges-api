@@ -45,7 +45,7 @@ class DeletePensionChargesService @Inject() (connector: DeletePensionChargesConn
       "INVALID_CORRELATIONID"     -> InternalError,
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError,
-      "OUTSIDE_AMENDMENT_WINDOW"        -> RuleOutsideAmendmentWindowError
+      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError
     )
 
     val extraTysErrors = Map(

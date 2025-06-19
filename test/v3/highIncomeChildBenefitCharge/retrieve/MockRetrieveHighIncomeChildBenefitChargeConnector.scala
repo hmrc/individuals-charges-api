@@ -27,13 +27,23 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveHighIncomeChildBenefitChargeConnector extends TestSuite with MockFactory {
 
-  val mockRetrieveHighIncomeChildBenefitChargeConnector: RetrieveHighIncomeChildBenefitChargeConnector = mock[RetrieveHighIncomeChildBenefitChargeConnector]
+  val mockRetrieveHighIncomeChildBenefitChargeConnector: RetrieveHighIncomeChildBenefitChargeConnector =
+    mock[RetrieveHighIncomeChildBenefitChargeConnector]
 
   object MockRetrieveHighIncomeChildBenefitChargeConnector {
 
-    def retrieve(request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] =
-      (mockRetrieveHighIncomeChildBenefitChargeConnector
-        .retrieve(_: RetrieveHighIncomeChildBenefitChargeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def retrieve(
+        request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] =
+      (
+        mockRetrieveHighIncomeChildBenefitChargeConnector
+          .retrieve(_: RetrieveHighIncomeChildBenefitChargeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *)
+
   }
+
 }

@@ -26,15 +26,16 @@ import v3.highIncomeChildBenefitCharge.retrieve.model.{RetrieveHighIncomeChildBe
 import scala.concurrent.Future
 
 class RetrieveHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   implicit override val correlationId: String = "X-123"
 
   "RetrieveHighIncomeChildBenefitChargeService" when {
     "retrieve" should {
       "return correct result for a success" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[RetrieveHighIncomeChildBenefitChargeResponse]] = Right(ResponseWrapper(correlationId, responseModel))
+        val outcome: Right[Nothing, ResponseWrapper[RetrieveHighIncomeChildBenefitChargeResponse]] =
+          Right(ResponseWrapper(correlationId, responseModel))
 
         MockRetrieveHighIncomeChildBenefitChargeConnector.retrieve(request).returns(Future.successful(outcome))
 
@@ -71,6 +72,7 @@ class RetrieveHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
     }
 
   }
+
   trait Test extends MockRetrieveHighIncomeChildBenefitChargeConnector {
 
     val request: RetrieveHighIncomeChildBenefitChargeRequest = RetrieveHighIncomeChildBenefitChargeRequest(
@@ -81,6 +83,7 @@ class RetrieveHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
     val service: RetrieveHighIncomeChildBenefitChargeService = new RetrieveHighIncomeChildBenefitChargeService(
       connector = mockRetrieveHighIncomeChildBenefitChargeConnector
     )
+
   }
 
 }

@@ -28,15 +28,13 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec with
 
   private implicit val correlationId: String = "1234"
 
-  private val validNino: String         = "AA123456A"
-  private val validTaxYear: String      = "2025-26"
+  private val validNino: String    = "AA123456A"
+  private val validTaxYear: String = "2025-26"
 
-  private val parsedNino: Nino                 = Nino(validNino)
-  private val parsedTaxYear: TaxYear           = TaxYear.fromMtd(validTaxYear)
+  private val parsedNino: Nino       = Nino(validNino)
+  private val parsedTaxYear: TaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String,
-                        taxYear: String,
-                        body: JsValue): CreateAmendHighIncomeChildBenefitChargeValidator =
+  private def validator(nino: String, taxYear: String, body: JsValue): CreateAmendHighIncomeChildBenefitChargeValidator =
     new CreateAmendHighIncomeChildBenefitChargeValidator(nino, taxYear, body)
 
   "running a validation" should {
@@ -91,7 +89,6 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec with
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
     }
-
 
     "return RuleIncorrectOrEmptyBodyError error" when {
       "passed an empty body" in {
@@ -149,7 +146,6 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec with
       }
     }
 
-
     "return DateCeasedFormatError error" when {
       "passed a body with an incorrectly formatted date ceased" in {
         val invalidJson: JsValue = validFullRequestBodyJson.update("/dateCeased", JsString("2025"))
@@ -160,7 +156,6 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec with
         result shouldBe Left(ErrorWrapper(correlationId, DateCeasedFormatError))
       }
     }
-
 
     "return RuleDateCeasedError error" when {
       "passed a body with a date ceased outside the supplied tax year" in {

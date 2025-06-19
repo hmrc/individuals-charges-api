@@ -18,6 +18,4 @@ package v3.highIncomeChildBenefitCharge.createAmend.models.request
 
 import shared.models.domain.{Nino, TaxYear}
 
-case class CreateAmendHighIncomeChildBenefitChargeRequest(nino: Nino,
-                                                          taxYear: TaxYear,
-                                                          body: CreateAmendHighIncomeChildBenefitChargeRequestBody)
+case class CreateAmendHighIncomeChildBenefitChargeRequest(nino: Nino, taxYear: TaxYear, body: CreateAmendHighIncomeChildBenefitChargeRequestBody)

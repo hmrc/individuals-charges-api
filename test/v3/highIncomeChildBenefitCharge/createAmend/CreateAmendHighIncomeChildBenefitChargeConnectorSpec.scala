@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
 
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   "CreateAmendHighIncomeChildBenefitChargeConnector" should {
     "return a 204 (NO_CONTENT) status for a success scenario" when {
@@ -75,6 +75,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
       taxYear = taxYear,
       body = minimumRequestBodyModel
     )
+
   }
 
 }

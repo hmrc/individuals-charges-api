@@ -24,18 +24,21 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.{fullRequestBodyModel, validFullRequestBodyJson}
+import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.{
+  fullRequestBodyModel,
+  validFullRequestBodyJson
+}
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendHighIncomeChildBenefitChargeControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateAmendHighIncomeChildBenefitChargeService
     with MockCreateAmendHighIncomeChildBenefitChargeValidatorFactory {
 
-  private val taxYear: String      = "2025-26"
+  private val taxYear: String = "2025-26"
 
   private val requestData: CreateAmendHighIncomeChildBenefitChargeRequest = CreateAmendHighIncomeChildBenefitChargeRequest(
     nino = parsedNino,

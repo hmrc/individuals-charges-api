@@ -33,8 +33,14 @@ trait MockCreateAmendHighIncomeChildBenefitChargeConnector extends TestSuite wit
   object MockCreateAmendHighIncomeChildBenefitChargeConnector {
 
     def createAmend(request: CreateAmendHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
-      (mockCreateAmendHighIncomeChildBenefitChargeConnector
-        .createAmend(_: CreateAmendHighIncomeChildBenefitChargeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+      (
+        mockCreateAmendHighIncomeChildBenefitChargeConnector
+          .createAmend(_: CreateAmendHighIncomeChildBenefitChargeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *)
 
   }

@@ -27,4 +27,5 @@ class CreateAmendHighIncomeChildBenefitChargeValidatorFactory {
 
   def validator(nino: String, taxYear: String, body: JsValue): Validator[CreateAmendHighIncomeChildBenefitChargeRequest] =
     new CreateAmendHighIncomeChildBenefitChargeValidator(nino, taxYear, body)
+
 }

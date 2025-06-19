@@ -28,20 +28,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteHighIncomeChildBenefitChargeConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class DeleteHighIncomeChildBenefitChargeConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def delete(request: DeleteHighIncomeChildBenefitChargeRequestData)(implicit
-                                                                                           hc: HeaderCarrier,
-                                                                                           ec: ExecutionContext,
-                                                                                           correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
     val downstreamUri =
-    HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
+      HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
     delete(uri = downstreamUri)
 
   }
-
 
 }

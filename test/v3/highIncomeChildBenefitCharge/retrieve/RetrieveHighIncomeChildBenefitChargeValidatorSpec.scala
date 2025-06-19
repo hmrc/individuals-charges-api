@@ -25,11 +25,11 @@ class RetrieveHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
 
-  private val validNino: String         = "AA123456A"
-  private val validTaxYear: String      = "2025-26"
+  private val validNino: String    = "AA123456A"
+  private val validTaxYear: String = "2025-26"
 
-  private val parsedNino: Nino                 = Nino(validNino)
-  private val parsedTaxYear: TaxYear           = TaxYear.fromMtd(validTaxYear)
+  private val parsedNino: Nino       = Nino(validNino)
+  private val parsedTaxYear: TaxYear = TaxYear.fromMtd(validTaxYear)
 
   def validator(nino: String, taxYear: String): RetrieveHighIncomeChildBenefitChargeValidator =
     new RetrieveHighIncomeChildBenefitChargeValidator(nino, taxYear)

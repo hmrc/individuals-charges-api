@@ -19,9 +19,8 @@ package v3.highIncomeChildBenefitCharge.createAmend.models.request
 import play.api.libs.json.{Json, OFormat}
 
 case class CreateAmendHighIncomeChildBenefitChargeRequestBody(amountOfChildBenefitReceived: BigDecimal,
-                                                               numberOfChildren: Int,
-                                                               dateCeased: Option[String]
-                                                                )
+                                                              numberOfChildren: Int,
+                                                              dateCeased: Option[String])
 
 object CreateAmendHighIncomeChildBenefitChargeRequestBody {
   implicit val format: OFormat[CreateAmendHighIncomeChildBenefitChargeRequestBody] = Json.format[CreateAmendHighIncomeChildBenefitChargeRequestBody]

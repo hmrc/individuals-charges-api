@@ -26,7 +26,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveHighIncomeChildBenefitChargeService @Inject()(connector: RetrieveHighIncomeChildBenefitChargeConnector) extends BaseService {
+class RetrieveHighIncomeChildBenefitChargeService @Inject() (connector: RetrieveHighIncomeChildBenefitChargeConnector) extends BaseService {
 
   def retrieve(request: RetrieveHighIncomeChildBenefitChargeRequest)(implicit
       ctx: RequestContext,

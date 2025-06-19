@@ -22,7 +22,8 @@ import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChil
 
 trait MockDeleteHighIncomeChildBenefitChargeValidatorFactory extends MockValidatorFactory[DeleteHighIncomeChildBenefitChargeRequestData] {
 
-  val mockDeleteHighIncomeChildBenefitChargeValidatorFactory: DeleteHighIncomeChildBenefitChargeValidatorFactory = mock[DeleteHighIncomeChildBenefitChargeValidatorFactory]
+  val mockDeleteHighIncomeChildBenefitChargeValidatorFactory: DeleteHighIncomeChildBenefitChargeValidatorFactory =
+    mock[DeleteHighIncomeChildBenefitChargeValidatorFactory]
 
   def validator(): CallHandler[Validator[DeleteHighIncomeChildBenefitChargeRequestData]] =
     (mockDeleteHighIncomeChildBenefitChargeValidatorFactory.validator(_: String, _: String)).expects(*, *)

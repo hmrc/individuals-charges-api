@@ -27,7 +27,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendHighIncomeChildBenefitChargeService extends TestSuite with MockFactory {
 
-  val mockCreateAmendHighIncomeChildBenefitChargeService: CreateAmendHighIncomeChildBenefitChargeService = mock[CreateAmendHighIncomeChildBenefitChargeService]
+  val mockCreateAmendHighIncomeChildBenefitChargeService: CreateAmendHighIncomeChildBenefitChargeService =
+    mock[CreateAmendHighIncomeChildBenefitChargeService]
 
   object MockCreateAmendHighIncomeChildBenefitChargeService {
 

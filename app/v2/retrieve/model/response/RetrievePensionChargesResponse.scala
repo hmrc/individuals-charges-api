@@ -25,7 +25,7 @@ trait RetrievePensionChargesResponse
 
 object RetrievePensionChargesResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrievePensionChargesResponse] = writesFrom{
+  implicit val writes: OWrites[RetrievePensionChargesResponse] = writesFrom {
     case def1: Def1_RetrievePensionChargesResponse =>
       implicitly[OWrites[Def1_RetrievePensionChargesResponse]].writes(def1)
     case def2: Def2_RetrievePensionChargesResponse =>

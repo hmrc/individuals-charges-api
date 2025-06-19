@@ -27,8 +27,8 @@ import scala.concurrent.Future
 
 class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
 
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   "DeleteHighIncomeChildBenefitConnector" should {
     "return a 204 result on delete for a TYS request" when {
@@ -37,7 +37,6 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
 
         willDelete(url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
           .returns(Future.successful(outcome))
-
 
         val result: DownstreamOutcome[Unit] = await(connector.delete(request))
 
@@ -70,6 +69,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
       nino = nino,
       taxYear = taxYear
     )
+
   }
 
 }

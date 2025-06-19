@@ -55,7 +55,6 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
   def forIntegerPathAndRange(path: String, min: String, max: String): MtdError =
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be an integer between $min and $max")
 
-
   def forPathAndMin(path: String, min: String): MtdError =
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be $min or more")
 

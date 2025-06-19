@@ -24,13 +24,12 @@ import shared.models.domain.TaxYear
 import shared.models.errors._
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
-
 object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValidator[CreateAmendHighIncomeChildBenefitChargeRequest] {
   private val minNumberOfChildren: Int = 1
   private val maxNumberOfChildren: Int = 99
 
-  override def validateBusinessRules(parsed: CreateAmendHighIncomeChildBenefitChargeRequest):
-  Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
+  override def validateBusinessRules(
+      parsed: CreateAmendHighIncomeChildBenefitChargeRequest): Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
     import parsed.body._
     combine(
       validateNumericFields(numberOfChildren, amountOfChildBenefitReceived),
@@ -38,12 +37,10 @@ object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValida
     ).onSuccess(parsed)
   }
 
-  private def validateNumericFields(numberOfChildren: Int,
-                                    amountOfChildBenefitReceived: BigDecimal): Validated[Seq[MtdError], Unit] = {
+  private def validateNumericFields(numberOfChildren: Int, amountOfChildBenefitReceived: BigDecimal): Validated[Seq[MtdError], Unit] = {
 
-    val integerValueFormatError: MtdError = ValueFormatError.forIntegerPathAndRange("/numberOfChildren",
-                                                                                    minNumberOfChildren.toString,
-                                                                                    maxNumberOfChildren.toString)
+    val integerValueFormatError: MtdError =
+      ValueFormatError.forIntegerPathAndRange("/numberOfChildren", minNumberOfChildren.toString, maxNumberOfChildren.toString)
     combine(
       ResolveInteger(minNumberOfChildren, maxNumberOfChildren)(numberOfChildren, integerValueFormatError),
       ResolveParsedNumber()(amountOfChildBenefitReceived, "/amountOfChildBenefitReceived")
@@ -60,4 +57,5 @@ object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValida
         }
       }
     }
+
 }
