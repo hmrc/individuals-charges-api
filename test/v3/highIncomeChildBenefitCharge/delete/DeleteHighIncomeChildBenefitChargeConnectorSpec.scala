@@ -20,6 +20,7 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 import scala.concurrent.Future
@@ -34,7 +35,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
       "the downstream call is successful and tax year specific" in new HipTest with Test {
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
+        willDelete(url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
           .returns(Future.successful(outcome))
 
 
@@ -50,7 +51,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
         val errorOutcome: Left[ResponseWrapper[DownstreamErrors], Nothing] =
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
-        willDelete(s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
+        willDelete(url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
           .returns(Future.successful(errorOutcome))
 
         val result: DownstreamOutcome[Unit] = await(connector.delete(request))

@@ -20,6 +20,7 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.minimumRequestBodyModel
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
@@ -36,7 +37,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
-          url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
+          url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
           body = minimumRequestBodyModel
         ).returns(Future.successful(outcome))
 
@@ -53,7 +54,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
         willPut(
-          url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
+          url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
           body = minimumRequestBodyModel
         ).returns(Future.successful(errorOutcome))
 

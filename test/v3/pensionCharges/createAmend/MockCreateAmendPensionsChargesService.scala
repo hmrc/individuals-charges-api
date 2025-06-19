@@ -18,6 +18,7 @@ package v3.pensionCharges.createAmend
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v3.pensionCharges.createAmend.CreateAmendPensionChargesService
@@ -25,7 +26,7 @@ import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequ
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendPensionsChargesService extends MockFactory {
+trait MockCreateAmendPensionsChargesService extends TestSuite with MockFactory {
 
   val mockCreateAmendPensionsChargesService: CreateAmendPensionChargesService = mock[CreateAmendPensionChargesService]
 

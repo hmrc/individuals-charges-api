@@ -18,13 +18,14 @@ package v2.delete
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v2.delete.model.request.DeletePensionChargesRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeletePensionChargesService extends MockFactory {
+trait MockDeletePensionChargesService extends TestSuite with MockFactory {
 
   val mockDeleteBFLossService: DeletePensionChargesService = mock[DeletePensionChargesService]
 

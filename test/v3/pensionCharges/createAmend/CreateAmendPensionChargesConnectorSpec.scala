@@ -16,10 +16,12 @@
 
 package v3.pensionCharges.createAmend
 
+import play.api.libs.json.Json
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v3.pensionCharges.createAmend.CreateAmendPensionChargesConnector
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
@@ -57,8 +59,8 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
-            body = createAmendPensionChargesRequestBody,
+            url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}",
+            body = Json.toJson(createAmendPensionChargesRequestBody),
             config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
@@ -75,7 +77,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, ()))
 
-        willPut(s"$baseUrl/income-tax/charges/pensions/23-24/$nino", createAmendPensionChargesRequestBody)
+        willPut(url"$baseUrl/income-tax/charges/pensions/23-24/$nino", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected
@@ -88,7 +90,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
-        willPut(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
+        willPut(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected
@@ -101,7 +103,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
-        willPut(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
+        willPut(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
 
         await(connector.createAmendPensionCharges(request)) shouldBe expected

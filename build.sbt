@@ -13,7 +13,7 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     retrieveManaged                 := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
-    scalaVersion                    := "2.13.12",
+    scalaVersion                    := "2.13.16",
     scalacOptions ++= Seq("-language:higherKinds", "-Xfatal-warnings", "-Wconf:src=routes/.*:silent", "-feature", "-Wconf:cat=lint-byname-implicit:s")
   )
   .settings(
@@ -32,8 +32,5 @@ lazy val microservice = Project(appName, file("."))
     ItTest / javaOptions += "-Dlogger.resource=logback-test.xml",
     ItTest / parallelExecution := false,
     addTestReportOption(ItTest, directory = "int-test-reports")
-  )
-  .settings(
-    resolvers += Resolver.jcenterRepo
   )
   .settings(PlayKeys.playDefaultPort := 9765)
