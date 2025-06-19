@@ -20,6 +20,7 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.responseModel
 import v3.highIncomeChildBenefitCharge.retrieve.model.{RetrieveHighIncomeChildBenefitChargeRequest, RetrieveHighIncomeChildBenefitChargeResponse}
 
@@ -35,7 +36,7 @@ class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
         val outcome: Right[Nothing, ResponseWrapper[RetrieveHighIncomeChildBenefitChargeResponse]] =
           Right(ResponseWrapper(correlationId, responseModel))
 
-        willGet(url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
+        willGet(url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")
           .returns(Future.successful(outcome))
 
         val result: DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse] =
@@ -52,7 +53,7 @@ class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
         willGet(
-          url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino"
+          url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino"
         ).returns(Future.successful(errorOutcome))
 
         val result: DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse] =

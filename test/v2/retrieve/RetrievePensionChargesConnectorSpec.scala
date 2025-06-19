@@ -20,6 +20,7 @@ import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v2.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
@@ -53,7 +54,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
-        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+        willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -66,7 +67,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
 
-        willGet(s"$baseUrl/income-tax/charges/pensions/23-24/$nino")
+        willGet(url"$baseUrl/income-tax/charges/pensions/23-24/$nino")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -79,7 +80,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
-        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+        willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected
@@ -92,7 +93,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
-        willGet(s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
+        willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
 
         await(connector.retrievePensionCharges(request)) shouldBe expected

@@ -18,13 +18,14 @@ package v3.highIncomeChildBenefitCharge.delete
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteHighIncomeChildBenefitChargeService extends MockFactory {
+trait MockDeleteHighIncomeChildBenefitChargeService extends TestSuite with MockFactory {
 
   val mockDeleteHighIncomeChildBenefitChargeService: DeleteHighIncomeChildBenefitChargeService = mock[DeleteHighIncomeChildBenefitChargeService]
 

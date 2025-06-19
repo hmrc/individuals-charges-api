@@ -18,6 +18,7 @@ package v2.retrieve
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
@@ -25,7 +26,7 @@ import v2.retrieve.model.response.RetrievePensionChargesResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrievePensionChargesConnector extends MockFactory {
+trait MockRetrievePensionChargesConnector extends TestSuite with MockFactory {
 
   val mockRetrievePensionChargesConnector: RetrievePensionChargesConnector = mock[RetrievePensionChargesConnector]
 

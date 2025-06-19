@@ -16,14 +16,16 @@
 
 package shared.connectors
 
-import com.google.common.base.Charsets
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.{Json, Writes}
 import shared.config.{BasicAuthDownstreamConfig, DownstreamConfig, MockSharedAppConfig}
 import shared.mocks.MockHttpClient
 import shared.utils.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 
+import java.net.URL
+import java.nio.charset.StandardCharsets
 import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -56,7 +58,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected def intent: Option[String] = None
 
-    protected def willGet[T](url: String, parameters: Seq[(String, String)] = Nil): CallHandler[Future[T]] = {
+    protected def willGet[T](url: URL, parameters: Seq[(String, String)] = Nil): CallHandler[Future[T]] = {
       MockedHttpClient
         .get(
           url = url,
@@ -67,29 +69,29 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
         )
     }
 
-    protected def willPost[BODY, T](url: String, body: BODY): CallHandler[Future[T]] = {
+    protected def willPost[BODY, T](url: URL, body: BODY)(implicit writes: Writes[BODY]): CallHandler[Future[T]] = {
       MockedHttpClient
         .post(
           url = url,
           config = dummyHeaderCarrierConfig,
-          body = body,
+          body = Json.toJson(body),
           requiredHeaders = requiredHeaders ++ List("Content-Type" -> "application/json"),
           excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
-    protected def willPut[BODY, T](url: String, body: BODY): CallHandler[Future[T]] = {
+    protected def willPut[BODY, T](url: URL, body: BODY)(implicit writes: Writes[BODY]): CallHandler[Future[T]] = {
       MockedHttpClient
         .put(
           url = url,
           config = dummyHeaderCarrierConfig,
-          body = body,
+          body = Json.toJson(body),
           requiredHeaders = requiredHeaders ++ List("Content-Type" -> "application/json"),
           excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
     }
 
-    protected def willDelete[T](url: String): CallHandler[Future[T]] = {
+    protected def willDelete[T](url: URL): CallHandler[Future[T]] = {
       MockedHttpClient
         .delete(
           url = url,
@@ -141,7 +143,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     private val clientSecret = "clientSecret"
 
     private val token =
-      Base64.getEncoder.encodeToString(s"$clientId:$clientSecret".getBytes(Charsets.UTF_8))
+      Base64.getEncoder.encodeToString(s"$clientId:$clientSecret".getBytes(StandardCharsets.UTF_8))
 
     private val environment = "hip-environment"
 
