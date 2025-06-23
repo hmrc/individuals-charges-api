@@ -31,6 +31,7 @@ import scala.concurrent.Future
 class RetrieveHighIncomeChildBenefitChargeControllerSpec extends ControllerBaseSpec with ControllerTestRunner {
 
   private val taxYear: String = "2025-26"
+
   private val requestData: RetrieveHighIncomeChildBenefitChargeRequest =
     RetrieveHighIncomeChildBenefitChargeRequest(parsedNino, TaxYear.fromMtd(taxYear))
 
@@ -39,7 +40,8 @@ class RetrieveHighIncomeChildBenefitChargeControllerSpec extends ControllerBaseS
       "given a valid request" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockRetrieveHighIncomeChildBenefitService.retrieve(requestData)
+        MockRetrieveHighIncomeChildBenefitService
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
         runOkTest(

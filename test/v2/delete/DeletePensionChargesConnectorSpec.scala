@@ -20,6 +20,7 @@ import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{InternalError, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v2.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v2.delete.model.request.DeletePensionChargesRequestData
 
@@ -52,7 +53,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
+          url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
         ).returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(request)) shouldBe expected
@@ -64,7 +65,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willDelete(
-          url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
+          url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
         ).returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(request)) shouldBe expected
@@ -77,7 +78,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError)))
 
         willDelete(
-          url = s"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
+          url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
         ).returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(request)) shouldBe expected
@@ -91,7 +92,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
         val expected = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino"
+          url = url"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino"
         ).returns(Future.successful(expected))
 
         await(connector.deletePensionCharges(request)) shouldBe expected

@@ -20,6 +20,7 @@ import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.minimumRequestBodyModel
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
@@ -27,8 +28,8 @@ import scala.concurrent.Future
 
 class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
 
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2025-26")
+  private val nino: Nino       = Nino("AA123456A")
+  private val taxYear: TaxYear = TaxYear.fromMtd("2025-26")
 
   "CreateAmendHighIncomeChildBenefitChargeConnector" should {
     "return a 204 (NO_CONTENT) status for a success scenario" when {
@@ -36,7 +37,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
-          url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
+          url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
           body = minimumRequestBodyModel
         ).returns(Future.successful(outcome))
 
@@ -53,7 +54,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
         willPut(
-          url = s"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
+          url = url"$baseUrl/itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino",
           body = minimumRequestBodyModel
         ).returns(Future.successful(errorOutcome))
 
@@ -74,6 +75,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
       taxYear = taxYear,
       body = minimumRequestBodyModel
     )
+
   }
 
 }

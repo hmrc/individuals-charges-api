@@ -28,8 +28,7 @@ import v2.delete.model.request.DeletePensionChargesRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String)
-    extends Validator[DeletePensionChargesRequestData] {
+class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String) extends Validator[DeletePensionChargesRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
 

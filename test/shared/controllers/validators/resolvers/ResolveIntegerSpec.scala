@@ -56,10 +56,10 @@ class ResolveIntegerSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks {
       }
 
       "validate integer range" in forAll { numberOfChildren: Int =>
-        val error   = ValueFormatError.forIntegerPathAndRange(path, "-1", "99")
-        val resolve = ResolveInteger(-1, 99)
+        val error    = ValueFormatError.forIntegerPathAndRange(path, "-1", "99")
+        val resolve  = ResolveInteger(-1, 99)
         val expected = if (-1 <= numberOfChildren && numberOfChildren <= 99) Valid(numberOfChildren) else Invalid(List(error))
-        val result = resolve(numberOfChildren, error)
+        val result   = resolve(numberOfChildren, error)
         result shouldBe expected
       }
     }

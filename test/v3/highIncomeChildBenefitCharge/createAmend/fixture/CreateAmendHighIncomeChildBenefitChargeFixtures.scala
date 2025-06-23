@@ -23,9 +23,9 @@ object CreateAmendHighIncomeChildBenefitChargeFixtures {
 
   val fullRequestBodyModel: CreateAmendHighIncomeChildBenefitChargeRequestBody =
     CreateAmendHighIncomeChildBenefitChargeRequestBody(
-        amountOfChildBenefitReceived = 1111.22,
-        numberOfChildren = 2,
-        dateCeased = Some("2025-05-08")
+      amountOfChildBenefitReceived = 1111.22,
+      numberOfChildren = 2,
+      dateCeased = Some("2025-05-08")
     )
 
   val minimumRequestBodyModel: CreateAmendHighIncomeChildBenefitChargeRequestBody =
@@ -34,8 +34,6 @@ object CreateAmendHighIncomeChildBenefitChargeFixtures {
       numberOfChildren = 2,
       dateCeased = None
     )
-
-
 
   val validFullRequestBodyJson: JsValue = Json.parse(
     """
@@ -55,4 +53,5 @@ object CreateAmendHighIncomeChildBenefitChargeFixtures {
       |}
     """.stripMargin
   )
+
 }

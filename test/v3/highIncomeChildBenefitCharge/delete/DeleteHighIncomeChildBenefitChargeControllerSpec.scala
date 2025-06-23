@@ -30,12 +30,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteHighIncomeChildBenefitChargeControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockDeleteHighIncomeChildBenefitChargeService
     with MockDeleteHighIncomeChildBenefitChargeValidatorFactory {
 
-  private val taxYear: String      = "2025-26"
+  private val taxYear: String = "2025-26"
 
   private val requestData: DeleteHighIncomeChildBenefitChargeRequestData = DeleteHighIncomeChildBenefitChargeRequestData(
     nino = parsedNino,

@@ -28,13 +28,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateAmendHighIncomeChildBenefitChargeController @Inject()(val authService: EnrolmentsAuthService,
-                                                                  val lookupService: MtdIdLookupService,
-                                                                  validatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory,
-                                                                  service: CreateAmendHighIncomeChildBenefitChargeService,
-                                                                  auditService: AuditService,
-                                                                  cc: ControllerComponents,
-                                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+class CreateAmendHighIncomeChildBenefitChargeController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory,
+    service: CreateAmendHighIncomeChildBenefitChargeService,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName: String = "create-or-amend-high-income-child-benefit-charge-submission"

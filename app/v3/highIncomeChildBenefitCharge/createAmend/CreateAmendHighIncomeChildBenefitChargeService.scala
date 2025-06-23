@@ -27,23 +27,24 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendHighIncomeChildBenefitChargeService @Inject()(connector: CreateAmendHighIncomeChildBenefitChargeConnector) extends BaseService {
+class CreateAmendHighIncomeChildBenefitChargeService @Inject() (connector: CreateAmendHighIncomeChildBenefitChargeConnector) extends BaseService {
 
-  def createAmend(request: CreateAmendHighIncomeChildBenefitChargeRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
+  def createAmend(
+      request: CreateAmendHighIncomeChildBenefitChargeRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
     connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
-
 
   private def downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,
+      "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
+      "INVALID_TAX_YEAR"                -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"           -> InternalError,
+      "INVALID_PAYLOAD"                 -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED"          -> RuleTaxYearNotSupportedError,
+      "OUTSIDE_AMENDMENT_WINDOW"        -> RuleOutsideAmendmentWindowError,
       "INVALID_RANGE_OF_NO_OF_CHILDREN" -> InternalError,
-      "INVALID_DATE_CEASED"       -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_DATE_CEASED"             -> InternalError,
+      "SERVER_ERROR"                    -> InternalError,
+      "SERVICE_UNAVAILABLE"             -> InternalError
     )
+
 }

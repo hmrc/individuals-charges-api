@@ -93,7 +93,7 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
           "SERVER_ERROR"              -> InternalError,
           "SERVICE_UNAVAILABLE"       -> InternalError,
           "UNEXPECTED_ERROR"          -> InternalError,
-          "OUTSIDE_AMENDMENT_WINDOW"     -> RuleOutsideAmendmentWindowError
+          "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError
         )
 
         val extraTysErrors = Map(

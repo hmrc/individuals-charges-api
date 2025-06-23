@@ -26,13 +26,13 @@ import shared.utils.IdGenerator
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class DeleteHighIncomeChildBenefitChargeController @Inject()(val authService: EnrolmentsAuthService,
-                                                             val lookupService: MtdIdLookupService,
-                                                             service: DeleteHighIncomeChildBenefitChargeService,
-                                                             validatorFactory: DeleteHighIncomeChildBenefitChargeValidatorFactory,
-                                                             auditService: AuditService,
-                                                             cc: ControllerComponents,
-                                                             val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+class DeleteHighIncomeChildBenefitChargeController @Inject() (val authService: EnrolmentsAuthService,
+                                                              val lookupService: MtdIdLookupService,
+                                                              service: DeleteHighIncomeChildBenefitChargeService,
+                                                              validatorFactory: DeleteHighIncomeChildBenefitChargeValidatorFactory,
+                                                              auditService: AuditService,
+                                                              cc: ControllerComponents,
+                                                              val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "delete-high-income-child-benefit-charge-submission"

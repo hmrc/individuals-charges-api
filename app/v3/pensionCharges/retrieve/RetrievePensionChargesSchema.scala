@@ -52,7 +52,8 @@ object RetrievePensionChargesSchema {
   def schemaFor(taxYear: TaxYear): Validated[Seq[MtdError], RetrievePensionChargesSchema] = {
     taxYear.year match {
       case x if x < 2025 => Valid(Def1)
-      case _ => Valid(Def2)
+      case _             => Valid(Def2)
     }
   }
+
 }

@@ -18,13 +18,14 @@ package v3.highIncomeChildBenefitCharge.createAmend
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendHighIncomeChildBenefitChargeConnector extends MockFactory {
+trait MockCreateAmendHighIncomeChildBenefitChargeConnector extends TestSuite with MockFactory {
 
   val mockCreateAmendHighIncomeChildBenefitChargeConnector: CreateAmendHighIncomeChildBenefitChargeConnector =
     mock[CreateAmendHighIncomeChildBenefitChargeConnector]
@@ -32,8 +33,14 @@ trait MockCreateAmendHighIncomeChildBenefitChargeConnector extends MockFactory {
   object MockCreateAmendHighIncomeChildBenefitChargeConnector {
 
     def createAmend(request: CreateAmendHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
-      (mockCreateAmendHighIncomeChildBenefitChargeConnector
-        .createAmend(_: CreateAmendHighIncomeChildBenefitChargeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+      (
+        mockCreateAmendHighIncomeChildBenefitChargeConnector
+          .createAmend(_: CreateAmendHighIncomeChildBenefitChargeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *)
 
   }

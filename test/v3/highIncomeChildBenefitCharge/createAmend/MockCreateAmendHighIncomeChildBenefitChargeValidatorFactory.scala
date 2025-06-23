@@ -23,7 +23,8 @@ import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHig
 
 trait MockCreateAmendHighIncomeChildBenefitChargeValidatorFactory extends MockValidatorFactory[CreateAmendHighIncomeChildBenefitChargeRequest] {
 
-  val mockCreateAmendHighIncomeChildBenefitChargeValidatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory = mock[CreateAmendHighIncomeChildBenefitChargeValidatorFactory]
+  val mockCreateAmendHighIncomeChildBenefitChargeValidatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory =
+    mock[CreateAmendHighIncomeChildBenefitChargeValidatorFactory]
 
   def validator(): CallHandler[Validator[CreateAmendHighIncomeChildBenefitChargeRequest]] =
     (mockCreateAmendHighIncomeChildBenefitChargeValidatorFactory.validator(_: String, _: String, _: JsValue)).expects(*, *, *)

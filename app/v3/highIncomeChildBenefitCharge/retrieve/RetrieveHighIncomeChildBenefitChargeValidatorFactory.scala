@@ -23,6 +23,8 @@ import javax.inject.Singleton
 
 @Singleton
 class RetrieveHighIncomeChildBenefitChargeValidatorFactory {
+
   def validator(nino: String, taxYear: String): Validator[RetrieveHighIncomeChildBenefitChargeRequest] =
     new RetrieveHighIncomeChildBenefitChargeValidator(nino, taxYear)
+
 }

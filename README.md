@@ -31,7 +31,7 @@ Start the service manager profile: `sm2 --start MTDFB_CHARGES`
 
 ```
 sbt test
-sbt it:test
+sbt it/test
 ```
 
 ## Viewing OAS

@@ -25,8 +25,7 @@ import shared.models.errors.MtdError
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v2.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def1_RetrievePensionChargesValidator(nino: String, taxYear: String)
-    extends Validator[RetrievePensionChargesRequestData] {
+class Def1_RetrievePensionChargesValidator(nino: String, taxYear: String) extends Validator[RetrievePensionChargesRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinMax((TaxYear.fromMtd("2021-22"), TaxYear.fromMtd("2023-24")))
 

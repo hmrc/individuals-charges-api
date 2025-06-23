@@ -251,8 +251,7 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
     }
   }
 
-  val multipleFailureErrorTypesJson: JsValue = Json.parse(
-    """
+  val multipleFailureErrorTypesJson: JsValue = Json.parse("""
       |{
       |    "origin": "HIP",
       |    "response": {
@@ -275,13 +274,15 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
       s"receiving a $responseCode response with multiple HIP errors containing types in failures array" should {
         "return a Left ResponseWrapper containing the extracted error types" in {
           val httpResponse = HttpResponse(
-            BAD_REQUEST, multipleFailureErrorTypesJson, Map("CorrelationId" -> List(correlationId))
+            BAD_REQUEST,
+            multipleFailureErrorTypesJson,
+            Map("CorrelationId" -> List(correlationId))
           )
 
           httpReads.read(method, url, httpResponse) shouldBe Left(
-            ResponseWrapper(correlationId, DownstreamErrors(
-              List(DownstreamErrorCode("INVALID_TAXABLE_ENTITY_ID"), DownstreamErrorCode("INVALID_TAX_YEAR")))
-            )
+            ResponseWrapper(
+              correlationId,
+              DownstreamErrors(List(DownstreamErrorCode("INVALID_TAXABLE_ENTITY_ID"), DownstreamErrorCode("INVALID_TAX_YEAR"))))
           )
         }
       }

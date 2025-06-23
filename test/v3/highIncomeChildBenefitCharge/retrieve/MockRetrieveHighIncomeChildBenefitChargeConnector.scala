@@ -18,21 +18,32 @@ package v3.highIncomeChildBenefitCharge.retrieve
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.highIncomeChildBenefitCharge.retrieve.model.{RetrieveHighIncomeChildBenefitChargeRequest, RetrieveHighIncomeChildBenefitChargeResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveHighIncomeChildBenefitChargeConnector extends MockFactory {
+trait MockRetrieveHighIncomeChildBenefitChargeConnector extends TestSuite with MockFactory {
 
-  val mockRetrieveHighIncomeChildBenefitChargeConnector: RetrieveHighIncomeChildBenefitChargeConnector = mock[RetrieveHighIncomeChildBenefitChargeConnector]
+  val mockRetrieveHighIncomeChildBenefitChargeConnector: RetrieveHighIncomeChildBenefitChargeConnector =
+    mock[RetrieveHighIncomeChildBenefitChargeConnector]
 
   object MockRetrieveHighIncomeChildBenefitChargeConnector {
 
-    def retrieve(request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] =
-      (mockRetrieveHighIncomeChildBenefitChargeConnector
-        .retrieve(_: RetrieveHighIncomeChildBenefitChargeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def retrieve(
+        request: RetrieveHighIncomeChildBenefitChargeRequest): CallHandler[Future[DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse]]] =
+      (
+        mockRetrieveHighIncomeChildBenefitChargeConnector
+          .retrieve(_: RetrieveHighIncomeChildBenefitChargeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *)
+
   }
+
 }

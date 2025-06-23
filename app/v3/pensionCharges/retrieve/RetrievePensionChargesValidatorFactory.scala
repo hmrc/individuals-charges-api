@@ -32,13 +32,13 @@ class RetrievePensionChargesValidatorFactory @Inject() (appConfig: SharedAppConf
   def validator(nino: String, taxYear: String): Validator[RetrievePensionChargesRequestData] = {
 
     val featureSwitches = ChargesFeatureSwitches()(appConfig)
-    val default = new Def1_RetrievePensionChargesValidator(nino, taxYear)
+    val default         = new Def1_RetrievePensionChargesValidator(nino, taxYear)
 
     RetrievePensionChargesSchema.schemaFor(Some(taxYear)) match {
-      case Valid(Def1) => new Def1_RetrievePensionChargesValidator(nino, taxYear)
+      case Valid(Def1)                                                   => new Def1_RetrievePensionChargesValidator(nino, taxYear)
       case Valid(Def2) if featureSwitches.isRemoveLifetimePensionEnabled => new Def2_RetrievePensionChargesValidator(nino, taxYear)
-      case Invalid(errors) => Validator.returningErrors(errors)
-      case _ => default
+      case Invalid(errors)                                               => Validator.returningErrors(errors)
+      case _                                                             => default
     }
 
   }

@@ -27,7 +27,7 @@ import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChil
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteHighIncomeChildBenefitChargeValidator @Inject()(nino: String, taxYear: String)
+class DeleteHighIncomeChildBenefitChargeValidator @Inject() (nino: String, taxYear: String)
     extends Validator[DeleteHighIncomeChildBenefitChargeRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2025-26"))
