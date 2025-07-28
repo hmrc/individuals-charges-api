@@ -31,6 +31,6 @@ object PensionSavingsTaxCharges {
     (__ \ "pensionSchemeTaxReference").write[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").writeNullable[LifetimeAllowance]
-  )(unlift(PensionSavingsTaxCharges.unapply))
+  )(o => Tuple.fromProductTyped(o))
 
 }

@@ -48,7 +48,7 @@ object FlattenedGenericAuditDetail {
       (JsPath \ "outcome").write[String] and
       (JsPath \ "httpStatusCode").write[Int] and
       (JsPath \ "errorCodes").writeNullable[Seq[String]]
-  )(unlift(FlattenedGenericAuditDetail.unapply))
+  )(o => Tuple.fromProductTyped(o))
 
   def apply(versionNumber: Option[String] = None,
             userDetails: UserDetails,

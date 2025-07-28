@@ -3,7 +3,7 @@ import sbt.Keys.baseDirectory
 import uk.gov.hmrc.DefaultBuildSettings
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 1
 
 val appName = "individuals-charges-api"
@@ -19,7 +19,8 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions ++= List(
       "-Xfatal-warnings",
       "-Wconf:src=routes/.*:s",
-      "-feature"
+      "-feature",
+      "-Wconf:msg=Flag.*repeatedly:s"
     )
   )
   .settings(
