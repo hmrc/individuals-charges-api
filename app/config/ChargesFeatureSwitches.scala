@@ -21,7 +21,7 @@ import shared.config.{FeatureSwitches, SharedAppConfig}
 
 /** API-specific feature switches.
   */
-case class ChargesFeatureSwitches(protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+case class ChargesFeatureSwitches private[config] (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
   def isRemoveLifetimePensionEnabled: Boolean      = isEnabled("removeLifetimePension")
   def isRemoveLifetimePensionInProduction: Boolean = isReleasedInProduction("removeLifetimePension")

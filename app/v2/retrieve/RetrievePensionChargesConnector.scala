@@ -18,7 +18,7 @@ package v2.retrieve
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,8 +36,8 @@ class RetrievePensionChargesConnector @Inject() (val http: HttpClientV2, val app
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrievePensionChargesResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     val downstreamUri: DownstreamUri[DownstreamResp] = taxYear match {
       case ty if ty.useTaxYearSpecificApi =>

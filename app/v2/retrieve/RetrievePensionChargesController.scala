@@ -18,11 +18,11 @@ package v2.retrieve
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 
 class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAuthService,

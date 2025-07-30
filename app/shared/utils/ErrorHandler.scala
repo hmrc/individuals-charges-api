@@ -16,11 +16,11 @@
 
 package shared.utils
 
-import play.api._
-import play.api.http.Status._
-import play.api.mvc.Results._
-import play.api.mvc._
-import shared.models.errors._
+import play.api.*
+import play.api.http.Status.*
+import play.api.mvc.Results.*
+import play.api.mvc.*
+import shared.models.errors.*
 import shared.routing.Versions
 import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.http._
