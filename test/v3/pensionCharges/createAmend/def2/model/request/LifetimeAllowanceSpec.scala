@@ -18,7 +18,6 @@ package v3.pensionCharges.createAmend.def2.model.request
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.pensionCharges.createAmend.def2.model.request.LifetimeAllowance
 
 class LifetimeAllowanceSpec extends UnitSpec {
 

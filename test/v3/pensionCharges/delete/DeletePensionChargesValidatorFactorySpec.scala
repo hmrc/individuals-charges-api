@@ -18,7 +18,6 @@ package v3.pensionCharges.delete
 
 import shared.controllers.validators.Validator
 import shared.utils.UnitSpec
-import v3.pensionCharges.delete.DeletePensionChargesValidatorFactory
 import v3.pensionCharges.delete.def1.Def1_DeletePensionChargesValidator
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

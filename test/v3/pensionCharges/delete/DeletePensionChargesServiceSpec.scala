@@ -19,11 +19,10 @@ package v3.pensionCharges.delete
 import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.pensionCharges.delete.DeletePensionChargesService
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

@@ -28,7 +28,6 @@ import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v3.pensionCharges.delete.DeletePensionChargesController
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global

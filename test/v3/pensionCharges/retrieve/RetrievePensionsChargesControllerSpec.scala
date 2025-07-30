@@ -25,9 +25,8 @@ import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v3.pensionCharges.retrieve.RetrievePensionChargesController
-import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.def1.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
+import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

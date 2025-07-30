@@ -19,7 +19,6 @@ package v3.pensionCharges.retrieve
 import play.api.Configuration
 import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
-import v3.pensionCharges.retrieve.RetrievePensionChargesValidatorFactory
 import v3.pensionCharges.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 
