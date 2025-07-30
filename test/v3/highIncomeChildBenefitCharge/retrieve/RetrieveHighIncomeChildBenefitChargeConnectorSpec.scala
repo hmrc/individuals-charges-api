@@ -64,7 +64,7 @@ class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     protected val connector: RetrieveHighIncomeChildBenefitChargeConnector =
       new RetrieveHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)

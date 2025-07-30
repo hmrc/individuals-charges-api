@@ -36,6 +36,6 @@ class DeleteHighIncomeChildBenefitChargeValidator @Inject() (nino: String, taxYe
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(DeleteHighIncomeChildBenefitChargeRequestData)
+    ).mapN(DeleteHighIncomeChildBenefitChargeRequestData.apply)
 
 }

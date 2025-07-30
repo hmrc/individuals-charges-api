@@ -32,7 +32,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
   val nino = "AA123456A"
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     def taxYear: TaxYear
 

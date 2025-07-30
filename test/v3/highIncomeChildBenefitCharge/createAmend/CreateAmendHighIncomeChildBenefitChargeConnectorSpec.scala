@@ -65,7 +65,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
     }
   }
 
-  private trait Test { _: ConnectorTest =>
+  private trait Test { self: ConnectorTest =>
 
     protected val connector: CreateAmendHighIncomeChildBenefitChargeConnector =
       new CreateAmendHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)

@@ -19,8 +19,6 @@ package shared.models.domain
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-import scala.annotation.targetName
-
 enum Source {
   case `MTD-SA`
 }

@@ -37,6 +37,6 @@ class CreateAmendHighIncomeChildBenefitChargeValidator(nino: String, taxYear: St
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(CreateAmendHighIncomeChildBenefitChargeRequest) andThen CreateAmendHighIncomeChildBenefitChargeRulesValidator.validateBusinessRules
+    ).mapN(CreateAmendHighIncomeChildBenefitChargeRequest.apply) andThen CreateAmendHighIncomeChildBenefitChargeRulesValidator.validateBusinessRules
 
 }

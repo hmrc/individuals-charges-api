@@ -31,6 +31,6 @@ object PensionSavingsTaxCharges {
     (__ \ "pensionSchemeTaxReference").readNullable[Seq[String]] and
       (__ \ "lumpSumBenefitTakenInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance] and
       (__ \ "benefitInExcessOfLifetimeAllowance").readNullable[LifetimeAllowance]
-  )(PensionSavingsTaxCharges.apply _)
+  )(PensionSavingsTaxCharges.apply)
 
 }

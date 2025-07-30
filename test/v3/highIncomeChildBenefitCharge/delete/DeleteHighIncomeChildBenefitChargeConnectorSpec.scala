@@ -60,7 +60,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     protected val connector: DeleteHighIncomeChildBenefitChargeConnector =
       new DeleteHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)

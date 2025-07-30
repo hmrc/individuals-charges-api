@@ -38,6 +38,6 @@ object PensionContributions {
       (__ \ "moneyPurchasedAllowance").readNullable[Boolean] and
       (__ \ "inExcessOfTheAnnualAllowance").read[BigDecimal] and
       (__ \ "annualAllowanceTaxPaid").read[BigDecimal]
-  )(PensionContributions.apply _)
+  )(PensionContributions.apply)
 
 }

@@ -36,6 +36,6 @@ class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: Strin
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_DeletePensionChargesRequestData)
+    ).mapN(Def1_DeletePensionChargesRequestData.apply)
 
 }

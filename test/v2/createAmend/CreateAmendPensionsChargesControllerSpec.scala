@@ -84,7 +84,7 @@ class CreateAmendPensionsChargesControllerSpec
 
   class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new CreateAmendPensionChargesController(
+    val controller: CreateAmendPensionChargesController = new CreateAmendPensionChargesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockAmendPensionChargesValidatorFactory,

@@ -42,7 +42,7 @@ class Def2_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: 
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def2_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
+    ).mapN(Def2_CreateAmendPensionChargesRequestData.apply) andThen validateBusinessRules
 
 }
 
