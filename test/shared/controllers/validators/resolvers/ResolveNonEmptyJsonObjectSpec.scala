@@ -102,7 +102,7 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
   "ResolveNonEmptyJsonObject" when {
 
     "the default resolver is used" must {
-      val resolver = ResolveNonEmptyJsonObject.resolver[Foo]
+      val resolver: Resolver[JsValue, Foo] = ResolveNonEmptyJsonObject.resolver[Foo]
 
       behave like jsonObjectResolver(resolver)
       behave like jsonObjectResolverWithEmptinessChecking(resolver)
@@ -115,7 +115,7 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
     }
 
     "the strict resolver is used" must {
-      val resolver = ResolveNonEmptyJsonObject.strictResolver[Foo]
+      val resolver: Resolver[JsValue, Foo] = ResolveNonEmptyJsonObject.strictResolver[Foo]
 
       behave like jsonObjectResolver(resolver)
       behave like jsonObjectResolverWithEmptinessChecking(resolver)
