@@ -17,11 +17,9 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import play.api.Configuration
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
 import shared.definition.{APIDefinition, APIStatus, APIVersion, Definition}
-import shared.mocks.MockHttpClient
 import shared.routing.{Version2, Version3}
 import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel

@@ -95,7 +95,7 @@ class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
           "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
       }
     }
   }

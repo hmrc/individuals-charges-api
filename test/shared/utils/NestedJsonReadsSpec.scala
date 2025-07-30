@@ -120,7 +120,7 @@ class NestedJsonReadsSpec extends UnitSpec {
     implicit val reads: Reads[Test] = (
       (JsPath \ "a" \ "b" \ "c").read[String] and
         (__ \ "a" \ "c" \ "e").readNestedNullable[String]
-    )(Test.apply _)
+    )(Test.apply)
 
   }
 
