@@ -26,7 +26,7 @@ lazy val microservice = Project(appName, file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
     Compile / unmanagedClasspath += baseDirectory.value / "resources"
   )
-  .settings(CodeCoverageSettings.settings: _*)
+  .settings(CodeCoverageSettings.settings *)
   .settings(PlayKeys.playDefaultPort := 9765)
 
 lazy val it = project
@@ -38,7 +38,4 @@ lazy val it = project
     Test / javaOptions += "-Dlogger.resource=logback-test.xml",
   )
   .settings(libraryDependencies ++= AppDependencies.itDependencies)
-  .settings(
-      scalacOptions ++= Seq("-Xfatal-warnings")
-  )
 
