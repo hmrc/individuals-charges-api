@@ -135,7 +135,7 @@ class Def1_RetrievePensionsChargesISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2018-22", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -168,7 +168,7 @@ class Def1_RetrievePensionsChargesISpec extends IntegrationBaseSpec {
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
-        (input ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (input ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

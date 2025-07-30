@@ -75,7 +75,7 @@ class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {
           ("AA123456A", "2015-16", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -120,7 +120,7 @@ class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
         )
 
-        errors.foreach(args => (serviceErrorTest _).tupled(args))
+        errors.foreach(serviceErrorTest.tupled)
       }
     }
   }

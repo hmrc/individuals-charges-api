@@ -22,6 +22,8 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
 import play.api.libs.json._
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import play.api.test.Helpers._
 import shared.models.domain.TaxYear
 import shared.models.errors._
@@ -127,7 +129,7 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
           )
         )
 
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -161,7 +163,7 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
-        errors.foreach(args => (serviceErrorTest _).tupled(args))
+        errors.foreach(serviceErrorTest.tupled)
       }
     }
   }

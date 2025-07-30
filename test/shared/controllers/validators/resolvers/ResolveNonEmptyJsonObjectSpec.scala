@@ -18,6 +18,7 @@ package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.*
+import shared.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.models.utils.JsonErrorValidators
 import shared.utils.EmptinessChecker.field
@@ -28,21 +29,36 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
   case class Bar(field1: String, field2: String)
   case class Baz(field1: Option[String], field2: Option[String])
   case class Qux(mandatory: String, oneOf1: Option[String] = None, oneOf2: Option[String] = None)
-
-  // at least one of oneOf1 and oneOf2 must be included:
-  implicit val emptinessChecker: EmptinessChecker[Qux] = EmptinessChecker.use { o =>
-    List(
-      field("oneOf1", o.oneOf1),
-      field("oneOf2", o.oneOf2)
-    )
-  }
-
   case class Foo(bar: Bar, bars: Option[Seq[Bar]] = None, baz: Option[Baz] = None, qux: Option[Qux] = None)
 
   implicit val barFormat: Reads[Bar] = Json.reads
   implicit val bazFormat: Reads[Baz] = Json.reads
   implicit val quxFormat: Reads[Qux] = Json.reads
   implicit val fooReads: Reads[Foo]  = Json.reads
+
+  // at least one of oneOf1 and oneOf2 must be included:
+  //  implicit val emptinessChecker: EmptinessChecker[Qux] = EmptinessChecker.use { o =>
+  //    List(
+  //      field("oneOf1", o.oneOf1),
+  //      field("oneOf2", o.oneOf2)
+  //    )
+  //  }
+
+  given EmptinessChecker[Bar] = EmptinessChecker.derived
+
+  given EmptinessChecker[Baz] = EmptinessChecker.derived
+
+  given EmptinessChecker[Foo] = EmptinessChecker.derived
+
+  given EmptinessChecker[Qux] = EmptinessChecker.use(qux => List(field("oneOf1", qux.oneOf1), field("oneOf2", qux.oneOf2)))
+
+  given SchemaStructureSource[Bar] = SchemaStructureSource.derived
+
+  given SchemaStructureSource[Baz] = SchemaStructureSource.derived
+
+  given SchemaStructureSource[Qux] = SchemaStructureSource.derived
+
+  given SchemaStructureSource[Foo] = SchemaStructureSource.derived
 
   private def jsonObjectResolver(resolver: Resolver[JsValue, Foo]): Unit = {
     "return the parsed object" when {

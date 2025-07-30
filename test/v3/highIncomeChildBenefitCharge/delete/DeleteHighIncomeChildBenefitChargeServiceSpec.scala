@@ -68,7 +68,7 @@ class DeleteHighIncomeChildBenefitChargeServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        errors.foreach(args => serviceError.tupled(args))
+        errors.foreach(serviceError.tupled)
       }
     }
   }

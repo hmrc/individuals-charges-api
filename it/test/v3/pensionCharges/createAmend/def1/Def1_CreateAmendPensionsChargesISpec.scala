@@ -22,6 +22,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services._
@@ -205,7 +206,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
               "/overseasPensionContributions/shortServiceRefundTaxPaid"
             ))))
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -251,7 +252,7 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceErrorTest.tupled)
       }
     }
   }

@@ -22,6 +22,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.domain.TaxYear
 import shared.models.errors._
@@ -75,7 +76,7 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
           ("AA123456A", "2025-27",  BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "2024-25",  BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -107,7 +108,7 @@ class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseS
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
-        errors.foreach(args => (serviceErrorTest _).tupled(args))
+        errors.foreach(serviceErrorTest.tupled)
       }
 
     }

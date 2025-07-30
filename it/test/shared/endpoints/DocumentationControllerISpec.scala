@@ -21,6 +21,7 @@ import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import shared.config.SharedAppConfig
 import shared.routing.{Version, Versions}
 import shared.support.IntegrationBaseSpec
