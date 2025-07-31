@@ -16,10 +16,10 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import play.api.mvc._
+import play.api.mvc.*
 import shared.config.SharedAppConfig
-import shared.controllers._
-import shared.services._
+import shared.controllers.*
+import shared.services.*
 import shared.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}

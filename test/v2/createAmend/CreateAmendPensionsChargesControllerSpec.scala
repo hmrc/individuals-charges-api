@@ -26,7 +26,7 @@ import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -21,7 +21,7 @@ import shared.config.Deprecation.NotDeprecated
 import shared.config.{SharedAppConfig, MockSharedAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}
 import shared.mocks.MockHttpClient
-import shared.routing._
+import shared.routing.*
 import shared.utils.UnitSpec
 
 import scala.language.reflectiveCalls

@@ -22,8 +22,8 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import shared.models.errors._
+import play.api.test.Helpers.*
+import shared.models.errors.*
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector

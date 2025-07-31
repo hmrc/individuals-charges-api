@@ -19,7 +19,7 @@ package v3.highIncomeChildBenefitCharge.createAmend
 import cats.implicits.toBifunctorOps
 import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 

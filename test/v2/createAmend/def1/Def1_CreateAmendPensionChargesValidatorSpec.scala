@@ -18,9 +18,9 @@ package v2.createAmend.def1
 
 import play.api.libs.json.{JsObject, JsValue}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
-import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v2.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData

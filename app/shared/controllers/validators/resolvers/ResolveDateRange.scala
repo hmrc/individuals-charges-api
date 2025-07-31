@@ -29,7 +29,7 @@ case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatErro
                             endDateFormatError: MtdError = EndDateFormatError,
                             endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError)
     extends ResolverSupport {
-  import ResolveDateRange._
+  import ResolveDateRange.*
 
   val resolver: Resolver[(String, String), DateRange] = { case (startDate, endDate) =>
     (

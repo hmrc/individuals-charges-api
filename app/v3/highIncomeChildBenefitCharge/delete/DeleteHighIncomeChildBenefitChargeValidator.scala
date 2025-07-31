@@ -17,7 +17,7 @@
 package v3.highIncomeChildBenefitCharge.delete
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear

@@ -23,7 +23,7 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
-import v3.highIncomeChildBenefitCharge.createAmend.models.request._
+import v3.highIncomeChildBenefitCharge.createAmend.models.request.*
 
 class CreateAmendHighIncomeChildBenefitChargeValidator(nino: String, taxYear: String, body: JsValue)
     extends Validator[CreateAmendHighIncomeChildBenefitChargeRequest] {

@@ -17,7 +17,7 @@
 package v3.pensionCharges.delete
 
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import common.errors.RuleOutsideAmendmentWindowError
