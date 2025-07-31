@@ -36,10 +36,6 @@ class UnexpectedJsonFieldsValidatorSpec extends UnitSpec {
 
   implicit val someEnumChecker: SchemaStructureSource[SomeEnum] = SchemaStructureSource.leaf
 
-  given SchemaStructureSource[Bar] = SchemaStructureSource.derived
-
-  given SchemaStructureSource[Foo] = SchemaStructureSource.derived
-
   val validator = new UnexpectedJsonFieldsValidator[Foo]
 
   private def errorWithPaths(paths: String*) = Some(Seq(RuleIncorrectOrEmptyBodyError.withPaths(paths)))

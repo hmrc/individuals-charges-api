@@ -36,29 +36,13 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
   implicit val quxFormat: Reads[Qux] = Json.reads
   implicit val fooReads: Reads[Foo]  = Json.reads
 
-  // at least one of oneOf1 and oneOf2 must be included:
-  //  implicit val emptinessChecker: EmptinessChecker[Qux] = EmptinessChecker.use { o =>
-  //    List(
-  //      field("oneOf1", o.oneOf1),
-  //      field("oneOf2", o.oneOf2)
-  //    )
-  //  }
-
-  given EmptinessChecker[Bar] = EmptinessChecker.derived
-
-  given EmptinessChecker[Baz] = EmptinessChecker.derived
-
-  given EmptinessChecker[Foo] = EmptinessChecker.derived
-
-  given EmptinessChecker[Qux] = EmptinessChecker.use(qux => List(field("oneOf1", qux.oneOf1), field("oneOf2", qux.oneOf2)))
-
-  given SchemaStructureSource[Bar] = SchemaStructureSource.derived
-
-  given SchemaStructureSource[Baz] = SchemaStructureSource.derived
-
-  given SchemaStructureSource[Qux] = SchemaStructureSource.derived
-
-  given SchemaStructureSource[Foo] = SchemaStructureSource.derived
+//   at least one of oneOf1 and oneOf2 must be included:
+  implicit val emptinessChecker: EmptinessChecker[Qux] = EmptinessChecker.use { o =>
+    List(
+      field("oneOf1", o.oneOf1),
+      field("oneOf2", o.oneOf2)
+    )
+  }
 
   private def jsonObjectResolver(resolver: Resolver[JsValue, Foo]): Unit = {
     "return the parsed object" when {
