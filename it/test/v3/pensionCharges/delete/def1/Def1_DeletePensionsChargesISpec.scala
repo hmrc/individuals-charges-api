@@ -19,11 +19,11 @@ package test.v3.pensionCharges.delete.def1
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
-import play.api.libs.json._
-import play.api.libs.ws._
+import play.api.http.Status.*
+import play.api.libs.json.*
+import play.api.libs.ws.*
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 

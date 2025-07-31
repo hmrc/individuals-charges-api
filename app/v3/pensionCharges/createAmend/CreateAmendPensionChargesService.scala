@@ -17,9 +17,9 @@
 package v3.pensionCharges.createAmend
 
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleOutsideAmendmentWindowError
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 

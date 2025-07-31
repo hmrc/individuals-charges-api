@@ -16,7 +16,7 @@
 
 package v3.pensionCharges.retrieve.def2.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import v3.pensionCharges.retrieve.model.response.RetrievePensionChargesResponse
 
 case class Def2_RetrievePensionChargesResponse(submittedOn: String,

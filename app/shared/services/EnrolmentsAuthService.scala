@@ -18,7 +18,7 @@ package shared.services
 
 import shared.config.SharedAppConfig
 import shared.models.auth.UserDetails
-import shared.models.errors.{InternalError, _}
+import shared.models.errors.{InternalError, *}
 import shared.models.outcomes.AuthOutcome
 import shared.services.EnrolmentsAuthService.{
   authorisationDisabledPredicate,

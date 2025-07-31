@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.retrieve.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class PensionContributions(pensionSchemeTaxReference: Seq[String],
                                 isAnnualAllowanceReduced: Option[Boolean],

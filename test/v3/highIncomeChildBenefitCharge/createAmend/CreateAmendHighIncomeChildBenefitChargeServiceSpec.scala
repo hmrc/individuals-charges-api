@@ -18,7 +18,7 @@ package v3.highIncomeChildBenefitCharge.createAmend
 
 import common.errors.RuleOutsideAmendmentWindowError
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.minimumRequestBodyModel

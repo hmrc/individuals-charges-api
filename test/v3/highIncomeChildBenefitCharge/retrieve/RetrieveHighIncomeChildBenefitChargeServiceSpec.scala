@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import shared.models.domain._
-import shared.models.errors._
+import shared.models.domain.*
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.responseModel
