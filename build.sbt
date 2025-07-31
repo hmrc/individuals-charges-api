@@ -5,6 +5,10 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 1
+ThisBuild / scalacOptions ++= Seq(
+  "-Werror",
+  "-Wconf:msg=Flag.*repeatedly:s"
+)
 
 val appName = "individuals-charges-api"
 
@@ -18,8 +22,7 @@ lazy val microservice = Project(appName, file("."))
     scalafmtOnCompile               := true,
     scalacOptions ++= List(
       "-Wconf:src=routes/.*:s",
-      "-feature",
-      "-Wconf:msg=Flag.*repeatedly:s"
+      "-feature"
     )
   )
   .settings(
@@ -32,7 +35,7 @@ lazy val microservice = Project(appName, file("."))
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
-  .settings(DefaultBuildSettings.itSettings() ++ ScalafmtPlugin.scalafmtConfigSettings)
+  .settings(DefaultBuildSettings.itSettings())
   .settings(
     Test / fork                       := true,
     Test / javaOptions += "-Dlogger.resource=logback-test.xml",
