@@ -17,8 +17,8 @@
 package v2.retrieve.def1.fixture
 
 import play.api.libs.json.{JsValue, Json}
-import v2.retrieve.def1.model.response._
-import v2.retrieve.model.response._
+import v2.retrieve.def1.model.response.*
+import v2.retrieve.model.response.*
 
 object RetrievePensionChargesFixture {
 

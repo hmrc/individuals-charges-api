@@ -21,10 +21,9 @@ import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v3.pensionCharges.retrieve.RetrievePensionChargesConnector
+import v3.pensionCharges.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
-import v3.pensionCharges.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 
 import scala.concurrent.Future
 
@@ -33,7 +32,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
   val nino = "AA123456A"
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     def taxYear: TaxYear
 

@@ -21,7 +21,7 @@ import shared.config.FeatureSwitchesBehaviour
 import shared.utils.UnitSpec
 
 class ChargesFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[ChargesFeatureSwitches] {
-  override def featureSwitches(configuration: Configuration): ChargesFeatureSwitches = ChargesFeatureSwitches(configuration)
+  def featureSwitches(configuration: Configuration): ChargesFeatureSwitches = ChargesFeatureSwitches(configuration)
 
   "isRemoveLifetimePensionEnabled" should {
     behave like aFeatureSwitchWithKey("removeLifetimePension.enabled", _.isRemoveLifetimePensionEnabled)

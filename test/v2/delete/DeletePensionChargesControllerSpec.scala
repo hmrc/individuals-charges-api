@@ -94,7 +94,7 @@ class DeletePensionChargesControllerSpec
 
   class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] with MockSharedAppConfig {
 
-    val controller = new DeletePensionChargesController(
+    val controller: DeletePensionChargesController = new DeletePensionChargesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       service = mockDeleteBFLossService,

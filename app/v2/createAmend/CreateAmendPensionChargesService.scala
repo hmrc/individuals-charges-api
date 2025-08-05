@@ -17,9 +17,9 @@
 package v2.createAmend
 
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
-import cats.implicits._
+import cats.implicits.*
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}

@@ -19,12 +19,11 @@ package v3.pensionCharges.createAmend
 import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
-import v3.pensionCharges.createAmend.CreateAmendPensionChargesService
+import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
 import scala.concurrent.Future
@@ -95,7 +94,7 @@ class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
           "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceError.tupled)
       }
     }
   }

@@ -17,7 +17,7 @@
 package v2.delete
 
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import shared.models.errors.MtdError

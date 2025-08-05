@@ -18,7 +18,7 @@ package v2.retrieve.def2.response
 
 import play.api.libs.json.{JsValue, Json}
 import shared.utils.UnitSpec
-import v2.retrieve.def2.model.response._
+import v2.retrieve.def2.model.response.*
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
 class Def2_RetrievePensionChargesResponseSpec extends UnitSpec {

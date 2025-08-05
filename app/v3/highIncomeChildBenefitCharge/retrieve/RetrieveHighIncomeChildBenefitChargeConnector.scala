@@ -18,7 +18,7 @@ package v3.highIncomeChildBenefitCharge.retrieve
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.HipUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.*
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,7 +36,7 @@ class RetrieveHighIncomeChildBenefitChargeConnector @Inject() (val http: HttpCli
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveHighIncomeChildBenefitChargeResponse]] = {
 
-    import request._
+    import request.*
 
     val downstreamUri: DownstreamUri[RetrieveHighIncomeChildBenefitChargeResponse] =
       HipUri[RetrieveHighIncomeChildBenefitChargeResponse](s"itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")

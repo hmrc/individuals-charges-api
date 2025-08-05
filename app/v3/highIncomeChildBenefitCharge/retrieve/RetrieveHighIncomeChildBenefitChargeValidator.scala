@@ -35,7 +35,7 @@ class RetrieveHighIncomeChildBenefitChargeValidator @Inject() (nino: String, tax
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(RetrieveHighIncomeChildBenefitChargeRequest)
+    ).mapN(RetrieveHighIncomeChildBenefitChargeRequest.apply)
   }
 
 }

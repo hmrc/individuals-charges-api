@@ -16,11 +16,11 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
-import v3.highIncomeChildBenefitCharge.retrieve.model._
+import v3.highIncomeChildBenefitCharge.retrieve.model.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

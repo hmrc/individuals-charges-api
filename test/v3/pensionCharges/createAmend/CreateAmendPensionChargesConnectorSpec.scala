@@ -23,7 +23,6 @@ import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
-import v3.pensionCharges.createAmend.CreateAmendPensionChargesConnector
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 
@@ -34,7 +33,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
   val nino = "AA123456A"
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     def taxYear: TaxYear
 

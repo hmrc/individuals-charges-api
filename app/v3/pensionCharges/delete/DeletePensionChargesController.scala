@@ -19,7 +19,7 @@ package v3.pensionCharges.delete
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.routing.Version
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
 

@@ -17,7 +17,7 @@
 package v3.pensionCharges.delete.def1
 
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v3.pensionCharges.delete.DeletePensionChargesValidatorFactory
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData

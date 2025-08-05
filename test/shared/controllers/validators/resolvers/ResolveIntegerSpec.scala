@@ -35,13 +35,13 @@ class ResolveIntegerSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks {
 
       "return the error with the correct message if and only if the value is outside the inclusive range" when {
 
-        "using validate" in forAll { money: Int =>
+        "using validate" in forAll { (money: Int) =>
           val expected = if (min <= money && money <= max) Valid(money) else Invalid(List(error))
           val result   = resolve(money, path)
           result shouldBe expected
         }
 
-        "using validateOptional" in forAll { money: Int =>
+        "using validateOptional" in forAll { (money: Int) =>
           val expected = if (min <= money && money <= max) Valid(Some(money)) else Invalid(List(error))
           val result   = resolve(Some(money), path)
           result shouldBe expected
@@ -55,7 +55,7 @@ class ResolveIntegerSpec extends UnitSpec with ScalaCheckDrivenPropertyChecks {
         }
       }
 
-      "validate integer range" in forAll { numberOfChildren: Int =>
+      "validate integer range" in forAll { (numberOfChildren: Int) =>
         val error    = ValueFormatError.forIntegerPathAndRange(path, "-1", "99")
         val resolve  = ResolveInteger(-1, 99)
         val expected = if (-1 <= numberOfChildren && numberOfChildren <= 99) Valid(numberOfChildren) else Invalid(List(error))

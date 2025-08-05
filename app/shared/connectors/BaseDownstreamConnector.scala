@@ -18,6 +18,7 @@ package shared.connectors
 
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.{Json, Writes}
+import play.api.libs.ws.writeableOf_JsValue
 import shared.config.SharedAppConfig
 import shared.utils.{Logging, UrlUtils}
 import uk.gov.hmrc.http.client.HttpClientV2

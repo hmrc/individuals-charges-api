@@ -18,7 +18,6 @@ package v3.pensionCharges.createAmend.def1.model.request
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.pensionCharges.createAmend.def1.model.request.{OverseasPensionContributions, OverseasSchemeProvider}
 
 class OverseasPensionContributionsSpec extends UnitSpec {
 

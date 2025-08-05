@@ -17,28 +17,21 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import play.api.Configuration
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
 import shared.definition.{APIDefinition, APIStatus, APIVersion, Definition}
-import shared.mocks.MockHttpClient
 import shared.routing.{Version2, Version3}
 import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
-class ChargesApiDefinitionFactorySpec extends UnitSpec {
-
-  class Test extends MockHttpClient with MockSharedAppConfig {
-    val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockSharedAppConfig)
-    MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
-  }
+class ChargesApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
 
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "definition" when {
     "called" should {
-      "return a valid Definition case class" in new Test {
-        MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+      "return a valid Definition case class" in {
+        MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
         MockedSharedAppConfig.apiStatus(Version2) returns "2.0"
         MockedSharedAppConfig.endpointsEnabled(Version2) returns true
         MockedSharedAppConfig.apiStatus(Version3) returns "3.0"
@@ -49,6 +42,7 @@ class ChargesApiDefinitionFactorySpec extends UnitSpec {
         MockedSharedAppConfig.deprecationFor(Version2).returns(NotDeprecated.valid).anyNumberOfTimes()
         MockedSharedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
 
+        val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockSharedAppConfig)
         apiDefinitionFactory.definition shouldBe
           Definition(
             api = APIDefinition(

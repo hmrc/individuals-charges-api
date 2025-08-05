@@ -17,7 +17,7 @@
 package v2.retrieve.def1
 
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v2.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v2.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData

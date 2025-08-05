@@ -18,23 +18,23 @@ package test.v3.highIncomeChildBenefitCharge.createAmend
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
-import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
-import play.api.libs.json._
+import play.api.libs.json.*
+import play.api.libs.ws.DefaultBodyReadables.readableAsString
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
-import shared.services._
+import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures._
+import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.*
 
 class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseSpec with JsonErrorValidators {
 
   "Calling the 'Create or Amend High Income Child Benefit Charge' endpoint" should {
     "return a 204 status code" when {
-      "any valid request is made" in new Test  {
+      "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -70,8 +70,8 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
                                 errorWrapper: Option[ErrorWrapper]): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String         = requestNino
-            override val taxYear: String      = requestTaxYear
+            override val nino: String    = requestNino
+            override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -127,7 +127,7 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
           )
         )
 
-        input.foreach(args => (validationErrorTest _).tupled(args))
+        input.foreach(validationErrorTest.tupled)
       }
 
       "downstream service error" when {
@@ -161,18 +161,16 @@ class CreateAmendHighIncomeChildBenefitChargeControllerISpec extends Integration
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
-        errors.foreach(args => (serviceErrorTest _).tupled(args))
+        errors.foreach(serviceErrorTest.tupled)
       }
     }
   }
-
-
 
   private trait Test {
 
     val nino = "AA123456A"
 
-    def taxYear: String           = "2025-26"
+    def taxYear: String = "2025-26"
 
     def downstreamUri: String = s"/itsa/income-tax/v1/${TaxYear.fromMtd(taxYear).asTysDownstream}/high-income-child-benefit/charges/$nino"
 

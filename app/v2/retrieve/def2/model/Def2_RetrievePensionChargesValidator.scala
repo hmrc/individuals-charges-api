@@ -33,7 +33,7 @@ class Def2_RetrievePensionChargesValidator(nino: String, taxYear: String) extend
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(Def2_RetrievePensionChargesRequestData)
+    ).mapN(Def2_RetrievePensionChargesRequestData.apply)
 
   }
 

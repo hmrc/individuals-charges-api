@@ -21,7 +21,7 @@ import cats.data.Validated.Invalid
 import shared.controllers.validators.RulesValidator
 import shared.controllers.validators.resolvers.{ResolveInteger, ResolveIsoDate, ResolveParsedNumber}
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValidator[CreateAmendHighIncomeChildBenefitChargeRequest] {
@@ -30,7 +30,7 @@ object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValida
 
   override def validateBusinessRules(
       parsed: CreateAmendHighIncomeChildBenefitChargeRequest): Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] = {
-    import parsed.body._
+    import parsed.body.*
     combine(
       validateNumericFields(numberOfChildren, amountOfChildBenefitReceived),
       validateDateCeased(parsed.taxYear, dateCeased)

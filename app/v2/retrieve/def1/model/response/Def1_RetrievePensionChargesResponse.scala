@@ -16,7 +16,7 @@
 
 package v2.retrieve.def1.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import v2.retrieve.model.response.RetrievePensionChargesResponse
 
 case class Def1_RetrievePensionChargesResponse(submittedOn: String,

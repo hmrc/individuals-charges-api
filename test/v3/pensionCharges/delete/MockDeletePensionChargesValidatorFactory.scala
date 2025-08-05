@@ -23,7 +23,6 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import shared.controllers.validators.Validator
 import shared.models.errors.MtdError
-import v3.pensionCharges.delete.DeletePensionChargesValidatorFactory
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 
 trait MockDeletePensionChargesValidatorFactory extends TestSuite with MockFactory {

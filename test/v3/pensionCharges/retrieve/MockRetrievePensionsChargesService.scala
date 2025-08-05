@@ -21,7 +21,6 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
-import v3.pensionCharges.retrieve.RetrievePensionChargesService
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.response.RetrievePensionChargesResponse
 

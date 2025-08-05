@@ -18,15 +18,15 @@ package v3.pensionCharges.createAmend.def1.model
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import cats.implicits._
-import common.errors._
+import cats.implicits.*
+import common.errors.*
 import play.api.libs.json.JsValue
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.controllers.validators.{RulesValidator, Validator}
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesRulesValidator.validateBusinessRules
-import v3.pensionCharges.createAmend.def1.model.request._
+import v3.pensionCharges.createAmend.def1.model.request.*
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class Def1_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: 
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
+    ).mapN(Def1_CreateAmendPensionChargesRequestData.apply) andThen validateBusinessRules
 
 }
 

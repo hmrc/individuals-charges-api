@@ -17,7 +17,7 @@
 package v2.delete.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
@@ -36,6 +36,6 @@ class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: Strin
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_DeletePensionChargesRequestData)
+    ).mapN(Def1_DeletePensionChargesRequestData.apply)
 
 }

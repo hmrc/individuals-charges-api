@@ -36,7 +36,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnector @Inject() (val http: Http
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import request._
+    import request.*
 
     val downstreamUri: DownstreamUri[Unit] =
       HipUri(s"itsa/income-tax/v1/${taxYear.asTysDownstream}/high-income-child-benefit/charges/$nino")

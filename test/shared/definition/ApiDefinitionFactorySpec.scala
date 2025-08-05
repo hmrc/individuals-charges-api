@@ -21,7 +21,7 @@ import shared.config.Deprecation.NotDeprecated
 import shared.config.{SharedAppConfig, MockSharedAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}
 import shared.mocks.MockHttpClient
-import shared.routing._
+import shared.routing.*
 import shared.utils.UnitSpec
 
 import scala.language.reflectiveCalls
@@ -35,7 +35,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         setupMockConfig(Version9)
         MockedSharedAppConfig.apiStatus(Version9) returns "BETA"
 
-        val result: APIStatus = apiDefinitionFactory.checkBuildApiStatus(Version9)
+        val result: APIStatus = buildAPIStatus(Version9)
         result shouldBe BETA
       }
 
@@ -46,7 +46,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         setupMockConfig(Version9)
         MockedSharedAppConfig.apiStatus(Version9) returns "not-a-status"
 
-        apiDefinitionFactory.checkBuildApiStatus(Version9) shouldBe ALPHA
+        buildAPIStatus(Version9) shouldBe ALPHA
       }
     }
 
@@ -60,7 +60,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
           .anyNumberOfTimes()
 
         val exception: Exception = intercept[Exception] {
-          apiDefinitionFactory.checkBuildApiStatus(Version9)
+          buildAPIStatus(Version9)
         }
 
         val exceptionMessage: String = exception.getMessage
@@ -69,24 +69,20 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
   }
 
-  class Test extends MockHttpClient with MockSharedAppConfig {
+  class Test extends MockHttpClient with MockSharedAppConfig with ApiDefinitionFactory {
     MockedSharedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
 
-    protected val apiDefinitionFactory = new ApiDefinitionFactory {
-      protected val appConfig: SharedAppConfig = mockSharedAppConfig
+    protected val appConfig: SharedAppConfig = mockSharedAppConfig
 
-      val definition: Definition = Definition(
-        APIDefinition(
-          "test API definition",
-          "description",
-          "context",
-          List("category"),
-          List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
-          None)
-      )
-
-      def checkBuildApiStatus(version: Version): APIStatus = buildAPIStatus(version)
-    }
+    val definition: Definition = Definition(
+      APIDefinition(
+        "test API definition",
+        "description",
+        "context",
+        List("category"),
+        List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
+        None)
+    )
 
     protected def setupMockConfig(version: Version): Unit = {
       MockedSharedAppConfig

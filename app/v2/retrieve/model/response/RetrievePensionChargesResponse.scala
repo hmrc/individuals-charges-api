@@ -16,7 +16,7 @@
 
 package v2.retrieve.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v2.retrieve.def1.model.response.Def1_RetrievePensionChargesResponse
 import v2.retrieve.def2.model.response.Def2_RetrievePensionChargesResponse

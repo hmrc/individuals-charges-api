@@ -18,15 +18,15 @@ package v2.createAmend.def1.model
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import cats.implicits._
-import common.errors._
+import cats.implicits.*
+import common.errors.*
 import play.api.libs.json.JsValue
-import shared.controllers.validators.resolvers._
+import shared.controllers.validators.resolvers.*
 import shared.controllers.validators.{RulesValidator, Validator}
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import v2.createAmend.def1.model.Def1_CreateAmendPensionChargesRulesValidator.validateBusinessRules
-import v2.createAmend.def1.model.request._
+import v2.createAmend.def1.model.request.*
 import v2.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class Def1_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: 
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_CreateAmendPensionChargesRequestData) andThen validateBusinessRules
+    ).mapN(Def1_CreateAmendPensionChargesRequestData.apply) andThen validateBusinessRules
 
 }
 
@@ -54,7 +54,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   def validateBusinessRules(
       parsed: Def1_CreateAmendPensionChargesRequestData): Validated[Seq[MtdError], Def1_CreateAmendPensionChargesRequestData] = {
 
-    import parsed._
+    import parsed.*
 
     combine(
       validateRulePensionReference(body),
@@ -69,11 +69,11 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateRulePensionReference(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validatePensionReference(overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] =
       overseasSchemeProviders.traverse_(schemeProvider => {
-        import schemeProvider._
+        import schemeProvider.*
         (qualifyingRecognisedOverseasPensionScheme, pensionSchemeTaxReference) match {
           case (Some(_), Some(_)) => Invalid(List(RulePensionReferenceError))
           case _                  => valid
@@ -89,11 +89,11 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateNames(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validateProviderName(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        import schemeProviderWithIndex._
+        import schemeProviderWithIndex.*
         val nameMaxLength = 105
         if (providerName.length() <= nameMaxLength && providerName.nonEmpty) {
           valid
@@ -114,11 +114,11 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateAddresses(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validateProviderAddress(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        import schemeProviderWithIndex._
+        import schemeProviderWithIndex.*
         val addressMaxLength = 250
         if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
           valid
@@ -139,7 +139,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateQROPsReferences(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validateQropsRef(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
@@ -168,11 +168,11 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validatePensionSchemeTaxReference(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validatePensionSchemeTaxRef(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
-        import schemeProviderWithIndex._
+        import schemeProviderWithIndex.*
         pensionSchemeTaxReference
           .traverse { references =>
             validateReferences(s"$startOfPath/overseasSchemeProvider/$index", references)
@@ -210,7 +210,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   private def validateRuleIsAnnualAllowanceReduced(maybePensionContributions: Option[PensionContributions]): Validated[Seq[MtdError], Unit] = {
     maybePensionContributions
       .map { pensionContributions =>
-        import pensionContributions._
+        import pensionContributions.*
         isAnnualAllowanceReduced
           .map { isAnnualAllowanceReduced =>
             (isAnnualAllowanceReduced, taperedAnnualAllowance, moneyPurchasedAllowance) match {
@@ -226,7 +226,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateCharges(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     val fieldsWithPaths = List(
       (
@@ -265,7 +265,7 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   }
 
   private def validateCountryCodes(pensionCharges: Def1_CreateAmendPensionChargesRequestBody): Validated[Seq[MtdError], Unit] = {
-    import pensionCharges._
+    import pensionCharges.*
 
     def validateCountryCode(startOfPath: String, overseasSchemeProviders: Seq[OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>

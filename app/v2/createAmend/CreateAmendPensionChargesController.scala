@@ -19,12 +19,12 @@ package v2.createAmend
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
-import shared.routing._
+import shared.controllers.*
+import shared.routing.*
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
 
-import javax.inject._
+import javax.inject.*
 import scala.concurrent.ExecutionContext
 
 @Singleton

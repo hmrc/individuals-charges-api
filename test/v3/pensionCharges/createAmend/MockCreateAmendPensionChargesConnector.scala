@@ -21,7 +21,6 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.pensionCharges.createAmend.CreateAmendPensionChargesConnector
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 import scala.concurrent.{ExecutionContext, Future}

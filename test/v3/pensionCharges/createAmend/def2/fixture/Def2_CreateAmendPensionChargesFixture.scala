@@ -17,7 +17,7 @@
 package v3.pensionCharges.createAmend.def2.fixture
 
 import play.api.libs.json.{JsValue, Json}
-import v3.pensionCharges.createAmend.def2.model.request._
+import v3.pensionCharges.createAmend.def2.model.request.*
 
 object Def2_CreateAmendPensionChargesFixture {
 

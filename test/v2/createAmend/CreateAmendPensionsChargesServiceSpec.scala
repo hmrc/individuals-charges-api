@@ -33,7 +33,7 @@ import shared.models.errors.{
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture._
+import v2.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v2.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
 
 import scala.concurrent.Future
@@ -103,7 +103,7 @@ class CreateAmendPensionsChargesServiceSpec extends ServiceSpec {
           "TAX_YEAR_NOT_SUPPORTED"             -> RuleTaxYearNotSupportedError
         )
 
-        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(serviceError.tupled)
       }
     }
   }

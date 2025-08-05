@@ -35,7 +35,7 @@ class DeletePensionChargesConnector @Inject() (val http: HttpClientV2, val appCo
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import request._
+    import request.*
 
     val downstreamUri = taxYear match {
       case ty if ty.useTaxYearSpecificApi =>
