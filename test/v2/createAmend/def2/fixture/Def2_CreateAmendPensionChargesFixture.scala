@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -556,7 +556,6 @@ object Def2_CreateAmendPensionChargesFixture {
       |""".stripMargin
   )
 
-  // scalastyle:off
   def fullReferencesJson(qrop: String, pensionRef: String): JsValue = Json.parse(
     s"""
        |{
@@ -701,7 +700,6 @@ object Def2_CreateAmendPensionChargesFixture {
       |""".stripMargin
   )
 
-  // scalastyle:off
   def fullJsonWithInvalidCountryFormat(cc: String): JsValue = Json.parse(
     s"""
        |{
@@ -765,7 +763,6 @@ object Def2_CreateAmendPensionChargesFixture {
        |""".stripMargin
   )
 
-  // scalastyle:off
   def fullJson(bigDecimal: BigDecimal): JsValue = Json.parse(
     s"""
        |{

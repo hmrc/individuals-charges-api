@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package v2.createAmend.def2.model.request
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import shared.utils.UnitSpec
 
 class OverseasSchemeProviderSpec extends UnitSpec {
@@ -29,7 +29,7 @@ class OverseasSchemeProviderSpec extends UnitSpec {
     None
   )
 
-  val responseJson = Json.parse("""
+  val responseJson: JsValue = Json.parse("""
       |{
       |        "providerName": "Overseas Pensions Plc",
       |        "providerAddress": "111 Main Street, George Town, Grand Cayman",

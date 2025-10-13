@@ -16,9 +16,9 @@ For high income child benefit charges a developer can:
 
 ## Requirements
 
-- Scala 2.13.x
+- Scala 3.5.x
 - Java 11
-- sbt 1.9.7
+- sbt 1.10.10
 - [Service Manager V2](https://github.com/hmrc/sm2)
 
 ## Development Setup

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.v2.delete.def1
+package v2.delete.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -23,7 +23,7 @@ import play.api.libs.json.*
 import play.api.libs.ws.*
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
-import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.*
 import shared.support.IntegrationBaseSpec
 
 class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {

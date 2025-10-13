@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package v2.retrieve.def2.response
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.*
 import shared.utils.UnitSpec
 import v2.createAmend.def1.model.request.PensionContributions
 
@@ -56,6 +56,10 @@ class PensionContributionsSpec extends UnitSpec {
         Json.toJson(responseModel) shouldBe responseJson
       }
     }
+  }
+
+  "error when JSON is invalid" in {
+    JsObject.empty.validate[PensionContributions] shouldBe a[JsError]
   }
 
 }

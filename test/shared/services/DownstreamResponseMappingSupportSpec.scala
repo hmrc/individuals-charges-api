@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,9 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
   val correlationId = "someCorrelationId"
 
   val errorCodeMap: PartialFunction[String, MtdError] = {
-    case "ERR1"                   => Error1
-    case "ERR2"                   => Error2
-    case "DS"                     => InternalError
-    case "UNMATCHED_STUB_ERROR"   => RuleIncorrectGovTestScenarioError
-    case "INVALID_CORRELATION_ID" => InternalError
-    case "INVALID_CORRELATIONID"  => InternalError
+    case "ERR1" => Error1
+    case "ERR2" => Error2
+    case "DS"   => InternalError
   }
 
   case class TestClass(field: Option[String])

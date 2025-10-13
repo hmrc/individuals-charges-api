@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package v3.pensionCharges.retrieve.def1.model.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.*
 import shared.utils.UnitSpec
 
 class ChargeSpec extends UnitSpec {
@@ -44,6 +44,10 @@ class ChargeSpec extends UnitSpec {
         Json.toJson(responseModel) shouldBe responseJson
       }
     }
+  }
+
+  "error when JSON is invalid" in {
+    JsObject.empty.validate[Charge] shouldBe a[JsError]
   }
 
 }

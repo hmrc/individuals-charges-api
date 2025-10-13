@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ trait HandlebarsRewriter {
       .`with`(new ConcurrentMapTemplateCache()) // so each file is only compiled once
 
   protected def rewrite(contents: String, context: AnyRef): String = {
-    if (contents.contains(("{{#"))) { // avoids every OAS file being cached as a Template
+    if (contents.contains("{{#")) { // avoids every OAS file being cached as a Template
       val template = hb.compileInline(contents)
       template.apply(context)
     } else {

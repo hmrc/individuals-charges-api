@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package shared.utils
 
-import scala.compiletime.{constValue, erasedValue, summonInline}
+import scala.compiletime.*
 import scala.deriving.Mirror
 
 sealed trait EmptyPathsResult
@@ -99,6 +99,8 @@ object EmptinessChecker {
 
   def instance[A](func: A => Structure): EmptinessChecker[A] = (value: A) => func(value)
 
+  def instanceObj[A](func: A => Structure.Obj): ObjEmptinessChecker[A] = (value: A) => func(value)
+
   def use[A](func: A => List[(String, Structure)]): EmptinessChecker[A] = EmptinessChecker.instance { a =>
     Structure.Obj(func(a))
   }
@@ -130,7 +132,7 @@ object EmptinessChecker {
     given [A](using a: => A): Lazy[A] = new Lazy(() => a)
   }
 
-  inline given derived[A](using m: Mirror.Of[A]): EmptinessChecker[A] =
+  inline given derived[A](using m: Mirror.ProductOf[A]): EmptinessChecker[A] =
     instance { a =>
       val elemLabels    = summonLabels[m.MirroredElemLabels]
       val elemInstances = summonAllInstances[m.MirroredElemTypes]

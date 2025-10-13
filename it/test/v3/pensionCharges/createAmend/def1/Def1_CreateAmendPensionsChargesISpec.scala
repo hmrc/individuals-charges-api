@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package test.v3.pensionCharges.createAmend.def1
+package v3.pensionCharges.createAmend.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.JsValue
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.*
@@ -101,8 +101,10 @@ class Def1_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
 
-          s"validation fails with ${expectedBody.code} error ${if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
-            else ""}" in new NonTysTest {
+          s"validation fails with ${expectedBody.code} error ${
+              if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
+              else ""
+            }" in new NonTysTest {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear

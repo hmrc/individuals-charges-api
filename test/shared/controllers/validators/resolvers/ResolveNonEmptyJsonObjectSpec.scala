@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,17 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
         val json = Json.parse("""{ "bar": {"field1" : "field one", "field2" : "field two", "extra": "x" }}""")
 
         resolver(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
+      }
+    }
+
+    "an instance is created" must {
+      "delegate to the companion object resolver and apply" in {
+        val json = Json.parse("""{ "bar": {"field1" : "field one", "field2" : "field two" }}""")
+
+        val instance = ResolveNonEmptyJsonObject[Foo]
+
+        instance.resolver(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
+        instance(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
       }
     }
 

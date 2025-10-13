@@ -19,8 +19,6 @@ package common.errors
 import play.api.http.Status.*
 import shared.models.errors.MtdError
 
-//scalastyle:off
-
 // Format errors
 object ProviderNameFormatError    extends MtdError("FORMAT_PROVIDER_NAME", "The provided name is invalid", BAD_REQUEST)
 object ProviderAddressFormatError extends MtdError("FORMAT_PROVIDERS_ADDRESS", "The provided address is invalid", BAD_REQUEST)

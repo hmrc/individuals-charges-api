@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package test.v2.createAmend.def2
+package v2.createAmend.def2
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors.{PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError}
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.JsValue
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
-import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.*
 import shared.support.IntegrationBaseSpec
 import v2.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture.*
 
@@ -86,8 +86,10 @@ class Def2_CreateAmendPensionsChargesISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
 
-          s"validation fails with ${expectedBody.code} error ${if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
-            else ""}" in new Test {
+          s"validation fails with ${expectedBody.code} error ${
+              if (expectedBody.equals(TaxYearFormatError)) java.util.UUID.randomUUID
+              else ""
+            }" in new Test {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
