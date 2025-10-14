@@ -38,7 +38,6 @@
             }
           },
           "required": [
-            "submittedOn",
             "amount",
             "taxPaid"
           ]
@@ -301,5 +300,8 @@
       ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "submittedOn"
+  ]
 }
