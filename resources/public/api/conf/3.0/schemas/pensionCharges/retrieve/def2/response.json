@@ -243,5 +243,8 @@
       ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "required": [
+    "submittedOn"
+  ]
 }
