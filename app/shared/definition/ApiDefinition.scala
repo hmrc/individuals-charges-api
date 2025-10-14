@@ -16,7 +16,7 @@
 
 package shared.definition
 
-import play.api.libs.json.{Format, Json, OFormat}
+import play.api.libs.json.*
 import shared.routing.Version
 import shared.utils.enums.Enums
 
@@ -58,4 +58,10 @@ case class APIDefinition(name: String,
 
 object APIDefinition {
   given OFormat[APIDefinition] = Json.format[APIDefinition]
+}
+
+case class Definition(api: APIDefinition)
+
+object Definition {
+  implicit val formatDefinition: OFormat[Definition] = Json.format[Definition]
 }

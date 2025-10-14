@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.v3.highIncomeChildBenefitCharge
+package v3.highIncomeChildBenefitCharge
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
@@ -111,13 +111,12 @@ class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {
              |}
       """.stripMargin
 
-
         val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
         errors.foreach(serviceErrorTest.tupled)

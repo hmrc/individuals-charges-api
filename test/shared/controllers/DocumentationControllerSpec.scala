@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package shared.controllers
 
 import com.typesafe.config.ConfigFactory
-import controllers.{AssetsConfiguration, DefaultAssetsMetadata, RewriteableAssets}
-import play.api.http.{DefaultFileMimeTypes, DefaultHttpErrorHandler, FileMimeTypesConfiguration, HttpConfiguration}
+import controllers.*
+import play.api.http.*
 import play.api.mvc.Result
 import play.api.{Configuration, Environment}
-import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
 import shared.config.rewriters.*
-import shared.config.{SharedAppConfig, MockSharedAppConfig, RealAppConfig}
+import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
+import shared.config.*
 import shared.definition.*
 import shared.routing.{Version, Versions}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -158,7 +158,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockSharedAppC
         status(response) shouldBe OK
 
         val result: String = contentAsString(response)
-        result shouldBe actualApplicationYaml
+        result.replaceAll("\r", "") shouldBe actualApplicationYaml.replaceAll("\r", "")
       }
     }
   }

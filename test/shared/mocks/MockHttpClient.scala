@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,9 +126,9 @@ trait MockHttpClient extends TestSuite with MockFactory {
       (mockRequestBuilder.execute(using _: HttpReads[T], _: ExecutionContext)).expects(*, *)
     }
 
-    private def assertHeaders[T, I](actualHeaders: Seq[(String, String)],
-                                    requiredHeaders: Seq[(String, String)],
-                                    excludedHeaders: Seq[(String, String)]) = {
+    private def assertHeaders(actualHeaders: Seq[(String, String)],
+                              requiredHeaders: Seq[(String, String)],
+                              excludedHeaders: Seq[(String, String)]) = {
 
       actualHeaders should contain allElementsOf requiredHeaders
       actualHeaders should contain noElementsOf excludedHeaders

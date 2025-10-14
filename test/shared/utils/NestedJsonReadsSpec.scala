@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,6 +83,15 @@ class NestedJsonReadsSpec extends UnitSpec {
     }
   }
 
+  "An empty JsPath" should {
+    "return a JsError with error.path.empty" in {
+      val empty                            = JsPath
+      val result: JsResult[Option[String]] = empty.readNestedNullable[String].reads(Json.obj("a" -> "b"))
+      result shouldBe a[JsError]
+      result.asInstanceOf[JsError].errors.head._2.exists(_.message == "error.path.empty") shouldBe true
+    }
+  }
+
   "A missing path" should {
     "return a None" in {
       firstOutput.as[Test] shouldBe Test("string", None)
@@ -102,13 +111,13 @@ class NestedJsonReadsSpec extends UnitSpec {
   }
 
   "Path with an invalid data type" should {
-    "return a None " in {
+    "return a None" in {
       thirdOutput.validate[Test] shouldBe a[JsError]
     }
   }
 
   "Empty path" should {
-    "return a None " in {
+    "return a None" in {
       fourthOutput.validate[Test] shouldBe a[JsSuccess[?]]
     }
   }

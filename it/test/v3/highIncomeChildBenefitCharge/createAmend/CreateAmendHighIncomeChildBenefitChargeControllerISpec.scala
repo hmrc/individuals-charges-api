@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.v3.highIncomeChildBenefitCharge.createAmend
+package v3.highIncomeChildBenefitCharge.createAmend
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError

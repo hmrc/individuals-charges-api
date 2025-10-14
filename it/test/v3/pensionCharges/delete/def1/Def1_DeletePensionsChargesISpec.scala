@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.v3.pensionCharges.delete.def1
+package v3.pensionCharges.delete.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
@@ -24,7 +24,7 @@ import play.api.libs.json.*
 import play.api.libs.ws.*
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
-import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.*
 import shared.support.IntegrationBaseSpec
 
 class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {

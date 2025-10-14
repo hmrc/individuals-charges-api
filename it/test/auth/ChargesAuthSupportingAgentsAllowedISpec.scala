@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package test.auth
+package auth
 
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.JsValue
-import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
+import play.api.libs.ws.{WSRequest, WSResponse}
 import shared.auth.AuthSupportingAgentsAllowedISpec
 import shared.models.domain.TaxYear
 import shared.services.DownstreamStub

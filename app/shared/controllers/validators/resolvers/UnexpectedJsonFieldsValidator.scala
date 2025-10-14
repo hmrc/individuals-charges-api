@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package shared.controllers.validators.resolvers
 
-import play.api.libs.json.{JsArray, JsObject, JsValue}
+import play.api.libs.json.*
 import shared.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
 import shared.models.domain.TaxYear
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.utils.Logging
 
-import scala.compiletime.{constValue, erasedValue, summonInline}
+import scala.compiletime.*
 import scala.deriving.Mirror
 
 class UnexpectedJsonFieldsValidator[A](implicit extraPathChecker: SchemaStructureSource[A]) extends ResolverSupport with Logging {
@@ -75,7 +75,7 @@ object UnexpectedJsonFieldsValidator extends ResolverSupport {
 
   sealed trait SchemaStructure
 
-  private[UnexpectedJsonFieldsValidator] object SchemaStructure {
+  object SchemaStructure {
 
     case class Obj(fields: List[(String, SchemaStructure)]) extends SchemaStructure {
       def keys: Set[String] = fields.map(_._1).toSet
@@ -113,11 +113,11 @@ object UnexpectedJsonFieldsValidator extends ResolverSupport {
     given [A](using aInstance: SchemaStructureSource[A]): SchemaStructureSource[Option[A]] =
       instance(opt => opt.map(aInstance.schemaStructureOf).getOrElse(SchemaStructure.Leaf))
 
-    given [A](using aInstance: SchemaStructureSource[A]): SchemaStructureSource[Seq[A]] =
-      instance(seq => SchemaStructure.Arr(seq.map(aInstance.schemaStructureOf)))
-
     given [A](using aInstance: SchemaStructureSource[A]): SchemaStructureSource[List[A]] =
       instance(list => SchemaStructure.Arr(list.map(aInstance.schemaStructureOf)))
+
+    given [A](using aInstance: SchemaStructureSource[A]): SchemaStructureSource[Seq[A]] =
+      instance(seq => SchemaStructure.Arr(seq.map(aInstance.schemaStructureOf)))
 
     // Lazy prevents infinite recursion in generic derivation
     final class Lazy[+A](val value: () => A) extends AnyVal

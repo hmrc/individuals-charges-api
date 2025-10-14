@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package shared.models.domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.*
 import shared.utils.UnitSpec
 
 class TimestampSpec extends UnitSpec {
@@ -68,6 +68,12 @@ class TimestampSpec extends UnitSpec {
           Timestamp("2021-06-17T10:53:38.1234Z").value shouldBe "2021-06-17T10:53:38.123Z"
         }
       }
+    }
+  }
+
+  "Timestamp.toString" should {
+    "return the string value" in {
+      Timestamp("2023-01-20T01:20:30.000Z").toString shouldBe "2023-01-20T01:20:30.000Z"
     }
   }
 
