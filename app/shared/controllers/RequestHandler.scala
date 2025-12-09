@@ -26,7 +26,7 @@ import play.api.mvc.Results.InternalServerError
 import shared.config.Deprecation.Deprecated
 import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
-import shared.hateoas.*
+import shared.hateoas.{HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper}
 import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.Version
@@ -110,17 +110,11 @@ object RequestHandler {
         private def withDeprecationHeaders: List[(String, String)] = {
 
           appConfig.deprecationFor(apiVersion) match {
-            case Valid(Deprecated(deprecatedOn, Some(sunsetDate))) =>
-              List(
-                "Deprecation" -> longDateTimestampGmt(deprecatedOn),
-                "Sunset"      -> longDateTimestampGmt(sunsetDate),
-                "Link"        -> appConfig.apiDocumentationUrl
-              )
-            case Valid(Deprecated(deprecatedOn, None)) =>
+            case Valid(Deprecated(deprecatedOn, maybeSunsetDate)) =>
               List(
                 "Deprecation" -> longDateTimestampGmt(deprecatedOn),
                 "Link"        -> appConfig.apiDocumentationUrl
-              )
+              ) ++ maybeSunsetDate.map(sunsetDate => "Sunset" -> longDateTimestampGmt(sunsetDate))
             case _ => Nil
           }
         }
