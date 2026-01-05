@@ -80,7 +80,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockSharedAppConfig {
       "allow authorised individuals" in new Test {
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
-        val retrievalsResult = new~(Some(Individual), Enrolments(Set.empty))
+        val retrievalsResult = new ~(Some(Individual), Enrolments(Set.empty))
 
         MockedAuthConnector
           .authorised(initialPredicate, affinityGroup and authorisedEnrolments)
@@ -93,7 +93,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockSharedAppConfig {
 
     def authorisedOrganisation(authValidationEnabled: Boolean, initialPredicate: Predicate): Unit =
       "allow authorised organisations" in new Test {
-        val retrievalsResult = new~(Some(Organisation), Enrolments(Set.empty))
+        val retrievalsResult = new ~(Some(Organisation), Enrolments(Set.empty))
         mockConfidenceLevelCheckConfig(authValidationEnabled = authValidationEnabled)
 
         MockedAuthConnector
