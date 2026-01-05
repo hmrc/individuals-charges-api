@@ -56,11 +56,11 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockSharedAppConfig {
     }
 
     def authService(
-       authValidationEnabled: Boolean,
-       initialPredicate: Predicate,
-       primaryAgentPredicate: Predicate,
-       supportingAgentPredicate: Predicate
-     ): Unit = {
+        authValidationEnabled: Boolean,
+        initialPredicate: Predicate,
+        primaryAgentPredicate: Predicate,
+        supportingAgentPredicate: Predicate
+    ): Unit = {
       behave like authorisedIndividual(authValidationEnabled, initialPredicate)
       behave like authorisedOrganisation(authValidationEnabled, initialPredicate)
 
