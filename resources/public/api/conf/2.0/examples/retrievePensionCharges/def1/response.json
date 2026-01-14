@@ -3,7 +3,7 @@
   "pensionSavingsTaxCharges": {
     "pensionSchemeTaxReference": [
       "00123456RA",
-      "00123456RA"
+      "00123456TB"
     ],
     "lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
       "amount": 100,
@@ -31,7 +31,7 @@
   "pensionSchemeUnauthorisedPayments": {
     "pensionSchemeTaxReference": [
       "00123456RA",
-      "00123456RA"
+      "00123456TB"
     ],
     "surcharge": {
       "amount": 100.99,
@@ -45,7 +45,7 @@
   "pensionContributions": {
     "pensionSchemeTaxReference": [
       "00123456RA",
-      "00123456RA"
+      "00123456TB"
     ],
     "inExcessOfTheAnnualAllowance": 100,
     "annualAllowanceTaxPaid": 100,
