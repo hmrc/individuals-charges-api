@@ -7,7 +7,7 @@
         "providerAddress": "111 Main Street, Any Town, Any City",
         "providerCountryCode": "CYM",
         "qualifyingRecognisedOverseasPensionScheme": [
-          "Q1234"
+          "Q123456"
         ]
       }
     ],
@@ -17,7 +17,7 @@
   "pensionSchemeUnauthorisedPayments": {
     "pensionSchemeTaxReference": [
       "00123456RA",
-      "00123456TB"
+      "00123456RB"
     ],
     "surcharge": {
       "amount": 100.99,
@@ -31,7 +31,7 @@
   "pensionContributions": {
     "pensionSchemeTaxReference": [
       "00123456RA",
-      "00123456TB"
+      "00123456RB"
     ],
     "inExcessOfTheAnnualAllowance": 100,
     "annualAllowanceTaxPaid": 100,
