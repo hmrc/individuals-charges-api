@@ -18,25 +18,23 @@ package routing
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.routing.Router
-import shared.routing.Version2
+import shared.routing.Version3
 import shared.utils.UnitSpec
 
 class ChargesVersionRoutingMapSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   val defaultRouter: Router = mock[Router]
-  val v2Routes: v2.Routes   = app.injector.instanceOf[v2.Routes]
   val v3Routes: v3.Routes   = app.injector.instanceOf[v3.Routes]
 
   "map" when {
-    "routing to v2 and v3" should {
+    "routing to v3" should {
       val versionRoutingMap: ChargesVersionRoutingMap = ChargesVersionRoutingMap(
         defaultRouter = defaultRouter,
-        v2Router = v2Routes,
         v3Router = v3Routes
       )
 
-      s"route to ${v2Routes.toString}" in {
-        versionRoutingMap.map(Version2) shouldBe v2Routes
+      s"route to ${v3Routes.toString}" in {
+        versionRoutingMap.map(Version3) shouldBe v3Routes
       }
     }
   }
