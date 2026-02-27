@@ -20,7 +20,7 @@ import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
 import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
 import shared.definition.{APIDefinition, APIStatus, APIVersion, Definition}
-import shared.routing.{Version2, Version3}
+import shared.routing.Version3
 import shared.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -32,14 +32,11 @@ class ChargesApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig 
     "called" should {
       "return a valid Definition case class" in {
         MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
-        MockedSharedAppConfig.apiStatus(Version2) returns "2.0"
-        MockedSharedAppConfig.endpointsEnabled(Version2) returns true
         MockedSharedAppConfig.apiStatus(Version3) returns "3.0"
         MockedSharedAppConfig.endpointsEnabled(Version3) returns true
         MockedSharedAppConfig.confidenceLevelConfig
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
-        MockedSharedAppConfig.deprecationFor(Version2).returns(NotDeprecated.valid).anyNumberOfTimes()
         MockedSharedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
 
         val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockSharedAppConfig)
@@ -51,11 +48,6 @@ class ChargesApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig 
               context = "api.gateway.context",
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
-                APIVersion(
-                  version = Version2,
-                  status = APIStatus.ALPHA,
-                  endpointsEnabled = true
-                ),
                 APIVersion(
                   version = Version3,
                   status = APIStatus.ALPHA,

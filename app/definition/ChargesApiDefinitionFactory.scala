@@ -18,7 +18,7 @@ package definition
 
 import shared.config.SharedAppConfig
 import shared.definition.*
-import shared.routing.{Version2, Version3}
+import shared.routing.Version3
 
 import javax.inject.{Inject, Singleton}
 
@@ -33,11 +33,6 @@ class ChargesApiDefinitionFactory @Inject() (protected val appConfig: SharedAppC
         context = appConfig.apiGatewayContext,
         categories = Seq(mtdCategory),
         versions = Seq(
-          APIVersion(
-            version = Version2,
-            status = buildAPIStatus(Version2),
-            endpointsEnabled = appConfig.endpointsEnabled(Version2)
-          ),
           APIVersion(
             version = Version3,
             status = buildAPIStatus(Version3),

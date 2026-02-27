@@ -21,10 +21,9 @@ import shared.routing.*
 
 import javax.inject.Inject
 
-case class ChargesVersionRoutingMap @Inject() (defaultRouter: Router, v2Router: v2.Routes, v3Router: v3.Routes) extends VersionRoutingMap {
+case class ChargesVersionRoutingMap @Inject() (defaultRouter: Router, v3Router: v3.Routes) extends VersionRoutingMap {
 
   val map: Map[Version, Router] = Map(
-    Version2 -> v2Router,
     Version3 -> v3Router
   )
 
