@@ -16,7 +16,6 @@
 
 package v3.pensionCharges.retrieve.def2
 
-import play.api.Configuration
 import shared.config.MockSharedAppConfig
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
@@ -34,20 +33,13 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockSharedA
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val validatorFactory = new RetrievePensionChargesValidatorFactory(mockSharedAppConfig)
+  private val validatorFactory = new RetrievePensionChargesValidatorFactory
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
-  private def setupMocks = MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
-    "removeLifetimePension.enabled" -> true
-  )
-
-  class Test {}
-
   "validator" should {
     "return the parsed domain object" when {
-      "passed a valid request" in new Test {
-        setupMocks
+      "passed a valid request" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
@@ -56,24 +48,21 @@ class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockSharedA
     }
 
     "should return a single error" when {
-      "an invalid nino is supplied" in new Test {
-        setupMocks
+      "an invalid nino is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
 
-      "an incorrectly formatted taxYear is supplied" in new Test {
-        setupMocks
+      "an incorrectly formatted taxYear is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "202122").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
       }
 
-      "an invalid tax year range is supplied" in new Test {
-        setupMocks
+      "an invalid tax year range is supplied" in {
         val result: Either[ErrorWrapper, RetrievePensionChargesRequestData] =
           validator(validNino, "2020-22").validateAndWrapResult()
 

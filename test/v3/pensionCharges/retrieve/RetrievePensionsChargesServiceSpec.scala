@@ -53,9 +53,9 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
 
     "return that wrapped error as-is" when {
       "the connector returns an outbound error" in new Test {
-        val someError   = MtdError("SOME_CODE", "some message", BAD_REQUEST)
-        val desResponse = ResponseWrapper(correlationId, OutboundError(someError))
-        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(desResponse)))
+        val someError = MtdError("SOME_CODE", "some message", BAD_REQUEST)
+        val response  = ResponseWrapper(correlationId, OutboundError(someError))
+        MockRetrievePensionChargesConnector.retrievePensions(request).returns(Future.successful(Left(response)))
 
         await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, someError))
       }
@@ -72,12 +72,12 @@ class RetrievePensionsChargesServiceSpec extends ServiceSpec {
         }
       }
       "map errors according to spec" when {
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(errorCode: String, error: MtdError): Unit =
+          s"a $errorCode error is returned from the service" in new Test {
 
             MockRetrievePensionChargesConnector
               .retrievePensions(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(errorCode))))))
 
             await(service.retrievePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
