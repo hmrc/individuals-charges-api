@@ -23,11 +23,11 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "bootstrap-backend-play-30" % bootstrapPlayVersion,
     "org.typelevel"                %% "cats-core"                 % "2.13.0",
     "com.neovisionaries"            % "nv-i18n"                   % "1.29",
-    "com.github.jknack"             % "handlebars"                % "4.5.0"
+    "com.github.jknack"             % "handlebars"                % "4.3.1"
   )
 
   val test: Seq[ModuleID] = Seq(
-    "org.scalatestplus"      %% "scalacheck-1-18"        % "3.2.19.0",
+    "org.scalatestplus"      %% "scalacheck-1-19"        % "3.2.19.0",
     "org.scalamock"          %% "scalamock"              % "7.5.5",
     "uk.gov.hmrc"            %% "bootstrap-test-play-30" % bootstrapPlayVersion
   ).map(_ % Test)
