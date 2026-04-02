@@ -24,12 +24,18 @@
             "amount": {
               "description": "The amount of the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             },
             "taxPaid": {
               "description": "The amount of tax to be paid on the lump sum benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             }
           },
           "required": [
@@ -44,12 +50,18 @@
             "amount": {
               "description": "The amount of the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             },
             "taxPaid": {
               "description": "The tax to be paid on the benefit taken in excess of the lifetime allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             }
           },
           "required": [
@@ -147,12 +159,18 @@
         "transferCharge": {
           "description": "The amount the pension provider charges to transfer the pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         },
         "transferChargeTaxPaid": {
           "description": "The amount of tax paid on the transfer charge. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         }
       },
       "required": [
@@ -181,12 +199,18 @@
             "amount": {
               "description": "The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             },
             "foreignTaxPaid": {
               "description": "The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             }
           },
           "required": [
@@ -201,12 +225,18 @@
             "amount": {
               "description": "The amount of the unauthorised payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             },
             "foreignTaxPaid": {
               "description": "The amount of foreign tax paid in pounds sterling. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
               "type": "number",
-              "example": "1999.99"
+              "multipleOf": 0.01,
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "example": 1999.99
             }
           },
           "required": [
@@ -235,27 +265,33 @@
         "inExcessOfTheAnnualAllowance": {
           "description": "The amount of the in excess of the annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         },
         "annualAllowanceTaxPaid": {
           "description": "The amount of tax paid on annual allowance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         },
         "isAnnualAllowanceReduced": {
           "description": "A boolean indicating whether annual allowance has been reduced. If this field is set to true then at least one of taperedAnnualAllowance or moneyPurchasedAllowance must also be set to true.",
           "type": "boolean",
-          "example": "false"
+          "example": false
         },
         "taperedAnnualAllowance": {
           "description": "A boolean indicating whether tapered annual allowance is lower than the standard annual allowance. The value must be true or false.",
           "type": "boolean",
-          "example": "true"
+          "example": true
         },
         "moneyPurchasedAllowance": {
           "description": "A boolean indicating whether the person has paid the maximum amount allowed for their reduced allowance, based on Money Purchase Annual Allowance (MPAA). The value must be true or false. For example: false",
           "type": "boolean",
-          "example": "false"
+          "example": false
         }
       },
       "required": [
@@ -350,12 +386,18 @@
         "shortServiceRefund": {
           "description": "The amount of short service refund for overseas pension contributions. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         },
         "shortServiceRefundTaxPaid": {
           "description": "The amount of tax paid on short service refund. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
-          "example": "1999.99"
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum": 99999999999.99,
+          "example": 1999.99
         }
       },
       "required": [
