@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package shared.controllers
 import play.api.http.{HttpEntity, Status}
 import play.api.libs.json.*
 import play.api.mvc.*
-import shared.hateoas.*
 
 case class ResultWrapper(httpStatus: Int, body: Option[JsValue]) {
 
@@ -44,15 +43,5 @@ object ResultCreator {
 
   def plainJson[Input, Output](successStatus: Int = Status.OK)(implicit ws: Writes[Output]): ResultCreator[Input, Output] =
     (_: Input, output: Output) => ResultWrapper(successStatus, Some(Json.toJson(output)))
-
-  def hateoasWrapping[Input, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
-      data: (Input, Output) => HData)(implicit
-      linksFactory: HateoasLinksFactory[Output, HData],
-      writes: Writes[HateoasWrapper[Output]]): ResultCreator[Input, Output] =
-    (input: Input, output: Output) => {
-      val wrapped = hateoasFactory.wrap(output, data(input, output))
-
-      ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
-    }
 
 }
