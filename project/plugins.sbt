@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,4 +22,4 @@ addSbtPlugin("uk.gov.hmrc"       % "sbt-distributables" % "2.6.0")
 addSbtPlugin("org.playframework" % "sbt-plugin"         % "3.0.10")
 addSbtPlugin("org.scoverage"     % "sbt-scoverage"      % "2.4.4")
 addSbtPlugin("com.timushev.sbt"  % "sbt-updates"        % "0.6.4")
-addSbtPlugin("org.scalameta"     % "sbt-scalafmt"       % "2.5.6")
+addSbtPlugin("org.scalameta"     % "sbt-scalafmt"       % "2.6.0")
