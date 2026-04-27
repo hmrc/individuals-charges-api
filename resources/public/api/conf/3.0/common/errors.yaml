@@ -61,10 +61,10 @@ components:
 
     ruleCountryCode:
       description: |
-        Not a valid ISO 3166-1 alpha-3 country code.
+        Not a permitted ISO 3166-1 alpha-3 country code.
       value:
         code: RULE_COUNTRY_CODE
-        message: The country code is not a valid ISO 3166-1 alpha-3 country code
+        message: The country code is not a permitted ISO 3166-1 alpha-3 country code
 
     formatProviderName:
       description: |

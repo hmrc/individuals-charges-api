@@ -18,47 +18,165 @@ package shared.controllers.validators.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import com.neovisionaries.i18n.CountryCode
-import shared.controllers.validators.resolvers.ResolveParsedCountryCode.permittedCustomCodes
 import shared.models.errors.{CountryCodeFormatError, MtdError, RuleCountryCodeError}
-
-case class ResolveParsedCountryCode(path: String) {
-
-  def apply(value: String): Validated[List[MtdError], String] = {
-    if (value.length != 3) {
-      Invalid(List(CountryCodeFormatError.withPath(path)))
-    } else if (permittedCustomCodes.contains(value)) {
-      Valid(value)
-    } else {
-      Option(CountryCode.getByAlpha3Code(value)) match {
-        case Some(_) => Valid(value)
-        case None    => Invalid(List(RuleCountryCodeError.withPath(path)))
-      }
-    }
-  }
-
-  def apply(maybeValue: Option[String]): Validated[List[MtdError], Option[String]] = {
-    maybeValue match {
-      case Some(value) => apply(value).map(Option(_))
-      case None        => Valid(None)
-    }
-  }
-
-}
 
 object ResolveParsedCountryCode {
 
-  private val permittedCustomCodes = Set("ZZZ")
-
-  def apply(value: String, path: String): Validated[Seq[MtdError], String] = {
-    val resolver = ResolveParsedCountryCode(path)
-
-    resolver(value)
+  private[resolvers] val permittedCodes = Set(
+    "ALB",
+    "DZA",
+    "ATG",
+    "ARG",
+    "ARM",
+    "AUS",
+    "AUT",
+    "AZE",
+    "BHR",
+    "BGD",
+    "BRB",
+    "BLR",
+    "BEL",
+    "BLZ",
+    "BOL",
+    "BIH",
+    "BWA",
+    "VGB",
+    "BRN",
+    "BGR",
+    "MMR",
+    "CAN",
+    "CYM",
+    "CHL",
+    "CHN",
+    "CXR",
+    "CCK",
+    "CIV",
+    "HRV",
+    "CYP",
+    "CZE",
+    "DNK",
+    "EGY",
+    "EST",
+    "ETH",
+    "FLK",
+    "FRO",
+    "FJI",
+    "FIN",
+    "FRA",
+    "GUF",
+    "GMB",
+    "GEO",
+    "DEU",
+    "GHA",
+    "GRC",
+    "GRD",
+    "GLP",
+    "GGY",
+    "GUY",
+    "HKG",
+    "HUN",
+    "ISL",
+    "IND",
+    "IDN",
+    "IRL",
+    "IMN",
+    "ISR",
+    "ITA",
+    "JAM",
+    "JPN",
+    "JEY",
+    "JOR",
+    "KAZ",
+    "KEN",
+    "KIR",
+    "XKX",
+    "KWT",
+    "LVA",
+    "LSO",
+    "LBY",
+    "LIE",
+    "LTU",
+    "LUX",
+    "MKD",
+    "MWI",
+    "MYS",
+    "MLT",
+    "MTQ",
+    "MUS",
+    "MEX",
+    "MDA",
+    "MNG",
+    "MNE",
+    "MSR",
+    "MAR",
+    "NAM",
+    "NLD",
+    "NZL",
+    "NGA",
+    "NFK",
+    "NOR",
+    "OMN",
+    "PAK",
+    "PAN",
+    "PNG",
+    "PHL",
+    "POL",
+    "PRT",
+    "QAT",
+    "REU",
+    "ROU",
+    "RUS",
+    "KNA",
+    "SAU",
+    "SEN",
+    "SRB",
+    "SLE",
+    "SGP",
+    "SVK",
+    "SVN",
+    "SLB",
+    "ZAF",
+    "KOR",
+    "ESP",
+    "LKA",
+    "SDN",
+    "SWZ",
+    "SWE",
+    "CHE",
+    "TWN",
+    "TJK",
+    "THA",
+    "TTO",
+    "TUN",
+    "TUR",
+    "TKM",
+    "TUV",
+    "UGA",
+    "UKR",
+    "ARE",
+    "USA",
+    "URY",
+    "UZB",
+    "VEN",
+    "VNM",
+    "ZMB",
+    "ZWE"
+  )
+  
+  def apply(value: String, path: String): Validated[List[MtdError], String] = {
+    if (value.length != 3) {
+      Invalid(List(CountryCodeFormatError.withPath(path)))
+    } else if (permittedCodes.contains(value)) {
+      Valid(value)
+    } else {
+      Invalid(List(RuleCountryCodeError.withPath(path)))
+    }
   }
 
-  def apply(maybeValue: Option[String], path: String): Validated[Seq[MtdError], Option[String]] = {
-    val resolver = ResolveParsedCountryCode(path)
-    resolver(maybeValue)
+  def apply(maybeValue: Option[String], path: String): Validated[List[MtdError], Option[String]] = {
+    maybeValue match {
+      case Some(value) => apply(value, path).map(Option(_))
+      case None        => Valid(None)
+    }
   }
-
 }
