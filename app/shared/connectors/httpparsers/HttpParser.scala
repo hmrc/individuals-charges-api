@@ -41,6 +41,12 @@ trait HttpParser extends Logging {
     (__ \ "bvrfailureResponseElement" \ "validationRuleFailures").read[Seq[DownstreamErrorCode]]
   }
 
+  private val multipleTopLevelErrorCodesReads: Reads[Seq[DownstreamErrorCode]] =
+    __.read[Seq[JsObject]].map(_.map(obj => DownstreamErrorCode((obj \ "errorCode").as[String])))
+
+  private val multipleErrorCodesInResponseReads: Reads[Seq[DownstreamErrorCode]] =
+    (__ \ "response").read[Seq[JsObject]].map(_.map(obj => DownstreamErrorCode((obj \ "errorCode").as[String])))
+
   private val multipleFailureErrorTypesReads: Reads[Seq[DownstreamErrorCode]] =
     (__ \ "response" \ "failures").read[Seq[JsObject]].map(_.map(obj => DownstreamErrorCode((obj \ "type").as[String])))
 
@@ -49,15 +55,17 @@ trait HttpParser extends Logging {
 
     val singleError         = wrappedResponse.validateJson[DownstreamErrorCode].map(err => DownstreamErrors(List(err)))
     lazy val multipleErrors = wrappedResponse.validateJson(multipleErrorReads).map(errs => DownstreamErrors(errs))
+    lazy val multipleTopLevelErrorCodes = wrappedResponse.validateJson(multipleTopLevelErrorCodesReads).map(errs => DownstreamErrors(errs))
+    lazy val multipleErrorCodesInResponse = wrappedResponse.validateJson(multipleErrorCodesInResponseReads).map(errs => DownstreamErrors(errs))
+    lazy val multipleFailureErrorTypes = wrappedResponse.validateJson(multipleFailureErrorTypesReads).map(errs => DownstreamErrors(errs))
     lazy val bvrErrors =
       wrappedResponse.validateJson(bvrErrorReads).map(errs => OutboundError(BVRError, Some(errs.map(_.toMtd(BVRError.httpStatus)))))
-    lazy val multipleFailureErrorTypes = wrappedResponse.validateJson(multipleFailureErrorTypesReads).map(errs => DownstreamErrors(errs))
     lazy val unableToParseJsonError = {
       logger.warn(s"unable to parse errors from response: ${response.body}")
       OutboundError(InternalError)
     }
 
-    singleError orElse multipleErrors orElse multipleFailureErrorTypes orElse bvrErrors getOrElse unableToParseJsonError
+    singleError orElse multipleErrors orElse multipleTopLevelErrorCodes orElse multipleErrorCodesInResponse orElse multipleFailureErrorTypes orElse bvrErrors getOrElse unableToParseJsonError
   }
 
 }
