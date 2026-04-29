@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 package shared.config
 
+import org.apache.commons.lang3.BooleanUtils
 import play.api.Configuration
+import play.api.mvc.Request
 
 trait FeatureSwitches {
 
@@ -29,6 +31,14 @@ trait FeatureSwitches {
   private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
 
   def supportingAgentsAccessControlEnabled: Boolean = isEnabled("supporting-agents-access-control")
+
+  def isTemporalValidationEnabled(implicit request: Request[?]): Boolean = {
+    if (isEnabled("allowTemporalValidationSuspension")) {
+      request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
+    } else {
+      true
+    }
+  }
 
 }
 
