@@ -1,0 +1,134 @@
+summary: Create or Amend Winter Fuel Payment
+description: |
+  This endpoint allows a developer to submit or amend the Winter Fuel Payment amount for a tax year.
+  A National Insurance number, tax year and the Winter Fuel Payment amount must be provided. The amount submitted must be either the minimum or maximum payment for that tax year, or zero if no payment was received.
+  This endpoint can only be used for tax years from 2026–27 onwards.
+  
+  ###  Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                                                                                |
+    |----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates success response.                                                                                                                                                             |
+    | WFP_AMOUNT_ABOVE_MAXIMUM         | Simulates the scenario where the submitted amount exceeds the maximum Winter Fuel Payment for the tax year.                                                                             |
+    | WFP_AMOUNT_BELOW_MINIMUM         | Simulates the scenario where the submitted amount is below the minimum Winter Fuel Payment for the tax year.                                                                            |
+    | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window.                                                                                         |
+    | STATEFUL                         | Performs a stateful create or update. It uses fixed winter fuel payment amounts where 100 is the minimum and 300 is the maximum across all supported tax years for testing purposes.    |
+
+tags:
+  - Winter Fuel Payment
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/minimumTaxYear2026'
+  - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - write:self-assessment
+
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/winterFuelPayment/createAmend/create_amend_request_schema.json'
+      examples:
+        amendment:
+          description:
+            Winter Fuel Payment Request
+          value:
+            $ref: './examples/winterFuelPayment/createAmend/request.json'
+
+
+responses:
+  "204":
+    description: No Content
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+
+  "400":
+    description: Bad request
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatValue'
+          RULE_TAX_YEAR_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBodySubmitted'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_OUTSIDE_AMENDMENT_WINDOW:
+            $ref: './common/errors.yaml#/components/examples/ruleOutsideAmendmentWindow'
+          RULE_TAX_YEAR_NOT_ENDED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotEnded'
+          RULE_WFP_AMOUNT_ABOVE_MAXIMUM:
+            $ref: './common/errors.yaml#/components/examples/ruleWFPAmountAboveMaximum'
+          RULE_WFP_AMOUNT_BELOW_MINIMUM:
+            $ref: './common/errors.yaml#/components/examples/ruleWFPAmountBelowMinimum'
+
+  "403":
+    description: Forbidden
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "422":
+    description: Unprocessable Entity
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          RULE_REQUEST_CANNOT_BE_FULFILLED:
+            $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'

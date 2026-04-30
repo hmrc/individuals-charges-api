@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create or Amend Winter Fuel Payment",
+  "description": "Create or Amend Winter Fuel Payment",
+  "type": "object",
+  "properties": {
+    "winterFuelPayment": {
+      "type": "number",
+      "description": "The amount of Winter Fuel Payment received. The value must be either zero or a valid amount for the tax year up to 2 decimal places.",
+      "example": 111.22,
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum": 99999999999.99
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "winterFuelPayment"
+  ]
+}
