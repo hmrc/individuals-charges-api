@@ -38,7 +38,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
 
         val expected = Right(ResponseWrapper(correlationId, ()))
 
-        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asMtd}", requestBodyModel)
+        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))
 
         await(connector.createAmend(request)) shouldBe expected
@@ -51,7 +51,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
 
-        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asMtd}", requestBodyModel)
+        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))
 
         await(connector.createAmend(request)) shouldBe expected
@@ -64,7 +64,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
 
         val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
-        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asMtd}", requestBodyModel)
+        willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))
 
         await(connector.createAmend(request)) shouldBe expected
