@@ -114,22 +114,3 @@ responses:
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
-
-  "422":
-    description: Unprocessable Entity
-    headers:
-      X-CorrelationId:
-        $ref: './common/headers.yaml#/components/parameters/correlationId'
-      Deprecation:
-        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
-      Sunset:
-        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
-      Link:
-        $ref: './common/headers.yaml#/components/parameters/linkHeader'
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/error-response.yaml'
-        examples:
-          RULE_REQUEST_CANNOT_BE_FULFILLED:
-            $ref: './common/errors.yaml#/components/examples/requestCannotBeFulfilled'
