@@ -31,6 +31,13 @@ components:
         code: RULE_TAX_YEAR_NOT_SUPPORTED
         message: The tax year specified does not lie within the supported range
 
+    ruleTaxYearNotEnded:
+      description: |
+        The submission has been made before the taxYear it relates to has ended.
+      value:
+        code: RULE_TAX_YEAR_NOT_ENDED
+        message: The specified tax year has not yet ended
+
     formatDateCeased:
       description: |
         The format of the supplied ceased date field is not valid.
@@ -107,6 +114,20 @@ components:
       value:
         code: RULE_IS_ANNUAL_ALLOWANCE_REDUCED
         message: Tapered annual allowance or money purchased allowance has not been provided
+
+    ruleWFPAmountAboveMaximum:
+      description: |
+        The submitted amount exceeds the maximum Winter Fuel Payment for the tax year.
+      value:
+        code: RULE_WFP_AMOUNT_ABOVE_MAXIMUM
+        message: Amount exceeds the maximum Winter Fuel Payment for the tax year
+
+    ruleWFPAmountBelowMinimum:
+      description: |
+        The submitted amount is below the minimum Winter Fuel Payment for the tax year.
+      value:
+        code: RULE_WFP_AMOUNT_BELOW_MINIMUM
+        message: Amount is below the minimum Winter Fuel Payment for the tax year
 
     ruleIncorrectGovTestScenario:
       description: |

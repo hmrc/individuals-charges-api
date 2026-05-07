@@ -107,6 +107,10 @@ object RuleEndBeforeStartDateError
 
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a permitted ISO 3166-1 alpha-3 country code", BAD_REQUEST)
 
+// API Specific Errors
+object RuleWFPAmountAboveMaximumError extends MtdError("RULE_WFP_AMOUNT_ABOVE_MAXIMUM", "Amount exceeds the maximum Winter Fuel Payment for the tax year", BAD_REQUEST)
+
+object RuleWFPAmountBelowMinimumError extends MtdError("RULE_WFP_AMOUNT_BELOW_MINIMUM", "Amount is below the minimum Winter Fuel Payment for the tax year", BAD_REQUEST)
+
 //Stub Errors
-object RuleIncorrectGovTestScenarioError
-    extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The supplied Gov-Test-Scenario is not valid", BAD_REQUEST)
+object RuleIncorrectGovTestScenarioError extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The supplied Gov-Test-Scenario is not valid", BAD_REQUEST)
