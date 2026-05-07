@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package v3.WinterFuelPayment.createAmend
+package v3.winterFuelPayment.createAmend
 
 import play.api.libs.json.*
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.*
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v3.winterFuelPayment.createAmend.CreateAmendWinterFuelPaymentValidator
 import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.*
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
@@ -35,8 +34,8 @@ class CreateAmendWinterFuelPaymentValidatorSpec extends UnitSpec with JsonErrorV
   private val parsedNino: Nino       = Nino(validNino)
   private val parsedTaxYear: TaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String, body: JsValue): CreateAmendWinterFuelPaymentValidator =
-    new CreateAmendWinterFuelPaymentValidator(nino, taxYear, body)
+  private def validator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean = false): CreateAmendWinterFuelPaymentValidator =
+    new CreateAmendWinterFuelPaymentValidator(nino, taxYear, body, temporalValidationEnabled)
 
   "running a validation" should {
     "return no errors" when {
@@ -81,6 +80,15 @@ class CreateAmendWinterFuelPaymentValidatorSpec extends UnitSpec with JsonErrorV
           validator(validNino, "2024-25", validRequestBodyJson).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
+      }
+    }
+
+    "return RuleTaxYearNotEndedError error" when {
+      "the tax year has not ended" in {
+        val result: Either[ErrorWrapper, CreateAmendWinterFuelPaymentRequestData] =
+          validator(validNino, TaxYear.currentTaxYear.asMtd, validRequestBodyJson, true).validateAndWrapResult()
+
+        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))
       }
     }
 

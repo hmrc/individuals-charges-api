@@ -147,7 +147,8 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
       buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, s"application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123"),
+          ("suspend-temporal-validations", "true")
         )
     }
 

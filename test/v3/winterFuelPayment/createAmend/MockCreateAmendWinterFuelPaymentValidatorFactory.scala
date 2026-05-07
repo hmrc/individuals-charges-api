@@ -27,6 +27,6 @@ trait MockCreateAmendWinterFuelPaymentValidatorFactory extends MockValidatorFact
     mock[CreateAmendWinterFuelPaymentValidatorFactory]
 
   def validator(): CallHandler[Validator[CreateAmendWinterFuelPaymentRequestData]] =
-    (mockCreateAmendWinterFuelPaymentValidatorFactory.validator(_: String, _: String, _: JsValue)).expects(*, *, *)
+    (mockCreateAmendWinterFuelPaymentValidatorFactory.validator(_: String, _: String, _: JsValue, _: Boolean)).expects(*, *, *, *)
 
 }

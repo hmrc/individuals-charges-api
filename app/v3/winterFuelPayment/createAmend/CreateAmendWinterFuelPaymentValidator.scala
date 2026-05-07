@@ -25,12 +25,15 @@ import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v3.winterFuelPayment.createAmend.models.request.*
 
-class CreateAmendWinterFuelPaymentValidator(nino: String, taxYear: String, body: JsValue)
+class CreateAmendWinterFuelPaymentValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean)
     extends Validator[CreateAmendWinterFuelPaymentRequestData] {
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[CreateAmendWinterFuelPaymentRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2026-27"))
+  private val resolveTaxYear = ResolveTaxYearMinimum(
+    TaxYear.fromMtd("2026-27"),
+    allowIncompleteTaxYear = !temporalValidationEnabled
+  )
 
   override def validate: Validated[Seq[MtdError], CreateAmendWinterFuelPaymentRequestData] =
     (

@@ -40,6 +40,7 @@ class CreateAmendWinterFuelPaymentConnector @Inject() (val http: HttpClientV2, v
 
     val downstreamUri: DownstreamUri[Unit] =
       HipUri(s"itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}")
+    
     put(body = request.body, uri = downstreamUri)
   }
 

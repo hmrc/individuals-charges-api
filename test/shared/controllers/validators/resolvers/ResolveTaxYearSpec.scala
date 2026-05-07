@@ -71,7 +71,7 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
 
   "ResolveTaxYearMinimum using the default errors" should {
     val minimumTaxYear = TaxYear.fromMtd("2021-22")
-    val resolver       = ResolveTaxYearMinimum(minimumTaxYear)
+    val resolver       = ResolveTaxYearMinimum(minimumTaxYear, allowIncompleteTaxYear = false)
 
     "return no errors" when {
       "given the minimum allowed tax year" in {
@@ -99,6 +99,14 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
       "when the tax year is before the minimum tax year" in {
         val result: Validated[Seq[MtdError], TaxYear] = resolver("2020-21")
         result shouldBe Invalid(List(RuleTaxYearNotSupportedError))
+      }
+    }
+    
+    "return RuleTaxYearNotEndedError" when {
+      "when the tax year has not ended" in {
+        val currentTaxYear = TaxYear.currentTaxYear
+        val result: Validated[Seq[MtdError], TaxYear] = resolver(currentTaxYear.asMtd)
+        result shouldBe Invalid(List(RuleTaxYearNotEndedError))
       }
     }
   }

@@ -18,7 +18,7 @@ package v3.winterFuelPayment.createAmend
 
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.SharedAppConfig
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.controllers.*
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
@@ -49,8 +49,8 @@ class CreateAmendWinterFuelPaymentController @Inject()(
   def createAmend(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-
-      val validator = validatorFactory.validator(nino, taxYear, request.body)
+      
+      val validator = validatorFactory.validator(nino, taxYear, request.body, ConfigFeatureSwitches().isTemporalValidationEnabled())
 
       val requestHandler = RequestHandler
         .withValidator(validator)
