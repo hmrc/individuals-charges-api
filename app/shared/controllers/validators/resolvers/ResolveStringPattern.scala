@@ -25,7 +25,7 @@ import scala.util.matching.Regex
 case class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
 
   val resolver: Resolver[String, String] = value =>
-    if (regexFormat.matches(value))
+    if (value.trim.nonEmpty && regexFormat.matches(value))
       Valid(value)
     else
       Invalid(List(error))
