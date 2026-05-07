@@ -23,6 +23,7 @@ import shared.models.errors.MtdError
 object ProviderNameFormatError    extends MtdError("FORMAT_PROVIDER_NAME", "The provided name is invalid", BAD_REQUEST)
 object ProviderAddressFormatError extends MtdError("FORMAT_PROVIDERS_ADDRESS", "The provided address is invalid", BAD_REQUEST)
 object QOPSRefFormatError         extends MtdError("FORMAT_QOPS_REF", "The provided QOPS reference number is invalid", BAD_REQUEST)
+object SourceFormatError          extends MtdError("FORMAT_SOURCE", "The provided source is invalid", BAD_REQUEST)
 
 object PensionSchemeTaxRefFormatError
     extends MtdError("FORMAT_PENSION_SCHEME_TAX_REFERENCE", "The provided pension scheme tax reference is invalid", BAD_REQUEST)

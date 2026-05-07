@@ -3,3 +3,9 @@ put:
   security:
     - User-Restricted:
         - write:self-assessment
+
+get:
+  $ref: "./winter_fuel_payment_retrieve.yaml"
+  security:
+    - User-Restricted:
+        - read:self-assessment

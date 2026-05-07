@@ -17,6 +17,13 @@ components:
         code: FORMAT_TAX_YEAR
         message: The taxYear format is invalid
 
+    formatSource:
+      description: |
+        The format of the supplied source is not valid.
+      value:
+        code: FORMAT_SOURCE
+        message: The provided source is invalid
+
     ruleTaxYearRangeInvalid:
       description: |
         Tax year range invalid. A tax year range of one year is required.

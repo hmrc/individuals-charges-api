@@ -1,0 +1,118 @@
+summary: Retrieve Winter Fuel Payment Submission
+description: |
+  This endpoint allows a developer to retrieve any customer submitted Winter Fuel Payment amount for a tax year.
+  A National Insurance number and tax year must be provided.
+  This endpoint can only be used for tax years from 2026–27 onwards.
+  
+  ###  Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+
+  | Header Value (Gov-Test-Scenario)         | Scenario                                                                                                                                                                                                                                   |
+  |------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                                                                                      
+  | N/A - DEFAULT                            | Simulates a successful response with latest values.                                                                                                                                                                                        |
+  | N/A - DEFAULT <br> **?source=latest**    | Simulates a successful response with latest values.                                                                                                                                                                                        |
+  | N/A - DEFAULT <br> **?source=hmrc-held** | Simulates a successful response with HMRC held values.                                                                                                                                                                                     |
+  | N/A - DEFAULT <br> **?source=user**      | Simulates a successful response with user submitted values.                                                                                                                                                                                |
+  | NOT_FOUND                                | Simulates the scenario where no data is found.                                                                                                                                                                                             |
+  | STATEFUL                                 | Performs a stateful retrieve. <p> Information and data held by HMRC is not available in the sandbox environment. Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned. </p> |
+
+tags:
+  - Winter Fuel Payment Submission
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/minimumTaxYear2026'
+  - $ref: './common/queryParameters.yaml#/components/parameters/source'
+  - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - read:self-assessment
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/winterFuelPayment/retrieve/retrieve_response_schema.json'
+        example:
+          $ref: './examples/winterFuelPayment/retrieve/retrieve_response.json'
+
+  "400":
+    description: Bad request
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_SOURCE:
+            $ref: './common/errors.yaml#/components/examples/formatSource'
+          RULE_TAX_YEAR_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+  "403":
+    description: Forbidden
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+      Deprecation:
+        $ref: './common/headers.yaml#/components/parameters/deprecationHeader'
+      Sunset:
+        $ref: './common/headers.yaml#/components/parameters/sunsetHeader'
+      Link:
+        $ref: './common/headers.yaml#/components/parameters/linkHeader'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

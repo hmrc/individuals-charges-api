@@ -63,6 +63,8 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
   protected val correlationId    = "X-123"
   protected val validNino        = "AA123456A"
   protected val parsedNino: Nino = Nino(validNino)
+  protected val source: String   = "latest"
+
 
   trait ControllerTest {
     protected val hc: HeaderCarrier = HeaderCarrier()
