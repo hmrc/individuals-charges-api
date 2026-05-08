@@ -1,4 +1,4 @@
-summary: Retrieve Winter Fuel Payment Submission
+summary: Retrieve Winter Fuel Payment
 description: |
   This endpoint allows a developer to retrieve any customer submitted Winter Fuel Payment amount for a tax year.
   A National Insurance number and tax year must be provided.
@@ -14,10 +14,10 @@ description: |
   | N/A - DEFAULT <br> **?source=hmrc-held** | Simulates a successful response with HMRC held values.                                                                                                                                                                                     |
   | N/A - DEFAULT <br> **?source=user**      | Simulates a successful response with user submitted values.                                                                                                                                                                                |
   | NOT_FOUND                                | Simulates the scenario where no data is found.                                                                                                                                                                                             |
-  | STATEFUL                                 | Performs a stateful retrieve. <p> Information and data held by HMRC is not available in the sandbox environment. Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned. </p> |
+  | STATEFUL                                 | Performs a stateful retrieve. <p> Information and data held by HMRC is not available in the sandbox environment. Providing ‘source=hmrc-held’ will result in the expected HTTP 404 (matching resource not found) error being returned. </p> |
 
 tags:
-  - Winter Fuel Payment Submission
+  - Winter Fuel Payment
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -47,8 +47,13 @@ responses:
       application/json:
         schema:
           $ref: './schemas/winterFuelPayment/retrieve/retrieve_response_schema.json'
-        example:
-          $ref: './examples/winterFuelPayment/retrieve/retrieve_response.json'
+        examples:
+          "User provided Winter Fuel Payment details":
+            value:
+              $ref: './examples/winterFuelPayment/retrieve/retrieve_response_user.json'
+          "HMRC held Winter Fuel Payment details":
+            value:
+              $ref: './examples/winterFuelPayment/retrieve/retrieve_response_hmrc_held.json'
 
   "400":
     description: Bad request

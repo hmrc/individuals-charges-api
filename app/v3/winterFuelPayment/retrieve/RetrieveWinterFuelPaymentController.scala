@@ -40,7 +40,7 @@ class RetrieveWinterFuelPaymentController @Inject()(
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveWinterFuelPaymentController",
-      endpointName = "retrieveWinterFuelPaymentSubmission"
+      endpointName = "retrieveWinterFuelPayment"
     )
 
   def retrieve(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] = {

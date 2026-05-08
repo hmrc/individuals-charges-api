@@ -26,14 +26,13 @@ import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentRes
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveWinterFuelPaymentChargeService extends TestSuite with MockFactory {
+trait MockRetrieveWinterFuelPaymentService extends TestSuite with MockFactory {
 
   val mockRetrieveWinterFuelPaymentService: RetrieveWinterFuelPaymentService = mock[RetrieveWinterFuelPaymentService]
 
-  object MockRetrieveHighIncomeChildBenefitService {
+  object MockRetrieveWinterFuelPaymentService {
 
-    def retrieve(
-        request: RetrieveWinterFuelPaymentRequestData): CallHandler[Future[ServiceOutcome[RetrieveWinterFuelPaymentResponse]]] = {
+    def retrieve(request: RetrieveWinterFuelPaymentRequestData): CallHandler[Future[ServiceOutcome[RetrieveWinterFuelPaymentResponse]]] = {
       (
         mockRetrieveWinterFuelPaymentService
           .retrieve(_: RetrieveWinterFuelPaymentRequestData)(

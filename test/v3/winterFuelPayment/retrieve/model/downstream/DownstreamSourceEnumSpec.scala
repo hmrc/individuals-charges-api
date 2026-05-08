@@ -23,13 +23,15 @@ import shared.utils.enums.EnumJsonSpecSupport
 
 class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  testRoundTrip[DownstreamSourceEnum](("HMRC-HELD", DownstreamSourceEnum.`HMRC-HELD`), ("CUSTOMER", DownstreamSourceEnum.CUSTOMER), ("LATEST", DownstreamSourceEnum.LATEST))
+  testDeserialization[DownstreamSourceEnum](
+    ("HMRC-HELD", DownstreamSourceEnum.`HMRC-HELD`),
+    ("CUSTOMER", DownstreamSourceEnum.CUSTOMER)
+  )
 
-  "toDownstream" should {
-    "convert to downstream correctly" in {
+  "toMtdEnum" should {
+    "convert to MtdSourceEnum correctly" in {
       DownstreamSourceEnum.`HMRC-HELD`.toMtdEnum shouldBe MtdSourceEnum.`hmrc-held`
       DownstreamSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
-      DownstreamSourceEnum.LATEST.toMtdEnum shouldBe MtdSourceEnum.latest
     }
   }
 

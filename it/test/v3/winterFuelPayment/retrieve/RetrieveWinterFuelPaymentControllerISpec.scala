@@ -25,19 +25,19 @@ import shared.models.domain.MtdSourceEnum
 import shared.models.errors.*
 import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.responseMtdJson
+import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseMtdJson, responseDownstreamJson}
 
 class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
 
-  "Calling the 'Retrieve Winter Fuel Payment Submission' endpoint" should {
+  "Calling the 'Retrieve Winter Fuel Payment' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "a valid request is made without source parameter" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, downstreamQueryParams, OK, responseHipJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, downstreamQueryParams, OK, responseDownstreamJson)
         }
 
         val response: WSResponse = await(request().get())
@@ -55,7 +55,7 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, downstreamQueryParamsWithSource, OK, responseHipJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, downstreamQueryParams, OK, responseDownstreamJson)
         }
 
         val response: WSResponse = await(request().get())
@@ -68,11 +68,15 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestMaybeSource: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestMaybeSource: Option[String],
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String                = requestNino
+            override val taxYear: String             = requestTaxYear
             override val maybeSource: Option[String] = requestMaybeSource
 
             override def setupStubs(): StubMapping = {
@@ -117,20 +121,15 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        def errorBody(`type`: String): String =
+        def errorBody(code: String): String =
           s"""
-             |{
-             |    "origin": "HIP",
-             |    "response": {
-             |        "failures": [
-             |            {
-             |                "type": "${`type`}",
-             |                "reason": "downstream message"
-             |            }
-             |        ]
-             |    }
-             |}
-       """.stripMargin
+             |[
+             |  {
+             |   "errorCode": "$code",
+             |   "errorDescription": "message"
+             |  }
+             |]
+          """.stripMargin
 
         val errors = List(
           (BAD_REQUEST, "1117", BAD_REQUEST, TaxYearFormatError),
@@ -138,7 +137,7 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "1216", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
           (NOT_FOUND, "5010", NOT_FOUND, NotFoundError),
-          (NOT_FOUND, "5000", INTERNAL_SERVER_ERROR, InternalError)
+          (NOT_IMPLEMENTED, "5000", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         errors.foreach(serviceErrorTest.tupled)
@@ -156,32 +155,26 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
 
     def downstreamUri: String = s"/itsd/charges/winter-fuel-payment/$nino"
 
-    def downstreamQueryParams: Map[String, String] = Map("view" -> MtdSourceEnum.latest.toDownstreamViewString)
-
-    def downstreamQueryParamsWithSource: Map[String, String] = {
+    def downstreamQueryParams: Map[String, String] = {
       val source = maybeSource.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
       Map("view" -> source.toDownstreamViewString)
     }
 
-    def responseHipJson: JsValue = RetrieveWinterFuelPaymentFixtures.responseHipJson
-
-    private def uri: String = {
-      val sourceParam = maybeSource.map(s => s"?source=$s").getOrElse("")
-      s"/winter-fuel-payment/$nino/$taxYear$sourceParam"
-    }
+    private def uri: String = s"/winter-fuel-payment/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123")
-        )
+
+      val baseRequest = buildRequest(uri).withHttpHeaders(
+        (ACCEPT, "application/vnd.hmrc.3.0+json"),
+        (AUTHORIZATION, "Bearer 123")
+      )
+
+      maybeSource.fold(baseRequest)(source => baseRequest.addQueryStringParameters("source" -> source))
     }
 
   }
 
 }
-

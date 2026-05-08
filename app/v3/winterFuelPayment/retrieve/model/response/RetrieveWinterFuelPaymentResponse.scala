@@ -20,11 +20,10 @@ import play.api.libs.json.*
 import shared.models.domain.{MtdSourceEnum, Timestamp}
 import shared.models.downstream.DownstreamSourceEnum
 import play.api.libs.functional.syntax.*
-import shared.utils.JsonWritesUtil
 
 case class RetrieveWinterFuelPaymentResponse(submittedOn: Timestamp, source: MtdSourceEnum, winterFuelPayment: BigDecimal)
 
-object RetrieveWinterFuelPaymentResponse extends JsonWritesUtil {
+object RetrieveWinterFuelPaymentResponse {
 
   given Reads[RetrieveWinterFuelPaymentResponse] = (
     (JsPath \ "submittedOn").read[Timestamp] and

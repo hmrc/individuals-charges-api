@@ -39,8 +39,8 @@ object RetrieveWinterFuelPaymentFixtures {
       |}
       |""".stripMargin
   )
-  
-  val responseHipJson: JsValue = Json.parse(
+
+  val responseDownstreamJson: JsValue = Json.parse(
     """
       |{
       |	 "submittedOn": "2026-07-24T14:15:22.544Z",

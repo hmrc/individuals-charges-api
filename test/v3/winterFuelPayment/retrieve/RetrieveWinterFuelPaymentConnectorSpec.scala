@@ -28,17 +28,17 @@ import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentRes
 import scala.concurrent.Future
 
 class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
-  private val nino: Nino       = Nino("AA123456A")
-  private val taxYear: TaxYear = TaxYear.fromMtd("2026-27")
-  private val maybeSource: MtdSourceEnum = MtdSourceEnum.`hmrc-held`
+  private val nino: Nino            = Nino("AA123456A")
+  private val taxYear: TaxYear      = TaxYear.fromMtd("2026-27")
+  private val source: MtdSourceEnum = MtdSourceEnum.`hmrc-held`
 
   "RetrieveWinterFuelPaymentConnector" should {
     "return a valid response" when {
       "a valid request is made" in new HipTest with Test {
-        val outcome: Right[Nothing, ResponseWrapper[RetrieveWinterFuelPaymentResponse]] =
+        val outcome: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
           Right(ResponseWrapper(correlationId, responseModel))
 
-        willGet(url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD")
+        willGet(url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD&taxYear=26-27")
           .returns(Future.successful(outcome))
 
         val result: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
@@ -51,11 +51,11 @@ class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
     "return an error" when {
       "downstream returns an error" in new HipTest with Test {
         val downstreamErrorResponse: DownstreamErrors = DownstreamErrors.single(DownstreamErrorCode("SOME_ERROR"))
-        val errorOutcome: Left[ResponseWrapper[DownstreamErrors], Nothing] =
+        val errorOutcome: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
         willGet(
-          url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD"
+          url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD&taxYear=26-27"
         ).returns(Future.successful(errorOutcome))
 
         val result: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
@@ -74,7 +74,7 @@ class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
     protected val request: RetrieveWinterFuelPaymentRequestData = RetrieveWinterFuelPaymentRequestData(
       nino = nino,
       taxYear = taxYear,
-      source = maybeSource
+      source = source
     )
 
   }

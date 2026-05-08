@@ -29,7 +29,7 @@ import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequ
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveWinterFuelPaymentControllerSpec extends ControllerBaseSpec with ControllerTestRunner {
+class RetrieveWinterFuelPaymentControllerSpec extends ControllerTestRunner {
 
   private val taxYear: String = "2026-27"
 
@@ -41,7 +41,7 @@ class RetrieveWinterFuelPaymentControllerSpec extends ControllerBaseSpec with Co
       "given a valid request" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockRetrieveHighIncomeChildBenefitService
+        MockRetrieveWinterFuelPaymentService
           .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
@@ -62,7 +62,7 @@ class RetrieveWinterFuelPaymentControllerSpec extends ControllerBaseSpec with Co
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockRetrieveHighIncomeChildBenefitService
+        MockRetrieveWinterFuelPaymentService
           .retrieve(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, NotFoundError))))
 
@@ -74,7 +74,7 @@ class RetrieveWinterFuelPaymentControllerSpec extends ControllerBaseSpec with Co
 
   trait Test
       extends ControllerTest
-      with MockRetrieveWinterFuelPaymentChargeService
+      with MockRetrieveWinterFuelPaymentService
       with MockRetrieveWinterFuelPaymentValidatorFactory {
 
     val controller: RetrieveWinterFuelPaymentController = new RetrieveWinterFuelPaymentController(

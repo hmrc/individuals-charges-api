@@ -1,24 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve Winter Fuel Payment Submission",
-  "description": "Retrieve Winter Fuel Payment Submission",
+  "title": "Retrieve Winter Fuel Payment",
+  "description": "Retrieve Winter Fuel Payment",
   "type": "object",
   "properties": {
     "submittedOn": {
-      "type": "string",
-      "description": "The date and time of the submission. Must conform to the format YYYY-MM-DDThh:mm:ss.SSSZ",
+      "type": "date-time",
+      "description": "The date and time the Winter Fuel Payment was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
       "format": "YYYY-MM-DDThh:mm:ss.SSSZ",
       "example": "2026-08-24T14:15:22.544Z"
     },
     "source": {
       "type": "string",
-      "description": "Specifies the source of data to be returned. If source is not provided, the latest submitted values will be returned.",
+      "description": "Indicates the source of the data returned.",
       "enum": ["hmrc-held", "user"]
     },
     "winterFuelPayment": {
       "type": "number",
       "description": "The amount of Winter Fuel Payment received. The value must be either zero or a valid amount for the tax year up to 2 decimal places.",
-      "example": 111.22,
+      "example": 220.99,
       "multipleOf": 0.01,
       "minimum": 0,
       "maximum": 99999999999.99

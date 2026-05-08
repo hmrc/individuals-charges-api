@@ -16,6 +16,7 @@
 
 package v3.winterFuelPayment.retrieve
 
+import shared.connectors.DownstreamOutcome
 import shared.models.domain.*
 import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
@@ -27,19 +28,22 @@ import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentRes
 import scala.concurrent.Future
 
 class RetrieveWinterFuelPaymentServiceSpec extends ServiceSpec {
-  private val nino: Nino                 = Nino("AA123456A")
-  private val taxYear: TaxYear           = TaxYear.fromMtd("2026-27")
-  private val maybeSource: MtdSourceEnum = MtdSourceEnum.`hmrc-held`
+  private val nino: Nino            = Nino("AA123456A")
+  private val taxYear: TaxYear      = TaxYear.fromMtd("2026-27")
+  private val source: MtdSourceEnum = MtdSourceEnum.`hmrc-held`
 
   implicit override val correlationId: String = "X-123"
 
   "RetrieveWinterFuelPaymentService" when {
     "retrieve" should {
       "return correct result for a success" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[RetrieveWinterFuelPaymentResponse]] =
+        val outcome: ServiceOutcome[RetrieveWinterFuelPaymentResponse] =
           Right(ResponseWrapper(correlationId, responseModel))
 
-        MockRetrieveWinterFuelPaymentConnector.retrieve(request).returns(Future.successful(outcome))
+        val connectorOutcome: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
+          Right(ResponseWrapper(correlationId, responseModel))
+
+        MockRetrieveWinterFuelPaymentConnector.retrieve(request).returns(Future.successful(connectorOutcome))
 
         val result: ServiceOutcome[RetrieveWinterFuelPaymentResponse] = await(service.retrieve(request))
 
@@ -78,7 +82,7 @@ class RetrieveWinterFuelPaymentServiceSpec extends ServiceSpec {
     val request: RetrieveWinterFuelPaymentRequestData = RetrieveWinterFuelPaymentRequestData(
       nino = nino,
       taxYear = taxYear,
-      source = maybeSource
+      source = source
     )
 
     val service: RetrieveWinterFuelPaymentService = new RetrieveWinterFuelPaymentService(

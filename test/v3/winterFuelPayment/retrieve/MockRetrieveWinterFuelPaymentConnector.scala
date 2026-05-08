@@ -33,8 +33,7 @@ trait MockRetrieveWinterFuelPaymentConnector extends TestSuite with MockFactory 
 
   object MockRetrieveWinterFuelPaymentConnector {
 
-    def retrieve(
-        request: RetrieveWinterFuelPaymentRequestData): CallHandler[Future[DownstreamOutcome[RetrieveWinterFuelPaymentResponse]]] =
+    def retrieve(request: RetrieveWinterFuelPaymentRequestData): CallHandler[Future[DownstreamOutcome[RetrieveWinterFuelPaymentResponse]]] =
       (
         mockRetrieveWinterFuelPaymentConnector
           .retrieve(_: RetrieveWinterFuelPaymentRequestData)(

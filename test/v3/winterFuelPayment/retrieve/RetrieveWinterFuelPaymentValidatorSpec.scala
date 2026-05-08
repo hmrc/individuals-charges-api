@@ -17,6 +17,7 @@
 package v3.winterFuelPayment.retrieve
 
 import common.errors.SourceFormatError
+import shared.models.domain.MtdSourceEnum.latest
 import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import shared.models.errors.*
 import shared.utils.UnitSpec
@@ -45,11 +46,19 @@ class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {
 
         result shouldBe Right(RetrieveWinterFuelPaymentRequestData(parsedNino, parsedTaxYear, parsedSource))
       }
+
+      "a valid request is supplied with no source" in {
+        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
+          validator(validNino, validTaxYear, None).validateAndWrapResult()
+
+        result shouldBe Right(RetrieveWinterFuelPaymentRequestData(parsedNino, parsedTaxYear, latest))
+      }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] = validator("A12344A", validTaxYear, validSource).validateAndWrapResult()
+        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
+          validator("A12344A", validTaxYear, validSource).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
@@ -81,7 +90,8 @@ class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {
 
     "return SourceFormatError error" when {
       "an invalid source is supplied" in {
-        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] = validator(validNino, validTaxYear, Some("invalid-source")).validateAndWrapResult()
+        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
+          validator(validNino, validTaxYear, Some("invalid-source")).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, SourceFormatError))
       }
@@ -89,9 +99,10 @@ class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] = validator("A12344A", "20267", validSource).validateAndWrapResult()
+        val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
+          validator(validNino, "20267", Some("invalid-source")).validateAndWrapResult()
 
-        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))
+        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(SourceFormatError, TaxYearFormatError))))
       }
     }
   }

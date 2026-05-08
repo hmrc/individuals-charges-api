@@ -24,7 +24,7 @@ class RetrieveWinterFuelPaymentResponseSpec extends UnitSpec {
 
   "RetrieveWinterFuelPaymentResponse" should {
     "read from json" in {
-      responseHipJson.as[RetrieveWinterFuelPaymentResponse] shouldBe responseModel
+      responseDownstreamJson.as[RetrieveWinterFuelPaymentResponse] shouldBe responseModel
     }
 
     "write to json" in {

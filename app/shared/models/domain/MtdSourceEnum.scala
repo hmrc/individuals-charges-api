@@ -16,7 +16,7 @@
 
 package shared.models.domain
 
-import play.api.libs.json.Format
+import play.api.libs.json.Writes
 import shared.utils.enums.Enums
 
 enum MtdSourceEnum(val toDownstreamViewString: String) {
@@ -26,6 +26,6 @@ enum MtdSourceEnum(val toDownstreamViewString: String) {
 }
 
 object MtdSourceEnum {
-  given Format[MtdSourceEnum]                        = Enums.format[MtdSourceEnum](values)
+  given Writes[MtdSourceEnum]                        = Enums.writes[MtdSourceEnum]
   val parser: PartialFunction[String, MtdSourceEnum] = Enums.parser[MtdSourceEnum](values)
 }

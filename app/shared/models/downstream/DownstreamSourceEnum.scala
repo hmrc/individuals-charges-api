@@ -17,15 +17,14 @@
 package shared.models.downstream
 
 import shared.models.domain.MtdSourceEnum
-import play.api.libs.json.Format
+import play.api.libs.json.Reads
 import shared.utils.enums.Enums
 
 enum DownstreamSourceEnum(val toMtdEnum: MtdSourceEnum) {
   case `HMRC-HELD` extends DownstreamSourceEnum(MtdSourceEnum.`hmrc-held`)
   case CUSTOMER    extends DownstreamSourceEnum(MtdSourceEnum.user)
-  case LATEST      extends DownstreamSourceEnum(MtdSourceEnum.latest)
 }
 
 object DownstreamSourceEnum {
-  given Format[DownstreamSourceEnum] = Enums.format[DownstreamSourceEnum](values)
+  given Reads[DownstreamSourceEnum] = Enums.reads(values)
 }
