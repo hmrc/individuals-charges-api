@@ -253,7 +253,7 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
       "empty or whitespace in fields" in {
         List(fullJsonWithWhitespaceOnlyTextFields, fullJsonWithEmptyTextFields).foreach { (payload: JsValue) =>
           val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
-            validator(validNino, validTaxYear, fullJsonWithEmptyTextFields).validateAndWrapResult()
+            validator(validNino, validTaxYear, payload).validateAndWrapResult()
 
           result shouldBe Left(
             ErrorWrapper(
