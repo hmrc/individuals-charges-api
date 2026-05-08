@@ -5,9 +5,9 @@
   "type": "object",
   "properties": {
     "submittedOn": {
-      "type": "date-time",
+      "type": "string",
       "description": "The date and time the Winter Fuel Payment was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
-      "format": "YYYY-MM-DDThh:mm:ss.SSSZ",
+      "format": "date-time",
       "example": "2026-08-24T14:15:22.544Z"
     },
     "source": {

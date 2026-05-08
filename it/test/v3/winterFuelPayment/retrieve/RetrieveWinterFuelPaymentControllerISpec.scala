@@ -21,11 +21,11 @@ import common.errors.SourceFormatError
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
-import shared.models.domain.MtdSourceEnum
+import shared.models.domain.{MtdSourceEnum, TaxYear}
 import shared.models.errors.*
 import shared.services.*
 import shared.support.IntegrationBaseSpec
-import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseMtdJson, responseDownstreamJson}
+import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseDownstreamJson, responseMtdJson}
 
 class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
 
@@ -157,7 +157,7 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
 
     def downstreamQueryParams: Map[String, String] = {
       val source = maybeSource.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
-      Map("view" -> source.toDownstreamViewString)
+      Map("view" -> source.toDownstreamViewString, "taxYear" -> "26-27")
     }
 
     private def uri: String = s"/winter-fuel-payment/$nino/$taxYear"

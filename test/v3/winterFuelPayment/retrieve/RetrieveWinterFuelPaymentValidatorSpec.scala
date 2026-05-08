@@ -40,14 +40,14 @@ class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied with source" in {
         val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
           validator(validNino, validTaxYear, validSource).validateAndWrapResult()
 
         result shouldBe Right(RetrieveWinterFuelPaymentRequestData(parsedNino, parsedTaxYear, parsedSource))
       }
 
-      "a valid request is supplied with no source" in {
+      "a valid request is supplied without source" in {
         val result: Either[ErrorWrapper, RetrieveWinterFuelPaymentRequestData] =
           validator(validNino, validTaxYear, None).validateAndWrapResult()
 
