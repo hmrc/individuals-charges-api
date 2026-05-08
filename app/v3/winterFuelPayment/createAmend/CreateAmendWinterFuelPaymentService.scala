@@ -39,7 +39,6 @@ class CreateAmendWinterFuelPaymentService @Inject() (connector: CreateAmendWinte
       "1117"                 -> TaxYearFormatError,
       "1215"                 -> NinoFormatError,
       "1216"                 -> InternalError,
-      "UNMATCHED_STUB_ERROR" -> RuleIncorrectGovTestScenarioError,
       "1115"                 -> RuleTaxYearNotEndedError,
       "1263"                 -> RuleWFPAmountAboveMaximumError,
       "1264"                 -> RuleWFPAmountBelowMinimumError,

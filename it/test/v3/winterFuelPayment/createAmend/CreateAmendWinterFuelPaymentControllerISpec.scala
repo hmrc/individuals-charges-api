@@ -45,6 +45,8 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
         val response: WSResponse = await(request().put(validRequestBodyJson))
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
+        response.header("Content-Type") shouldBe None
+        response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }
 
@@ -108,6 +110,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
+            response.header("X-CorrelationId").nonEmpty shouldBe true
           }
         }
 
@@ -152,18 +155,16 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
         )
     }
 
-    def errorBody(`type`: String): String =
+    def errorBody(code: String): String =
       s"""
          |{
          |    "origin": "HIP",
-         |    "response": {
-         |        "failures": [
-         |            {
-         |                "type": "${`type`}",
-         |                "reason": "downstream message"
-         |            }
-         |        ]
-         |    }
+         |    "response": [
+         |        {
+         |          "errorCode": "$code",
+         |          "errorDescription": "Error Message"
+         |        }
+         |    ]
          |}
        """.stripMargin
 
