@@ -357,6 +357,73 @@ object Def1_CreateAmendPensionChargesFixture {
       |""".stripMargin
   )
 
+  val fullValidJsonLeadingTrailingWhitespace: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		}
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": " Overseas Pensions Plc  ",
+      |				"providerAddress": "   111 Main Street, George Town, Grand Cayman ",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"00123456RA","00123456RA"
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": " Overseas Pensions Plc",
+      |				"providerAddress": " 111 Main Street, George Town, Grand Cayman",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
   val invalidJsonWithExtraField: JsValue = Json.parse(
     """
       |{
@@ -786,6 +853,140 @@ object Def1_CreateAmendPensionChargesFixture {
       |				"providerCountryCode": "BEANS",
       |				"qualifyingRecognisedOverseasPensionScheme": [
       |					"Q123456"
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  val fullJsonWithWhitespaceOnlyTextFields: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			" ","  "
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		}
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "  ",
+      |				"providerAddress": " ",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					"  "
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			" ","  "
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"  ","  "
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": " ",
+      |				"providerAddress": "  ",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					" "
+      |				]
+      |			}
+      |		],
+      |		"shortServiceRefund": 123.45,
+      |		"shortServiceRefundTaxPaid": 0
+      |	}
+      |}
+      |""".stripMargin
+  )
+
+  val fullJsonWithEmptyTextFields: JsValue = Json.parse(
+    """
+      |{
+      |	"pensionSavingsTaxCharges": {
+      |		"pensionSchemeTaxReference": [
+      |			"",""
+      |		],
+      |		"lumpSumBenefitTakenInExcessOfLifetimeAllowance": {
+      |			"amount": 123.45,
+      |			"taxPaid": 12.45
+      |		}
+      |	},
+      |	"pensionSchemeOverseasTransfers": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "",
+      |				"providerAddress": "",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					""
+      |				]
+      |			}
+      |		],
+      |		"transferCharge": 123.45,
+      |		"transferChargeTaxPaid": 0
+      |	},
+      |	"pensionSchemeUnauthorisedPayments": {
+      |		"pensionSchemeTaxReference": [
+      |			"",""
+      |		],
+      |		"surcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		},
+      |		"noSurcharge": {
+      |			"amount": 123.45,
+      |			"foreignTaxPaid": 123.45
+      |		}
+      |	},
+      |	"pensionContributions": {
+      |		"pensionSchemeTaxReference": [
+      |			"",""
+      |		],
+      |		"inExcessOfTheAnnualAllowance": 123.45,
+      |		"annualAllowanceTaxPaid": 123.45,
+      |		"isAnnualAllowanceReduced": true,
+      |		"taperedAnnualAllowance": true,
+      |		"moneyPurchasedAllowance": false
+      |	},
+      |	"overseasPensionContributions": {
+      |		"overseasSchemeProvider": [
+      |			{
+      |				"providerName": "",
+      |				"providerAddress": "",
+      |				"providerCountryCode": "ESP",
+      |				"qualifyingRecognisedOverseasPensionScheme": [
+      |					""
       |				]
       |			}
       |		],
