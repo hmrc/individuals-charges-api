@@ -102,7 +102,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, Map("taxYear" -> "26-27"), downstreamStatus, errorBody(downstreamCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, Map("taxYear" -> "26-27"), downstreamStatus, errorBody(downstreamStatus, downstreamCode))
 
             }
 
@@ -155,18 +155,29 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
         )
     }
 
-    def errorBody(code: String): String =
-      s"""
-         |{
-         |    "origin": "HIP",
-         |    "response": [
-         |        {
-         |          "errorCode": "$code",
-         |          "errorDescription": "Error Message"
-         |        }
-         |    ]
-         |}
-       """.stripMargin
+    def errorBody(status: Int, code: String): String = {
+      if (status == UNPROCESSABLE_ENTITY) then
+        s"""
+           |[
+           |  {
+           |    "errorCode": "$code",
+           |    "errorDescription": "Error Message"
+           |  }
+           |]
+        """.stripMargin
+      else
+        s"""
+           |{
+           |    "origin": "HIP",
+           |    "response": [
+           |        {
+           |          "errorCode": "$code",
+           |          "errorDescription": "Error Message"
+           |        }
+           |    ]
+           |}
+         """.stripMargin
+    }
 
   }
 
