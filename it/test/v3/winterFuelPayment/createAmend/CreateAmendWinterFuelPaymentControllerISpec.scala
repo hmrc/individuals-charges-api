@@ -45,6 +45,8 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
         val response: WSResponse = await(request().put(validRequestBodyJson))
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
+        response.header("Content-Type") shouldBe None
+        response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }
 
@@ -100,7 +102,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, Map("taxYear" -> "26-27"), downstreamStatus, errorBody(downstreamCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, Map("taxYear" -> "26-27"), downstreamStatus, errorBody(downstreamStatus, downstreamCode))
 
             }
 
@@ -108,6 +110,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
+            response.header("X-CorrelationId").nonEmpty shouldBe true
           }
         }
 
@@ -152,20 +155,29 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
         )
     }
 
-    def errorBody(`type`: String): String =
-      s"""
-         |{
-         |    "origin": "HIP",
-         |    "response": {
-         |        "failures": [
-         |            {
-         |                "type": "${`type`}",
-         |                "reason": "downstream message"
-         |            }
-         |        ]
-         |    }
-         |}
-       """.stripMargin
+    def errorBody(status: Int, code: String): String = {
+      if (status == UNPROCESSABLE_ENTITY) then
+        s"""
+           |[
+           |  {
+           |    "errorCode": "$code",
+           |    "errorDescription": "Error Message"
+           |  }
+           |]
+        """.stripMargin
+      else
+        s"""
+           |{
+           |    "origin": "HIP",
+           |    "response": [
+           |        {
+           |          "errorCode": "$code",
+           |          "errorDescription": "Error Message"
+           |        }
+           |    ]
+           |}
+         """.stripMargin
+    }
 
   }
 
