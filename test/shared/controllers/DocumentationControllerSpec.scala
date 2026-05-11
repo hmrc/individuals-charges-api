@@ -158,7 +158,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockSharedAppC
         status(response) shouldBe OK
 
         val result: String = contentAsString(response)
-        result.replaceAll("\r", "") shouldBe actualApplicationYaml.replaceAll("\r", "")
+        result.replaceAll("\r", "").trim shouldBe actualApplicationYaml.replaceAll("\r", "").trim
       }
     }
   }

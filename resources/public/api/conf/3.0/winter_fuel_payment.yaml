@@ -1,3 +1,9 @@
+get:
+  $ref: "./winter_fuel_payment_retrieve.yaml"
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
 put:
   $ref: "./winter_fuel_payment_create_amend.yaml"
   security:

@@ -75,3 +75,4 @@ paths:
   /individuals/charges/winter-fuel-payment/{nino}/{taxYear}:
     $ref: "./winter_fuel_payment.yaml"
   {{/if}}
+
