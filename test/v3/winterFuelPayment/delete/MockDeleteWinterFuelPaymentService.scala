@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package v3.pensionCharges.delete
+package v3.winterFuelPayment.delete
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.services.ServiceOutcome
-import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeletePensionChargesService extends TestSuite with MockFactory {
+trait MockDeleteWinterFuelPaymentService extends TestSuite with MockFactory {
 
-  val mockDeletePensionChargesService: DeletePensionChargesService = mock[DeletePensionChargesService]
+  val mockDeleteWinterFuelPaymentService: DeleteWinterFuelPaymentService = mock[DeleteWinterFuelPaymentService]
 
-  object MockDeletePensionChargesService {
+  object MockDeleteWinterFuelPaymentService {
 
-    def deletePensionCharges(requestData: DeletePensionChargesRequestData): CallHandler[Future[ServiceOutcome[Unit]]] = {
-      (mockDeletePensionChargesService
-        .deletePensionCharges(_: DeletePensionChargesRequestData)(_: RequestContext, _: ExecutionContext))
+    def delete(requestData: DeleteWinterFuelPaymentRequestData): CallHandler[Future[ServiceOutcome[Unit]]] = {
+      (mockDeleteWinterFuelPaymentService
+        .delete(_: DeleteWinterFuelPaymentRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
 

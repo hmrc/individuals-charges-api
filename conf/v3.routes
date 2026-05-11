@@ -8,3 +8,4 @@ DELETE     /high-income-child-benefit/:nino/:taxYear       v3.highIncomeChildBen
 
 PUT        /winter-fuel-payment/:nino/:taxYear          v3.winterFuelPayment.createAmend.CreateAmendWinterFuelPaymentController.createAmend(nino: String, taxYear: String)
 GET        /winter-fuel-payment/:nino/:taxYear          v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentController.retrieve(nino: String, taxYear: String, source: Option[String])
+DELETE     /winter-fuel-payment/:nino/:taxYear v3.winterFuelPayment.delete.DeleteWinterFuelPaymentController.delete(nino: String, taxYear: String)

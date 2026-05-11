@@ -14,33 +14,30 @@
  * limitations under the License.
  */
 
-package v3.winterFuelPayment.createAmend
+package v3.winterFuelPayment.delete
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.HipUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendWinterFuelPaymentConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class DeleteWinterFuelPaymentConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
-  def createAmend(request: CreateAmendWinterFuelPaymentRequestData)(implicit
+  def delete(request: DeleteWinterFuelPaymentRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import request.*
+    val downstreamUri = HipUri(s"itsd/charges/winter-fuel-payment/${request.nino}?taxYear=${request.taxYear.asTysDownstream}")
 
-    val downstreamUri: DownstreamUri[Unit] =
-      HipUri(s"itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}")
-
-    put(body = request.body, uri = downstreamUri)
+    delete(downstreamUri)
   }
 
 }

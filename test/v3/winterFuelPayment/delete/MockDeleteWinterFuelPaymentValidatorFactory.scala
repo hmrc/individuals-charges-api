@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package v3.pensionCharges.delete
+package v3.winterFuelPayment.delete
 
 import org.scalamock.handlers.CallHandler
 import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
-trait MockDeletePensionChargesValidatorFactory extends MockValidatorFactory[DeletePensionChargesRequestData] {
+trait MockDeleteWinterFuelPaymentValidatorFactory extends MockValidatorFactory[DeleteWinterFuelPaymentRequestData] {
 
-  val mockDeletePensionChargesValidatorFactory: DeletePensionChargesValidatorFactory = mock[DeletePensionChargesValidatorFactory]
+  val mockDeleteWinterFuelPaymentValidatorFactory: DeleteWinterFuelPaymentValidatorFactory = mock[DeleteWinterFuelPaymentValidatorFactory]
 
-  def validator(): CallHandler[Validator[DeletePensionChargesRequestData]] =
-    (mockDeletePensionChargesValidatorFactory.validator(_: String, _: String)).expects(*, *)
+  def validator(): CallHandler[Validator[DeleteWinterFuelPaymentRequestData]] =
+    (mockDeleteWinterFuelPaymentValidatorFactory.validator(_: String, _: String)).expects(*, *)
 
 }

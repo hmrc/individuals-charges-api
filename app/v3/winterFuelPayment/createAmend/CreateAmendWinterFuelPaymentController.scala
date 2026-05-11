@@ -28,14 +28,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateAmendWinterFuelPaymentController @Inject()(
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    validatorFactory: CreateAmendWinterFuelPaymentValidatorFactory,
-    service: CreateAmendWinterFuelPaymentService,
-    auditService: AuditService,
-    cc: ControllerComponents,
-    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+class CreateAmendWinterFuelPaymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                        val lookupService: MtdIdLookupService,
+                                                        validatorFactory: CreateAmendWinterFuelPaymentValidatorFactory,
+                                                        service: CreateAmendWinterFuelPaymentService,
+                                                        auditService: AuditService,
+                                                        cc: ControllerComponents,
+                                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName: String = "create-amend-winter-fuel-payment"
@@ -49,7 +48,7 @@ class CreateAmendWinterFuelPaymentController @Inject()(
   def createAmend(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-      
+
       val validator = validatorFactory.validator(nino, taxYear, request.body, ConfigFeatureSwitches().isTemporalValidationEnabled())
 
       val requestHandler = RequestHandler

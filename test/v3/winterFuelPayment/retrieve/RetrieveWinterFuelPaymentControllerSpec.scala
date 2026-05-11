@@ -72,10 +72,7 @@ class RetrieveWinterFuelPaymentControllerSpec extends ControllerTestRunner {
 
   }
 
-  trait Test
-      extends ControllerTest
-      with MockRetrieveWinterFuelPaymentService
-      with MockRetrieveWinterFuelPaymentValidatorFactory {
+  trait Test extends ControllerTest with MockRetrieveWinterFuelPaymentService with MockRetrieveWinterFuelPaymentValidatorFactory {
 
     val controller: RetrieveWinterFuelPaymentController = new RetrieveWinterFuelPaymentController(
       authService = mockEnrolmentsAuthService,

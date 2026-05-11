@@ -27,8 +27,8 @@ object CreateAmendWinterFuelPaymentRulesValidator extends RulesValidator[CreateA
   override def validateBusinessRules(
       parsed: CreateAmendWinterFuelPaymentRequestData): Validated[Seq[MtdError], CreateAmendWinterFuelPaymentRequestData] = {
     import parsed.body.*
-    
+
     ResolveParsedNumber()(winterFuelPayment, "/winterFuelPayment").onSuccess(parsed)
   }
-  
+
 }

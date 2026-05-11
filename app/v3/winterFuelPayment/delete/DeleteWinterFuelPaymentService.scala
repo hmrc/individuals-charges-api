@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package v3.winterFuelPayment.createAmend
+package v3.winterFuelPayment.delete
 
-import cats.implicits.toBifunctorOps
-import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.RequestContext
 import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
-import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
+import cats.implicits.toBifunctorOps
+import common.errors.RuleOutsideAmendmentWindowError
+import shared.models.errors.MtdError
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendWinterFuelPaymentService @Inject() (connector: CreateAmendWinterFuelPaymentConnector) extends BaseService {
+class DeleteWinterFuelPaymentService @Inject() (connector: DeleteWinterFuelPaymentConnector) extends BaseService {
 
-  def createAmend(
-      request: CreateAmendWinterFuelPaymentRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
-    connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+  def delete(request: DeleteWinterFuelPaymentRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+    connector
+      .delete(request)
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+  }
 
   private def downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "1000" -> InternalError,
       "1117" -> TaxYearFormatError,
       "1215" -> NinoFormatError,
       "1216" -> InternalError,
-      "1115" -> RuleTaxYearNotEndedError,
-      "1263" -> RuleWFPAmountAboveMaximumError,
-      "1264" -> RuleWFPAmountBelowMinimumError,
+      "5010" -> NotFoundError,
       "4200" -> RuleOutsideAmendmentWindowError,
       "5000" -> InternalError
     )

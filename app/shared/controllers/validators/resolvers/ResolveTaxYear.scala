@@ -67,13 +67,13 @@ object ResolveTaxYear extends ResolverSupport {
 }
 
 case class ResolveTaxYearMinimum(
-                                  minimumTaxYear: TaxYear,
-                                  notSupportedError: MtdError = RuleTaxYearNotSupportedError,
-                                  allowIncompleteTaxYear: Boolean = true,
-                                  formatError: MtdError = TaxYearFormatError,
-                                  rangeError: MtdError = RuleTaxYearRangeInvalidError,
-                                  taxYearNotEnded: MtdError = RuleTaxYearNotEndedError
-                                ) extends ResolverSupport {
+    minimumTaxYear: TaxYear,
+    notSupportedError: MtdError = RuleTaxYearNotSupportedError,
+    allowIncompleteTaxYear: Boolean = true,
+    formatError: MtdError = TaxYearFormatError,
+    rangeError: MtdError = RuleTaxYearRangeInvalidError,
+    taxYearNotEnded: MtdError = RuleTaxYearNotEndedError
+) extends ResolverSupport {
 
   private val baseResolver: Resolver[String, TaxYear] =
     ResolveTaxYear.resolverWithCustomErrors(formatError, rangeError).thenValidate(satisfiesMin(minimumTaxYear, notSupportedError))

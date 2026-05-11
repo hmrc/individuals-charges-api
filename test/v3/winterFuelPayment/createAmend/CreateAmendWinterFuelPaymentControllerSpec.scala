@@ -24,16 +24,13 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
-import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.{
-  requestBodyModel,
-  validRequestBodyJson
-}
+import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.{requestBodyModel, validRequestBodyJson}
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendWinterFuelPaymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateAmendWinterFuelPaymentService
     with MockCreateAmendWinterFuelPaymentValidatorFactory {
