@@ -38,7 +38,7 @@ class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
         val outcome: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
           Right(ResponseWrapper(correlationId, responseModel))
 
-        willGet(url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD&taxYear=26-27")
+        willGet(url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=26-27&view=HMRC-HELD")
           .returns(Future.successful(outcome))
 
         val result: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =
@@ -55,7 +55,7 @@ class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
           Left(ResponseWrapper(correlationId, downstreamErrorResponse))
 
         willGet(
-          url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?view=HMRC-HELD&taxYear=26-27"
+          url = url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=26-27&view=HMRC-HELD"
         ).returns(Future.successful(errorOutcome))
 
         val result: DownstreamOutcome[RetrieveWinterFuelPaymentResponse] =

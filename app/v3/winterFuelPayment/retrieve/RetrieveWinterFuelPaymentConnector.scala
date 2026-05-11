@@ -39,10 +39,7 @@ class RetrieveWinterFuelPaymentConnector @Inject()(val http: HttpClientV2, val a
 
     import request.*
 
-    val queryParams = Seq(
-      "view" -> source.toDownstreamViewString,
-      "taxYear" -> taxYear.asTysDownstream
-    )
+    val queryParams = Seq("taxYear" -> taxYear.asTysDownstream, "view" -> source.toDownstreamViewString)
 
     val downstreamUri: DownstreamUri[RetrieveWinterFuelPaymentResponse] =
       HipUri[RetrieveWinterFuelPaymentResponse](s"itsd/charges/winter-fuel-payment/$nino")

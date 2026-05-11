@@ -157,7 +157,7 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
 
     def downstreamQueryParams: Map[String, String] = {
       val source = maybeSource.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
-      Map("view" -> source.toDownstreamViewString, "taxYear" -> "26-27")
+      Map("taxYear" -> "26-27", "view" -> source.toDownstreamViewString)
     }
 
     private def uri: String = s"/winter-fuel-payment/$nino/$taxYear"
