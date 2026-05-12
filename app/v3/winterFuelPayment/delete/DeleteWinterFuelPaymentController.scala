@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.pensionCharges.delete
+package v3.winterFuelPayment.delete
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.routing.Version
@@ -27,20 +27,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                service: DeletePensionChargesService,
-                                                validatorFactory: DeletePensionChargesValidatorFactory,
-                                                auditService: AuditService,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+class DeleteWinterFuelPaymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                   val lookupService: MtdIdLookupService,
+                                                   service: DeleteWinterFuelPaymentService,
+                                                   validatorFactory: DeleteWinterFuelPaymentValidatorFactory,
+                                                   auditService: AuditService,
+                                                   cc: ControllerComponents,
+                                                   val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
-  val endpointName = "delete-pension-charges"
+  val endpointName = "delete-winter-fuel-payment"
 
   implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
-    controllerName = "DeletePensionChargesController",
-    endpointName = "Delete Pension Charges"
+    controllerName = "DeleteWinterFuelPaymentController",
+    endpointName = "deleteWinterFuelPayment"
   )
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = {
@@ -52,11 +52,11 @@ class DeletePensionChargesController @Inject() (val authService: EnrolmentsAuthS
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService(service.deletePensionCharges)
+          .withService(service.delete)
           .withAuditing(AuditHandler(
             auditService = auditService,
-            auditType = "DeletePensionsCharges",
-            transactionName = "delete-pensions-charges",
+            auditType = "DeleteWinterFuelPayment",
+            transactionName = "delete-winter-fuel-payment",
             apiVersion = Version(request),
             params = Map("nino" -> nino, "taxYear" -> taxYear)
           ))

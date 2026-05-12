@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.pensionCharges.delete
+package v3.winterFuelPayment.delete
 
 import play.api.Configuration
 import play.api.libs.json.JsValue
@@ -24,26 +24,26 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import shared.models.outcomes.ResponseWrapper
-import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeletePensionChargesControllerSpec
+class DeleteWinterFuelPaymentControllerSpec
     extends ControllerTestRunner
-    with MockDeletePensionChargesValidatorFactory
-    with MockDeletePensionChargesService {
+    with MockDeleteWinterFuelPaymentValidatorFactory
+    with MockDeleteWinterFuelPaymentService {
 
-  private val taxYear     = "2020-21"
-  private val requestData = Def1_DeletePensionChargesRequestData(Nino(validNino), TaxYear.fromMtd(taxYear))
+  private val taxYear     = "2026-27"
+  private val requestData = DeleteWinterFuelPaymentRequestData(Nino(validNino), TaxYear.fromMtd(taxYear))
 
   "delete" should {
     "return a successful response with status 204 (NO_CONTENT)" when {
       "the request received is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockDeletePensionChargesService
-          .deletePensionCharges(requestData)
+        MockDeleteWinterFuelPaymentService
+          .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         runOkTestWithAudit(expectedStatus = NO_CONTENT)
@@ -60,8 +60,8 @@ class DeletePensionChargesControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockDeletePensionChargesService
-          .deletePensionCharges(requestData)
+        MockDeleteWinterFuelPaymentService
+          .delete(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, TaxYearFormatError))))
 
         runErrorTestWithAudit(TaxYearFormatError)
@@ -71,11 +71,11 @@ class DeletePensionChargesControllerSpec
 
   class Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller: DeletePensionChargesController = new DeletePensionChargesController(
+    val controller: DeleteWinterFuelPaymentController = new DeleteWinterFuelPaymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      service = mockDeletePensionChargesService,
-      validatorFactory = mockDeletePensionChargesValidatorFactory,
+      service = mockDeleteWinterFuelPaymentService,
+      validatorFactory = mockDeleteWinterFuelPaymentValidatorFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -91,8 +91,8 @@ class DeletePensionChargesControllerSpec
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
-        auditType = "DeletePensionsCharges",
-        transactionName = "delete-pensions-charges",
+        auditType = "DeleteWinterFuelPayment",
+        transactionName = "delete-winter-fuel-payment",
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,

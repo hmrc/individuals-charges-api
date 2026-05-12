@@ -9,3 +9,9 @@ put:
   security:
     - User-Restricted:
         - write:self-assessment
+
+delete:
+  $ref: "./winter_fuel_payment_delete.yaml"
+  security:
+    - User-Restricted:
+        - write:self-assessment

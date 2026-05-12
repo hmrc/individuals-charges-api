@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v3.winterFuelPayment.retrieve.model.request
+package v3.winterFuelPayment.delete.model.request
 
-import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 
-case class RetrieveWinterFuelPaymentRequestData(nino: Nino, taxYear: TaxYear, source: MtdSourceEnum)
+case class DeleteWinterFuelPaymentRequestData(nino: Nino, taxYear: TaxYear)

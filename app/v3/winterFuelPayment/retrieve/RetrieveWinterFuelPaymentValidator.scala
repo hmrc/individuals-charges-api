@@ -28,8 +28,9 @@ import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequ
 
 import javax.inject.Inject
 
-class RetrieveWinterFuelPaymentValidator @Inject()(nino: String, taxYear: String, maybeSource: Option[String])
-  extends Validator[RetrieveWinterFuelPaymentRequestData] with ResolverSupport {
+class RetrieveWinterFuelPaymentValidator @Inject() (nino: String, taxYear: String, maybeSource: Option[String])
+    extends Validator[RetrieveWinterFuelPaymentRequestData]
+    with ResolverSupport {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2026-27"))
 

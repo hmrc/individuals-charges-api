@@ -21,10 +21,10 @@ import DeletePensionChargesSchema.Def1
 import v3.pensionCharges.delete.def1.Def1_DeletePensionChargesValidator
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 
 @Singleton
-class DeletePensionChargesValidatorFactory @Inject() {
+class DeletePensionChargesValidatorFactory {
 
   def validator(nino: String, taxYear: String): Validator[DeletePensionChargesRequestData] = {
 

@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveWinterFuelPaymentService @Inject()(connector: RetrieveWinterFuelPaymentConnector) extends BaseService {
+class RetrieveWinterFuelPaymentService @Inject() (connector: RetrieveWinterFuelPaymentConnector) extends BaseService {
 
   def retrieve(request: RetrieveWinterFuelPaymentRequestData)(implicit
       ctx: RequestContext,

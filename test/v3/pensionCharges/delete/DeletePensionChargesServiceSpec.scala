@@ -17,12 +17,10 @@
 package v3.pensionCharges.delete
 
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.controllers.EndpointLogContext
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
-import uk.gov.hmrc.http.HeaderCarrier
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 
@@ -34,9 +32,6 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
   val taxYear: TaxYear = TaxYear.fromMtd("2020-21")
 
   trait Test extends MockDeletePensionChargesConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
     lazy val service = new DeletePensionChargesService(mockDeletePensionChargesConnector)
   }
 
@@ -47,9 +42,9 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
       "the connector call is successful" in new Test {
         MockDeletePensionChargesConnector
           .deletePensionCharges(request)
-          .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
+        await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
 
@@ -63,46 +58,35 @@ class DeletePensionChargesServiceSpec extends ServiceSpec {
       }
     }
 
-    "service" when {
-      "a service call is successful" should {
-        "return a mapped result" in new Test {
+    "map errors according to spec" when {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a code $downstreamErrorCode error is returned from the service" in new Test {
+
           MockDeletePensionChargesConnector
             .deletePensionCharges(request)
-            .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          await(service.deletePensionCharges(request)) shouldBe Right(ResponseWrapper("resultId", ()))
+          await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
-      }
-      "a service call is unsuccessful" should {
-        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-          s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
 
-            MockDeletePensionChargesConnector
-              .deletePensionCharges(request)
-              .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+      val errors = Seq(
+        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+        "NO_DATA_FOUND"             -> NotFoundError,
+        "INVALID_CORRELATIONID"     -> InternalError,
+        "SERVER_ERROR"              -> InternalError,
+        "SERVICE_UNAVAILABLE"       -> InternalError,
+        "UNEXPECTED_ERROR"          -> InternalError,
+        "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError
+      )
 
-            await(service.deletePensionCharges(request)) shouldBe Left(ErrorWrapper("resultId", error))
-          }
+      val extraTysErrors = Map(
+        "INVALID_CORRELATION_ID" -> InternalError,
+        "NOT_FOUND"              -> NotFoundError,
+        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+      )
 
-        val errors = Seq(
-          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "NO_DATA_FOUND"             -> NotFoundError,
-          "INVALID_CORRELATIONID"     -> InternalError,
-          "SERVER_ERROR"              -> InternalError,
-          "SERVICE_UNAVAILABLE"       -> InternalError,
-          "UNEXPECTED_ERROR"          -> InternalError,
-          "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError
-        )
-
-        val extraTysErrors = Map(
-          "INVALID_CORRELATION_ID" -> InternalError,
-          "NOT_FOUND"              -> NotFoundError,
-          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
-        )
-
-        (errors ++ extraTysErrors).foreach(serviceError.tupled)
-      }
+      (errors ++ extraTysErrors).foreach(serviceError.tupled)
     }
   }
 

@@ -35,7 +35,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
 
     def taxYear: TaxYear
 
-    protected val request: CreateAmendWinterFuelPaymentRequestData= CreateAmendWinterFuelPaymentRequestData(
+    protected val request: CreateAmendWinterFuelPaymentRequestData = CreateAmendWinterFuelPaymentRequestData(
       nino = Nino(nino),
       taxYear = taxYear,
       body = requestBodyModel
@@ -89,4 +89,3 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
   }
 
 }
-

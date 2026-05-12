@@ -34,7 +34,10 @@ class CreateAmendWinterFuelPaymentValidatorSpec extends UnitSpec with JsonErrorV
   private val parsedNino: Nino       = Nino(validNino)
   private val parsedTaxYear: TaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean = false): CreateAmendWinterFuelPaymentValidator =
+  private def validator(nino: String,
+                        taxYear: String,
+                        body: JsValue,
+                        temporalValidationEnabled: Boolean = false): CreateAmendWinterFuelPaymentValidator =
     new CreateAmendWinterFuelPaymentValidator(nino, taxYear, body, temporalValidationEnabled)
 
   "running a validation" should {
@@ -103,16 +106,16 @@ class CreateAmendWinterFuelPaymentValidatorSpec extends UnitSpec with JsonErrorV
 
     "return RuleIncorrectOrEmptyBodyError error" when {
       "passed a value for winter fuel payment of incorrect type" in {
-        
+
         val invalidJson: JsValue = validRequestBodyJson.update(JsPath \ "winterFuelPayment", JsString("invalid"))
-        
+
         val result: Either[ErrorWrapper, CreateAmendWinterFuelPaymentRequestData] =
           validator(validNino, validTaxYear, invalidJson).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/winterFuelPayment")))
       }
     }
-    
+
     "return ValueFormatError" when {
       "passed a value for winter fuel payment exceeding max value" in {
         val invalidJson: JsValue = validRequestBodyJson.update(JsPath \ "winterFuelPayment", JsNumber(123.123))
@@ -123,7 +126,6 @@ class CreateAmendWinterFuelPaymentValidatorSpec extends UnitSpec with JsonErrorV
         result shouldBe Left(ErrorWrapper(correlationId, ValueFormatError.withPath("/winterFuelPayment")))
       }
     }
-    
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {

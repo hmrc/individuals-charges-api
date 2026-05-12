@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package v3.winterFuelPayment.retrieve.model.request
+package v3.winterFuelPayment.delete
 
-import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import shared.controllers.validators.Validator
+import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
-case class RetrieveWinterFuelPaymentRequestData(nino: Nino, taxYear: TaxYear, source: MtdSourceEnum)
+import javax.inject.Singleton
+
+@Singleton
+class DeleteWinterFuelPaymentValidatorFactory {
+
+  def validator(nino: String, taxYear: String): Validator[DeleteWinterFuelPaymentRequestData] = {
+
+    new DeleteWinterFuelPaymentValidator(nino, taxYear)
+
+  }
+
+}

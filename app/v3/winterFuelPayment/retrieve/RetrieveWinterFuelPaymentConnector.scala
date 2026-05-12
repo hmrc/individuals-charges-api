@@ -29,10 +29,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveWinterFuelPaymentConnector @Inject()(val http: HttpClientV2, val appConfig: SharedAppConfig)
-  extends BaseDownstreamConnector {
+class RetrieveWinterFuelPaymentConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
-  def retrieve(request: RetrieveWinterFuelPaymentRequestData)(implicit 
+  def retrieve(request: RetrieveWinterFuelPaymentRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveWinterFuelPaymentResponse]] = {
@@ -43,7 +42,7 @@ class RetrieveWinterFuelPaymentConnector @Inject()(val http: HttpClientV2, val a
 
     val downstreamUri: DownstreamUri[RetrieveWinterFuelPaymentResponse] =
       HipUri[RetrieveWinterFuelPaymentResponse](s"itsd/charges/winter-fuel-payment/$nino")
-      
+
     get(downstreamUri, queryParams)
   }
 

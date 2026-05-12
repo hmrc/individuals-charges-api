@@ -25,7 +25,10 @@ import javax.inject.Singleton
 @Singleton
 class CreateAmendWinterFuelPaymentValidatorFactory {
 
-  def validator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean): Validator[CreateAmendWinterFuelPaymentRequestData] =
+  def validator(nino: String,
+                taxYear: String,
+                body: JsValue,
+                temporalValidationEnabled: Boolean): Validator[CreateAmendWinterFuelPaymentRequestData] =
     new CreateAmendWinterFuelPaymentValidator(nino, taxYear, body, temporalValidationEnabled)
 
 }

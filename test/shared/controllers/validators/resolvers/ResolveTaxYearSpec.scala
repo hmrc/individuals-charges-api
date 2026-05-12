@@ -101,10 +101,10 @@ class ResolveTaxYearSpec extends UnitSpec with ResolverSupport {
         result shouldBe Invalid(List(RuleTaxYearNotSupportedError))
       }
     }
-    
+
     "return RuleTaxYearNotEndedError" when {
       "when the tax year has not ended" in {
-        val currentTaxYear = TaxYear.currentTaxYear
+        val currentTaxYear                            = TaxYear.currentTaxYear
         val result: Validated[Seq[MtdError], TaxYear] = resolver(currentTaxYear.asMtd)
         result shouldBe Invalid(List(RuleTaxYearNotEndedError))
       }

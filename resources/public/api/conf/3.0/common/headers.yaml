@@ -90,7 +90,6 @@ components:
         Only in sandbox environment. See Test Data table for all header values.
       schema:
         type: string
-        example: "-"
       required: false
 
     suspendTemporalValidationsHeader:

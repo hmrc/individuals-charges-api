@@ -88,7 +88,13 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
           ("AA123456A", "2026-28", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2024-25", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2026-27", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-          ("AA123456A", "2026-27", validRequestBodyJson.update("/winterFuelPayment", JsNumber(123.123)), BAD_REQUEST, ValueFormatError.withPath("/winterFuelPayment"), None)
+          (
+            "AA123456A",
+            "2026-27",
+            validRequestBodyJson.update("/winterFuelPayment", JsNumber(123.123)),
+            BAD_REQUEST,
+            ValueFormatError.withPath("/winterFuelPayment"),
+            None)
         )
 
         input.foreach(validationErrorTest.tupled)
@@ -102,7 +108,12 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, Map("taxYear" -> "26-27"), downstreamStatus, errorBody(downstreamStatus, downstreamCode))
+              DownstreamStub.onError(
+                DownstreamStub.PUT,
+                downstreamUri,
+                Map("taxYear" -> "26-27"),
+                downstreamStatus,
+                errorBody(downstreamStatus, downstreamCode))
 
             }
 
@@ -156,8 +167,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
     }
 
     def errorBody(status: Int, code: String): String = {
-      if (status == UNPROCESSABLE_ENTITY) then
-        s"""
+      if (status == UNPROCESSABLE_ENTITY) then s"""
            |[
            |  {
            |    "errorCode": "$code",
@@ -165,8 +175,7 @@ class CreateAmendWinterFuelPaymentControllerISpec extends IntegrationBaseSpec wi
            |  }
            |]
         """.stripMargin
-      else
-        s"""
+      else s"""
            |{
            |    "origin": "HIP",
            |    "response": [

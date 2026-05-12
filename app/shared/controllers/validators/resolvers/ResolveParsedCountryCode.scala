@@ -162,7 +162,7 @@ object ResolveParsedCountryCode {
     "ZMB",
     "ZWE"
   )
-  
+
   def apply(value: String, path: String): Validated[List[MtdError], String] = {
     if (value.length != 3) {
       Invalid(List(CountryCodeFormatError.withPath(path)))
@@ -179,4 +179,5 @@ object ResolveParsedCountryCode {
       case None        => Valid(None)
     }
   }
+
 }

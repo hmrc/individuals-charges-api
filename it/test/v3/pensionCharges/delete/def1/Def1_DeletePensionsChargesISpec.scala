@@ -48,7 +48,7 @@ class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {
       buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, s"application/vnd.hmrc.3.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 
