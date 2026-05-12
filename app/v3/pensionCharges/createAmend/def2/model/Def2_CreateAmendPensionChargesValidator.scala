@@ -50,6 +50,8 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
   private val resolveParsedNumber      = ResolveParsedNumber()
   private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$".r
   private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$".r
+  private val nameRegex = "^.{1,105}$".r
+  private val addressRegex = "^.{1,250}$".r
 
   def validateBusinessRules(
       parsed: Def2_CreateAmendPensionChargesRequestData): Validated[Seq[MtdError], Def2_CreateAmendPensionChargesRequestData] = {
@@ -94,12 +96,8 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
     def validateProviderName(startOfPath: String, overseasSchemeProviders: Seq[request.OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
         import schemeProviderWithIndex._
-        val nameMaxLength = 105
-        if (providerName.length() <= nameMaxLength && providerName.nonEmpty) {
-          valid
-        } else {
-          Invalid(List(ProviderNameFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerName")))
-        }
+
+        ResolveStringPattern(providerName, nameRegex, ProviderNameFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerName"))
       }
     }
 
@@ -119,12 +117,8 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
     def validateProviderAddress(startOfPath: String, overseasSchemeProviders: Seq[request.OverseasSchemeProvider]): Validated[Seq[MtdError], Unit] = {
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
         import schemeProviderWithIndex._
-        val addressMaxLength = 250
-        if (providerAddress.length() <= addressMaxLength && providerAddress.nonEmpty) {
-          valid
-        } else {
-          Invalid(List(ProviderAddressFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerAddress")))
-        }
+
+        ResolveStringPattern(providerAddress, addressRegex, ProviderAddressFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerAddress"))
       }
     }
 
@@ -146,12 +140,7 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
         schemeProviderWithIndex.qualifyingRecognisedOverseasPensionScheme
           .traverse { qualifyingRecognisedOverseasPensionScheme =>
             qualifyingRecognisedOverseasPensionScheme.zipWithIndex.traverse_ { case (qropsReference, qropsIndex) =>
-              if (qropsRefRegex.matches(qropsReference)) {
-                valid
-              } else {
-                Invalid(List(
-                  QOPSRefFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex")))
-              }
+              ResolveStringPattern(qropsReference, qropsRefRegex, QOPSRefFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex"))
             }
           }
       }
@@ -183,11 +172,7 @@ object Def2_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def2_
 
     def validateReferences(startOfPath: String, pensionSchemeTaxReference: Seq[String]): Validated[Seq[MtdError], Unit] = {
       pensionSchemeTaxReference.zipWithIndex.traverse_ { case (reference, referenceIndex) =>
-        if (pensionSchemeTaxRefRegex.matches(reference)) {
-          valid
-        } else {
-          Invalid(List(PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex")))
-        }
+        ResolveStringPattern(reference, pensionSchemeTaxRefRegex, PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex"))
       }
     }
 

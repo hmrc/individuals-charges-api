@@ -16,6 +16,7 @@
 
 package v3.pensionCharges.createAmend.def1
 
+import common.errors.{PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError}
 import play.api.libs.json.{JsObject, JsValue}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.*
@@ -35,6 +36,7 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
   private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
+  private val parsedFullRequestBodyLeadingTrailingWhitespace = fullValidJsonLeadingTrailingWhitespace.as[Def1_CreateAmendPensionChargesRequestBody]
   private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
 
   private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)
@@ -56,6 +58,15 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
 
         result shouldBe Right(
           Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedUpdatedRequestBody)
+        )
+      }
+
+      "a valid request is supplied with leading/trailing whitespace in an otherwise valid field" in {
+        val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
+          validator(validNino, validTaxYear, fullValidJsonLeadingTrailingWhitespace).validateAndWrapResult()
+
+        result shouldBe Right(
+          Def1_CreateAmendPensionChargesRequestData(parsedNino, parsedTaxYear, parsedFullRequestBodyLeadingTrailingWhitespace)
         )
       }
     }
@@ -235,6 +246,54 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
             )
           )
         )
+      }
+    }
+
+    "return format error" when {
+      "empty or whitespace in fields" in {
+        List(fullJsonWithWhitespaceOnlyTextFields, fullJsonWithEmptyTextFields).foreach { (payload: JsValue) =>
+          val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
+            validator(validNino, validTaxYear, payload).validateAndWrapResult()
+
+          result shouldBe Left(
+            ErrorWrapper(
+              correlationId,
+              BadRequestError,
+              Some(
+                List(
+                  PensionSchemeTaxRefFormatError.withPaths(
+                    List(
+                      "/pensionContributions/pensionSchemeTaxReference/0",
+                      "/pensionContributions/pensionSchemeTaxReference/1",
+                      "/pensionSavingsTaxCharges/pensionSchemeTaxReference/0",
+                      "/pensionSavingsTaxCharges/pensionSchemeTaxReference/1",
+                      "/pensionSchemeUnauthorisedPayments/pensionSchemeTaxReference/0",
+                      "/pensionSchemeUnauthorisedPayments/pensionSchemeTaxReference/1"
+                    )
+                  ),
+                  ProviderAddressFormatError.withPaths(
+                    List(
+                      "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerAddress",
+                      "/overseasPensionContributions/overseasSchemeProvider/0/providerAddress"
+                    )
+                  ),
+                  ProviderNameFormatError.withPaths(
+                    List(
+                      "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/providerName",
+                      "/overseasPensionContributions/overseasSchemeProvider/0/providerName"
+                    )
+                  ),
+                  QOPSRefFormatError.withPaths(
+                    List(
+                      "/pensionSchemeOverseasTransfers/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0",
+                      "/overseasPensionContributions/overseasSchemeProvider/0/qualifyingRecognisedOverseasPensionScheme/0"
+                    )
+                  )
+                )
+              )
+            )
+          )
+        }
       }
     }
   }

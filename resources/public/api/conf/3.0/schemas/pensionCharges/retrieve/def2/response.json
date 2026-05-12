@@ -22,13 +22,15 @@
             "type": "object",
             "properties": {
               "providerName": {
-                "description": "The name of the pension provider",
+                "description": "The name of the pension provider. Must not be empty or contain only whitespace.",
                 "type": "string",
+                "pattern": "^.{1,105}$",
                 "example": "Overseas Pensions Plc"
               },
               "providerAddress": {
-                "description": "The address of the pension provider.",
+                "description": "The address of the pension provider. Must not be empty or contain only whitespace.",
                 "type": "string",
+                "pattern": "^.{1,250}$",
                 "example": "111 Main Street, Any Town, Any City"
               },
               "providerCountryCode": {
@@ -215,13 +217,15 @@
             "type": "object",
             "properties": {
               "providerName": {
-                "description": "The name of the pension provider",
+                "description": "The name of the pension provider. Must not be empty or contain only whitespace.",
                 "type": "string",
+                "pattern": "^.{1,105}$",
                 "example": "Overseas Pensions Plc"
               },
               "providerAddress": {
-                "description": "The address of the pension provider.",
+                "description": "The address of the pension provider. Must not be empty or contain only whitespace.",
                 "type": "string",
+                "pattern": "^.{1,250}$",
                 "example": "111 Main Street, Any Town, Any City"
               },
               "providerCountryCode": {

@@ -45,8 +45,31 @@ class ResolveStringPatternSpec extends UnitSpec {
         val result = resolveTaxYearPattern("does-not-match-regex")
         result shouldBe Invalid(List(TaxYearFormatError))
       }
+
+      "given a non-matching string via the legacy apply() function and no override error" in {
+        val result = ResolveStringPattern("does-not-match-regex", taxYearRegex, TaxYearFormatError)
+        result shouldBe Invalid(List(TaxYearFormatError))
+      }
+
+      "given an empty string" in {
+        val result = resolveTaxYearPattern("")
+        result shouldBe Invalid(List(TaxYearFormatError))
+      }
+
+      "given an empty string via the legacy apply() function" in {
+        val result = ResolveStringPattern("", taxYearRegex, TaxYearFormatError)
+        result shouldBe Invalid(List(TaxYearFormatError))
+      }
+
+      "given a string with only spaces" in {
+        val result = resolveTaxYearPattern("   ")
+        result shouldBe Invalid(List(TaxYearFormatError))
+      }
+
+      "given a string with only spaces via the legacy apply() function" in {
+        val result = ResolveStringPattern("   ", taxYearRegex, TaxYearFormatError)
+        result shouldBe Invalid(List(TaxYearFormatError))
+      }
     }
-
   }
-
 }
