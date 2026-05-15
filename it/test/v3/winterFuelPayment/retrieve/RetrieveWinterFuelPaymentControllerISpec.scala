@@ -135,6 +135,7 @@ class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "1117", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "1215", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "1216", INTERNAL_SERVER_ERROR, InternalError),
+          (BAD_REQUEST, "1239", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
           (NOT_FOUND, "5010", NOT_FOUND, NotFoundError),
           (NOT_IMPLEMENTED, "5000", INTERNAL_SERVER_ERROR, InternalError)

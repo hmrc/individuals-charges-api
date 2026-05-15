@@ -38,6 +38,7 @@ class RetrieveWinterFuelPaymentService @Inject() (connector: RetrieveWinterFuelP
     "1117" -> TaxYearFormatError,
     "1215" -> NinoFormatError,
     "1216" -> InternalError,
+    "1239" -> InternalError,
     "5010" -> NotFoundError,
     "5000" -> InternalError
   )
