@@ -16,10 +16,10 @@
 
 package v3.winterFuelPayment.retrieve.model.downstream
 
-import shared.models.domain.MtdSourceEnum
-import shared.models.downstream.DownstreamSourceEnum
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.models.domain.MtdSourceEnum
+import api.models.downstream.DownstreamSourceEnum
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 
 class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 

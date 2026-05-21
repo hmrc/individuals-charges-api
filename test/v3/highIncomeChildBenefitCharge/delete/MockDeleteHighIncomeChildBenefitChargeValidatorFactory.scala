@@ -17,7 +17,7 @@
 package v3.highIncomeChildBenefitCharge.delete
 
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 trait MockDeleteHighIncomeChildBenefitChargeValidatorFactory extends MockValidatorFactory[DeleteHighIncomeChildBenefitChargeRequestData] {

@@ -18,10 +18,10 @@ package v3.highIncomeChildBenefitCharge.createAmend
 
 import cats.data.Validated
 import cats.data.Validated.Invalid
-import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.{ResolveInteger, ResolveIsoDate, ResolveParsedNumber}
-import shared.models.domain.TaxYear
-import shared.models.errors.*
+import api.controllers.validators.RulesValidator
+import api.controllers.validators.resolvers.{ResolveInteger, ResolveIsoDate, ResolveParsedNumber}
+import api.models.domain.TaxYear
+import api.models.errors.*
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 object CreateAmendHighIncomeChildBenefitChargeRulesValidator extends RulesValidator[CreateAmendHighIncomeChildBenefitChargeRequest] {

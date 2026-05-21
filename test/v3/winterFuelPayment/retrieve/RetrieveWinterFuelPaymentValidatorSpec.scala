@@ -17,10 +17,10 @@
 package v3.winterFuelPayment.retrieve
 
 import common.errors.SourceFormatError
-import shared.models.domain.MtdSourceEnum.latest
-import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.MtdSourceEnum.latest
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {

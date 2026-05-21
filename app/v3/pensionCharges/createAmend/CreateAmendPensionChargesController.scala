@@ -18,11 +18,11 @@ package v3.pensionCharges.createAmend
 
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.routing.*
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.config.AppConfig
+import api.controllers.*
+import api.routing.*
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.*
 import scala.concurrent.ExecutionContext
@@ -34,7 +34,7 @@ class CreateAmendPensionChargesController @Inject() (val authService: Enrolments
                                                      validatorFactory: CreateAmendPensionChargesValidatorFactory,
                                                      auditService: AuditService,
                                                      cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+                                                     val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "create-amend-pension-charges"

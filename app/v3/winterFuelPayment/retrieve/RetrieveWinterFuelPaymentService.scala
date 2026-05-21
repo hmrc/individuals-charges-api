@@ -17,9 +17,9 @@
 package v3.winterFuelPayment.retrieve
 
 import cats.implicits.*
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.services.{BaseService, ServiceOutcome}
+import api.controllers.RequestContext
+import api.models.errors.*
+import api.services.{BaseService, ServiceOutcome}
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentResponse
 

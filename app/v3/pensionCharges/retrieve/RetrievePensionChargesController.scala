@@ -17,10 +17,10 @@
 package v3.pensionCharges.retrieve
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.config.AppConfig
+import api.controllers.*
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.*
 import scala.concurrent.ExecutionContext
@@ -30,7 +30,7 @@ class RetrievePensionChargesController @Inject() (val authService: EnrolmentsAut
                                                   service: RetrievePensionChargesService,
                                                   validatorFactory: RetrievePensionChargesValidatorFactory,
                                                   cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+                                                  val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-pension-charges"

@@ -21,10 +21,10 @@ import cats.data.Validated.Invalid
 import cats.implicits.*
 import common.errors.*
 import play.api.libs.json.JsValue
-import shared.controllers.validators.resolvers.*
-import shared.controllers.validators.{RulesValidator, Validator}
-import shared.models.domain.TaxYear
-import shared.models.errors.*
+import api.controllers.validators.resolvers.*
+import api.controllers.validators.{RulesValidator, Validator}
+import api.models.domain.TaxYear
+import api.models.errors.*
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v3.pensionCharges.createAmend.def1.model.request.*
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
@@ -50,8 +50,8 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
   private val resolveParsedNumber      = ResolveParsedNumber()
   private val qropsRefRegex            = "^[Q]{1}[0-9]{6}$".r
   private val pensionSchemeTaxRefRegex = "^\\d{8}[R]{1}[a-zA-Z]{1}$".r
-  private val nameRegex = "^.{1,105}$".r
-  private val addressRegex = "^.{1,250}$".r
+  private val nameRegex                = "^.{1,105}$".r
+  private val addressRegex             = "^.{1,250}$".r
 
   def validateBusinessRules(
       parsed: Def1_CreateAmendPensionChargesRequestData): Validated[Seq[MtdError], Def1_CreateAmendPensionChargesRequestData] = {
@@ -118,7 +118,10 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
       overseasSchemeProviders.zipWithIndex.traverse_ { case (schemeProviderWithIndex, index) =>
         import schemeProviderWithIndex._
 
-        ResolveStringPattern(providerAddress, addressRegex, ProviderAddressFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerAddress"))
+        ResolveStringPattern(
+          providerAddress,
+          addressRegex,
+          ProviderAddressFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/providerAddress"))
       }
     }
 
@@ -140,7 +143,11 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
         schemeProviderWithIndex.qualifyingRecognisedOverseasPensionScheme
           .traverse { qualifyingRecognisedOverseasPensionScheme =>
             qualifyingRecognisedOverseasPensionScheme.zipWithIndex.traverse_ { case (qropsReference, qropsIndex) =>
-              ResolveStringPattern(qropsReference, qropsRefRegex, QOPSRefFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex"))
+              ResolveStringPattern(
+                qropsReference,
+                qropsRefRegex,
+                QOPSRefFormatError.withPath(s"/$startOfPath/overseasSchemeProvider/$index/qualifyingRecognisedOverseasPensionScheme/$qropsIndex")
+              )
             }
           }
       }
@@ -171,7 +178,10 @@ object Def1_CreateAmendPensionChargesRulesValidator extends RulesValidator[Def1_
 
     def validateReferences(startOfPath: String, pensionSchemeTaxReference: Seq[String]): Validated[Seq[MtdError], Unit] = {
       pensionSchemeTaxReference.zipWithIndex.traverse_ { case (reference, referenceIndex) =>
-        ResolveStringPattern(reference, pensionSchemeTaxRefRegex, PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex"))
+        ResolveStringPattern(
+          reference,
+          pensionSchemeTaxRefRegex,
+          PensionSchemeTaxRefFormatError.withPath(s"/$startOfPath/pensionSchemeTaxReference/$referenceIndex"))
       }
     }
 

@@ -18,7 +18,7 @@ package v3.winterFuelPayment.createAmend
 
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
 trait MockCreateAmendWinterFuelPaymentValidatorFactory extends MockValidatorFactory[CreateAmendWinterFuelPaymentRequestData] {

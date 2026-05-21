@@ -17,7 +17,7 @@
 package v3.pensionCharges.retrieve
 
 import cats.data.Validated.{Invalid, Valid}
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v3.pensionCharges.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData

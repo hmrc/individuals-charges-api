@@ -16,6 +16,6 @@
 
 package v3.highIncomeChildBenefitCharge.delete.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 
 case class DeleteHighIncomeChildBenefitChargeRequestData(nino: Nino, taxYear: TaxYear)

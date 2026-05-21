@@ -18,9 +18,9 @@ package v3.pensionCharges.createAmend.def1
 
 import common.errors.{PensionSchemeTaxRefFormatError, ProviderAddressFormatError, ProviderNameFormatError, QOPSRefFormatError}
 import play.api.libs.json.{JsObject, JsValue}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.def1.model.request.{Def1_CreateAmendPensionChargesRequestBody, Def1_CreateAmendPensionChargesRequestData}
@@ -35,9 +35,9 @@ class Def1_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val parsedFullRequestBody    = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
+  private val parsedFullRequestBody                          = fullValidJson.as[Def1_CreateAmendPensionChargesRequestBody]
   private val parsedFullRequestBodyLeadingTrailingWhitespace = fullValidJsonLeadingTrailingWhitespace.as[Def1_CreateAmendPensionChargesRequestBody]
-  private val parsedUpdatedRequestBody = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
+  private val parsedUpdatedRequestBody                       = fullValidJsonUpdated.as[Def1_CreateAmendPensionChargesRequestBody]
 
   private def validator(nino: String, taxYear: String, body: JsValue) = new Def1_CreateAmendPensionChargesValidator(nino, taxYear, body)
 

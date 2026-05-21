@@ -18,11 +18,11 @@ package v3.winterFuelPayment.retrieve
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.MtdSourceEnum.`hmrc-held`
-import shared.models.domain.TaxYear
-import shared.models.errors.{ErrorWrapper, NinoFormatError, NotFoundError}
-import shared.models.outcomes.ResponseWrapper
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.MtdSourceEnum.`hmrc-held`
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NinoFormatError, NotFoundError}
+import api.models.outcomes.ResponseWrapper
 import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseMtdJson, responseModel}
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
@@ -83,11 +83,11 @@ class RetrieveWinterFuelPaymentControllerSpec extends ControllerTestRunner {
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieve(validNino, taxYear, Some(source))(fakeRequest)
   }

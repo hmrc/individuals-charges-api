@@ -16,7 +16,7 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeRequest
 
 import javax.inject.Singleton

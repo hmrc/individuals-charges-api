@@ -19,7 +19,7 @@ package v3.pensionCharges.delete
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.connectors.DownstreamOutcome
+import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

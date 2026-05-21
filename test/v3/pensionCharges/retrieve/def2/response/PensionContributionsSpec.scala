@@ -17,7 +17,7 @@
 package v3.pensionCharges.retrieve.def2.response
 
 import play.api.libs.json.*
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v3.pensionCharges.createAmend.def1.model.request.PensionContributions
 
 class PensionContributionsSpec extends UnitSpec {

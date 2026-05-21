@@ -16,9 +16,9 @@
 
 package v3.pensionCharges.retrieve.def1
 
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v3.pensionCharges.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData

@@ -16,9 +16,9 @@
 
 package v3.winterFuelPayment.retrieve.model.response
 
-import shared.models.domain.MtdSourceEnum
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.models.domain.MtdSourceEnum
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 
 class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 

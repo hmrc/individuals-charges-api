@@ -16,15 +16,15 @@
 
 package v3.pensionCharges.retrieve.def2
 
-import shared.config.MockSharedAppConfig
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import shared.utils.UnitSpec
+import api.config.MockAppConfig
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import api.utils.UnitSpec
 import v3.pensionCharges.retrieve.RetrievePensionChargesValidatorFactory
 import v3.pensionCharges.retrieve.def2.model.request.Def2_RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
 
-class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockSharedAppConfig {
+class Def2_RetrievePensionChargesValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"

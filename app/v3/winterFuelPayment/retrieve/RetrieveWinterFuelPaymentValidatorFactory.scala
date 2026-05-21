@@ -16,7 +16,7 @@
 
 package v3.winterFuelPayment.retrieve
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 import javax.inject.Singleton

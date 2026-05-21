@@ -16,6 +16,6 @@
 
 package v3.winterFuelPayment.retrieve.model.request
 
-import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 
 case class RetrieveWinterFuelPaymentRequestData(nino: Nino, taxYear: TaxYear, source: MtdSourceEnum)

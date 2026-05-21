@@ -17,10 +17,10 @@
 package v3.pensionCharges.createAmend
 
 import play.api.libs.json.Json
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.createAmendPensionChargesRequestBody
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData
@@ -44,7 +44,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: CreateAmendPensionChargesConnector =
-      new CreateAmendPensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new CreateAmendPensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
   }
 
@@ -54,7 +54,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val expected: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
@@ -74,7 +74,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val expected: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willPut(url"$baseUrl/income-tax/charges/pensions/23-24/$nino", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
@@ -87,7 +87,7 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and a single error" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+        val expected: Left[ResponseWrapper[NinoFormatError.type], Nothing] = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willPut(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))
@@ -100,7 +100,8 @@ class CreateAmendPensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
+        val expected: Left[ResponseWrapper[Seq[MtdError]], Nothing] =
+          Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
         willPut(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}", createAmendPensionChargesRequestBody)
           .returns(Future.successful(expected))

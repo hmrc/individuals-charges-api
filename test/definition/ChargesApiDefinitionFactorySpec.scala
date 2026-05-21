@@ -17,29 +17,29 @@
 package definition
 
 import cats.implicits.catsSyntaxValidatedId
-import shared.config.Deprecation.NotDeprecated
-import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
-import shared.definition.{APIDefinition, APIStatus, APIVersion, Definition}
-import shared.routing.Version3
-import shared.utils.UnitSpec
+import api.config.Deprecation.NotDeprecated
+import api.config.{ConfidenceLevelConfig, MockAppConfig}
+import api.definition.{APIDefinition, APIStatus, APIVersion, Definition}
+import api.routing.Version3
+import api.utils.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
-class ChargesApiDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
+class ChargesApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in {
-        MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
-        MockedSharedAppConfig.apiStatus(Version3) returns "3.0"
-        MockedSharedAppConfig.endpointsEnabled(Version3) returns true
-        MockedSharedAppConfig.confidenceLevelConfig
+        MockedAppConfig.apiGatewayContext returns "api.gateway.context"
+        MockedAppConfig.apiStatus(Version3) returns "3.0"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.confidenceLevelConfig
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
-        MockedSharedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
 
-        val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockSharedAppConfig)
+        val apiDefinitionFactory = new ChargesApiDefinitionFactory(mockAppConfig)
         apiDefinitionFactory.definition shouldBe
           Definition(
             api = APIDefinition(

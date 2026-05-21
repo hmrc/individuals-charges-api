@@ -16,6 +16,6 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve.model
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 
 case class RetrieveHighIncomeChildBenefitChargeRequest(nino: Nino, taxYear: TaxYear)

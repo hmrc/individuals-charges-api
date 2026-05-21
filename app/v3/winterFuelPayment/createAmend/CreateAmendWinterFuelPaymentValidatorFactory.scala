@@ -17,7 +17,7 @@
 package v3.winterFuelPayment.createAmend
 
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
 import javax.inject.Singleton

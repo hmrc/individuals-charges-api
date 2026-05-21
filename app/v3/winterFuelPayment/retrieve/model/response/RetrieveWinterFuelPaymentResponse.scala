@@ -17,8 +17,8 @@
 package v3.winterFuelPayment.retrieve.model.response
 
 import play.api.libs.json.*
-import shared.models.domain.{MtdSourceEnum, Timestamp}
-import shared.models.downstream.DownstreamSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
+import api.models.downstream.DownstreamSourceEnum
 import play.api.libs.functional.syntax.*
 
 case class RetrieveWinterFuelPaymentResponse(submittedOn: Timestamp, source: MtdSourceEnum, winterFuelPayment: BigDecimal)

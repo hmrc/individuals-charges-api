@@ -16,7 +16,7 @@
 
 package v3.pensionCharges.delete.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 
 trait DeletePensionChargesRequestData {
   val nino: Nino

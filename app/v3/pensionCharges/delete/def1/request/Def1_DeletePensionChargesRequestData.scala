@@ -16,7 +16,7 @@
 
 package v3.pensionCharges.delete.def1.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v3.pensionCharges.delete.DeletePensionChargesSchema
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

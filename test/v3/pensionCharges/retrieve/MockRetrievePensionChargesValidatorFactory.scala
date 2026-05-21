@@ -21,8 +21,8 @@ import cats.data.Validated.{Invalid, Valid}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.controllers.validators.Validator
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.models.errors.MtdError
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
 
 trait MockRetrievePensionChargesValidatorFactory extends TestSuite with MockFactory {

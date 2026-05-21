@@ -16,10 +16,10 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.minimumRequestBodyModel
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
@@ -68,7 +68,7 @@ class CreateAmendHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec
   private trait Test { self: ConnectorTest =>
 
     protected val connector: CreateAmendHighIncomeChildBenefitChargeConnector =
-      new CreateAmendHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new CreateAmendHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: CreateAmendHighIncomeChildBenefitChargeRequest = CreateAmendHighIncomeChildBenefitChargeRequest(
       nino = nino,

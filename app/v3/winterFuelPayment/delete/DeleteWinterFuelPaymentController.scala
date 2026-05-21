@@ -17,11 +17,11 @@
 package v3.winterFuelPayment.delete
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.routing.Version
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.routing.Version
+import api.config.AppConfig
+import api.controllers.*
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +33,7 @@ class DeleteWinterFuelPaymentController @Inject() (val authService: EnrolmentsAu
                                                    validatorFactory: DeleteWinterFuelPaymentValidatorFactory,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
-                                                   val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+                                                   val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "delete-winter-fuel-payment"
