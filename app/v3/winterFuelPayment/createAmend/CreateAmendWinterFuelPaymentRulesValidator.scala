@@ -16,10 +16,10 @@
 
 package v3.winterFuelPayment.createAmend
 
+import api.controllers.validators.RulesValidator
+import api.controllers.validators.resolvers.ResolveParsedNumber
+import api.models.errors.*
 import cats.data.Validated
-import shared.controllers.validators.RulesValidator
-import shared.controllers.validators.resolvers.ResolveParsedNumber
-import shared.models.errors.*
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
 object CreateAmendWinterFuelPaymentRulesValidator extends RulesValidator[CreateAmendWinterFuelPaymentRequestData] {

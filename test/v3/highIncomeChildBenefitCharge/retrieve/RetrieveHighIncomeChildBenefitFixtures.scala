@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsValue, Json}
-import shared.models.domain.Timestamp
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeResponse
 
 object RetrieveHighIncomeChildBenefitFixtures {

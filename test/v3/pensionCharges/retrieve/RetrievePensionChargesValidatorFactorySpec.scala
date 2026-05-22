@@ -16,12 +16,12 @@
 
 package v3.pensionCharges.retrieve
 
-import shared.config.MockSharedAppConfig
-import shared.utils.UnitSpec
+import api.config.MockAppConfig
+import api.utils.UnitSpec
 import v3.pensionCharges.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 
-class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockSharedAppConfig {
+class RetrievePensionChargesValidatorFactorySpec extends UnitSpec with MockAppConfig {
 
   private val validNino        = "AA123456A"
   private val validDef1TaxYear = "2021-22"

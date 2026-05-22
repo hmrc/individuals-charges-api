@@ -16,10 +16,10 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.responseModel
 import v3.highIncomeChildBenefitCharge.retrieve.model.{RetrieveHighIncomeChildBenefitChargeRequest, RetrieveHighIncomeChildBenefitChargeResponse}
@@ -67,7 +67,7 @@ class RetrieveHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
   trait Test { self: ConnectorTest =>
 
     protected val connector: RetrieveHighIncomeChildBenefitChargeConnector =
-      new RetrieveHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new RetrieveHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: RetrieveHighIncomeChildBenefitChargeRequest = RetrieveHighIncomeChildBenefitChargeRequest(
       nino = nino,

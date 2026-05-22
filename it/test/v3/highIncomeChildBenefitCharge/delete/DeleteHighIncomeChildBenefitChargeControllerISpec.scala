@@ -16,6 +16,10 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
+import api.models.domain.TaxYear
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
 import play.api.http.HeaderNames.ACCEPT
@@ -24,10 +28,6 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.domain.TaxYear
-import shared.models.errors.*
-import shared.services.*
-import shared.support.IntegrationBaseSpec
 
 class DeleteHighIncomeChildBenefitChargeControllerISpec extends IntegrationBaseSpec {
 

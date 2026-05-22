@@ -16,8 +16,8 @@
 
 package v3.winterFuelPayment.retrieve
 
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 trait MockRetrieveWinterFuelPaymentValidatorFactory extends MockValidatorFactory[RetrieveWinterFuelPaymentRequestData] {

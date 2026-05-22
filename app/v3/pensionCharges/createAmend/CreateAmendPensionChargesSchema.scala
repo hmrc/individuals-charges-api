@@ -16,9 +16,9 @@
 
 package v3.pensionCharges.createAmend
 
-import shared.config.SharedAppConfig
-import shared.controllers.validators.resolvers.ResolveTaxYear
-import shared.models.domain.TaxYear
+import api.config.AppConfig
+import api.controllers.validators.resolvers.ResolveTaxYear
+import api.models.domain.TaxYear
 
 sealed trait CreateAmendPensionChargesSchema
 
@@ -29,7 +29,7 @@ object CreateAmendPensionChargesSchema {
 
   private val defaultSchema = Def1
 
-  def schemaFor(taxYear: String)(implicit appConfig: SharedAppConfig): CreateAmendPensionChargesSchema =
+  def schemaFor(taxYear: String)(implicit appConfig: AppConfig): CreateAmendPensionChargesSchema =
     ResolveTaxYear(taxYear)
       .map(schemaFor)
       .getOrElse(defaultSchema)

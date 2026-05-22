@@ -16,11 +16,11 @@
 
 package v3.pensionCharges.delete
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.ServiceSpec
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

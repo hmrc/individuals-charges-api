@@ -16,12 +16,12 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
+import api.config.AppConfig
+import api.controllers.*
+import api.routing.Version
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.routing.Version
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -32,7 +32,7 @@ class DeleteHighIncomeChildBenefitChargeController @Inject() (val authService: E
                                                               validatorFactory: DeleteHighIncomeChildBenefitChargeValidatorFactory,
                                                               auditService: AuditService,
                                                               cc: ControllerComponents,
-                                                              val idGenerator: IdGenerator)(implicit appConfig: SharedAppConfig, ec: ExecutionContext)
+                                                              val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   val endpointName = "delete-high-income-child-benefit-charge-submission"

@@ -16,9 +16,9 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 class DeleteHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec {

@@ -16,14 +16,14 @@
 
 package v3.pensionCharges.createAmend
 
+import api.config.MockAppConfig
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import play.api.libs.json.{JsValue, Json}
-import shared.config.MockSharedAppConfig
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
-class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig {
+class CreateAmendPensionChargesValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"

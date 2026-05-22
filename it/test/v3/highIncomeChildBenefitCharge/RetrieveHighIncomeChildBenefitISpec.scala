@@ -16,14 +16,14 @@
 
 package v3.highIncomeChildBenefitCharge
 
+import api.models.domain.TaxYear
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
-import shared.models.domain.TaxYear
-import shared.models.errors.*
-import shared.services.*
-import shared.support.IntegrationBaseSpec
 import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.responseJson
 
 class RetrieveHighIncomeChildBenefitISpec extends IntegrationBaseSpec {

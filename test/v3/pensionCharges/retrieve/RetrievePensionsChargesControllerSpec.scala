@@ -16,15 +16,15 @@
 
 package v3.pensionCharges.retrieve
 
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v3.pensionCharges.retrieve.def1.fixture.RetrievePensionChargesFixture.{fullJson, retrieveResponse}
 import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 
@@ -87,11 +87,11 @@ class RetrievePensionsChargesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration(
       "supporting-agents-access-control.enabled" -> true
     )
 
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     override protected def callController(): Future[Result] = controller.retrieve(validNino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =

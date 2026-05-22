@@ -16,10 +16,10 @@
 
 package v3.pensionCharges.retrieve
 
+import api.controllers.RequestContext
+import api.models.errors.*
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.services.{BaseService, ServiceOutcome}
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.response.RetrievePensionChargesResponse
 

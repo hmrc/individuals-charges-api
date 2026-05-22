@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
+import api.controllers.validators.Validator
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 import javax.inject.Singleton

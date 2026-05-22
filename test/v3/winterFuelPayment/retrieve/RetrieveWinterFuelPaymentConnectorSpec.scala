@@ -16,10 +16,10 @@
 
 package v3.winterFuelPayment.retrieve
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{MtdSourceEnum, Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.responseModel
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
@@ -69,7 +69,7 @@ class RetrieveWinterFuelPaymentConnectorSpec extends ConnectorSpec {
   trait Test { self: ConnectorTest =>
 
     protected val connector: RetrieveWinterFuelPaymentConnector =
-      new RetrieveWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new RetrieveWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: RetrieveWinterFuelPaymentRequestData = RetrieveWinterFuelPaymentRequestData(
       nino = nino,

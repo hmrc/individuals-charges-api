@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.retrieve.def2.response
 
+import api.utils.UnitSpec
 import play.api.libs.json.*
-import shared.utils.UnitSpec
 import v3.pensionCharges.retrieve.def2.model.response.Charge
 
 class ChargeSpec extends UnitSpec {

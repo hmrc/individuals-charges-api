@@ -16,11 +16,11 @@
 
 package v3.winterFuelPayment.createAmend
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{ServiceOutcome, ServiceSpec}
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.*
 import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 

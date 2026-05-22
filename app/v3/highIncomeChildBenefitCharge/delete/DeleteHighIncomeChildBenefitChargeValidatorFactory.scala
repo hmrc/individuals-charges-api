@@ -16,8 +16,7 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
-import shared.controllers.validators.Validator
-
+import api.controllers.validators.Validator
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 import javax.inject.{Inject, Singleton}

@@ -16,23 +16,22 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
+import api.config.AppConfig
+import api.controllers.*
+import api.services.*
+import api.utils.IdGenerator
 import play.api.mvc.*
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.services.*
-import shared.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveHighIncomeChildBenefitChargeController @Inject() (
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    val service: RetrieveHighIncomeChildBenefitChargeService,
-    val validatorFactory: RetrieveHighIncomeChildBenefitChargeValidatorFactory,
-    val cc: ControllerComponents,
-    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+class RetrieveHighIncomeChildBenefitChargeController @Inject() (val authService: EnrolmentsAuthService,
+                                                                val lookupService: MtdIdLookupService,
+                                                                val service: RetrieveHighIncomeChildBenefitChargeService,
+                                                                val validatorFactory: RetrieveHighIncomeChildBenefitChargeValidatorFactory,
+                                                                val cc: ControllerComponents,
+                                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-high-income-child-benefit-charge-submission"

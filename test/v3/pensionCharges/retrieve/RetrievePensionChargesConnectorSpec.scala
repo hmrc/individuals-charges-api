@@ -16,14 +16,15 @@
 
 package v3.pensionCharges.retrieve
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.pensionCharges.retrieve.def1.fixture.RetrievePensionChargesFixture.retrieveResponse
 import v3.pensionCharges.retrieve.def1.model.request.Def1_RetrievePensionChargesRequestData
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
+import v3.pensionCharges.retrieve.model.response.RetrievePensionChargesResponse
 
 import scala.concurrent.Future
 
@@ -42,7 +43,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: RetrievePensionChargesConnector =
-      new RetrievePensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new RetrievePensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
   }
 
@@ -52,7 +53,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+        val expected: Right[Nothing, ResponseWrapper[RetrievePensionChargesResponse]] = Right(ResponseWrapper(correlationId, retrieveResponse))
 
         willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
@@ -65,7 +66,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, retrieveResponse))
+        val expected: Right[Nothing, ResponseWrapper[RetrievePensionChargesResponse]] = Right(ResponseWrapper(correlationId, retrieveResponse))
 
         willGet(url"$baseUrl/income-tax/charges/pensions/23-24/$nino")
           .returns(Future.successful(expected))
@@ -78,7 +79,7 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and a single error" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+        val expected: Left[ResponseWrapper[NinoFormatError.type], Nothing] = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))
@@ -91,7 +92,8 @@ class RetrievePensionChargesConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
+        val expected: Left[ResponseWrapper[Seq[MtdError]], Nothing] =
+          Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
         willGet(url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}")
           .returns(Future.successful(expected))

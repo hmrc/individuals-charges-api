@@ -16,12 +16,11 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.services.{BaseService, ServiceOutcome}
+import api.controllers.RequestContext
+import api.models.errors.{MtdError, *}
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.models.errors.MtdError
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
 import javax.inject.{Inject, Singleton}

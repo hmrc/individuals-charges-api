@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.delete
 
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 
 trait MockDeletePensionChargesValidatorFactory extends MockValidatorFactory[DeletePensionChargesRequestData] {

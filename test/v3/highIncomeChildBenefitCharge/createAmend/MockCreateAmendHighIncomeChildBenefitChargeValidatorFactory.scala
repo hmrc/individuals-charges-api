@@ -16,9 +16,9 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 trait MockCreateAmendHighIncomeChildBenefitChargeValidatorFactory extends MockValidatorFactory[CreateAmendHighIncomeChildBenefitChargeRequest] {

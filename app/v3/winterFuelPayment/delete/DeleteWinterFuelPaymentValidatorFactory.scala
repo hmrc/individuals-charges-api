@@ -16,7 +16,7 @@
 
 package v3.winterFuelPayment.delete
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import javax.inject.Singleton

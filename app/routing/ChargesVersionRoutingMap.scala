@@ -16,8 +16,8 @@
 
 package routing
 
+import api.routing.*
 import play.api.routing.Router
-import shared.routing.*
 
 import javax.inject.Inject
 

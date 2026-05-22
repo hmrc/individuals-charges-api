@@ -16,9 +16,9 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeRequest
 
 class RetrieveHighIncomeChildBenefitChargeValidatorSpec extends UnitSpec {

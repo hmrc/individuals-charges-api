@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeRequest
 
 trait MockRetrieveHighIncomeChildBenefitChargeValidatorFactory extends MockValidatorFactory[RetrieveHighIncomeChildBenefitChargeRequest] {

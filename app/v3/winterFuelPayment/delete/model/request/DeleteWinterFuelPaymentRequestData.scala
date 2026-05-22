@@ -16,6 +16,6 @@
 
 package v3.winterFuelPayment.delete.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 
 case class DeleteWinterFuelPaymentRequestData(nino: Nino, taxYear: TaxYear)

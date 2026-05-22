@@ -16,10 +16,10 @@
 
 package v3.pensionCharges.delete
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{InternalError, NinoFormatError}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{InternalError, MtdError, NinoFormatError}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
@@ -41,7 +41,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
     )
 
     val connector: DeletePensionChargesConnector =
-      new DeletePensionChargesConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new DeletePensionChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
   }
 
@@ -50,7 +50,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
       "a valid request is made" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val expected: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
           url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
@@ -62,7 +62,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
       "downstream returns a single error" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+        val expected: Left[ResponseWrapper[NinoFormatError.type], Nothing] = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willDelete(
           url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
@@ -75,7 +75,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError)))
+        val expected: Left[ResponseWrapper[Seq[MtdError]], Nothing] = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError)))
 
         willDelete(
           url = url"$baseUrl/income-tax/charges/pensions/$nino/${taxYear.asMtd}"
@@ -89,7 +89,7 @@ class DeletePensionChargesConnectorSpec extends ConnectorSpec {
       "a valid request is made" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val expected: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
           url = url"$baseUrl/income-tax/charges/pensions/${taxYear.asTysDownstream}/$nino"

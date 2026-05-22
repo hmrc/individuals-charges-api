@@ -16,11 +16,11 @@
 
 package v3.winterFuelPayment.retrieve
 
-import shared.connectors.DownstreamOutcome
-import shared.models.domain.*
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{ServiceOutcome, ServiceSpec}
+import api.connectors.DownstreamOutcome
+import api.models.domain.*
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{ServiceOutcome, ServiceSpec}
 import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.responseModel
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentResponse

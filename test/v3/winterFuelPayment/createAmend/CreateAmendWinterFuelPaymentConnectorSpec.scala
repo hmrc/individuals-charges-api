@@ -16,13 +16,13 @@
 
 package v3.winterFuelPayment.createAmend
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{InternalError, NinoFormatError, TaxYearFormatError}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.*
+import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
 import scala.concurrent.Future
 
@@ -42,7 +42,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
     )
 
     val connector: CreateAmendWinterFuelPaymentConnector =
-      new CreateAmendWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new CreateAmendWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
   }
 
@@ -52,7 +52,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
       "return a successful response with the correct correlationId" in new HipTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2026-27")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val expected: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))
@@ -65,7 +65,7 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and a single error" in new HipTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2026-27")
 
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+        val expected: Left[ResponseWrapper[NinoFormatError.type], Nothing] = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))
@@ -78,7 +78,8 @@ class CreateAmendWinterFuelPaymentConnectorSpec extends ConnectorSpec {
       "return an unsuccessful response with the correct correlationId and multiple errors" in new HipTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2026-27")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
+        val expected: Left[ResponseWrapper[Seq[MtdError]], Nothing] =
+          Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError, TaxYearFormatError)))
 
         willPut(url"$baseUrl/itsd/charges/winter-fuel-payment/$nino?taxYear=${taxYear.asTysDownstream}", requestBodyModel)
           .returns(Future.successful(expected))

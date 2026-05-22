@@ -16,26 +16,25 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
+import api.config.AppConfig
+import api.controllers.*
+import api.routing.Version
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.routing.Version
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateAmendHighIncomeChildBenefitChargeController @Inject() (
-    val authService: EnrolmentsAuthService,
-    val lookupService: MtdIdLookupService,
-    validatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory,
-    service: CreateAmendHighIncomeChildBenefitChargeService,
-    auditService: AuditService,
-    cc: ControllerComponents,
-    val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+class CreateAmendHighIncomeChildBenefitChargeController @Inject() (val authService: EnrolmentsAuthService,
+                                                                   val lookupService: MtdIdLookupService,
+                                                                   validatorFactory: CreateAmendHighIncomeChildBenefitChargeValidatorFactory,
+                                                                   service: CreateAmendHighIncomeChildBenefitChargeService,
+                                                                   auditService: AuditService,
+                                                                   cc: ControllerComponents,
+                                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName: String = "create-or-amend-high-income-child-benefit-charge-submission"

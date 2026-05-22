@@ -16,7 +16,7 @@
 
 package v3.pensionCharges.retrieve.def1.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v3.pensionCharges.retrieve.RetrievePensionChargesSchema
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
 

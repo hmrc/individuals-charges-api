@@ -16,15 +16,15 @@
 
 package v3.winterFuelPayment.retrieve
 
+import api.models.domain.MtdSourceEnum
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.SourceFormatError
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
-import shared.models.domain.MtdSourceEnum
-import shared.models.errors.*
-import shared.services.*
-import shared.support.IntegrationBaseSpec
 import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseDownstreamJson, responseMtdJson}
 
 class RetrieveWinterFuelPaymentControllerISpec extends IntegrationBaseSpec {

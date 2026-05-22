@@ -16,11 +16,11 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import play.api.libs.json.*
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.*
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 

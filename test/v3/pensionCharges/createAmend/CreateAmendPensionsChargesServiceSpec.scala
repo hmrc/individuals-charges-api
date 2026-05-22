@@ -16,12 +16,12 @@
 
 package v3.pensionCharges.createAmend
 
+import api.controllers.EndpointLogContext
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.controllers.EndpointLogContext
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData

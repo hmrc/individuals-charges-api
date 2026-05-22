@@ -16,10 +16,10 @@
 
 package v3.winterFuelPayment.delete
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
@@ -34,7 +34,7 @@ class DeleteWinterFuelPaymentConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     protected val connector: DeleteWinterFuelPaymentConnector =
-      new DeleteWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new DeleteWinterFuelPaymentConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: DeleteWinterFuelPaymentRequestData = DeleteWinterFuelPaymentRequestData(
       nino = Nino(nino),

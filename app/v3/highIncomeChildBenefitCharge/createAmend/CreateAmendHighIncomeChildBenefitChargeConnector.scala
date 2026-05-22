@@ -16,20 +16,19 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.HipUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import uk.gov.hmrc.http.client.HttpClientV2
+import api.config.AppConfig
+import api.connectors.DownstreamUri.HipUri
+import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.CreateAmendHighIncomeChildBenefitChargeRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendHighIncomeChildBenefitChargeConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig)
-    extends BaseDownstreamConnector {
+class CreateAmendHighIncomeChildBenefitChargeConnector @Inject() (val http: HttpClientV2, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAmend(request: CreateAmendHighIncomeChildBenefitChargeRequest)(implicit
       hc: HeaderCarrier,

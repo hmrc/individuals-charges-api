@@ -16,10 +16,10 @@
 
 package v3.highIncomeChildBenefitCharge.delete
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.highIncomeChildBenefitCharge.delete.model.request.DeleteHighIncomeChildBenefitChargeRequestData
 
@@ -63,7 +63,7 @@ class DeleteHighIncomeChildBenefitChargeConnectorSpec extends ConnectorSpec {
   trait Test { self: ConnectorTest =>
 
     protected val connector: DeleteHighIncomeChildBenefitChargeConnector =
-      new DeleteHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new DeleteHighIncomeChildBenefitChargeConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: DeleteHighIncomeChildBenefitChargeRequestData = DeleteHighIncomeChildBenefitChargeRequestData(
       nino = nino,
