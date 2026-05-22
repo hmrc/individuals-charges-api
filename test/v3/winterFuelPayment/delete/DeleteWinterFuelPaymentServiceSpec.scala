@@ -16,11 +16,11 @@
 
 package v3.winterFuelPayment.delete
 
-import common.errors.RuleOutsideAmendmentWindowError
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import common.errors.RuleOutsideAmendmentWindowError
 import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import scala.concurrent.Future

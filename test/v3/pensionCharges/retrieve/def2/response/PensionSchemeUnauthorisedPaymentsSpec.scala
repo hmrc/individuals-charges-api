@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.retrieve.def2.response
 
-import play.api.libs.json.{JsValue, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsValue, Json}
 import v3.pensionCharges.retrieve.def2.model.response.{Charge, PensionSchemeUnauthorisedPayments}
 
 class PensionSchemeUnauthorisedPaymentsSpec extends UnitSpec {

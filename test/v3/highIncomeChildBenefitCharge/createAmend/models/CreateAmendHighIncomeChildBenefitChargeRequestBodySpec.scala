@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend.models
 
-import play.api.libs.json.{JsError, JsObject, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsError, JsObject, Json}
 import v3.highIncomeChildBenefitCharge.createAmend.fixture.CreateAmendHighIncomeChildBenefitChargeFixtures.{
   fullRequestBodyModel,
   validFullRequestBodyJson

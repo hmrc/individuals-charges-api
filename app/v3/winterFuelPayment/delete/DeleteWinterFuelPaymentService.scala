@@ -17,11 +17,10 @@
 package v3.winterFuelPayment.delete
 
 import api.controllers.RequestContext
-import api.models.errors.*
+import api.models.errors.{MtdError, *}
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import common.errors.RuleOutsideAmendmentWindowError
-import api.models.errors.MtdError
 import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import javax.inject.{Inject, Singleton}

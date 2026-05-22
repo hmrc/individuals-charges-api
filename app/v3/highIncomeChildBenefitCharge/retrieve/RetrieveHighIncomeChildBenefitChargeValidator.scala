@@ -16,12 +16,12 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple2Semigroupal
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeRequest
 
 import javax.inject.Inject

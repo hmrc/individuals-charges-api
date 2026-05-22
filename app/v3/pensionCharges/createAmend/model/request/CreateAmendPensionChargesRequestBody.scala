@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.createAmend.model.request
 
-import play.api.libs.json.{JsObject, Json, OWrites}
 import api.utils.JsonWritesUtil
+import play.api.libs.json.{JsObject, Json, OWrites}
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestBody
 import v3.pensionCharges.createAmend.def2.model.request.Def2_CreateAmendPensionChargesRequestBody
 

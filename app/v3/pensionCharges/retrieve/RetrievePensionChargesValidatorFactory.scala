@@ -16,12 +16,12 @@
 
 package v3.pensionCharges.retrieve
 
-import cats.data.Validated.{Invalid, Valid}
 import api.controllers.validators.Validator
+import cats.data.Validated.{Invalid, Valid}
+import v3.pensionCharges.retrieve.RetrievePensionChargesSchema.{Def1, Def2}
 import v3.pensionCharges.retrieve.def1.model.Def1_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.def2.model.Def2_RetrievePensionChargesValidator
 import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestData
-import RetrievePensionChargesSchema.{Def1, Def2}
 
 class RetrievePensionChargesValidatorFactory {
 

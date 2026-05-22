@@ -16,10 +16,10 @@
 
 package v3.winterFuelPayment.retrieve
 
-import cats.implicits.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentResponse
 

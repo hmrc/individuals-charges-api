@@ -21,8 +21,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 import v3.winterFuelPayment.createAmend.fixture.CreateAmendWinterFuelPaymentFixtures.*
+import v3.winterFuelPayment.createAmend.models.request.CreateAmendWinterFuelPaymentRequestData
 
 import scala.concurrent.Future
 

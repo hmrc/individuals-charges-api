@@ -16,13 +16,13 @@
 
 package v3.highIncomeChildBenefitCharge.createAmend
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple3Semigroupal
-import play.api.libs.json.JsValue
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYearMinimum}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple3Semigroupal
+import play.api.libs.json.JsValue
 import v3.highIncomeChildBenefitCharge.createAmend.models.request.*
 
 class CreateAmendHighIncomeChildBenefitChargeValidator(nino: String, taxYear: String, body: JsValue)

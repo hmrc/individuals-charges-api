@@ -16,8 +16,8 @@
 
 package v3.pensionCharges.createAmend.def1.model.request
 
-import play.api.libs.json.*
 import api.utils.UnitSpec
+import play.api.libs.json.*
 
 class ChargeSpec extends UnitSpec {
 

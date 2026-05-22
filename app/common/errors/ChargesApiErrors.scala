@@ -16,8 +16,8 @@
 
 package common.errors
 
-import play.api.http.Status.*
 import api.models.errors.MtdError
+import play.api.http.Status.*
 
 // Format errors
 object ProviderNameFormatError    extends MtdError("FORMAT_PROVIDER_NAME", "The provided name is invalid", BAD_REQUEST)

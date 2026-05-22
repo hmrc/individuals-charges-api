@@ -16,8 +16,8 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve.model
 
-import play.api.libs.json.{Json, OFormat}
 import api.models.domain.Timestamp
+import play.api.libs.json.{Json, OFormat}
 
 case class RetrieveHighIncomeChildBenefitChargeResponse(submittedOn: Timestamp,
                                                         amountOfChildBenefitReceived: BigDecimal,

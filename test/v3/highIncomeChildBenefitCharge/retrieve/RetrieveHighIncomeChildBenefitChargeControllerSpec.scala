@@ -16,12 +16,12 @@
 
 package v3.highIncomeChildBenefitCharge.retrieve
 
-import play.api.Configuration
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError, NotFoundError}
 import api.models.outcomes.ResponseWrapper
+import play.api.Configuration
+import play.api.mvc.Result
 import v3.highIncomeChildBenefitCharge.retrieve.RetrieveHighIncomeChildBenefitFixtures.{responseJson, responseModel}
 import v3.highIncomeChildBenefitCharge.retrieve.model.RetrieveHighIncomeChildBenefitChargeRequest
 

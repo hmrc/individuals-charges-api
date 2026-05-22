@@ -16,14 +16,14 @@
 
 package v3.winterFuelPayment.retrieve
 
-import play.api.Configuration
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.MtdSourceEnum.`hmrc-held`
 import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError, NotFoundError}
 import api.models.outcomes.ResponseWrapper
-import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseMtdJson, responseModel}
+import play.api.Configuration
+import play.api.mvc.Result
+import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.{responseModel, responseMtdJson}
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global

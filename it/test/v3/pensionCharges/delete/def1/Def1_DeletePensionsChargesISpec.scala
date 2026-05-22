@@ -16,6 +16,9 @@
 
 package v3.pensionCharges.delete.def1
 
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
 import play.api.http.HeaderNames.ACCEPT
@@ -23,9 +26,6 @@ import play.api.http.Status.*
 import play.api.libs.json.*
 import play.api.libs.ws.*
 import play.api.test.Helpers.AUTHORIZATION
-import api.models.errors.*
-import api.services.*
-import api.support.IntegrationBaseSpec
 
 class Def1_DeletePensionsChargesISpec extends IntegrationBaseSpec {
 

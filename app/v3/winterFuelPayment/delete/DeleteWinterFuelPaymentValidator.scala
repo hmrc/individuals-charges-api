@@ -16,12 +16,12 @@
 
 package v3.winterFuelPayment.delete
 
-import cats.data.Validated
-import cats.implicits.*
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
 import v3.winterFuelPayment.delete.model.request.DeleteWinterFuelPaymentRequestData
 
 import javax.inject.{Inject, Singleton}

@@ -20,8 +20,8 @@ import api.config.AppConfig
 import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.client.HttpClientV2
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +35,7 @@ class DeletePensionChargesConnector @Inject() (val http: HttpClientV2, val appCo
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import request._
+    import request.*
 
     val downstreamUri = taxYear match {
       case ty if ty.useTaxYearSpecificApi =>

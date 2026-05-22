@@ -16,8 +16,8 @@
 
 package v3.winterFuelPayment.retrieve.model.response
 
-import play.api.libs.json.Json
 import api.utils.UnitSpec
+import play.api.libs.json.Json
 import v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentFixtures.*
 
 class RetrieveWinterFuelPaymentResponseSpec extends UnitSpec {

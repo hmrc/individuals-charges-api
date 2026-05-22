@@ -16,12 +16,12 @@
 
 package definition
 
-import cats.implicits.catsSyntaxValidatedId
 import api.config.Deprecation.NotDeprecated
 import api.config.{ConfidenceLevelConfig, MockAppConfig}
 import api.definition.{APIDefinition, APIStatus, APIVersion, Definition}
 import api.routing.Version3
 import api.utils.UnitSpec
+import cats.implicits.catsSyntaxValidatedId
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ChargesApiDefinitionFactorySpec extends UnitSpec with MockAppConfig {

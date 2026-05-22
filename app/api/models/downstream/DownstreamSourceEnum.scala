@@ -17,8 +17,8 @@
 package api.models.downstream
 
 import api.models.domain.MtdSourceEnum
-import play.api.libs.json.Reads
 import api.utils.enums.Enums
+import play.api.libs.json.Reads
 
 enum DownstreamSourceEnum(val toMtdEnum: MtdSourceEnum) {
   case `HMRC-HELD` extends DownstreamSourceEnum(MtdSourceEnum.`hmrc-held`)

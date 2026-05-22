@@ -16,11 +16,11 @@
 
 package v3.winterFuelPayment.retrieve
 
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentResponse
 

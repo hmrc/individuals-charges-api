@@ -16,16 +16,16 @@
 
 package api.controllers.validators
 
+import api.controllers.validators.resolvers.*
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.*
 import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.*
-import api.controllers.validators.resolvers.*
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.*
-import api.utils.UnitSpec
 
 class ValidatorSpec extends UnitSpec with MockFactory {
 

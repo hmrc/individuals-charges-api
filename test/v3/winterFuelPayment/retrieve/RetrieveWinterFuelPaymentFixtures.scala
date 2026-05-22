@@ -16,9 +16,9 @@
 
 package v3.winterFuelPayment.retrieve
 
-import play.api.libs.json.{JsValue, Json}
 import api.models.domain.MtdSourceEnum.`hmrc-held`
 import api.models.domain.Timestamp
+import play.api.libs.json.{JsValue, Json}
 import v3.winterFuelPayment.retrieve.model.response.RetrieveWinterFuelPaymentResponse
 
 object RetrieveWinterFuelPaymentFixtures {

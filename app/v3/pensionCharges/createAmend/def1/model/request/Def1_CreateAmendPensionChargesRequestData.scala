@@ -17,8 +17,8 @@
 package v3.pensionCharges.createAmend.def1.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v3.pensionCharges.createAmend.CreateAmendPensionChargesSchema.Def1
 import v3.pensionCharges.createAmend.CreateAmendPensionChargesSchema
+import v3.pensionCharges.createAmend.CreateAmendPensionChargesSchema.Def1
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 
 case class Def1_CreateAmendPensionChargesRequestData(nino: Nino, taxYear: TaxYear, body: Def1_CreateAmendPensionChargesRequestBody)

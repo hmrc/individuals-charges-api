@@ -16,14 +16,14 @@
 
 package v3.winterFuelPayment.delete
 
+import api.models.errors.*
+import api.services.*
+import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.RuleOutsideAmendmentWindowError
 import play.api.libs.json.*
 import play.api.libs.ws.*
 import play.api.test.Helpers.*
-import api.models.errors.*
-import api.services.*
-import api.support.IntegrationBaseSpec
 
 class DeleteWinterFuelPaymentISpec extends IntegrationBaseSpec {
 

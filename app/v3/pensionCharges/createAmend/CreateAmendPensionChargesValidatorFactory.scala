@@ -16,10 +16,10 @@
 
 package v3.pensionCharges.createAmend
 
-import play.api.libs.json.JsValue
 import api.config.AppConfig
 import api.controllers.validators.Validator
-import CreateAmendPensionChargesSchema.{Def1, Def2}
+import play.api.libs.json.JsValue
+import v3.pensionCharges.createAmend.CreateAmendPensionChargesSchema.{Def1, Def2}
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData

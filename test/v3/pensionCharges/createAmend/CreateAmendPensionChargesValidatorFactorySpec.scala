@@ -16,10 +16,10 @@
 
 package v3.pensionCharges.createAmend
 
-import play.api.libs.json.{JsValue, Json}
 import api.config.MockAppConfig
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
+import play.api.libs.json.{JsValue, Json}
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 
