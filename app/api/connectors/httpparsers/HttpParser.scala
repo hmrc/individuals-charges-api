@@ -21,14 +21,32 @@ import api.utils.Logging
 import play.api.libs.json.*
 import uk.gov.hmrc.http.HttpResponse
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 trait HttpParser extends Logging {
 
   implicit class JsonResponseHelper(response: HttpResponse) {
-    private lazy val jsonOpt: Option[JsValue] = Try(response.json).toOption
 
-    def validateJson[T](implicit reads: Reads[T]): Option[T] = jsonOpt.flatMap(_.asOpt)
+    private lazy val jsonTry: Try[JsValue] = Try(response.json)
+
+    def validateJson[T](implicit reads: Reads[T]): Option[T] = jsonTry.toOption.flatMap(_.asOpt)
+
+    def validateJsonWithLogging[T](implicit reads: Reads[T]): Option[T] =
+      jsonTry match {
+        case Success(json) =>
+          json
+            .validate[T]
+            .fold(
+              errors => {
+                logger.warn(s"[JsonResponseHelper][validateJsonWithLogging] JSON validation failed: $errors")
+                None
+              },
+              value => Some(value)
+            )
+        case Failure(_) =>
+          logger.warn("[JsonResponseHelper][validateJsonWithLogging] Response body is not valid JSON")
+          None
+      }
 
   }
 
@@ -51,6 +69,7 @@ trait HttpParser extends Logging {
     (__ \ "response" \ "failures").read[Seq[JsObject]].map(_.map(obj => DownstreamErrorCode((obj \ "type").as[String])))
 
   def parseErrors(response: HttpResponse): DownstreamError = {
+
     val wrappedResponse: JsonResponseHelper = new JsonResponseHelper(response)
 
     val singleError                       = wrappedResponse.validateJson[DownstreamErrorCode].map(err => DownstreamErrors(List(err)))
