@@ -44,7 +44,7 @@ object RetrieveWinterFuelPaymentFixtures {
     """
       |{
       |	 "submittedOn": "2026-07-24T14:15:22.544Z",
-      |	 "source": "HMRC-HELD",
+      |	 "source": "HMRC HELD",
       |	 "winterFuelPayment": 210.99
       |}
       |""".stripMargin

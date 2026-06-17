@@ -21,7 +21,7 @@ import api.utils.enums.Enums
 import play.api.libs.json.Reads
 
 enum DownstreamSourceEnum(val toMtdEnum: MtdSourceEnum) {
-  case `HMRC-HELD` extends DownstreamSourceEnum(MtdSourceEnum.`hmrc-held`)
+  case `HMRC HELD` extends DownstreamSourceEnum(MtdSourceEnum.`hmrc-held`)
   case CUSTOMER    extends DownstreamSourceEnum(MtdSourceEnum.user)
 }
 
