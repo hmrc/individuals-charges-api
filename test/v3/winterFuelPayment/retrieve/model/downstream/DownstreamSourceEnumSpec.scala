@@ -24,13 +24,13 @@ import api.utils.enums.EnumJsonSpecSupport
 class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testDeserialization[DownstreamSourceEnum](
-    ("HMRC-HELD", DownstreamSourceEnum.`HMRC-HELD`),
+    ("HMRC HELD", DownstreamSourceEnum.`HMRC HELD`),
     ("CUSTOMER", DownstreamSourceEnum.CUSTOMER)
   )
 
   "toMtdEnum" should {
     "convert to MtdSourceEnum correctly" in {
-      DownstreamSourceEnum.`HMRC-HELD`.toMtdEnum shouldBe MtdSourceEnum.`hmrc-held`
+      DownstreamSourceEnum.`HMRC HELD`.toMtdEnum shouldBe MtdSourceEnum.`hmrc-held`
       DownstreamSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
     }
   }
