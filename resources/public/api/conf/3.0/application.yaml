@@ -7,9 +7,8 @@ info:
     The following groups of endpoints are stateful in the Sandbox:
     * [Pension Charges](#tag/Pension-Charges)
     * [High Income Child Benefit Charge Submission](#tag/High-Income-Child-Benefit-Charge-Submission)
-    {{#if (enabled "api_5832_r21")}}
     * [Winter Fuel Payment](#tag/Winter-Fuel-Payment)
-    {{/if}}
+ 
     
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
@@ -61,18 +60,17 @@ tags:
 
   - name: High Income Child Benefit Charge Submission
     description: Resources relating to an individual's high income child benefit charge submission.
-  {{#if (enabled "api_5832_r21")}}
+
   - name: Winter Fuel Payment
     description: Resources relating to an individual's winter fuel payment.
-  {{/if}}
+
 
 paths:
   /individuals/charges/pensions/{nino}/{taxYear}:
     $ref: "./pension_charges.yaml"
   /individuals/charges/high-income-child-benefit/{nino}/{taxYear}:
     $ref: "./high_income_child_benefit_charge.yaml"
-  {{#if (enabled "api_5832_r21")}}
   /individuals/charges/winter-fuel-payment/{nino}/{taxYear}:
     $ref: "./winter_fuel_payment.yaml"
-  {{/if}}
+
 
