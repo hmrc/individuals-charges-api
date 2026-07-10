@@ -2,7 +2,8 @@ summary: Create or Amend Winter Fuel Payment
 description: |
   This endpoint allows a developer to submit or amend the Winter Fuel Payment amount for a tax year.
   A National Insurance number, tax year and the Winter Fuel Payment amount must be provided. The amount submitted must be either the minimum or maximum payment for that tax year, or zero if no payment was received.
-  This endpoint can only be used for tax years from 2026–27 onwards.
+  This endpoint can only be used for tax years from 2026–27 onwards. 
+  This endpoint can only be used after the tax year has ended.
   
   ###  Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
