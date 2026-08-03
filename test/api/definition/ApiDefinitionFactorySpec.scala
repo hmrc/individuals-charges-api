@@ -39,7 +39,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
           Definition(
             api = APIDefinition(
               name = "Individuals Charges (MTD)",
-              description = "This is a draft spec for the Individuals Charges API",
+              description = "An API for providing charges data",
               context = "individuals/charges",
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
