@@ -55,6 +55,30 @@ class ApiDefinitionFactorySpec extends UnitSpec {
           )
       }
     }
+
+    "the controlled access flag is enabled" should {
+      "set the access type to CONTROLLED" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "BETA"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+
+        MockedAppConfig.controlledAccessEnabled returns true
+
+        apiDefinitionFactory.definition.api.versions.head.access shouldBe APIAccessType.CONTROLLED
+      }
+    }
+
+    "the controlled access flag is disabled" should {
+      "set the access type to PUBLIC" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "BETA"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+
+        MockedAppConfig.controlledAccessEnabled returns false
+
+        apiDefinitionFactory.definition.api.versions.head.access shouldBe APIAccessType.PUBLIC
+      }
+    }
   }
 
   "buildAPIStatus" when {
