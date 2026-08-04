@@ -17,19 +17,35 @@
 package api.definition
 
 import api.config.AppConfig
-import api.routing.Version
+import api.definition.APIAccessType.{CONTROLLED, PUBLIC}
+import api.routing.{Version, Version3}
 import api.utils.Logging
 import cats.data.Validated.Invalid
 
-trait ApiDefinitionFactory extends Logging {
+import javax.inject.Inject
 
-  protected val mtdCategory = "INCOME_TAX_MTD"
+class ApiDefinitionFactory @Inject() (val appConfig: AppConfig) extends Logging {
 
-  protected val appConfig: AppConfig
+  lazy val definition: Definition =
+    Definition(
+      api = APIDefinition(
+        name = "Individuals Charges (MTD)",
+        description = "An API for providing charges data",
+        context = appConfig.apiGatewayContext,
+        categories = Seq("INCOME_TAX_MTD"),
+        versions = Seq(
+          APIVersion(
+            version = Version3,
+            status = buildAPIStatus(Version3),
+            access = if (appConfig.controlledAccessEnabled) CONTROLLED else PUBLIC,
+            endpointsEnabled = appConfig.endpointsEnabled(Version3)
+          )
+        ),
+        requiresTrust = None
+      )
+    )
 
-  val definition: Definition
-
-  protected def buildAPIStatus(version: Version): APIStatus = {
+  def buildAPIStatus(version: Version): APIStatus = {
     checkDeprecationConfigFor(version)
 
     APIStatus.parser

@@ -177,20 +177,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockAppConfig 
 
     MockedAppConfig.featureSwitchConfig returns Configuration("openApiFeatureTest.enabled" -> featureEnabled)
 
-    private val apiFactory = new ApiDefinitionFactory {
-      protected val appConfig: AppConfig = mockAppConfig
-
-      val definition: Definition = Definition(
-        APIDefinition(
-          "test API definition",
-          "description",
-          "context",
-          List("category"),
-          List(APIVersion(apiVersion, APIStatus.BETA, endpointsEnabled = true)),
-          None)
-      )
-
-    }
+    private val apiFactory = new ApiDefinitionFactory(mockAppConfig)
 
     private val config    = new Configuration(ConfigFactory.load())
     private val mimeTypes = HttpConfiguration.parseFileMimeTypes(config) ++ Map("yaml" -> "text/yaml", "md" -> "text/markdown")

@@ -17,9 +17,8 @@
 package api.definition
 
 import api.config.Deprecation.NotDeprecated
-import api.config.{AppConfig, MockAppConfig}
+import api.config.MockAppConfig
 import api.definition.APIStatus.{ALPHA, BETA}
-import api.mocks.MockHttpClient
 import api.routing.*
 import api.utils.UnitSpec
 import cats.implicits.catsSyntaxValidatedId
@@ -28,14 +27,67 @@ import scala.language.reflectiveCalls
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
+  "definition" when {
+    "called" should {
+      "return a valid Definition case class" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "ALPHA"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.controlledAccessEnabled returns false
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+
+        apiDefinitionFactory.definition shouldBe
+          Definition(
+            api = APIDefinition(
+              name = "Individuals Charges (MTD)",
+              description = "An API for providing charges data",
+              context = "individuals/charges",
+              categories = Seq("INCOME_TAX_MTD"),
+              versions = Seq(
+                APIVersion(
+                  version = Version3,
+                  status = APIStatus.ALPHA,
+                  access = APIAccessType.PUBLIC,
+                  endpointsEnabled = true
+                )
+              ),
+              requiresTrust = None
+            )
+          )
+      }
+    }
+
+    "the controlled access flag is enabled" should {
+      "set the access type to CONTROLLED" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "BETA"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+
+        MockedAppConfig.controlledAccessEnabled returns true
+
+        apiDefinitionFactory.definition.api.versions.head.access shouldBe APIAccessType.CONTROLLED
+      }
+    }
+
+    "the controlled access flag is disabled" should {
+      "set the access type to PUBLIC" in new Test {
+        MockedAppConfig.apiStatus(Version3) returns "BETA"
+        MockedAppConfig.endpointsEnabled(Version3) returns true
+        MockedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
+
+        MockedAppConfig.controlledAccessEnabled returns false
+
+        apiDefinitionFactory.definition.api.versions.head.access shouldBe APIAccessType.PUBLIC
+      }
+    }
+  }
+
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
 
       s"return the expected status" in new Test {
-        setupMockConfig(Version9)
         MockedAppConfig.apiStatus(Version9) returns "BETA"
-
-        val result: APIStatus = buildAPIStatus(Version9)
+        MockedAppConfig.deprecationFor(Version9).returns(NotDeprecated.valid)
+        val result: APIStatus = apiDefinitionFactory.buildAPIStatus(Version9)
         result shouldBe BETA
       }
 
@@ -43,10 +95,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
     "the 'apiStatus' parameter is present but invalid" should {
       s"default to alpha" in new Test {
-        setupMockConfig(Version9)
         MockedAppConfig.apiStatus(Version9) returns "not-a-status"
-
-        buildAPIStatus(Version9) shouldBe ALPHA
+        MockedAppConfig.deprecationFor(Version9).returns(NotDeprecated.valid)
+        apiDefinitionFactory.buildAPIStatus(Version9) shouldBe ALPHA
       }
     }
 
@@ -60,7 +111,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
           .anyNumberOfTimes()
 
         val exception: Exception = intercept[Exception] {
-          buildAPIStatus(Version9)
+          apiDefinitionFactory.buildAPIStatus(Version9)
         }
 
         val exceptionMessage: String = exception.getMessage
@@ -69,27 +120,10 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
   }
 
-  class Test extends MockHttpClient with MockAppConfig with ApiDefinitionFactory {
-    MockedAppConfig.apiGatewayContext returns "individuals/self-assessment/adjustable-summary"
+  class Test extends MockAppConfig {
+    MockedAppConfig.apiGatewayContext returns "individuals/charges"
 
-    protected val appConfig: AppConfig = mockAppConfig
-
-    val definition: Definition = Definition(
-      APIDefinition(
-        "test API definition",
-        "description",
-        "context",
-        List("category"),
-        List(APIVersion(Version1, APIStatus.BETA, endpointsEnabled = true)),
-        None)
-    )
-
-    protected def setupMockConfig(version: Version): Unit = {
-      MockedAppConfig
-        .deprecationFor(version)
-        .returns(NotDeprecated.valid)
-        .anyNumberOfTimes()
-    }
+    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
 
   }
 
