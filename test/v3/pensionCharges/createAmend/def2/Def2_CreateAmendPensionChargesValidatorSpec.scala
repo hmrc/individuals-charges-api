@@ -18,14 +18,15 @@ package v3.pensionCharges.createAmend.def2
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
+import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsArray, JsObject, JsValue}
 import v3.pensionCharges.createAmend.def2.fixture.Def2_CreateAmendPensionChargesFixture.*
 import v3.pensionCharges.createAmend.def2.model.Def2_CreateAmendPensionChargesValidator
 import v3.pensionCharges.createAmend.def2.model.request.{Def2_CreateAmendPensionChargesRequestBody, Def2_CreateAmendPensionChargesRequestData}
 import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 
-class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
+class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec with JsonErrorValidators {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -121,6 +122,17 @@ class Def2_CreateAmendPensionChargesValidatorSpec extends UnitSpec {
           ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/pensionSavingsTaxCharges"))
         )
       }
+
+      "the body contains empty arrays" in {
+        val result: Either[ErrorWrapper, CreateAmendPensionChargesRequestData] =
+          validator(validNino, validTaxYear, fullJson.update("/pensionSchemeOverseasTransfers/overseasSchemeProvider", JsArray.empty))
+            .validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError.withPath("/pensionSchemeOverseasTransfers/overseasSchemeProvider"))
+        )
+      }
+
     }
 
     "return country errors" when {
