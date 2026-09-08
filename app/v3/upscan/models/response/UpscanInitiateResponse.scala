@@ -18,12 +18,30 @@ package v3.upscan.models.response
 
 import play.api.libs.json.*
 
-case class UpscanInitiateResponse(reference: String)
+case class Fields(acl: String,
+                  key: String,
+                  policy: String,
+                  `x-amz-algorithm`: String,
+                  `x-amz-credential`: String,
+                  `x-amz-date`: String,
+                  `x-amz-meta-callback-url`: String,
+                  `x-amz-signature`: String,
+                  success_action_redirect: Option[String],
+                  error_action_redirect: Option[String])
+
+object Fields {
+  implicit val format: OFormat[Fields] = Json.format[Fields]
+}
+
+case class UploadRequest(href: String, fields: Fields)
+
+object UploadRequest {
+  implicit val format: OFormat[UploadRequest] = Json.format[UploadRequest]
+}
+
+case class UpscanInitiateResponse(reference: String, uploadRequest: UploadRequest)
 
 object UpscanInitiateResponse {
 
-  given Reads[UpscanInitiateResponse] = Json.reads[UpscanInitiateResponse]
-
-  given Writes[UpscanInitiateResponse] = Json.writes[UpscanInitiateResponse]
-
+  implicit val format: OFormat[UpscanInitiateResponse] = Json.format[UpscanInitiateResponse]
 }

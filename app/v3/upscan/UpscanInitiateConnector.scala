@@ -18,7 +18,7 @@ package v3.upscan
 
 import api.config.AppConfig
 import api.connectors.DownstreamUri.UpscanUri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
+import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2

@@ -52,6 +52,7 @@ class UpscanInitiateController @Inject() (val authService: EnrolmentsAuthService
       val requestHandler = RequestHandler
         .withValidator(validator)
         .withService(service.initiate)
+        .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }
