@@ -31,4 +31,7 @@ object DownstreamUri {
   def HipUri[Resp](path: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
     DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig))
 
+  def UpscanUri[Resp](path: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+    DownstreamUri(path, DownstreamStrategy.standardStrategy(appConfig.upscanDownstreamConfig))
+
 }
