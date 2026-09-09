@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,17 @@
 package v3.upscan
 
 import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.ResolveNonEmptyJsonObject
+import api.models.errors.MtdError
+import cats.data.Validated
 import play.api.libs.json.JsValue
 import v3.upscan.model.InitiateUploadRequest
 
-import javax.inject.{Inject, Singleton}
+class InitiateUploadValidator(body: JsValue) extends Validator[InitiateUploadRequest] {
 
-@Singleton
-class InitiateUploadValidatorFactory @Inject() {
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[InitiateUploadRequest]
 
-  def validator(body: JsValue): Validator[InitiateUploadRequest] = {
-    new InitiateUploadValidator(body)
-  }
+  override def validate: Validated[Seq[MtdError], InitiateUploadRequest] =
+    resolveJson(body)
 
 }

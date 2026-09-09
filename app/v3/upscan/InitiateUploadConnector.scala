@@ -17,12 +17,14 @@
 package v3.upscan
 
 import api.config.AppConfig
-import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamStrategy, DownstreamUri}
+import api.connectors.httpparsers.StandardDownstreamHttpParser.*
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import play.api.libs.json.Json
+import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import v3.upscan.model.{InitiateUploadRequest, InitiateUploadResponse}
+
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,8 +34,6 @@ class InitiateUploadConnector @Inject(val http: HttpClientV2, val appConfig: App
 
   def initiateUpload(
       request: InitiateUploadRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[InitiateUploadResponse]] = {
-
-    import request.*
 
     def doPost(): Future[DownstreamOutcome[InitiateUploadResponse]] = {
       http.post(url"http://localhost:9570/upscan/v2/initiate").withBody(Json.toJson(request)).execute
