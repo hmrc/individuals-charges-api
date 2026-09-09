@@ -20,8 +20,6 @@ import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import common.errors.RuleOutsideAmendmentWindowError
-import v3.pensionCharges.createAmend.model.request.CreateAmendPensionChargesRequestData
 import v3.upscan.model.{InitiateUploadRequest, InitiateUploadResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -32,7 +30,10 @@ class InitiateUploadService @Inject() (connector: InitiateUploadConnector) exten
 
   def initiateUpload(
       request: InitiateUploadRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[InitiateUploadResponse]] = {
-    connector.initiateUpload(request)
+    connector.initiateUpload(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
+
+  private def downstreamErrorMap: Map[String, MtdError] =
+    Map()
 
 }
