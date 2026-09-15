@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import v3.upscan.model.{InitiateUploadRequest, InitiateUploadResponse}
+import v3.upscan.model.{InitiateUploadRequestData, InitiateUploadResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class InitiateUploadService @Inject() (connector: InitiateUploadConnector) extends BaseService {
 
   def initiateUpload(
-      request: InitiateUploadRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[InitiateUploadResponse]] = {
+      request: InitiateUploadRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[InitiateUploadResponse]] = {
     connector.initiateUpload(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 

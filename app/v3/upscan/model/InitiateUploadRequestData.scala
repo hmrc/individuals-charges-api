@@ -16,18 +16,6 @@
 
 package v3.upscan.model
 
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
+import api.models.domain.{Nino, TaxYear}
 
-case class InitiateUploadRequest(callbackUrl: String,
-                                 successRedirect: Option[String],
-                                 errorRedirect: Option[String],
-                                 minimumFileSize: Option[Double], // Long Req
-                                 maximumFileSize: Option[Int],    // Long Req
-                                 consumingService: Option[String])
-
-object InitiateUploadRequest {
-
-  implicit val initiateUploadRequestFormat: OFormat[InitiateUploadRequest] =
-    Json.format[InitiateUploadRequest]
-
-}
+case class InitiateUploadRequestData(nino: Nino, taxYear: TaxYear, body: InitiateUploadRequestBody)

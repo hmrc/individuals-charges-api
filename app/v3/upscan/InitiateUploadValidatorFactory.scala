@@ -18,15 +18,15 @@ package v3.upscan
 
 import api.controllers.validators.Validator
 import play.api.libs.json.JsValue
-import v3.upscan.model.InitiateUploadRequest
+import v3.upscan.model.InitiateUploadRequestData
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class InitiateUploadValidatorFactory @Inject() {
 
-  def validator(body: JsValue): Validator[InitiateUploadRequest] = {
-    new InitiateUploadValidator(body)
+  def validator(nino: String, taxYear: String, body: JsValue): Validator[InitiateUploadRequestData] = {
+    new InitiateUploadValidator(nino, taxYear, body)
   }
 
 }

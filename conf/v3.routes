@@ -10,4 +10,4 @@ PUT        /winter-fuel-payment/:nino/:taxYear          v3.winterFuelPayment.cre
 GET        /winter-fuel-payment/:nino/:taxYear          v3.winterFuelPayment.retrieve.RetrieveWinterFuelPaymentController.retrieve(nino: String, taxYear: String, source: Option[String])
 DELETE     /winter-fuel-payment/:nino/:taxYear          v3.winterFuelPayment.delete.DeleteWinterFuelPaymentController.delete(nino: String, taxYear: String)
 
-POST       /upscan/initiate                v3.upscan.InitiateUploadController.initiateUpload()
+POST       /upscan/initiate/:nino/:taxYear              v3.upscan.InitiateUploadController.initiateUpload(nino: String, taxYear: String)

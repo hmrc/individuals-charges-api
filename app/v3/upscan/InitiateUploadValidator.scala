@@ -17,17 +17,24 @@
 package v3.upscan
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.ResolveNonEmptyJsonObject
+import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYearMinimum}
+import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
+import cats.implicits.catsSyntaxTuple3Semigroupal
 import play.api.libs.json.JsValue
-import v3.upscan.model.InitiateUploadRequest
+import v3.upscan.model.{InitiateUploadRequestBody, InitiateUploadRequestData}
 
-class InitiateUploadValidator(body: JsValue) extends Validator[InitiateUploadRequest] {
+class InitiateUploadValidator(nino: String, taxYear: String, body: JsValue) extends Validator[InitiateUploadRequestData] {
 
-  private val resolveJson = ResolveNonEmptyJsonObject.resolver[InitiateUploadRequest]
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
+  private val resolveJson    = ResolveNonEmptyJsonObject.resolver[InitiateUploadRequestBody]
 
-  override def validate: Validated[Seq[MtdError], InitiateUploadRequest] =
-    resolveJson(body)
+  def validate: Validated[Seq[MtdError], InitiateUploadRequestData] =
+    (
+      ResolveNino(nino),
+      resolveTaxYear(taxYear),
+      resolveJson(body)
+    ).mapN(InitiateUploadRequestData.apply)
 
 }
