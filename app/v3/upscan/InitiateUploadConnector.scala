@@ -17,8 +17,9 @@
 package v3.upscan
 
 import api.config.AppConfig
+import api.connectors.DownstreamUri.HipUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
 import cats.data.EitherT
 import play.api.libs.json.Json
 import play.api.libs.ws.writeableOf_JsValue
@@ -40,11 +41,11 @@ class InitiateUploadConnector @Inject(val http: HttpClientV2, val appConfig: App
     }
 
     def doSecondPost(reference: String): Future[DownstreamOutcome[Unit]] = {
+      val downstreamUri: DownstreamUri[Unit] =
+        HipUri(s"itsd/attachment-metadata/${request.nino}/$reference?taxYear=${request.taxYear.asTysDownstream}")
+
       val amsCreateBody = AMSCreateBody("Agent", "Requested", "2026-04-30T16:05:42Z")
-      http
-        .post(url"http://localhost:9772/itsd/attachment-metadata/${request.nino}/$reference?taxYear=${request.taxYear.asTysDownstream}")
-        .withBody(Json.toJson(amsCreateBody))
-        .execute
+      post(body = amsCreateBody, uri = downstreamUri)
     }
 
     val eitherTResult = for {
