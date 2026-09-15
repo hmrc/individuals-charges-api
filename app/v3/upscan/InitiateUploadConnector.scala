@@ -19,11 +19,12 @@ package v3.upscan
 import api.config.AppConfig
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import cats.data.EitherT
 import play.api.libs.json.Json
 import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
-import v3.upscan.model.{InitiateUploadRequestData, InitiateUploadResponse}
+import v3.upscan.model.{AMSCreateBody, InitiateUploadRequestData, InitiateUploadResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +39,19 @@ class InitiateUploadConnector @Inject(val http: HttpClientV2, val appConfig: App
       http.post(url"http://localhost:9570/upscan/v2/initiate").withBody(Json.toJson(request.body)).execute
     }
 
-    for {
-      result  <- doPost()
+    def doSecondPost(reference: String): Future[DownstreamOutcome[Unit]] = {
+      val amsCreateBody = AMSCreateBody("Agent", "Requested", "2026-04-30T16:05:42Z")
+      http
+        .post(url"http://localhost:9772/itsd/attachment-metadata/${request.nino}/$reference?taxYear=${request.taxYear.asTysDownstream}")
+        .withBody(Json.toJson(amsCreateBody))
+        .execute
+    }
+
+    val eitherTResult = for {
+      result  <- EitherT(doPost())
+      _ <- EitherT(doSecondPost(result.responseData.reference))
     } yield result
+
+    eitherTResult.value
   }
 }

@@ -18,7 +18,6 @@ package v3.upscan
 
 import api.config.AppConfig
 import api.controllers.*
-import api.models.auth.UserDetails
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.IdGenerator
 import play.api.libs.json.JsValue
@@ -42,19 +41,20 @@ class InitiateUploadController @Inject() (val authService: EnrolmentsAuthService
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "InitiateUploadController", endpointName = "Initiate File Upload")
 
-  def initiateUpload(nino: String, taxYear: String): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    implicit val userRequest: UserRequest[JsValue] = UserRequest(UserDetails("", "", None), request)
-    implicit val ctx: RequestContext               = RequestContext.from(idGenerator, endpointLogContext)
+  def initiateUpload(nino: String, taxYear: String): Action[JsValue] = {
+    authorisedAction(nino).async(parse.json) { implicit request =>
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-    val validator = validatorFactory.validator(nino, taxYear, request.body)
+      val validator = validatorFactory.validator(nino, taxYear, request.body)
 
-    val requestHandler =
-      RequestHandler
-        .withValidator(validator)
-        .withService(service.initiateUpload)
-        .withPlainJsonResult()
+      val requestHandler =
+        RequestHandler
+          .withValidator(validator)
+          .withService(service.initiateUpload)
+          .withPlainJsonResult()
 
-    requestHandler.handleRequest()
+      requestHandler.handleRequest()
+    }
   }
 
 }
