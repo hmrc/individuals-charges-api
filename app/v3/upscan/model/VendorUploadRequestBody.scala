@@ -16,6 +16,13 @@
 
 package v3.upscan.model
 
-import api.models.domain.{Nino, TaxYear}
+import play.api.libs.json.{Json, OFormat}
 
-case class InitiateUploadRequestData(nino: Nino, taxYear: TaxYear, body: VendorUploadRequestBody)
+case class VendorUploadRequestBody(successRedirect: Option[String], errorRedirect: Option[String])
+
+object VendorUploadRequestBody {
+
+  implicit val vendorUploadRequestBodyFormat: OFormat[VendorUploadRequestBody] =
+    Json.format[VendorUploadRequestBody]
+
+}

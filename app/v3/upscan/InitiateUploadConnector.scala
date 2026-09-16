@@ -25,7 +25,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
-import v3.upscan.model.{AMSCreateBody, InitiateUploadRequestData, InitiateUploadResponse}
+import v3.upscan.model.{AMSCreateBody, InitiateUploadRequestBody, InitiateUploadRequestData, InitiateUploadResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +37,14 @@ class InitiateUploadConnector @Inject(val http: HttpClientV2, val appConfig: App
       request: InitiateUploadRequestData)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[InitiateUploadResponse]] = {
 
     def doPost(): Future[DownstreamOutcome[InitiateUploadResponse]] = {
-      http.post(url"http://localhost:9570/upscan/v2/initiate").withBody(Json.toJson(request.body)).execute
+      val initiateUploadRequestBody = InitiateUploadRequestBody(callbackUrl = "https://myservice.com/callback",
+        successRedirect = request.body.successRedirect,
+        errorRedirect = request.body.errorRedirect,
+        minimumFileSize = Some(0),
+        maximumFileSize = Some(1024),
+        consumingService = None)
+
+      http.post(url"http://localhost:9570/upscan/v2/initiate").withBody(Json.toJson(initiateUploadRequestBody)).execute
     }
 
     def doSecondPost(reference: String): Future[DownstreamOutcome[Unit]] = {

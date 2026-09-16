@@ -23,12 +23,12 @@ import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple3Semigroupal
 import play.api.libs.json.JsValue
-import v3.upscan.model.{InitiateUploadRequestBody, InitiateUploadRequestData}
+import v3.upscan.model.{InitiateUploadRequestData, VendorUploadRequestBody}
 
 class InitiateUploadValidator(nino: String, taxYear: String, body: JsValue) extends Validator[InitiateUploadRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
-  private val resolveJson    = ResolveNonEmptyJsonObject.resolver[InitiateUploadRequestBody]
+  private val resolveJson    = ResolveNonEmptyJsonObject.resolver[VendorUploadRequestBody]
 
   def validate: Validated[Seq[MtdError], InitiateUploadRequestData] =
     (
