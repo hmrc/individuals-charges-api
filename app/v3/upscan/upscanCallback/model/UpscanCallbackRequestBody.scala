@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.upscanCallback.model
 
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
-case class AMSCreateBody(uploadedBy: String, status: String, uploadTimestamp: String)
+case class UpscanCallbackRequestBody(reference: String)
 
-object AMSCreateBody {
+object UpscanCallbackRequestBody {
 
-  implicit val AMSCreateBodyFormat: OFormat[AMSCreateBody] =
-    Json.format[AMSCreateBody]
+  implicit val upscanCallbackRequestBodyFormat: OFormat[UpscanCallbackRequestBody] =
+    Json.format[UpscanCallbackRequestBody]
 
 }

@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.initiateUpload.model
 
 import play.api.libs.json.{Json, OFormat}
 
-case class UploadRequest(
-    href: String,
-    fields: Map[String, String]
-)
+case class VendorUploadRequestBody(successRedirect: Option[String], errorRedirect: Option[String])
 
-object UploadRequest {
+object VendorUploadRequestBody {
 
-  implicit val uploadRequestFormat: OFormat[UploadRequest] =
-    Json.format[UploadRequest]
+  implicit val vendorUploadRequestBodyFormat: OFormat[VendorUploadRequestBody] =
+    Json.format[VendorUploadRequestBody]
 
 }

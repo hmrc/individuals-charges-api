@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.upscan
+package v3.upscan.initiateUpload
 
 import api.config.AppConfig
 import api.connectors.DownstreamUri.HipUri
@@ -25,7 +25,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.writeableOf_JsValue
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
-import v3.upscan.model.{AMSCreateBody, InitiateUploadRequestBody, InitiateUploadRequestData, InitiateUploadResponse}
+import v3.upscan.initiateUpload.model.{AMSCreateBody, InitiateUploadRequestBody, InitiateUploadRequestData, InitiateUploadResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

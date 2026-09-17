@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.initiateUpload.model
 
 import play.api.libs.json.{Json, OFormat}
 
-case class InitiateUploadResponse(
-    reference: String,
-    uploadRequest: UploadRequest
+case class UploadRequest(
+    href: String,
+    fields: Map[String, String]
 )
 
-object InitiateUploadResponse {
+object UploadRequest {
 
-  implicit val initiateUploadResponseFormat: OFormat[InitiateUploadResponse] =
-    Json.format[InitiateUploadResponse]
+  implicit val uploadRequestFormat: OFormat[UploadRequest] =
+    Json.format[UploadRequest]
 
 }

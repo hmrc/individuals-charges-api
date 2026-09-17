@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package v3.upscan
+package v3.upscan.upscanCallback
 
 import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.ResolveNonEmptyJsonObject
+import api.models.errors.MtdError
+import cats.data.Validated
 import play.api.libs.json.JsValue
-import v3.upscan.model.InitiateUploadRequestData
+import v3.upscan.upscanCallback.model.{UpscanCallbackRequestBody, UpscanCallbackRequestData}
 
-import javax.inject.{Inject, Singleton}
+class UpscanCallbackValidator(body: JsValue) extends Validator[UpscanCallbackRequestData] {
 
-@Singleton
-class InitiateUploadValidatorFactory @Inject() {
+  private val resolveJson = ResolveNonEmptyJsonObject.resolver[UpscanCallbackRequestBody]
 
-  def validator(nino: String, taxYear: String, body: JsValue): Validator[InitiateUploadRequestData] = {
-    new InitiateUploadValidator(nino, taxYear, body)
-  }
+  def validate: Validated[Seq[MtdError], UpscanCallbackRequestData] =
+    (
+      resolveJson(body)
+    ).map(UpscanCallbackRequestData.apply)
 
 }

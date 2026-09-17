@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.initiateUpload.model
 
 import play.api.libs.json.{Json, OFormat, Reads, Writes}
 

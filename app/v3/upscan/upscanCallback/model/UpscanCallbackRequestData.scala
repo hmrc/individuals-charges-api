@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.upscanCallback.model
 
-import play.api.libs.json.{Json, OFormat}
-
-case class VendorUploadRequestBody(successRedirect: Option[String], errorRedirect: Option[String])
-
-object VendorUploadRequestBody {
-
-  implicit val vendorUploadRequestBodyFormat: OFormat[VendorUploadRequestBody] =
-    Json.format[VendorUploadRequestBody]
-
-}
+case class UpscanCallbackRequestData(body: UpscanCallbackRequestBody)

@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package v3.upscan
+package v3.upscan.upscanCallback
 
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import v3.upscan.model.{InitiateUploadRequestData, InitiateUploadResponse}
+import v3.upscan.upscanCallback.model.UpscanCallbackRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class InitiateUploadService @Inject() (connector: InitiateUploadConnector) extends BaseService {
+class UpscanCallbackService @Inject() (connector: UpscanCallbackConnector) extends BaseService {
 
-  def initiateUpload(
-      request: InitiateUploadRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[InitiateUploadResponse]] = {
-    connector.initiateUpload(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+  def handleCallback(request: UpscanCallbackRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+    connector.handleCallback(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private def downstreamErrorMap: Map[String, MtdError] =

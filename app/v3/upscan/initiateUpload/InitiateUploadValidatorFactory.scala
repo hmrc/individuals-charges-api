@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package v3.upscan.model
+package v3.upscan.initiateUpload
 
-import api.models.domain.{Nino, TaxYear}
+import api.controllers.validators.Validator
+import play.api.libs.json.JsValue
+import v3.upscan.initiateUpload.model.InitiateUploadRequestData
 
-case class InitiateUploadRequestData(nino: Nino, taxYear: TaxYear, body: VendorUploadRequestBody)
+import javax.inject.{Inject, Singleton}
+
+@Singleton
+class InitiateUploadValidatorFactory @Inject() {
+
+  def validator(nino: String, taxYear: String, body: JsValue): Validator[InitiateUploadRequestData] = {
+    new InitiateUploadValidator(nino, taxYear, body)
+  }
+
+}

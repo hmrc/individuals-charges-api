@@ -14,44 +14,47 @@
  * limitations under the License.
  */
 
-package v3.upscan
+package v3.upscan.upscanCallback
 
 import api.config.AppConfig
 import api.controllers.*
+import api.models.auth.UserDetails
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.IdGenerator
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
+import v3.upscan.upscanCallback
 
 import javax.inject.*
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class InitiateUploadController @Inject() (val authService: EnrolmentsAuthService,
+class UpscanCallbackController @Inject() (val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          val validatorFactory: InitiateUploadValidatorFactory,
-                                          val service: InitiateUploadService,
-                                          val connector: InitiateUploadConnector,
+                                          val validatorFactory: UpscanCallbackValidatorFactory,
+                                          val service: UpscanCallbackService,
+                                          val connector: UpscanCallbackConnector,
                                           cc: ControllerComponents,
                                           val idGenerator: IdGenerator)(implicit appConfig: AppConfig, ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
-  val endpointName = "upscan-file-upload"
+  val endpointName = "upscan-callback"
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "InitiateUploadController", endpointName = "Initiate File Upload")
+    EndpointLogContext(controllerName = "UpscanCallbackController", endpointName = "Upscan Callback")
 
-  def initiateUpload(nino: String, taxYear: String): Action[JsValue] = {
-    authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+  def handleCallback(): Action[JsValue] = {
+    Action.async(parse.json) { implicit request =>
+      implicit val userRequest: UserRequest[JsValue] = UserRequest(UserDetails("", "", None), request)
+      implicit val ctx: RequestContext               = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, taxYear, request.body)
+      val validator = validatorFactory.validator(request.body)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService(service.initiateUpload)
-          .withPlainJsonResult()
+          .withService(service.handleCallback)
+          .withNoContentResult()
 
       requestHandler.handleRequest()
     }
