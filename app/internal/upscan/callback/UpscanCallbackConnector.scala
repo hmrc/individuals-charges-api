@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package v3.upscan.upscanCallback
+package internal.upscan.callback
 
 import api.config.AppConfig
 import api.connectors.DownstreamUri.HipUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import internal.upscan.callback.model.{AMSUpdateFailureBody, AMSUpdateSuccessBody, UpscanCallbackRequestBodySuccess, UpscanCallbackRequestBodyFailure, UpscanCallbackRequestData}
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier}
-import v3.upscan.upscanCallback.model.UpscanCallbackRequestData
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,11 +34,30 @@ class UpscanCallbackConnector @Inject(val http: HttpClientV2, val appConfig: App
       request: UpscanCallbackRequestData)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     val nino = "NE719627D" // TODO: WHERE DO WE GET THIS FROM?
-    val taxYear = "2026-27" // TODO: WHERE DO WE GET THIS FROM?
+    val taxYear = "26-27" // TODO: WHERE DO WE GET THIS FROM?
 
     val downstreamUri: DownstreamUri[Unit] =
       HipUri(s"itsd/attachment-metadata/$nino/${request.body.reference}?taxYear=$taxYear")
+      
+    request.body match {
+      case successBody: UpscanCallbackRequestBodySuccess => handleSuccessCallback(downstreamUri, successBody)
+      case failureBody: UpscanCallbackRequestBodyFailure => handleFailureCallback(downstreamUri, failureBody)
+    }
+  }
 
-    patch(body = request.body, uri = downstreamUri)
+  private def handleSuccessCallback(downstreamUri: DownstreamUri[Unit], callbackBody: UpscanCallbackRequestBodySuccess)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+    import callbackBody.*
+
+    val body = AMSUpdateSuccessBody(scanId = downloadUrl, fileName = uploadDetails.fileName, fileSize = uploadDetails.size, uploadTimestamp = uploadDetails.uploadTimestamp)
+
+    patch(body = body, uri = downstreamUri)
+  }
+
+  private def handleFailureCallback(downstreamUri: DownstreamUri[Unit], callbackBody: UpscanCallbackRequestBodyFailure)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+    import callbackBody.*
+
+    val body = AMSUpdateFailureBody(status = fileStatus, statusReason = failureDetails.failureReason)
+
+    patch(body = body, uri = downstreamUri)
   }
 }

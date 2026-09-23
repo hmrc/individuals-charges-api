@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.upscan.upscanCallback
+package internal.upscan.callback
 
 import api.config.AppConfig
 import api.controllers.*
@@ -23,7 +23,6 @@ import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.IdGenerator
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import v3.upscan.upscanCallback
 
 import javax.inject.*
 import scala.concurrent.ExecutionContext

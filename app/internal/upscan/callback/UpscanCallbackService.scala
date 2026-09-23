@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v3.upscan.upscanCallback
+package internal.upscan.callback
 
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import v3.upscan.upscanCallback.model.UpscanCallbackRequestData
+import internal.upscan.callback.model.UpscanCallbackRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

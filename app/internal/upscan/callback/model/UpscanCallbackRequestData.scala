@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package v3.upscan.upscanCallback.model
+package internal.upscan.callback.model
 
 case class UpscanCallbackRequestData(body: UpscanCallbackRequestBody)

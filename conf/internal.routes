@@ -1,0 +1,1 @@
+POST       /internal/upscan/callback              internal.upscan.callback.UpscanCallbackController.handleCallback()

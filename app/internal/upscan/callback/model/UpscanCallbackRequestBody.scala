@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package v3.upscan.upscanCallback
+package internal.upscan.callback.model
 
-import api.controllers.validators.Validator
-import play.api.libs.json.JsValue
-import v3.upscan.upscanCallback.model.UpscanCallbackRequestData
-
-import javax.inject.{Inject, Singleton}
-
-@Singleton
-class UpscanCallbackValidatorFactory @Inject() {
-
-  def validator(body: JsValue): Validator[UpscanCallbackRequestData] = {
-    new UpscanCallbackValidator(body)
-  }
-
+trait UpscanCallbackRequestBody {
+  val reference: String
 }
