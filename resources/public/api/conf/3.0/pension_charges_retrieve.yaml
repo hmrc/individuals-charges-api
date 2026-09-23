@@ -36,7 +36,7 @@ responses:
     content:
       application/json:
         schema:
-          oneOf:
+          anyOf:
             - $ref: './schemas/pensionCharges/retrieve/def1/response.json'
             - $ref: './schemas/pensionCharges/retrieve/def2/response.json'
         examples:
