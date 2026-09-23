@@ -32,6 +32,7 @@ import play.api.libs.json.JsValue
 class UpscanCallbackValidator(body: JsValue) extends Validator[UpscanCallbackRequestData] {
 
   private val resolveJson: ResolveNonEmptyJsonObject.Resolver[JsValue, UpscanCallbackRequestBody] = (rawBody: JsValue) => {
+    // TODO: Figure out how to avoid losing parsing errors
     ResolveNonEmptyJsonObject.resolver[UpscanCallbackRequestBodySuccess].apply(rawBody) match {
       case Valid(a)   => Valid(a)
       case Invalid(a) => ResolveNonEmptyJsonObject.resolver[UpscanCallbackRequestBodyFailure].apply(rawBody)

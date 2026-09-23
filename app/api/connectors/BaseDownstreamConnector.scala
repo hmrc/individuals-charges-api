@@ -63,7 +63,7 @@ trait BaseDownstreamConnector extends Logging {
     val strategy = uri.strategy
 
     def doPatch(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.post(url"${getBackendUri(uri.path, strategy)}").withBody(Json.toJson(body)).execute[DownstreamOutcome[Resp]]
+      http.patch(url"${getBackendUri(uri.path, strategy)}").withBody(Json.toJson(body)).execute[DownstreamOutcome[Resp]]
     }
 
     for {

@@ -21,7 +21,7 @@ import api.config.Deprecation.Deprecated
 import api.controllers.validators.Validator
 import api.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import api.models.outcomes.ResponseWrapper
-import api.routing.Version
+import api.routing.{Version, Versions}
 import api.services.ServiceOutcome
 import api.utils.DateUtils.longDateTimestampGmt
 import api.utils.Logging
@@ -94,18 +94,22 @@ object RequestHandler {
     // Scoped as a private delegate so as to keep the logic completely separate from the configuration
     private object Delegate extends RequestHandler with Logging with RequestContextImplicits {
 
-      implicit class Response(result: Result)(implicit appConfig: AppConfig, apiVersion: Version) {
+      implicit class Response(result: Result)(implicit appConfig: AppConfig, apiVersion: Option[Version]) {
 
         private def withDeprecationHeaders: List[(String, String)] = {
-
-          appConfig.deprecationFor(apiVersion) match {
-            case Valid(Deprecated(deprecatedOn, maybeSunsetDate)) =>
-              List(
-                "Deprecation" -> longDateTimestampGmt(deprecatedOn),
-                "Link"        -> appConfig.apiDocumentationUrl
-              ) ++ maybeSunsetDate.map(sunsetDate => "Sunset" -> longDateTimestampGmt(sunsetDate))
-            case _ => Nil
+          apiVersion match {
+            case None => Nil
+            case Some(version) =>
+              appConfig.deprecationFor(version) match {
+                case Valid(Deprecated(deprecatedOn, maybeSunsetDate)) =>
+                  List(
+                    "Deprecation" -> longDateTimestampGmt(deprecatedOn),
+                    "Link"        -> appConfig.apiDocumentationUrl
+                  ) ++ maybeSunsetDate.map(sunsetDate => "Sunset" -> longDateTimestampGmt(sunsetDate))
+                case _ => Nil
+              }
           }
+
         }
 
         def withApiHeaders(correlationId: String, responseHeaders: (String, String)*): Result = {
@@ -170,7 +174,8 @@ object RequestHandler {
           ec: ExecutionContext,
           appConfig: AppConfig): Result = {
 
-        implicit val apiVersion: Version = Version(request)
+        // The callback endpoint does not have an Accept header with a version, so we need to handle that
+        implicit val apiVersion: Option[Version] = Versions.getFromRequest(request).toOption
 
         logger.info(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
@@ -187,7 +192,7 @@ object RequestHandler {
       private def handleFailure(
           errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[?], ec: ExecutionContext, appConfig: AppConfig): Result = {
 
-        implicit val apiVersion: Version = Version(request)
+        implicit val apiVersion: Option[Version] = Versions.getFromRequest(request).toOption
         logger.warn(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: ${ctx.correlationId}")

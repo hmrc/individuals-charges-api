@@ -44,6 +44,7 @@ class UpscanCallbackController @Inject() (val authService: EnrolmentsAuthService
 
   def handleCallback(): Action[JsValue] = {
     Action.async(parse.json) { implicit request =>
+      // TODO: Figure out how to avoid creating a dummy UserRequest
       implicit val userRequest: UserRequest[JsValue] = UserRequest(UserDetails("", "", None), request)
       implicit val ctx: RequestContext               = RequestContext.from(idGenerator, endpointLogContext)
 

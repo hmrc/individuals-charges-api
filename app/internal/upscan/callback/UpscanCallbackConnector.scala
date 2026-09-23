@@ -33,11 +33,8 @@ class UpscanCallbackConnector @Inject(val http: HttpClientV2, val appConfig: App
   def handleCallback(
       request: UpscanCallbackRequestData)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino = "NE719627D" // TODO: WHERE DO WE GET THIS FROM?
-    val taxYear = "26-27" // TODO: WHERE DO WE GET THIS FROM?
-
-    val downstreamUri: DownstreamUri[Unit] =
-      HipUri(s"itsd/attachment-metadata/$nino/${request.body.reference}?taxYear=$taxYear")
+    // TODO: The URL for Update Record is still not fully decided yet - we have been told it hopefully does not require nino and tax year
+    val downstreamUri: DownstreamUri[Unit] = HipUri(s"itsd/attachment-metadata/${request.body.reference}")
       
     request.body match {
       case successBody: UpscanCallbackRequestBodySuccess => handleSuccessCallback(downstreamUri, successBody)
