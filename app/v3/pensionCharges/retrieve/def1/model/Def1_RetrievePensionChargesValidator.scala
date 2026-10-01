@@ -17,7 +17,7 @@
 package v3.pensionCharges.retrieve.def1.model
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinMax}
+import api.controllers.validators.resolvers.{ResolveDetailedTaxYear, ResolveNino}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -27,7 +27,10 @@ import v3.pensionCharges.retrieve.model.request.RetrievePensionChargesRequestDat
 
 class Def1_RetrievePensionChargesValidator(nino: String, taxYear: String) extends Validator[RetrievePensionChargesRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinMax((TaxYear.fromMtd("2021-22"), TaxYear.fromMtd("2023-24")))
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2021-22"),
+    maximumTaxYear = Some(TaxYear.fromMtd("2023-24"))
+  )
 
   def validate: Validated[Seq[MtdError], RetrievePensionChargesRequestData] = {
     (

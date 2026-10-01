@@ -17,7 +17,7 @@
 package v3.highIncomeChildBenefitCharge.createAmend
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYearMinimum}
+import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveDetailedTaxYear}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -30,7 +30,9 @@ class CreateAmendHighIncomeChildBenefitChargeValidator(nino: String, taxYear: St
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[CreateAmendHighIncomeChildBenefitChargeRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2025-26"))
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2025-26")
+  )
 
   override def validate: Validated[Seq[MtdError], CreateAmendHighIncomeChildBenefitChargeRequest] =
     (

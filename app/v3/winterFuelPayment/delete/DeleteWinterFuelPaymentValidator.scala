@@ -17,7 +17,7 @@
 package v3.winterFuelPayment.delete
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
+import api.controllers.validators.resolvers.{ResolveNino, ResolveDetailedTaxYear}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -29,7 +29,9 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DeleteWinterFuelPaymentValidator @Inject() (nino: String, taxYear: String) extends Validator[DeleteWinterFuelPaymentRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2026-27"))
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2026-27")
+  )
 
   override def validate: Validated[Seq[MtdError], DeleteWinterFuelPaymentRequestData] =
     (

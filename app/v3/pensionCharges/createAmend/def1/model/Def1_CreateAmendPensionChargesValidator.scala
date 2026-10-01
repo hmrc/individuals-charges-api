@@ -34,8 +34,11 @@ import javax.inject.Inject
 class Def1_CreateAmendPensionChargesValidator @Inject() (nino: String, taxYear: String, body: JsValue)
     extends Validator[CreateAmendPensionChargesRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
-  private val resolveJson    = ResolveNonEmptyJsonObject.strictResolver[Def1_CreateAmendPensionChargesRequestBody]
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2021-22")
+  )
+
+  private val resolveJson = ResolveNonEmptyJsonObject.strictResolver[Def1_CreateAmendPensionChargesRequestBody]
 
   def validate: Validated[Seq[MtdError], CreateAmendPensionChargesRequestData] =
     (
