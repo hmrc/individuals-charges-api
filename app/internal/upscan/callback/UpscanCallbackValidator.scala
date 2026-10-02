@@ -17,27 +17,16 @@
 package internal.upscan.callback
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.ResolveNonEmptyJsonObject
+import api.controllers.validators.resolvers.{ResolveJsonObject, ResolveNonEmptyJsonObject}
 import api.models.errors.MtdError
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
-import internal.upscan.callback.model.{
-  UpscanCallbackRequestBody,
-  UpscanCallbackRequestBodyFailure,
-  UpscanCallbackRequestBodySuccess,
-  UpscanCallbackRequestData
-}
+import internal.upscan.callback.model.{UpscanCallbackRequestBody, UpscanCallbackRequestData}
 import play.api.libs.json.JsValue
 
 class UpscanCallbackValidator(body: JsValue) extends Validator[UpscanCallbackRequestData] {
 
-  private val resolveJson: ResolveNonEmptyJsonObject.Resolver[JsValue, UpscanCallbackRequestBody] = (rawBody: JsValue) => {
-    // TODO: Figure out how to avoid losing parsing errors
-    ResolveNonEmptyJsonObject.resolver[UpscanCallbackRequestBodySuccess].apply(rawBody) match {
-      case Valid(a)   => Valid(a)
-      case Invalid(a) => ResolveNonEmptyJsonObject.resolver[UpscanCallbackRequestBodyFailure].apply(rawBody)
-    }
-  }
+  private val resolveJson: ResolveNonEmptyJsonObject.Resolver[JsValue, UpscanCallbackRequestBody] =
+    ResolveJsonObject.resolver[UpscanCallbackRequestBody]
 
   def validate: Validated[Seq[MtdError], UpscanCallbackRequestData] =
     (

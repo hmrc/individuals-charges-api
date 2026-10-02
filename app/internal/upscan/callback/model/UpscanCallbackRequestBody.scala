@@ -16,6 +16,21 @@
 
 package internal.upscan.callback.model
 
+import play.api.libs.json.{JsError, JsSuccess, Reads, __}
+
 trait UpscanCallbackRequestBody {
   val reference: String
+}
+
+object UpscanCallbackRequestBody {
+
+  implicit val reads: Reads[UpscanCallbackRequestBody] = { json =>
+    (__ \ "fileStatus").read[String].reads(json) match {
+      case JsSuccess("READY", _)  => json.validate[UpscanCallbackRequestBodySuccess]
+      case JsSuccess("FAILED", _) => json.validate[UpscanCallbackRequestBodyFailure]
+      case JsSuccess(other, _)    => JsError(__ \ "fileStatus", s"Unknown fileStatus: $other")
+      case e: JsError             => e
+    }
+  }
+
 }

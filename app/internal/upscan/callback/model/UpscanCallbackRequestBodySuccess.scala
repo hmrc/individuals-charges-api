@@ -42,7 +42,7 @@ case class UpscanCallbackRequestBodySuccess(
 
 object UpscanCallbackRequestBodySuccess {
 
-  implicit val upscanCallbackRequestBodySuccessFormat: OFormat[UpscanCallbackRequestBodySuccess] =
-    Json.format[UpscanCallbackRequestBodySuccess]
+  implicit val reads: Reads[UpscanCallbackRequestBodySuccess] =
+    Json.reads[UpscanCallbackRequestBodySuccess]
 
 }
