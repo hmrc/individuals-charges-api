@@ -17,7 +17,7 @@
 package v3.winterFuelPayment.createAmend
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYearMinimum}
+import api.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveDetailedTaxYear}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -30,7 +30,7 @@ class CreateAmendWinterFuelPaymentValidator(nino: String, taxYear: String, body:
 
   private val resolveJson = ResolveNonEmptyJsonObject.resolver[CreateAmendWinterFuelPaymentRequestBody]
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(
+  private val resolveTaxYear = ResolveDetailedTaxYear(
     TaxYear.fromMtd("2026-27"),
     allowIncompleteTaxYear = !temporalValidationEnabled
   )

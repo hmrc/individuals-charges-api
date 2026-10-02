@@ -18,7 +18,7 @@ package v3.winterFuelPayment.retrieve
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.ResolverSupport.*
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum, ResolverSupport}
+import api.controllers.validators.resolvers.{ResolveNino, ResolveDetailedTaxYear, ResolverSupport}
 import api.models.domain.{MtdSourceEnum, TaxYear}
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -32,7 +32,9 @@ class RetrieveWinterFuelPaymentValidator @Inject() (nino: String, taxYear: Strin
     extends Validator[RetrieveWinterFuelPaymentRequestData]
     with ResolverSupport {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2026-27"))
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2026-27")
+  )
 
   private val resolveSource: Resolver[Option[String], MtdSourceEnum] =
     resolvePartialFunction(SourceFormatError)(MtdSourceEnum.parser).resolveOptionallyWithDefault(MtdSourceEnum.latest)

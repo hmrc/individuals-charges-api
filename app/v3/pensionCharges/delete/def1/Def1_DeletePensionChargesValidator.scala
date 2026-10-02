@@ -17,7 +17,7 @@
 package v3.pensionCharges.delete.def1
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
+import api.controllers.validators.resolvers.{ResolveNino, ResolveDetailedTaxYear}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -30,7 +30,9 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class Def1_DeletePensionChargesValidator @Inject() (nino: String, taxYear: String) extends Validator[DeletePensionChargesRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2021-22"))
+  private val resolveTaxYear = ResolveDetailedTaxYear(
+    minimumTaxYear = TaxYear.fromMtd("2021-22")
+  )
 
   def validate: Validated[Seq[MtdError], DeletePensionChargesRequestData] =
     (
