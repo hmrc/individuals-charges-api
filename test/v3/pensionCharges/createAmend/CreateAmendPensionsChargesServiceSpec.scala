@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import common.errors.RuleOutsideAmendmentWindowError
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.pensionCharges.createAmend.def1.fixture.Def1_CreateAmendPensionChargesFixture.*
 import v3.pensionCharges.createAmend.def1.model.request.Def1_CreateAmendPensionChargesRequestData

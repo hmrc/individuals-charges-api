@@ -21,7 +21,6 @@ import api.models.utils.JsonErrorValidators
 import api.services.*
 import api.support.IntegrationBaseSpec
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors.RuleOutsideAmendmentWindowError
 import play.api.libs.json.*
 import play.api.libs.ws.DefaultBodyReadables.readableAsString
 import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import common.errors.RuleOutsideAmendmentWindowError
 import v3.pensionCharges.delete.def1.request.Def1_DeletePensionChargesRequestData
 import v3.pensionCharges.delete.model.request.DeletePensionChargesRequestData
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.implicits.*
-import common.errors.*
 import play.api.libs.json.JsValue
 import v3.pensionCharges.createAmend.def1.model.Def1_CreateAmendPensionChargesRulesValidator.validateBusinessRules
 import v3.pensionCharges.createAmend.def1.model.request.*

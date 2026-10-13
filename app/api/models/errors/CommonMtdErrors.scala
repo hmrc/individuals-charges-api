@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,14 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
     ValueFormatError.copy(paths = Some(Seq(path)), message = s"The value must be an integer between $min and $max")
 
 }
+
+object ProviderNameFormatError    extends MtdError("FORMAT_PROVIDER_NAME", "The provided name is invalid", BAD_REQUEST)
+object ProviderAddressFormatError extends MtdError("FORMAT_PROVIDERS_ADDRESS", "The provided address is invalid", BAD_REQUEST)
+object QOPSRefFormatError         extends MtdError("FORMAT_QOPS_REF", "The provided QOPS reference number is invalid", BAD_REQUEST)
+object SourceFormatError          extends MtdError("FORMAT_SOURCE", "The provided source is invalid", BAD_REQUEST)
+
+object PensionSchemeTaxRefFormatError
+    extends MtdError("FORMAT_PENSION_SCHEME_TAX_REFERENCE", "The provided pension scheme tax reference is invalid", BAD_REQUEST)
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found", NOT_FOUND)
@@ -95,6 +103,17 @@ object RuleDateRangeInvalidError extends MtdError(code = "RULE_DATE_RANGE_INVALI
 object RuleDateCeasedError extends MtdError("RULE_DATE_CEASED", "The ceased date must be within the tax year", BAD_REQUEST)
 
 object RuleCountryCodeError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a permitted ISO 3166-1 alpha-3 country code", BAD_REQUEST)
+
+object RuleIsAnnualAllowanceReducedError
+    extends MtdError("RULE_IS_ANNUAL_ALLOWANCE_REDUCED", "Tapered annual allowance or money purchased allowance has not been provided", BAD_REQUEST)
+
+object RulePensionReferenceError
+    extends MtdError(
+      "RULE_PENSION_REFERENCE",
+      "You can only provide qualifying recognised Overseas Pension Scheme reference or pension scheme tax reference not both",
+      BAD_REQUEST)
+
+object RuleOutsideAmendmentWindowError extends MtdError("RULE_OUTSIDE_AMENDMENT_WINDOW", "You are outside the amendment window", BAD_REQUEST)
 
 // API Specific Errors
 object RuleWFPAmountAboveMaximumError
