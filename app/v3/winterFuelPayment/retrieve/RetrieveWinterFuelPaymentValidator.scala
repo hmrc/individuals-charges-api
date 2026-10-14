@@ -18,12 +18,11 @@ package v3.winterFuelPayment.retrieve
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.ResolverSupport.*
-import api.controllers.validators.resolvers.{ResolveNino, ResolveDetailedTaxYear, ResolverSupport}
+import api.controllers.validators.resolvers.{ResolveDetailedTaxYear, ResolveNino, ResolverSupport}
 import api.models.domain.{MtdSourceEnum, TaxYear}
-import api.models.errors.MtdError
+import api.models.errors.{MtdError, SourceFormatError}
 import cats.data.Validated
 import cats.implicits.*
-import common.errors.SourceFormatError
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 import javax.inject.Inject

@@ -20,7 +20,6 @@ import api.models.domain.MtdSourceEnum.latest
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
-import common.errors.SourceFormatError
 import v3.winterFuelPayment.retrieve.model.request.RetrieveWinterFuelPaymentRequestData
 
 class RetrieveWinterFuelPaymentValidatorSpec extends UnitSpec {
