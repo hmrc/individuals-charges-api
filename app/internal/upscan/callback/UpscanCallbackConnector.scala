@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import api.config.AppConfig
 import api.connectors.DownstreamUri.HipUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import internal.upscan.callback.model.{AMSUpdateFailureBody, AMSUpdateSuccessBody, UpscanCallbackRequestBodySuccess, UpscanCallbackRequestBodyFailure, UpscanCallbackRequestData}
+import internal.upscan.callback.model.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -35,7 +35,7 @@ class UpscanCallbackConnector @Inject(val http: HttpClientV2, val appConfig: App
 
     // TODO: The URL for Update Record is still not fully decided yet - we have been told it hopefully does not require nino and tax year
     val downstreamUri: DownstreamUri[Unit] = HipUri(s"itsd/attachment-metadata/${request.body.reference}")
-      
+
     request.body match {
       case successBody: UpscanCallbackRequestBodySuccess => handleSuccessCallback(downstreamUri, successBody)
       case failureBody: UpscanCallbackRequestBodyFailure => handleFailureCallback(downstreamUri, failureBody)
@@ -48,6 +48,8 @@ class UpscanCallbackConnector @Inject(val http: HttpClientV2, val appConfig: App
     val body = AMSUpdateSuccessBody(scanId = downloadUrl, fileName = uploadDetails.fileName, fileSize = uploadDetails.size, uploadTimestamp = uploadDetails.uploadTimestamp)
 
     patch(body = body, uri = downstreamUri)
+
+    requestFileTransfer()
   }
 
   private def handleFailureCallback(downstreamUri: DownstreamUri[Unit], callbackBody: UpscanCallbackRequestBodyFailure)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
@@ -56,5 +58,26 @@ class UpscanCallbackConnector @Inject(val http: HttpClientV2, val appConfig: App
     val body = AMSUpdateFailureBody(status = fileStatus, statusReason = failureDetails.failureReason)
 
     patch(body = body, uri = downstreamUri)
+  }
+
+  private def requestFileTransfer()(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+    val downstreamUri: DownstreamUri[Unit] = HipUri("notification/fileready")
+
+    val informationType: String = "S18"
+    val audit: Audit = Audit(correlationId)
+    val checksum: Checksum = Checksum("SHA-512", "931tduanda128sknnksl")
+    val file: File = File(
+      "xyx.doc",
+      "https://yourdomain.com/pathtothefile",
+      checksum,
+      0
+    )
+    val fileTransferNotificationBody = FileTransferNotificationBody(
+      informationType,
+      audit,
+      file
+    )
+
+    post(body = fileTransferNotificationBody, uri = downstreamUri)
   }
 }
