@@ -1,1 +1,2 @@
 POST       /internal/upscan/callback              internal.upscan.callback.UpscanCallbackController.handleCallback()
+POST       /internal/fts/callback                 internal.fts.callback.FTSCallbackController.handleCallback()
