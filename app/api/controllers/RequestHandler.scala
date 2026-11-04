@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.config.AppConfig
-import api.config.Deprecation.Deprecated
+import api.config.Deprecation.HasDeprecationDates
 import api.controllers.validators.Validator
 import api.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}
 import api.models.outcomes.ResponseWrapper
@@ -99,11 +99,11 @@ object RequestHandler {
         private def withDeprecationHeaders: List[(String, String)] = {
 
           appConfig.deprecationFor(apiVersion) match {
-            case Valid(Deprecated(deprecatedOn, maybeSunsetDate)) =>
+            case Valid(deprecation: HasDeprecationDates) =>
               List(
-                "Deprecation" -> longDateTimestampGmt(deprecatedOn),
+                "Deprecation" -> longDateTimestampGmt(deprecation.deprecatedOn),
                 "Link"        -> appConfig.apiDocumentationUrl
-              ) ++ maybeSunsetDate.map(sunsetDate => "Sunset" -> longDateTimestampGmt(sunsetDate))
+              ) ++ deprecation.sunsetDate.map(sunsetDate => "Sunset" -> longDateTimestampGmt(sunsetDate))
             case _ => Nil
           }
         }
